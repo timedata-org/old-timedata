@@ -7,6 +7,7 @@
 #include <fcolor/math/level.h>
 
 namespace fcolor {
+namespace level {
 
 template <typename Number>
 Float<Number> toFloat(Number n) {
@@ -104,5 +105,5 @@ To convert(From from) {
     return static_cast<To>(from / (maximum<From>() / maximum<To>()));
 }
 
-
+} // level
 } // fcolor

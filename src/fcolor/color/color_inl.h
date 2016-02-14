@@ -69,12 +69,10 @@ Color applyToComponents(Operator op, Color const& x, Color const& y) {
 }
 
 template <typename Number, typename Alpha, typename Float>
-Color<Number, Alpha> interpolate(
-    Color<Number, Alpha> const& x, Color<Number, Alpha> const& y, Float ratio) {
-    auto inter = [&] (Number cx, Number cy) {
-        return cx + ratio * (cy - cx);
-    };
-    return applyToComponents(inter, x, y);
+Color<Number, Alpha> interpolate(Color<Number, Alpha> const& x,
+                                 Color<Number, Alpha> const& y, Float ratio) {
+    return applyToComponents(
+        [&] (Number cx, Number cy) { return cx + ratio * (cy - cx); }, x, y);
 }
 
 }  // namespace fcolor

@@ -3,6 +3,7 @@
 #include <fcolor/math/float.h>
 
 namespace fcolor {
+namespace level {
 
 /** We're defining the ranges of numbers used to represent *levels* -
     components of colors.
@@ -10,7 +11,7 @@ namespace fcolor {
     Color levels differ from audio or electronic signals because they can't be
     negative!
 
-    This is all done generically - so we can use any C++ type.
+    This is all done generically - so we can use any C++ numeric type.
 
     Floating point numbers range from 0 to 1.
     Integers range from zero to the maximum possible integer of that type.
@@ -36,4 +37,5 @@ Number limit(Number);
 template <typename Number>
 Float<Number> toFloat(Number);
 
+} // level
 } // fcolor
