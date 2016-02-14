@@ -2,21 +2,23 @@
 
 #include <cmath>
 #include <utility>
-
-#include <fcolor/Fcolor.h>
+#include <fcolor/base/number.h>
 
 namespace fcolor {
 
-// These functions are only good for values between 0 and pi/2.
+// These fast, approximate functions are only good for values between 0 and pi/2.
+// TODO: either junk or test these.
 
 template <typename Float>
-Float fastSin(float);
-Float fastCos(float);
+Float fastSin(Float);
 
-std::pair<float, float> fastSinCos(float);
+template <typename Float>
+Float fastCos(Float);
 
-inline float restrictAngle(float x) {
-    return fmod(x + M_PI, M_PI * 2) - M_PI;
-}
+template <typename Float>
+Pair<Float> fastSinCos(Float);
+
+template <typename Float>
+Float restrictAngle(Float);
 
 }  // namespace fcolor

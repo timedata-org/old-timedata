@@ -2,7 +2,7 @@
 
 #include <limits>
 #include <fcolor/color/color.h>
-#include <fcolor/base/float_inl.h>
+#include <fcolor/base/number_inl.h>
 #include <fcolor/base/level_inl.h>
 
 namespace fcolor {

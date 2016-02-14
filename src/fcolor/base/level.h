@@ -1,6 +1,6 @@
 #pragma once
 
-#include <fcolor/base/float.h>
+#include <fcolor/base/number.h>
 
 namespace fcolor {
 namespace level {

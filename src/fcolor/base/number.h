@@ -14,19 +14,13 @@ struct Traits {
 template <typename Number>
 using Float = typename Traits<Number>::Float;
 
-template <typename Float>
-Float modf(Float, Float&);
-
 template <typename Number>
 using Pair = std::pair<Number, Number>;
 
 template <typename Float>
 Pair<Float> modf(Float);
 
-template <typename Float, typename Exponent>
-Float pow(Float, Exponent);
-
-template <typename Float>
-Float sqrt(Float);
+template <typename Float = double>
+Float pi();
 
 } // fcolor
