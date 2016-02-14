@@ -1,5 +1,7 @@
 #include <fcolor/color/color_inl.h>
 
 int main() {
-    return 0;
+    auto c = fcolor::color(1, 2, 3);
+    auto d = fcolor::color(1, 2, 3, 0);
+    return c.green + d.red;
 }

@@ -10,19 +10,29 @@ struct Color;
 
 template <typename Number>
 struct Color<Number, void> {
-    Number red = 0;
-    Number green = 0;
-    Number blue = 0;
+    Number red;
+    Number green;
+    Number blue;
 };
 
 template <typename Number, typename Alpha>
 struct Color {
-    Number red = 0;
-    Number green = 0;
-    Number blue = 0;
+    Number red;
+    Number green;
+    Number blue;
 
-    Alpha alpha = maximum<Alpha>();
+    Alpha alpha;
 };
+
+template <typename Number, typename Alpha>
+Color<Number, Alpha> color(Number r, Number g, Number b, Alpha a) {
+    return {r, g, b, a};
+}
+
+template <typename Number>
+Color<Number> color(Number r, Number g, Number b) {
+    return {r, g, b};
+}
 
 template <typename Number, typename Alpha>
 Float<Number> distance2(
