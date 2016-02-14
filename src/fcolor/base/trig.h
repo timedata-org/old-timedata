@@ -1,6 +1,7 @@
 #pragma once
 
 #include <cmath>
+#include <utility>
 
 #include <fcolor/Fcolor.h>
 
@@ -8,8 +9,10 @@ namespace fcolor {
 
 // These functions are only good for values between 0 and pi/2.
 
-float fastSin(float);
-float fastCos(float);
+template <typename Float>
+Float fastSin(float);
+Float fastCos(float);
+
 std::pair<float, float> fastSinCos(float);
 
 inline float restrictAngle(float x) {

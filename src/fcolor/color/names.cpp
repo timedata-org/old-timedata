@@ -12,7 +12,9 @@ namespace color {
 
 namespace {
 
-std::string replace(std::string subject, const std::string& search, const std::string& replace) {
+std::string replace(std::string subject,
+                    std::string const& search,
+                    std::string const& replace) {
     size_t pos = 0;
     while ((pos = subject.find(search, pos)) != std::string::npos) {
         subject.replace(pos, search.length(), replace);
@@ -552,12 +554,6 @@ ColorNamer makeNamer() {
     namer.add("yellow 2", 0xffeeee00);
     namer.add("yellow 3", 0xffcdcd00);
     namer.add("yellow 4", 0xff8b8b00);
-#if 0
-    for (auto i = 1; i < 100; ++i) {
-        auto argb = 0xff000000 + 0x10101 * ((i * 0xff) / 100);
-        namer.add("grey " + to_string(i), argb);
-    }
-#endif
 
     return namer;
 }

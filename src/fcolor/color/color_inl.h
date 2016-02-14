@@ -2,8 +2,8 @@
 
 #include <limits>
 #include <fcolor/color/color.h>
-#include <fcolor/math/float_inl.h>
-#include <fcolor/math/level_inl.h>
+#include <fcolor/base/float_inl.h>
+#include <fcolor/base/level_inl.h>
 
 namespace fcolor {
 

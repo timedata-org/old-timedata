@@ -1,4 +1,4 @@
-#include <fcolor/FastTrig.h>
+#include <fcolor/base/trig.h>
 
 namespace fcolor {
 
@@ -9,7 +9,7 @@ float complement(float x) {
 
 }
 
-// From http://stackoverflow.com/questions/6091837/sin-and-cos-are-slow-is-there-an-alternatve
+// From http://stackoverflow.com/questions/6091837/
 
 float fastSin(float theta) {
     auto B = 4.0f / M_PI;

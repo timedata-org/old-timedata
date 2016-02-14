@@ -1,7 +1,7 @@
 #pragma once
 
 #include <limits>
-#include <fcolor/math/level.h>
+#include <fcolor/base/level.h>
 
 namespace fcolor {
 
@@ -25,7 +25,8 @@ struct Color {
 };
 
 template <typename Number, typename Alpha>
-Color<Number, Alpha> color(Number r, Number g, Number b, Alpha a) {
+Color<Number, Alpha> color(Number r, Number g, Number b,
+                           Alpha a = level::maximum<Alpha>()) {
     return {r, g, b, a};
 }
 

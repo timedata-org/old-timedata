@@ -1,5 +1,7 @@
 #pragma once
 
+#include <utility>
+
 namespace fcolor {
 
 template <typename Number>
@@ -12,10 +14,19 @@ struct Traits {
 template <typename Number>
 using Float = typename Traits<Number>::Float;
 
-template <typename Float, typename T>
-Float pow(Float x, T e);
+template <typename Float>
+Float modf(Float, Float&);
+
+template <typename Number>
+using Pair = std::pair<Number, Number>;
 
 template <typename Float>
-Float sqrt(Float x);
+Pair<Float> modf(Float);
+
+template <typename Float, typename Exponent>
+Float pow(Float, Exponent);
+
+template <typename Float>
+Float sqrt(Float);
 
 } // fcolor

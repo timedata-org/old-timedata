@@ -4,7 +4,7 @@
 #include <algorithm>
 #include <limits>
 #include <type_traits>
-#include <fcolor/math/level.h>
+#include <fcolor/base/level.h>
 
 namespace fcolor {
 namespace level {
@@ -36,10 +36,11 @@ Number limit(Number x) {
 /* Implementations of convert().
 
    The math is tricky... and probably none of these work well if To is much
-   smaller than From.
+   smaller in bitsize than From.
 */
 
-/** Are T and U the same class, ignoring const and volatile?
+/** Are T and U the same class, ignoring `const` and `volatile` qualifiers?
+
     See http://en.cppreference.com/w/cpp/types/remove_cv
 */
 template <typename T, typename U>
