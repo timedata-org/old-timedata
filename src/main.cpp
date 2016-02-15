@@ -3,6 +3,8 @@
 #include <fcolor/base/trig_inl.h>
 #include <fcolor/color/color_inl.h>
 
+#include <fcolor/base/stl.h>
+
 #include <fcolor/base/string.cpp>
 
 int main() {
