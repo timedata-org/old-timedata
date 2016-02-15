@@ -35,6 +35,10 @@ void clearAlpha(Color<Number>&);
 template <typename Color>
 void clear(Color&);
 
+/** Convert between two different types of color. */
+template <typename N1, typename A1, typename N2, typename A2=A1>
+Color<N2, A2> convert(Color<N1, A1> const&);
+
 /** Create a new color from components and an alpha channel. */
 template <typename Number, typename Alpha>
 Color<Number, Alpha> color(Number r = 0, Number g = 0, Number b = 0,

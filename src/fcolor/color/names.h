@@ -6,6 +6,6 @@ namespace fcolor {
 
 Color<uint8_t> fromName(const std::string& cname);
 
-std::string toName(const Color&);
+std::string toName(const Color<uint8_t>&);
 
 }  // namespace fcolor

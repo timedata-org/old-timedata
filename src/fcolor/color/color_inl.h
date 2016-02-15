@@ -32,6 +32,17 @@ Color<Number> color(Number r, Number g, Number b) {
     return {r, g, b};
 }
 
+template <typename N1, typename A1, typename N2>
+Color<N2> convert(Color<N1> const& c) {
+    return {convert<N2>(c.red), convert<N2>(c.green), convert<N2>(c.blue)};
+}
+
+template <typename N1, typename A1, typename N2, typename A2=A1>
+Color<N2> convert(Color<N1> const& c) {
+    return {convert<N2>(c.red), convert<N2>(c.green), convert<N2>(c.blue),
+            convert<A2>(c.alpha)};
+}
+
 template <typename Number, typename Alpha>
 Float<Number> distance2(Color<Number, Alpha> const& x,
                         Color<Number, Alpha> const& y) {
