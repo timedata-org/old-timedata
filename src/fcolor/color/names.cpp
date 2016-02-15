@@ -503,4 +503,11 @@ static auto const NAMES_TO_COLORS = processValue(
 
 } // namespace
 
-}  // namespace fcolor
+Color<uint8_t> fromName(const std::string& cname) {
+    return NAMES_TO_COLORS.at(cname);
+}
+
+std::string toName(const Color<uint8_t>&) {
+}
+
+}  // fcolor

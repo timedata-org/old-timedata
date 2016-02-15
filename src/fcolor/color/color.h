@@ -25,6 +25,38 @@ struct Color {
     Alpha alpha;
 };
 
+// Useful color types.
+
+/** 8-bit color. */
+using Color8 = Color<uint8_t>;
+
+/** 8-bit color with alpha. */
+using ColorA8 = Color<uint8_t, uint8_t>;
+
+/** 16-bit color. */
+using Color16 = Color<uint16_t>;
+
+/** 16-bit color with alpha. */
+using ColorA16 = Color<uint16_t, uint16_t>;
+
+/** Floating point color. */
+using ColorF = Color<float>;
+
+/** Floating point color with alpha. */
+using ColorAF = Color<float, float>;
+
+// Pack some integer colors into words.
+uint32_t pack(Color8);
+uint32_t pack(ColorA8);
+uint64_t pack(Color16);
+uint64_t pack(ColorA16);
+
+// Unpack some integer colors from words.
+Color8 unpack(uint32_t);
+ColorA8 unpack(uint32_t);
+Color16 unpack(uint64_t);
+ColorA16 unpack(uint64_t);
+
 /** Clears just the alpha channel, if any, setting it to maximum.
     If the color has no alpha channel then there is no effect. */
 template <typename Number, typename Alpha>

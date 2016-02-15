@@ -1,2 +1,4 @@
-def say_hello_to(name):
-    print("Hello %s!" % name)
+from libc.math cimport sqrt
+
+def square_root(double x):
+    return sqrt(x)

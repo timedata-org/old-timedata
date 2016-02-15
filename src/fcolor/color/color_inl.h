@@ -43,6 +43,52 @@ Color<N2> convert(Color<N1> const& c) {
             convert<A2>(c.alpha)};
 }
 
+uint32_t pack(Color8 c) {
+    return c.red * 0x10000 + c.green * 0x100 + c.blue;
+}
+
+uint32_t pack(ColorA8 c) {
+    return c.alpha * 0x1000000 + c.red * 0x10000 + c.green * 0x100 + c.blue;
+}
+
+uint64_t pack(Color16 c) {
+    return c.red * 0x100000000ULL + c.green * 0x10000ULL + c.blue;
+}
+
+uint64_t pack(ColorA16 c) {
+    return c.alpha * 0x1000000000000ULL +
+            c.red * 0x100000000ULL + c.green * 0x10000ULL + c.blue;
+}
+
+Color8 unpack(uint32_t i) {
+    auto b = static_cast<uint8_t>(i % 0x100);
+    i /= 0x100;
+    auto g = static_cast<uint8_t>(i % 0x100);
+    i /= 0x100;
+    auto r = static_cast<uint8_t>(i % 0x100);
+
+    return {r, g, b};
+}
+
+ColorA8 unpack(uint32_t i) {
+    auto b = static_cast<uint8_t>(i % 0x100);
+    i /= 0x100;
+    auto g = static_cast<uint8_t>(i % 0x100);
+    i /= 0x100;
+    auto r = static_cast<uint8_t>(i % 0x100);
+    i /= 0x100;
+    auto a = static_cast<uint8_t>(i % 0x100);
+
+    return {r, g, b};
+}
+
+Color16 unpack(uint64_t i) {
+}
+
+ColorA16 unpack(uint64_t i) {
+}
+
+
 template <typename Number, typename Alpha>
 Float<Number> distance2(Color<Number, Alpha> const& x,
                         Color<Number, Alpha> const& y) {
