@@ -93,11 +93,45 @@ Color applyToComponents(Operator op, Color const& x, Color const& y) {
     return c;
 }
 
+template <typename Number, typename Alpha, typename Operator>
+Color<Number, Alpha> applyToComponentsWithAlpha(
+        Operator op, Color<Number, Alpha> const& color) {
+    auto c = applyToComponents(op, color);
+    c.alpha = op(color.alpha);
+    return c;
+}
+
+template <typename Number, typename Operator>
+Color<Number> applyToComponentsWithAlpha(
+        Operator op, Color<Number> const& color) {
+    return applyToComponents(op, color);
+}
+
+template <typename Number, typename Alpha, typename Operator>
+Color<Number, Alpha> applyToComponentsWithAlpha(
+        Operator op,
+        Color<Number, Alpha> const& x,
+        Color<Number, Alpha> const& y) {
+    auto c = applyToComponents(op, x, y);
+    c.alpha = op(x.alpha, y.alpha);
+    return c;
+}
+
+template <typename Number, typename Alpha, typename Operator>
+Color<Number> applyToComponentsWithAlpha(
+        Operator op,
+        Color<Number> const& x,
+        Color<Number> const& y) {
+    return applyToComponents(op, x, y);
+}
+
 template <typename Number, typename Alpha, typename Float>
 Color<Number, Alpha> interpolate(Color<Number, Alpha> const& x,
                                  Color<Number, Alpha> const& y, Float ratio) {
-    return applyToComponents(
-        [&] (Number cx, Number cy) { return cx + ratio * (cy - cx); }, x, y);
+    return applyToComponentsWithAlpha(
+        [&] (Number cx, Number cy) {
+            return cx + ratio * (cy - cx);
+        }, x, y);
 }
 
 }  // namespace fcolor
