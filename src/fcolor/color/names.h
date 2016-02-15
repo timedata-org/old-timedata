@@ -3,13 +3,9 @@
 #include <fcolor/color/color.h>
 
 namespace fcolor {
-namespace color {
 
-template <typename Color>
-bool fromString(const std::string& cname, Color&);
+Color<uint8_t> fromName(const std::string& cname);
 
-template <typename Color>
-std::string toString(const FColor&);
+std::string toName(const Color&);
 
-}  // namespace color
 }  // namespace fcolor

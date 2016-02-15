@@ -21,6 +21,7 @@ struct Color {
     Number green;
     Number blue;
 
+    // See e. g. https://en.wikipedia.org/wiki/Alpha_compositing
     Alpha alpha;
 };
 
@@ -78,8 +79,7 @@ template <typename Color, typename Operator>
 Color applyToComponentsWithAlpha(Operator, Color const&, Color const&);
 
 /** Interpolate between two colors. */
-template <typename Number, typename Alpha, typename Float>
-Color<Number, Alpha> interpolate(
-    Color<Number, Alpha> const&, Color<Number, Alpha> const&, Float ratio);
+template <typename Number, typename Float>
+Color<Number> interpolate(Color<Number> const&, Color<Number> const&, Float);
 
 }  // namespace fcolor

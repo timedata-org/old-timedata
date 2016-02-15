@@ -1,12 +1,9 @@
 #include <map>
 
 #include <fcolor/color/names.h>
-#include <fcolor/base/map.h>
-
-using namespace std;
+#include <fcolor/base/stl.h>
 
 namespace fcolor {
-namespace color {
 namespace {
 
 static const std::map<std::string, uint32_t> NAMES_TO_VALUES{
@@ -493,73 +490,17 @@ static const std::map<std::string, uint32_t> NAMES_TO_VALUES{
 };
 
 static auto const VALUES_TO_NAMES = invert(NAMES_TO_VALUES);
-
-static const char GREY_MARKER[] = "grey";
+static auto const NAMES_TO_COLORS = processValue(
+    NAMES_TO_VALUES,
+    [&](uint32_t colorCode) {
+        auto b = static_cast<uint8_t>(colorCode % 256);
+        colorCode = colorCode / 256;
+        auto g = static_cast<uint8_t>(colorCode % 256);
+        colorCode = colorCode / 256;
+        auto r = static_cast<uint8_t>(colorCode % 256);
+        return color(r, g, b);
+    });
 
 } // namespace
 
-template <typename Color>
-bool fromString(const std::string& cname, Color& );
-
-
-bool nameToRgb(const std::string& cname, FColor* color) {
-    auto name = replace(cname, " ", "");
-    lower(&name);
-    name = replace(name, "gray", "grey");
-    if (name.empty())
-        return false;
-
-    auto hasHash = (name[0] == '#');
-    if (hasHash or isHex(name)) {
-        *color = FColor(fromHex(&name[hasHash ? 1 : 0]));
-        return true;
-    }
-
-    auto i = NAMER.stringToColor_.find(name);
-    auto success = (i != NAMER.stringToColor_.end());
-    if (success) {
-        *color = FColor(i->second);
-    } else if (not name.find(GREY_MARKER)) {
-        auto start = name.c_str();
-        auto p = start + strlen(GREY_MARKER);
-        for (; isspace(*p); ++p);
-        char* endptr;
-        auto f = roundf(strtof(p, &endptr) * 100.0f) / 10000.0f;
-        if (not *endptr and f >= 0.0f and f <= 1.0f) {
-            *color = FColor(f, f, f);
-            success = true;
-        }
-    }
-    return success;
-}
-
-std::string rgbToName(const FColor& color) {
-    std::string suffix;
-    FColor c = color;
-    if (c.alpha() < 1.0f) {
-        suffix = ", alpha=" + toString(c.alpha()) + "]";
-        c.alpha() = 1.0f;
-    }
-
-    auto i = NAMER.colorToString_.find(c);
-    std::string name;
-    if (i != NAMER.colorToStd::String_.end()) {
-        name = i->second;
-        if (not suffix.empty())
-            name = "[" + name;
-    } else if (c.isGrey()) {
-        name = "grey " + toPercent(c.red());
-        if (not suffix.empty())
-            name = "[" + name;
-    } else {
-        name = "[red=" + toStd::String(c.red()) +
-                ", green=" + toStd::String(c.green()) +
-                ", blue=" + toStd::String(c.blue());
-        if (suffix.empty())
-            suffix += "]";
-    }
-    return name + suffix;
-}
-
-}  // namespace color
 }  // namespace fcolor

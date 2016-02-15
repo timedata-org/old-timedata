@@ -125,10 +125,10 @@ Color<Number> applyToComponentsWithAlpha(
     return applyToComponents(op, x, y);
 }
 
-template <typename Number, typename Alpha, typename Float>
-Color<Number, Alpha> interpolate(Color<Number, Alpha> const& x,
-                                 Color<Number, Alpha> const& y, Float ratio) {
-    return applyToComponentsWithAlpha(
+template <typename Number, typename Float>
+Color<Number> interpolate(
+          Color<Number> const& x, Color<Number> const& y, Float ratio) {
+    return applyToComponents(
         [&] (Number cx, Number cy) {
             return cx + ratio * (cy - cx);
         }, x, y);

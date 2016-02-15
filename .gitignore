@@ -1,2 +1,4 @@
 .deps/
 bin/
+build/
+*.so

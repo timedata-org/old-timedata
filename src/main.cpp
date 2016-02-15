@@ -6,6 +6,7 @@
 #include <fcolor/base/stl.h>
 
 #include <fcolor/base/string.cpp>
+#include <fcolor/color/names.cpp>
 
 int main() {
     auto c = fcolor::color(1, 2, 3);
