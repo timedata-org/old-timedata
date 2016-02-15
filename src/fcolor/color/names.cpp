@@ -1,568 +1,506 @@
 #include <map>
-#include <tuple>
 
-#include <fcolor/ColorName.h>
-#include <fcolor/FColor.h>
-#include <fcolor/FColorList.h>
+#include <fcolor/color/names.h>
+#include <fcolor/base/map.h>
 
 using namespace std;
 
 namespace fcolor {
 namespace color {
-
 namespace {
 
-std::string replace(std::string subject,
-                    std::string const& search,
-                    std::string const& replace) {
-    size_t pos = 0;
-    while ((pos = subject.find(search, pos)) != std::string::npos) {
-        subject.replace(pos, search.length(), replace);
-        pos += replace.length();
-    }
-    return subject;
-}
-
-void lower(std::string* subject) {
-    for (auto& ch: *subject)
-        ch = tolower(ch);
-}
-
-// Return a float as "x.xxx".
-std::string toString(float f) {
-    f = min(1.0f, max(0.0f, f));
-    std::string result;
-    result.resize(5);
-    result.resize(sprintf(&result.front(), "%.3f", f));
-    return result;
-}
-
-// Return a float as "xx.x or 100.0".
-std::string toPercent(float g) {
-    auto f = roundf(min(1.0f, max(0.0f, g)) * 1000.0f) / 10.0f;
-    std::string result;
-    result.resize(5);
-    result.resize(sprintf(&result.front(), "%.1f", f));
-    if (result.find(".0") != std::string::npos)
-        result = result.substr(0, result.size() - 2);
-    return result;
-}
-
-bool isHex(const std::string& s) {
-    return strspn(s.data(), "abcdef0123456789") == s.size();
-}
-
-uint32 fromHex(const char* s) {
-    uint32 decimalValue;
-    sscanf(s, "%u", &decimalValue);
-    return decimalValue;
-}
-
-struct ColorNamer {
-    std::map<std::string, FColor> stringToColor_;
-    std::map<FColor, std::string> colorToString_;
-
-    void add(const std::string& s, uint32 argb) {
-        FColor c(argb);
-        stringToColor_[replace(s, " ", "")] = c;
-        if (colorToString_.find(c) == colorToString_.end())
-            colorToString_[c] = s;
-    }
+static const std::map<std::string, uint32_t> NAMES_TO_VALUES{
+    {"alice blue", 0xf0f8ff},
+    {"antique white 1", 0xffefdb},
+    {"antique white 2", 0xeedfcc},
+    {"antique white 3", 0xcdc0b0},
+    {"antique white 4", 0x8b8378},
+    {"antique white", 0xfaebd7},
+    {"aqua", 0x00ffff},
+    {"aquamarine 1", 0x7fffd4},
+    {"aquamarine 2", 0x76eec6},
+    {"aquamarine 3", 0x66cdaa},
+    {"aquamarine 4", 0x458b74},
+    {"aquamarine", 0x7fffd4},
+    {"azure 1", 0xf0ffff},
+    {"azure 2", 0xe0eeee},
+    {"azure 3", 0xc1cdcd},
+    {"azure 4", 0x838b8b},
+    {"azure", 0xf0ffff},
+    {"banana", 0xe3cf57},
+    {"beige", 0xf5f5dc},
+    {"bisque 1", 0xffe4c4},
+    {"bisque 2", 0xeed5b7},
+    {"bisque 3", 0xcdb79e},
+    {"bisque 4", 0x8b7d6b},
+    {"bisque", 0xffe4c4},
+    {"black", 0x000000},
+    {"blanched almond", 0xffebcd},
+    {"blue 2", 0x0000ee},
+    {"blue 3", 0x0000cd},
+    {"blue 4", 0x00008b},
+    {"blue violet", 0x8a2be2},
+    {"blue", 0x0000ff},
+    {"brick", 0x9c661f},
+    {"brown 1", 0xff4040},
+    {"brown 2", 0xee3b3b},
+    {"brown 3", 0xcd3333},
+    {"brown 4", 0x8b2323},
+    {"brown", 0xa52a2a},
+    {"burly wood 1", 0xffd39b},
+    {"burly wood 2", 0xeec591},
+    {"burly wood 3", 0xcdaa7d},
+    {"burly wood 4", 0x8b7355},
+    {"burly wood", 0xdeb887},
+    {"burnt sienna", 0x8a360f},
+    {"burnt umber", 0x8a3324},
+    {"cadet blue 1", 0x98f5ff},
+    {"cadet blue 2", 0x8ee5ee},
+    {"cadet blue 3", 0x7ac5cd},
+    {"cadet blue 4", 0x53868b},
+    {"cadet blue", 0x5f9ea0},
+    {"cadmium orange", 0xff6103},
+    {"cadmium yellow", 0xff9912},
+    {"carrot", 0xed9121},
+    {"chartreuse 1", 0x7fff00},
+    {"chartreuse 2", 0x76ee00},
+    {"chartreuse 3", 0x66cd00},
+    {"chartreuse 4", 0x458b00},
+    {"chartreuse", 0x7fff00},
+    {"chocolate 1", 0xff7f24},
+    {"chocolate 2", 0xee7621},
+    {"chocolate 3", 0xcd661d},
+    {"chocolate 4", 0x8b4513},
+    {"chocolate", 0xd2691e},
+    {"cobalt green", 0x3d9140},
+    {"cobalt", 0x3d59ab},
+    {"cold grey", 0x808a87},
+    {"coral 1", 0xff7256},
+    {"coral 2", 0xee6a50},
+    {"coral 3", 0xcd5b45},
+    {"coral 4", 0x8b3e2f},
+    {"coral", 0xff7f50},
+    {"corn silk 1", 0xfff8dc},
+    {"corn silk 2", 0xeee8cd},
+    {"corn silk 3", 0xcdc8b1},
+    {"corn silk 4", 0x8b8878},
+    {"corn silk", 0xfff8dc},
+    {"cornflower blue", 0x6495ed},
+    {"crimson", 0xdc143c},
+    {"cyan 2", 0x00eeee},
+    {"cyan 3", 0x00cdcd},
+    {"cyan 4", 0x008b8b},
+    {"cyan", 0x00ffff},
+    {"dark blue", 0x00008b},
+    {"dark cyan", 0x008b8b},
+    {"dark goldenrod 1", 0xffb90f},
+    {"dark goldenrod 2", 0xeead0e},
+    {"dark goldenrod 3", 0xcd950c},
+    {"dark goldenrod 4", 0x8b6508},
+    {"dark goldenrod", 0xb8860b},
+    {"dark green", 0x006400},
+    {"dark grey", 0x555555},
+    {"dark khaki", 0xbdb76b},
+    {"dark magenta", 0x8b008b},
+    {"dark olive green", 0x556b2f},
+    {"dark olivegreen 1", 0xcaff70},
+    {"dark olivegreen 2", 0xbcee68},
+    {"dark olivegreen 3", 0xa2cd5a},
+    {"dark olivegreen 4", 0x6e8b3d},
+    {"dark olivegreen", 0x556b2f},
+    {"dark orange 1", 0xff7f00},
+    {"dark orange 2", 0xee7600},
+    {"dark orange 3", 0xcd6600},
+    {"dark orange 4", 0x8b4500},
+    {"dark orange", 0xff8c00},
+    {"dark orchid 1", 0xbf3eff},
+    {"dark orchid 2", 0xb23aee},
+    {"dark orchid 3", 0x9a32cd},
+    {"dark orchid 4", 0x68228b},
+    {"dark orchid", 0x9932cc},
+    {"dark red", 0x8b0000},
+    {"dark salmon", 0xe9967a},
+    {"dark sea green 1", 0xc1ffc1},
+    {"dark sea green 2", 0xb4eeb4},
+    {"dark sea green 3", 0x9bcd9b},
+    {"dark sea green 4", 0x698b69},
+    {"dark sea green", 0x8fbc8f},
+    {"dark slate blue", 0x483d8b},
+    {"dark slate grey 1", 0x97ffff},
+    {"dark slate grey 2", 0x8deeee},
+    {"dark slate grey 3", 0x79cdcd},
+    {"dark slate grey 4", 0x528b8b},
+    {"dark slate grey", 0x2f4f4f},
+    {"dark turquoise", 0x00ced1},
+    {"dark violet", 0x9400d3},
+    {"deep pink 1", 0xff1493},
+    {"deep pink 2", 0xee1289},
+    {"deep pink 3", 0xcd1076},
+    {"deep pink 4", 0x8b0a50},
+    {"deep pink", 0xff1493},
+    {"deep sky blue 1", 0x00bfff},
+    {"deep sky blue 2", 0x00b2ee},
+    {"deep sky blue 3", 0x009acd},
+    {"deep sky blue 4", 0x00688b},
+    {"deep sky blue", 0x00bfff},
+    {"dim grey", 0x696969},
+    {"dodger blue 1", 0x1e90ff},
+    {"dodger blue 2", 0x1c86ee},
+    {"dodger blue 3", 0x1874cd},
+    {"dodger blue 4", 0x104e8b},
+    {"dodger blue", 0x1e90ff},
+    {"eggshell", 0xfce6c9},
+    {"emerald green", 0x00c957},
+    {"fire brick 1", 0xff3030},
+    {"fire brick 2", 0xee2c2c},
+    {"fire brick 3", 0xcd2626},
+    {"fire brick 4", 0x8b1a1a},
+    {"fire brick", 0xb22222},
+    {"flesh", 0xff7d40},
+    {"floral white", 0xfffaf0},
+    {"forest green", 0x228b22},
+    {"fuchsia", 0xff00ff},
+    {"gainsboro", 0xdcdcdc},
+    {"ghost white", 0xf8f8ff},
+    {"gold 1", 0xffd700},
+    {"gold 2", 0xeec900},
+    {"gold 3", 0xcdad00},
+    {"gold 4", 0x8b7500},
+    {"gold", 0xffd700},
+    {"goldenrod 1", 0xffc125},
+    {"goldenrod 2", 0xeeb422},
+    {"goldenrod 3", 0xcd9b1d},
+    {"goldenrod 4", 0x8b6914},
+    {"goldenrod", 0xdaa520},
+    {"green 1", 0x00ff00},
+    {"green 2", 0x00ee00},
+    {"green 3", 0x00cd00},
+    {"green 4", 0x008b00},
+    {"green yellow", 0xadff2f},
+    {"green", 0x00ff00},
+    {"grey", 0x808080},
+    {"honeydew 1", 0xf0fff0},
+    {"honeydew 2", 0xe0eee0},
+    {"honeydew 3", 0xc1cdc1},
+    {"honeydew 4", 0x838b83},
+    {"honeydew", 0xf0fff0},
+    {"hot pink 1", 0xff6eb4},
+    {"hot pink 2", 0xee6aa7},
+    {"hot pink 3", 0xcd6090},
+    {"hot pink 4", 0x8b3a62},
+    {"hot pink", 0xff69b4},
+    {"indian red 1", 0xff6a6a},
+    {"indian red 2", 0xee6363},
+    {"indian red 3", 0xcd5555},
+    {"indian red 4", 0x8b3a3a},
+    {"indian red", 0xcd5c5c},
+    {"indigo", 0x4b0082},
+    {"ivory 1", 0xfffff0},
+    {"ivory 2", 0xeeeee0},
+    {"ivory 3", 0xcdcdc1},
+    {"ivory 4", 0x8b8b83},
+    {"ivory black", 0x292421},
+    {"ivory", 0xfffff0},
+    {"khaki 1", 0xfff68f},
+    {"khaki 2", 0xeee685},
+    {"khaki 3", 0xcdc673},
+    {"khaki 4", 0x8b864e},
+    {"khaki", 0xf0e68c},
+    {"lavender blush 1", 0xfff0f5},
+    {"lavender blush 2", 0xeee0e5},
+    {"lavender blush 3", 0xcdc1c5},
+    {"lavender blush 4", 0x8b8386},
+    {"lavender blush", 0xfff0f5},
+    {"lavender", 0xe6e6fa},
+    {"lawn green", 0x7cfc00},
+    {"lemon chiffon 1", 0xfffacd},
+    {"lemon chiffon 2", 0xeee9bf},
+    {"lemon chiffon 3", 0xcdc9a5},
+    {"lemon chiffon 4", 0x8b8970},
+    {"lemon chiffon", 0xfffacd},
+    {"light blue 1", 0xbfefff},
+    {"light blue 2", 0xb2dfee},
+    {"light blue 3", 0x9ac0cd},
+    {"light blue 4", 0x68838b},
+    {"light blue", 0xadd8e6},
+    {"light coral", 0xf08080},
+    {"light cyan 1", 0xe0ffff},
+    {"light cyan 2", 0xd1eeee},
+    {"light cyan 3", 0xb4cdcd},
+    {"light cyan 4", 0x7a8b8b},
+    {"light cyan", 0xe0ffff},
+    {"light goldenrod 1", 0xffec8b},
+    {"light goldenrod 2", 0xeedc82},
+    {"light goldenrod 3", 0xcdbe70},
+    {"light goldenrod 4", 0x8b814c},
+    {"light goldenrod yellow", 0xfafad2},
+    {"light green", 0x90ee90},
+    {"light grey", 0xd3d3d3},
+    {"light pink 1", 0xffaeb9},
+    {"light pink 2", 0xeea2ad},
+    {"light pink 3", 0xcd8c95},
+    {"light pink 4", 0x8b5f65},
+    {"light pink", 0xffb6c1},
+    {"light salmon 1", 0xffa07a},
+    {"light salmon 2", 0xee9572},
+    {"light salmon 3", 0xcd8162},
+    {"light salmon 4", 0x8b5742},
+    {"light salmon", 0xffa07a},
+    {"light sea green", 0x20b2aa},
+    {"light sky blue 1", 0xb0e2ff},
+    {"light sky blue 2", 0xa4d3ee},
+    {"light sky blue 3", 0x8db6cd},
+    {"light sky blue 4", 0x607b8b},
+    {"light sky blue", 0x87cefa},
+    {"light slate blue", 0x8470ff},
+    {"light slate grey", 0x778899},
+    {"light steel blue 1", 0xcae1ff},
+    {"light steel blue 2", 0xbcd2ee},
+    {"light steel blue 3", 0xa2b5cd},
+    {"light steel blue 4", 0x6e7b8b},
+    {"light steel blue", 0xb0c4de},
+    {"light yellow 1", 0xffffe0},
+    {"light yellow 2", 0xeeeed1},
+    {"light yellow 3", 0xcdcdb4},
+    {"light yellow 4", 0x8b8b7a},
+    {"light yellow", 0xffffe0},
+    {"lime green", 0x32cd32},
+    {"lime", 0x00ff00},
+    {"limegreen", 0x32cd32},
+    {"linen", 0xfaf0e6},
+    {"magenta 2", 0xee00ee},
+    {"magenta 3", 0xcd00cd},
+    {"magenta 4", 0x8b008b},
+    {"magenta", 0xff00ff},
+    {"manganese blue", 0x03a89e},
+    {"maroon 1", 0xff34b3},
+    {"maroon 2", 0xee30a7},
+    {"maroon 3", 0xcd2990},
+    {"maroon 4", 0x8b1c62},
+    {"maroon", 0x800000},
+    {"medium aquamarine", 0x66cdaa},
+    {"medium blue", 0x0000cd},
+    {"medium orchid 1", 0xe066ff},
+    {"medium orchid 2", 0xd15fee},
+    {"medium orchid 3", 0xb452cd},
+    {"medium orchid 4", 0x7a378b},
+    {"medium orchid", 0xba55d3},
+    {"medium purple 1", 0xab82ff},
+    {"medium purple 2", 0x9f79ee},
+    {"medium purple 3", 0x8968cd},
+    {"medium purple 4", 0x5d478b},
+    {"medium purple", 0x9370db},
+    {"medium sea green", 0x3cb371},
+    {"medium seagreen", 0x3cb371},
+    {"medium slate blue", 0x7b68ee},
+    {"medium slateblue", 0x7b68ee},
+    {"medium spring green", 0x00fa9a},
+    {"medium turquoise", 0x48d1cc},
+    {"medium violet red", 0xc71585},
+    {"medium violetred", 0xc71585},
+    {"melon", 0xe3a869},
+    {"midnight blue", 0x191970},
+    {"mint cream", 0xf5fffa},
+    {"mint", 0xbdfcc9},
+    {"misty rose 1", 0xffe4e1},
+    {"misty rose 2", 0xeed5d2},
+    {"misty rose 3", 0xcdb7b5},
+    {"misty rose 4", 0x8b7d7b},
+    {"misty rose", 0xffe4e1},
+    {"moccasin", 0xffe4b5},
+    {"navajo white 1", 0xffdead},
+    {"navajo white 2", 0xeecfa1},
+    {"navajo white 3", 0xcdb38b},
+    {"navajo white 4", 0x8b795e},
+    {"navajo white", 0xffdead},
+    {"navy", 0x000080},
+    {"none", 0x00000000},
+    {"old lace", 0xfdf5e6},
+    {"olive drab 1", 0xc0ff3e},
+    {"olive drab 2", 0xb3ee3a},
+    {"olive drab 3", 0x9acd32},
+    {"olive drab 4", 0x698b22},
+    {"olive drab", 0x6b8e23},
+    {"olive", 0x808000},
+    {"orange 1", 0xffa500},
+    {"orange 2", 0xee9a00},
+    {"orange 3", 0xcd8500},
+    {"orange 4", 0x8b5a00},
+    {"orange red 1", 0xff4500},
+    {"orange red 2", 0xee4000},
+    {"orange red 3", 0xcd3700},
+    {"orange red 4", 0x8b2500},
+    {"orange red", 0xff4500},
+    {"orange", 0xffa500},
+    {"orchid 1", 0xff83fa},
+    {"orchid 2", 0xee7ae9},
+    {"orchid 3", 0xcd69c9},
+    {"orchid 4", 0x8b4789},
+    {"orchid", 0xda70d6},
+    {"pale goldenrod", 0xeee8aa},
+    {"pale green 1", 0x9aff9a},
+    {"pale green 2", 0x90ee90},
+    {"pale green 3", 0x7ccd7c},
+    {"pale green 4", 0x548b54},
+    {"pale green", 0x98fb98},
+    {"pale turquoise 1", 0xbbffff},
+    {"pale turquoise 2", 0xaeeeee},
+    {"pale turquoise 3", 0x96cdcd},
+    {"pale turquoise 4", 0x668b8b},
+    {"pale turquoise", 0xafeeee},
+    {"pale violet red 1", 0xff82ab},
+    {"pale violet red 2", 0xee799f},
+    {"pale violet red 3", 0xcd6889},
+    {"pale violet red 4", 0x8b475d},
+    {"pale violet red", 0xdb7093},
+    {"papaya whip", 0xffefd5},
+    {"peachpuff 1", 0xffdab9},
+    {"peachpuff 2", 0xeecbad},
+    {"peachpuff 3", 0xcdaf95},
+    {"peachpuff 4", 0x8b7765},
+    {"peachpuff", 0xffdab9},
+    {"peacock", 0x33a1c9},
+    {"peru", 0xcd853f},
+    {"pink 1", 0xffb5c5},
+    {"pink 2", 0xeea9b8},
+    {"pink 3", 0xcd919e},
+    {"pink 4", 0x8b636c},
+    {"pink", 0xffc0cb},
+    {"plum 1", 0xffbbff},
+    {"plum 2", 0xeeaeee},
+    {"plum 3", 0xcd96cd},
+    {"plum 4", 0x8b668b},
+    {"plum", 0xdda0dd},
+    {"powder blue", 0xb0e0e6},
+    {"purple 1", 0x9b30ff},
+    {"purple 2", 0x912cee},
+    {"purple 3", 0x7d26cd},
+    {"purple 4", 0x551a8b},
+    {"purple", 0x800080},
+    {"raspberry", 0x872657},
+    {"raw sienna", 0xc76114},
+    {"red 1", 0xff0000},
+    {"red 2", 0xee0000},
+    {"red 3", 0xcd0000},
+    {"red 4", 0x8b0000},
+    {"red", 0xff0000},
+    {"rosy brown 1", 0xffc1c1},
+    {"rosy brown 2", 0xeeb4b4},
+    {"rosy brown 3", 0xcd9b9b},
+    {"rosy brown 4", 0x8b6969},
+    {"rosy brown", 0xbc8f8f},
+    {"royal blue 1", 0x4876ff},
+    {"royal blue 2", 0x436eee},
+    {"royal blue 3", 0x3a5fcd},
+    {"royal blue 4", 0x27408b},
+    {"royal blue", 0x4169e1},
+    {"saddle brown", 0x8b4513},
+    {"salmon 1", 0xff8c69},
+    {"salmon 2", 0xee8262},
+    {"salmon 3", 0xcd7054},
+    {"salmon 4", 0x8b4c39},
+    {"salmon", 0xfa8072},
+    {"sandy brown", 0xf4a460},
+    {"sap green", 0x308014},
+    {"sea green 1", 0x54ff9f},
+    {"sea green 2", 0x4eee94},
+    {"sea green 3", 0x43cd80},
+    {"sea green 4", 0x2e8b57},
+    {"sea green", 0x2e8b57},
+    {"seashell 1", 0xfff5ee},
+    {"seashell 2", 0xeee5de},
+    {"seashell 3", 0xcdc5bf},
+    {"seashell 4", 0x8b8682},
+    {"seashell", 0xfff5ee},
+    {"sepia", 0x5e2612},
+    {"sienna 1", 0xff8247},
+    {"sienna 2", 0xee7942},
+    {"sienna 3", 0xcd6839},
+    {"sienna 4", 0x8b4726},
+    {"sienna", 0xa0522d},
+    {"silver", 0xc0c0c0},
+    {"sky blue 1", 0x87ceff},
+    {"sky blue 2", 0x7ec0ee},
+    {"sky blue 3", 0x6ca6cd},
+    {"sky blue 4", 0x4a708b},
+    {"sky blue", 0x87ceeb},
+    {"slate blue 1", 0x836fff},
+    {"slate blue 2", 0x7a67ee},
+    {"slate blue 3", 0x6959cd},
+    {"slate blue 4", 0x473c8b},
+    {"slate blue", 0x6a5acd},
+    {"slate grey 1", 0xc6e2ff},
+    {"slate grey 2", 0xb9d3ee},
+    {"slate grey 3", 0x9fb6cd},
+    {"slate grey 4", 0x6c7b8b},
+    {"slate grey", 0x708090},
+    {"snow 1", 0xfffafa},
+    {"snow 2", 0xeee9e9},
+    {"snow 3", 0xcdc9c9},
+    {"snow 4", 0x8b8989},
+    {"snow", 0xfffafa},
+    {"spring green 1", 0x00ee76},
+    {"spring green 2", 0x00cd66},
+    {"spring green 3", 0x008b45},
+    {"spring green", 0x00ff7f},
+    {"steel blue 1", 0x63b8ff},
+    {"steel blue 2", 0x5cacee},
+    {"steel blue 3", 0x4f94cd},
+    {"steel blue 4", 0x36648b},
+    {"steel blue", 0x4682b4},
+    {"tan 1", 0xffa54f},
+    {"tan 2", 0xee9a49},
+    {"tan 3", 0xcd853f},
+    {"tan 4", 0x8b5a2b},
+    {"tan", 0xd2b48c},
+    {"teal", 0x008080},
+    {"thistle 1", 0xffe1ff},
+    {"thistle 2", 0xeed2ee},
+    {"thistle 3", 0xcdb5cd},
+    {"thistle 4", 0x8b7b8b},
+    {"thistle", 0xd8bfd8},
+    {"tomato 1", 0xff6347},
+    {"tomato 2", 0xee5c42},
+    {"tomato 3", 0xcd4f39},
+    {"tomato 4", 0x8b3626},
+    {"tomato", 0xff6347},
+    {"turquoise 1", 0x00f5ff},
+    {"turquoise 2", 0x00e5ee},
+    {"turquoise 3", 0x00c5cd},
+    {"turquoise 4", 0x00868b},
+    {"turquoise blue", 0x00c78c},
+    {"turquoise", 0x40e0d0},
+    {"violet red 1", 0xff3e96},
+    {"violet red 2", 0xee3a8c},
+    {"violet red 3", 0xcd3278},
+    {"violet red 4", 0x8b2252},
+    {"violet red", 0xd02090},
+    {"violet", 0xee82ee},
+    {"warm grey", 0x808069},
+    {"wheat 1", 0xffe7ba},
+    {"wheat 2", 0xeed8ae},
+    {"wheat 3", 0xcdba96},
+    {"wheat 4", 0x8b7e66},
+    {"wheat", 0xf5deb3},
+    {"white smoke", 0xf5f5f5},
+    {"white", 0xffffff},
+    {"yellow 1", 0xffff00},
+    {"yellow 2", 0xeeee00},
+    {"yellow 3", 0xcdcd00},
+    {"yellow 4", 0x8b8b00},
+    {"yellow green", 0x9acd32},
+    {"yellow", 0xffff00},
 };
 
-ColorNamer makeNamer() {
-    ColorNamer namer;
-
-    namer.add("cyan", 0xff00ffff);
-    namer.add("dark blue", 0xff00008b);
-    namer.add("dark cyan", 0xff008b8b);
-    namer.add("magenta", 0xffff00ff);
-    namer.add("medium aquamarine", 0xff66cdaa);
-    namer.add("medium blue", 0xff0000cd);
-    namer.add("yellow green", 0xff9acd32);
-
-    namer.add("alice blue", 0xfff0f8ff);
-    namer.add("antique white", 0xfffaebd7);
-    namer.add("antique white 1", 0xffffefdb);
-    namer.add("antique white 2", 0xffeedfcc);
-    namer.add("antique white 3", 0xffcdc0b0);
-    namer.add("antique white 4", 0xff8b8378);
-    namer.add("aqua", 0xff00ffff);
-    namer.add("aquamarine", 0xff7fffd4);
-    namer.add("aquamarine 1", 0xff7fffd4);
-    namer.add("aquamarine 2", 0xff76eec6);
-    namer.add("aquamarine 3", 0xff66cdaa);
-    namer.add("aquamarine 4", 0xff458b74);
-    namer.add("azure", 0xfff0ffff);
-    namer.add("azure 1", 0xfff0ffff);
-    namer.add("azure 2", 0xffe0eeee);
-    namer.add("azure 3", 0xffc1cdcd);
-    namer.add("azure 4", 0xff838b8b);
-    namer.add("banana", 0xffe3cf57);
-    namer.add("beige", 0xfff5f5dc);
-    namer.add("bisque", 0xffffe4c4);
-    namer.add("bisque 1", 0xffffe4c4);
-    namer.add("bisque 2", 0xffeed5b7);
-    namer.add("bisque 3", 0xffcdb79e);
-    namer.add("bisque 4", 0xff8b7d6b);
-    namer.add("black", 0xff000000);
-    namer.add("blanched almond", 0xffffebcd);
-    namer.add("blue", 0xff0000ff);
-    namer.add("blue 2", 0xff0000ee);
-    namer.add("blue 3", 0xff0000cd);
-    namer.add("blue 4", 0xff00008b);
-    namer.add("blue violet", 0xff8a2be2);
-    namer.add("brick", 0xff9c661f);
-    namer.add("brown", 0xffa52a2a);
-    namer.add("brown 1", 0xffff4040);
-    namer.add("brown 2", 0xffee3b3b);
-    namer.add("brown 3", 0xffcd3333);
-    namer.add("brown 4", 0xff8b2323);
-    namer.add("burly wood", 0xffdeb887);
-    namer.add("burly wood 1", 0xffffd39b);
-    namer.add("burly wood 2", 0xffeec591);
-    namer.add("burly wood 3", 0xffcdaa7d);
-    namer.add("burly wood 4", 0xff8b7355);
-    namer.add("burnt sienna", 0xff8a360f);
-    namer.add("burnt umber", 0xff8a3324);
-    namer.add("cadet blue", 0xff5f9ea0);
-    namer.add("cadet blue 1", 0xff98f5ff);
-    namer.add("cadet blue 2", 0xff8ee5ee);
-    namer.add("cadet blue 3", 0xff7ac5cd);
-    namer.add("cadet blue 4", 0xff53868b);
-    namer.add("cadmium orange", 0xffff6103);
-    namer.add("cadmium yellow", 0xffff9912);
-    namer.add("carrot", 0xffed9121);
-    namer.add("chartreuse", 0xff7fff00);
-    namer.add("chartreuse 1", 0xff7fff00);
-    namer.add("chartreuse 2", 0xff76ee00);
-    namer.add("chartreuse 3", 0xff66cd00);
-    namer.add("chartreuse 4", 0xff458b00);
-    namer.add("chocolate", 0xffd2691e);
-    namer.add("chocolate 1", 0xffff7f24);
-    namer.add("chocolate 2", 0xffee7621);
-    namer.add("chocolate 3", 0xffcd661d);
-    namer.add("chocolate 4", 0xff8b4513);
-    namer.add("cobalt", 0xff3d59ab);
-    namer.add("cobalt green", 0xff3d9140);
-    namer.add("cold grey", 0xff808a87);
-    namer.add("coral", 0xffff7f50);
-    namer.add("coral 1", 0xffff7256);
-    namer.add("coral 2", 0xffee6a50);
-    namer.add("coral 3", 0xffcd5b45);
-    namer.add("coral 4", 0xff8b3e2f);
-    namer.add("corn silk", 0xfffff8dc);
-    namer.add("corn silk 1", 0xfffff8dc);
-    namer.add("corn silk 2", 0xffeee8cd);
-    namer.add("corn silk 3", 0xffcdc8b1);
-    namer.add("corn silk 4", 0xff8b8878);
-    namer.add("cornflower blue", 0xff6495ed);
-    namer.add("crimson", 0xffdc143c);
-    namer.add("cyan 2", 0xff00eeee);
-    namer.add("cyan 3", 0xff00cdcd);
-    namer.add("cyan 4", 0xff008b8b);
-    namer.add("dark goldenrod", 0xffb8860b);
-    namer.add("dark goldenrod 1", 0xffffb90f);
-    namer.add("dark goldenrod 2", 0xffeead0e);
-    namer.add("dark goldenrod 3", 0xffcd950c);
-    namer.add("dark goldenrod 4", 0xff8b6508);
-    namer.add("dark green", 0xff006400);
-    namer.add("dark grey", 0xff555555);
-    namer.add("dark khaki", 0xffbdb76b);
-    namer.add("dark magenta", 0xff8b008b);
-    namer.add("dark olive green", 0xff556b2f);
-    namer.add("dark olivegreen", 0xff556b2f);
-    namer.add("dark olivegreen 1", 0xffcaff70);
-    namer.add("dark olivegreen 2", 0xffbcee68);
-    namer.add("dark olivegreen 3", 0xffa2cd5a);
-    namer.add("dark olivegreen 4", 0xff6e8b3d);
-    namer.add("dark orange", 0xffff8c00);
-    namer.add("dark orange 1", 0xffff7f00);
-    namer.add("dark orange 2", 0xffee7600);
-    namer.add("dark orange 3", 0xffcd6600);
-    namer.add("dark orange 4", 0xff8b4500);
-    namer.add("dark orchid", 0xff9932cc);
-    namer.add("dark orchid 1", 0xffbf3eff);
-    namer.add("dark orchid 2", 0xffb23aee);
-    namer.add("dark orchid 3", 0xff9a32cd);
-    namer.add("dark orchid 4", 0xff68228b);
-    namer.add("dark red", 0xff8b0000);
-    namer.add("dark salmon", 0xffe9967a);
-    namer.add("dark sea green", 0xff8fbc8f);
-    namer.add("dark sea green 1", 0xffc1ffc1);
-    namer.add("dark sea green 2", 0xffb4eeb4);
-    namer.add("dark sea green 3", 0xff9bcd9b);
-    namer.add("dark sea green 4", 0xff698b69);
-    namer.add("dark slate blue", 0xff483d8b);
-    namer.add("dark slate grey", 0xff2f4f4f);
-    namer.add("dark slate grey 1", 0xff97ffff);
-    namer.add("dark slate grey 2", 0xff8deeee);
-    namer.add("dark slate grey 3", 0xff79cdcd);
-    namer.add("dark slate grey 4", 0xff528b8b);
-    namer.add("dark turquoise", 0xff00ced1);
-    namer.add("dark violet", 0xff9400d3);
-    namer.add("deep pink", 0xffff1493);
-    namer.add("deep pink 1", 0xffff1493);
-    namer.add("deep pink 2", 0xffee1289);
-    namer.add("deep pink 3", 0xffcd1076);
-    namer.add("deep pink 4", 0xff8b0a50);
-    namer.add("deep sky blue", 0xff00bfff);
-    namer.add("deep sky blue 1", 0xff00bfff);
-    namer.add("deep sky blue 2", 0xff00b2ee);
-    namer.add("deep sky blue 3", 0xff009acd);
-    namer.add("deep sky blue 4", 0xff00688b);
-    namer.add("dim grey", 0xff696969);
-    namer.add("dodger blue", 0xff1e90ff);
-    namer.add("dodger blue 1", 0xff1e90ff);
-    namer.add("dodger blue 2", 0xff1c86ee);
-    namer.add("dodger blue 3", 0xff1874cd);
-    namer.add("dodger blue 4", 0xff104e8b);
-    namer.add("eggshell", 0xfffce6c9);
-    namer.add("emerald green", 0xff00c957);
-    namer.add("fire brick", 0xffb22222);
-    namer.add("fire brick 1", 0xffff3030);
-    namer.add("fire brick 2", 0xffee2c2c);
-    namer.add("fire brick 3", 0xffcd2626);
-    namer.add("fire brick 4", 0xff8b1a1a);
-    namer.add("flesh", 0xffff7d40);
-    namer.add("floral white", 0xfffffaf0);
-    namer.add("forest green", 0xff228b22);
-    namer.add("fuchsia", 0xffff00ff);
-    namer.add("gainsboro", 0xffdcdcdc);
-    namer.add("ghost white", 0xfff8f8ff);
-    namer.add("gold", 0xffffd700);
-    namer.add("gold 1", 0xffffd700);
-    namer.add("gold 2", 0xffeec900);
-    namer.add("gold 3", 0xffcdad00);
-    namer.add("gold 4", 0xff8b7500);
-    namer.add("goldenrod", 0xffdaa520);
-    namer.add("goldenrod 1", 0xffffc125);
-    namer.add("goldenrod 2", 0xffeeb422);
-    namer.add("goldenrod 3", 0xffcd9b1d);
-    namer.add("goldenrod 4", 0xff8b6914);
-    namer.add("green", 0xff00ff00);
-    namer.add("green 1", 0xff00ff00);
-    namer.add("green 2", 0xff00ee00);
-    namer.add("green 3", 0xff00cd00);
-    namer.add("green 4", 0xff008b00);
-    namer.add("green yellow", 0xffadff2f);
-    namer.add("grey", 0xff808080);
-    namer.add("honeydew", 0xfff0fff0);
-    namer.add("honeydew 1", 0xfff0fff0);
-    namer.add("honeydew 2", 0xffe0eee0);
-    namer.add("honeydew 3", 0xffc1cdc1);
-    namer.add("honeydew 4", 0xff838b83);
-    namer.add("hot pink", 0xffff69b4);
-    namer.add("hot pink 1", 0xffff6eb4);
-    namer.add("hot pink 2", 0xffee6aa7);
-    namer.add("hot pink 3", 0xffcd6090);
-    namer.add("hot pink 4", 0xff8b3a62);
-    namer.add("indian red", 0xffcd5c5c);
-    namer.add("indian red 1", 0xffff6a6a);
-    namer.add("indian red 2", 0xffee6363);
-    namer.add("indian red 3", 0xffcd5555);
-    namer.add("indian red 4", 0xff8b3a3a);
-    namer.add("indigo", 0xff4b0082);
-    namer.add("ivory", 0xfffffff0);
-    namer.add("ivory 1", 0xfffffff0);
-    namer.add("ivory 2", 0xffeeeee0);
-    namer.add("ivory 3", 0xffcdcdc1);
-    namer.add("ivory 4", 0xff8b8b83);
-    namer.add("ivory black", 0xff292421);
-    namer.add("khaki", 0xfff0e68c);
-    namer.add("khaki 1", 0xfffff68f);
-    namer.add("khaki 2", 0xffeee685);
-    namer.add("khaki 3", 0xffcdc673);
-    namer.add("khaki 4", 0xff8b864e);
-    namer.add("lavender", 0xffe6e6fa);
-    namer.add("lavender blush", 0xfffff0f5);
-    namer.add("lavender blush 1", 0xfffff0f5);
-    namer.add("lavender blush 2", 0xffeee0e5);
-    namer.add("lavender blush 3", 0xffcdc1c5);
-    namer.add("lavender blush 4", 0xff8b8386);
-    namer.add("lawn green", 0xff7cfc00);
-    namer.add("lemon chiffon", 0xfffffacd);
-    namer.add("lemon chiffon 1", 0xfffffacd);
-    namer.add("lemon chiffon 2", 0xffeee9bf);
-    namer.add("lemon chiffon 3", 0xffcdc9a5);
-    namer.add("lemon chiffon 4", 0xff8b8970);
-    namer.add("light blue", 0xffadd8e6);
-    namer.add("light blue 1", 0xffbfefff);
-    namer.add("light blue 2", 0xffb2dfee);
-    namer.add("light blue 3", 0xff9ac0cd);
-    namer.add("light blue 4", 0xff68838b);
-    namer.add("light coral", 0xfff08080);
-    namer.add("light cyan", 0xffe0ffff);
-    namer.add("light cyan 1", 0xffe0ffff);
-    namer.add("light cyan 2", 0xffd1eeee);
-    namer.add("light cyan 3", 0xffb4cdcd);
-    namer.add("light cyan 4", 0xff7a8b8b);
-    namer.add("light goldenrod 1", 0xffffec8b);
-    namer.add("light goldenrod 2", 0xffeedc82);
-    namer.add("light goldenrod 3", 0xffcdbe70);
-    namer.add("light goldenrod 4", 0xff8b814c);
-    namer.add("light goldenrod yellow", 0xfffafad2);
-    namer.add("light green", 0xff90ee90);
-    namer.add("light grey", 0xffd3d3d3);
-    namer.add("light pink", 0xffffb6c1);
-    namer.add("light pink 1", 0xffffaeb9);
-    namer.add("light pink 2", 0xffeea2ad);
-    namer.add("light pink 3", 0xffcd8c95);
-    namer.add("light pink 4", 0xff8b5f65);
-    namer.add("light salmon", 0xffffa07a);
-    namer.add("light salmon 1", 0xffffa07a);
-    namer.add("light salmon 2", 0xffee9572);
-    namer.add("light salmon 3", 0xffcd8162);
-    namer.add("light salmon 4", 0xff8b5742);
-    namer.add("light sea green", 0xff20b2aa);
-    namer.add("light sky blue", 0xff87cefa);
-    namer.add("light sky blue 1", 0xffb0e2ff);
-    namer.add("light sky blue 2", 0xffa4d3ee);
-    namer.add("light sky blue 3", 0xff8db6cd);
-    namer.add("light sky blue 4", 0xff607b8b);
-    namer.add("light slate blue", 0xff8470ff);
-    namer.add("light slate grey", 0xff778899);
-    namer.add("light steel blue", 0xffb0c4de);
-    namer.add("light steel blue 1", 0xffcae1ff);
-    namer.add("light steel blue 2", 0xffbcd2ee);
-    namer.add("light steel blue 3", 0xffa2b5cd);
-    namer.add("light steel blue 4", 0xff6e7b8b);
-    namer.add("light yellow", 0xffffffe0);
-    namer.add("light yellow 1", 0xffffffe0);
-    namer.add("light yellow 2", 0xffeeeed1);
-    namer.add("light yellow 3", 0xffcdcdb4);
-    namer.add("light yellow 4", 0xff8b8b7a);
-    namer.add("lime", 0xff00ff00);
-    namer.add("lime green", 0xff32cd32);
-    namer.add("limegreen", 0xff32cd32);
-    namer.add("linen", 0xfffaf0e6);
-    namer.add("magenta 2", 0xffee00ee);
-    namer.add("magenta 3", 0xffcd00cd);
-    namer.add("magenta 4", 0xff8b008b);
-    namer.add("manganese blue", 0xff03a89e);
-    namer.add("maroon", 0xff800000);
-    namer.add("maroon 1", 0xffff34b3);
-    namer.add("maroon 2", 0xffee30a7);
-    namer.add("maroon 3", 0xffcd2990);
-    namer.add("maroon 4", 0xff8b1c62);
-    namer.add("medium orchid", 0xffba55d3);
-    namer.add("medium orchid 1", 0xffe066ff);
-    namer.add("medium orchid 2", 0xffd15fee);
-    namer.add("medium orchid 3", 0xffb452cd);
-    namer.add("medium orchid 4", 0xff7a378b);
-    namer.add("medium purple", 0xff9370db);
-    namer.add("medium purple 1", 0xffab82ff);
-    namer.add("medium purple 2", 0xff9f79ee);
-    namer.add("medium purple 3", 0xff8968cd);
-    namer.add("medium purple 4", 0xff5d478b);
-    namer.add("medium sea green", 0xff3cb371);
-    namer.add("medium seagreen", 0xff3cb371);
-    namer.add("medium slate blue", 0xff7b68ee);
-    namer.add("medium slateblue", 0xff7b68ee);
-    namer.add("medium spring green", 0xff00fa9a);
-    namer.add("medium turquoise", 0xff48d1cc);
-    namer.add("medium violet red", 0xffc71585);
-    namer.add("medium violetred", 0xffc71585);
-    namer.add("melon", 0xffe3a869);
-    namer.add("midnight blue", 0xff191970);
-    namer.add("mint", 0xffbdfcc9);
-    namer.add("mint cream", 0xfff5fffa);
-    namer.add("misty rose", 0xffffe4e1);
-    namer.add("misty rose 1", 0xffffe4e1);
-    namer.add("misty rose 2", 0xffeed5d2);
-    namer.add("misty rose 3", 0xffcdb7b5);
-    namer.add("misty rose 4", 0xff8b7d7b);
-    namer.add("moccasin", 0xffffe4b5);
-    namer.add("navajo white", 0xffffdead);
-    namer.add("navajo white 1", 0xffffdead);
-    namer.add("navajo white 2", 0xffeecfa1);
-    namer.add("navajo white 3", 0xffcdb38b);
-    namer.add("navajo white 4", 0xff8b795e);
-    namer.add("navy", 0xff000080);
-    namer.add("none", 0xff00000000);
-    namer.add("old lace", 0xfffdf5e6);
-    namer.add("olive", 0xff808000);
-    namer.add("olive drab", 0xff6b8e23);
-    namer.add("olive drab 1", 0xffc0ff3e);
-    namer.add("olive drab 2", 0xffb3ee3a);
-    namer.add("olive drab 3", 0xff9acd32);
-    namer.add("olive drab 4", 0xff698b22);
-    namer.add("orange", 0xffffa500);
-    namer.add("orange 1", 0xffffa500);
-    namer.add("orange 2", 0xffee9a00);
-    namer.add("orange 3", 0xffcd8500);
-    namer.add("orange 4", 0xff8b5a00);
-    namer.add("orange red", 0xffff4500);
-    namer.add("orange red 1", 0xffff4500);
-    namer.add("orange red 2", 0xffee4000);
-    namer.add("orange red 3", 0xffcd3700);
-    namer.add("orange red 4", 0xff8b2500);
-    namer.add("orchid", 0xffda70d6);
-    namer.add("orchid 1", 0xffff83fa);
-    namer.add("orchid 2", 0xffee7ae9);
-    namer.add("orchid 3", 0xffcd69c9);
-    namer.add("orchid 4", 0xff8b4789);
-    namer.add("pale goldenrod", 0xffeee8aa);
-    namer.add("pale green", 0xff98fb98);
-    namer.add("pale green 1", 0xff9aff9a);
-    namer.add("pale green 2", 0xff90ee90);
-    namer.add("pale green 3", 0xff7ccd7c);
-    namer.add("pale green 4", 0xff548b54);
-    namer.add("pale turquoise", 0xffafeeee);
-    namer.add("pale turquoise 1", 0xffbbffff);
-    namer.add("pale turquoise 2", 0xffaeeeee);
-    namer.add("pale turquoise 3", 0xff96cdcd);
-    namer.add("pale turquoise 4", 0xff668b8b);
-    namer.add("pale violet red", 0xffdb7093);
-    namer.add("pale violet red 1", 0xffff82ab);
-    namer.add("pale violet red 2", 0xffee799f);
-    namer.add("pale violet red 3", 0xffcd6889);
-    namer.add("pale violet red 4", 0xff8b475d);
-    namer.add("papaya whip", 0xffffefd5);
-    namer.add("peachpuff", 0xffffdab9);
-    namer.add("peachpuff 1", 0xffffdab9);
-    namer.add("peachpuff 2", 0xffeecbad);
-    namer.add("peachpuff 3", 0xffcdaf95);
-    namer.add("peachpuff 4", 0xff8b7765);
-    namer.add("peacock", 0xff33a1c9);
-    namer.add("peru", 0xffcd853f);
-    namer.add("pink", 0xffffc0cb);
-    namer.add("pink 1", 0xffffb5c5);
-    namer.add("pink 2", 0xffeea9b8);
-    namer.add("pink 3", 0xffcd919e);
-    namer.add("pink 4", 0xff8b636c);
-    namer.add("plum", 0xffdda0dd);
-    namer.add("plum 1", 0xffffbbff);
-    namer.add("plum 2", 0xffeeaeee);
-    namer.add("plum 3", 0xffcd96cd);
-    namer.add("plum 4", 0xff8b668b);
-    namer.add("powder blue", 0xffb0e0e6);
-    namer.add("purple", 0xff800080);
-    namer.add("purple 1", 0xff9b30ff);
-    namer.add("purple 2", 0xff912cee);
-    namer.add("purple 3", 0xff7d26cd);
-    namer.add("purple 4", 0xff551a8b);
-    namer.add("raspberry", 0xff872657);
-    namer.add("raw sienna", 0xffc76114);
-    namer.add("red", 0xffff0000);
-    namer.add("red 1", 0xffff0000);
-    namer.add("red 2", 0xffee0000);
-    namer.add("red 3", 0xffcd0000);
-    namer.add("red 4", 0xff8b0000);
-    namer.add("rosy brown", 0xffbc8f8f);
-    namer.add("rosy brown 1", 0xffffc1c1);
-    namer.add("rosy brown 2", 0xffeeb4b4);
-    namer.add("rosy brown 3", 0xffcd9b9b);
-    namer.add("rosy brown 4", 0xff8b6969);
-    namer.add("royal blue", 0xff4169e1);
-    namer.add("royal blue 1", 0xff4876ff);
-    namer.add("royal blue 2", 0xff436eee);
-    namer.add("royal blue 3", 0xff3a5fcd);
-    namer.add("royal blue 4", 0xff27408b);
-    namer.add("saddle brown", 0xff8b4513);
-    namer.add("salmon", 0xfffa8072);
-    namer.add("salmon 1", 0xffff8c69);
-    namer.add("salmon 2", 0xffee8262);
-    namer.add("salmon 3", 0xffcd7054);
-    namer.add("salmon 4", 0xff8b4c39);
-    namer.add("sandy brown", 0xfff4a460);
-    namer.add("sap green", 0xff308014);
-    namer.add("sea green", 0xff2e8b57);
-    namer.add("sea green 1", 0xff54ff9f);
-    namer.add("sea green 2", 0xff4eee94);
-    namer.add("sea green 3", 0xff43cd80);
-    namer.add("sea green 4", 0xff2e8b57);
-    namer.add("seashell", 0xfffff5ee);
-    namer.add("seashell 1", 0xfffff5ee);
-    namer.add("seashell 2", 0xffeee5de);
-    namer.add("seashell 3", 0xffcdc5bf);
-    namer.add("seashell 4", 0xff8b8682);
-    namer.add("sepia", 0xff5e2612);
-    namer.add("sienna", 0xffa0522d);
-    namer.add("sienna 1", 0xffff8247);
-    namer.add("sienna 2", 0xffee7942);
-    namer.add("sienna 3", 0xffcd6839);
-    namer.add("sienna 4", 0xff8b4726);
-    namer.add("silver", 0xffc0c0c0);
-    namer.add("sky blue", 0xff87ceeb);
-    namer.add("sky blue 1", 0xff87ceff);
-    namer.add("sky blue 2", 0xff7ec0ee);
-    namer.add("sky blue 3", 0xff6ca6cd);
-    namer.add("sky blue 4", 0xff4a708b);
-    namer.add("slate blue", 0xff6a5acd);
-    namer.add("slate blue 1", 0xff836fff);
-    namer.add("slate blue 2", 0xff7a67ee);
-    namer.add("slate blue 3", 0xff6959cd);
-    namer.add("slate blue 4", 0xff473c8b);
-    namer.add("slate grey", 0xff708090);
-    namer.add("slate grey 1", 0xffc6e2ff);
-    namer.add("slate grey 2", 0xffb9d3ee);
-    namer.add("slate grey 3", 0xff9fb6cd);
-    namer.add("slate grey 4", 0xff6c7b8b);
-    namer.add("snow", 0xfffffafa);
-    namer.add("snow 1", 0xfffffafa);
-    namer.add("snow 2", 0xffeee9e9);
-    namer.add("snow 3", 0xffcdc9c9);
-    namer.add("snow 4", 0xff8b8989);
-    namer.add("spring green", 0xff00ff7f);
-    namer.add("spring green 1", 0xff00ee76);
-    namer.add("spring green 2", 0xff00cd66);
-    namer.add("spring green 3", 0xff008b45);
-    namer.add("steel blue", 0xff4682b4);
-    namer.add("steel blue 1", 0xff63b8ff);
-    namer.add("steel blue 2", 0xff5cacee);
-    namer.add("steel blue 3", 0xff4f94cd);
-    namer.add("steel blue 4", 0xff36648b);
-    namer.add("tan", 0xffd2b48c);
-    namer.add("tan 1", 0xffffa54f);
-    namer.add("tan 2", 0xffee9a49);
-    namer.add("tan 3", 0xffcd853f);
-    namer.add("tan 4", 0xff8b5a2b);
-    namer.add("teal", 0xff008080);
-    namer.add("thistle", 0xffd8bfd8);
-    namer.add("thistle 1", 0xffffe1ff);
-    namer.add("thistle 2", 0xffeed2ee);
-    namer.add("thistle 3", 0xffcdb5cd);
-    namer.add("thistle 4", 0xff8b7b8b);
-    namer.add("tomato", 0xffff6347);
-    namer.add("tomato 1", 0xffff6347);
-    namer.add("tomato 2", 0xffee5c42);
-    namer.add("tomato 3", 0xffcd4f39);
-    namer.add("tomato 4", 0xff8b3626);
-    namer.add("turquoise", 0xff40e0d0);
-    namer.add("turquoise 1", 0xff00f5ff);
-    namer.add("turquoise 2", 0xff00e5ee);
-    namer.add("turquoise 3", 0xff00c5cd);
-    namer.add("turquoise 4", 0xff00868b);
-    namer.add("turquoise blue", 0xff00c78c);
-    namer.add("violet", 0xffee82ee);
-    namer.add("violet red", 0xffd02090);
-    namer.add("violet red 1", 0xffff3e96);
-    namer.add("violet red 2", 0xffee3a8c);
-    namer.add("violet red 3", 0xffcd3278);
-    namer.add("violet red 4", 0xff8b2252);
-    namer.add("warm grey", 0xff808069);
-    namer.add("wheat", 0xfff5deb3);
-    namer.add("wheat 1", 0xffffe7ba);
-    namer.add("wheat 2", 0xffeed8ae);
-    namer.add("wheat 3", 0xffcdba96);
-    namer.add("wheat 4", 0xff8b7e66);
-    namer.add("white", 0xffffffff);
-    namer.add("white smoke", 0xfff5f5f5);
-    namer.add("yellow", 0xffffff00);
-    namer.add("yellow 1", 0xffffff00);
-    namer.add("yellow 2", 0xffeeee00);
-    namer.add("yellow 3", 0xffcdcd00);
-    namer.add("yellow 4", 0xff8b8b00);
-
-    return namer;
-}
-
-static const ColorNamer NAMER = makeNamer();
+static auto const VALUES_TO_NAMES = invert(NAMES_TO_VALUES);
 
 static const char GREY_MARKER[] = "grey";
 
 } // namespace
+
+template <typename Color>
+bool fromString(const std::string& cname, Color& );
+
 
 bool nameToRgb(const std::string& cname, FColor* color) {
     auto name = replace(cname, " ", "");

@@ -7,6 +7,31 @@
 
 namespace fcolor {
 
+template <typename Color>
+void clear(Color& c) {
+    c.red = c.green = c.blue = 0;
+    clearAlpha(c);
+}
+
+template <typename Number>
+void clearAlpha(Color<Number>&) {}
+
+template <typename Number, typename Alpha>
+void clearAlpha(Color<Number>& n) {
+    n.alpha = level::maximum<Alpha>();
+}
+
+template <typename Number, typename Alpha>
+Color<Number, Alpha> color(Number r, Number g, Number b,
+                           Alpha a) {
+    return {r, g, b, a};
+}
+
+template <typename Number>
+Color<Number> color(Number r, Number g, Number b) {
+    return {r, g, b};
+}
+
 template <typename Number, typename Alpha>
 Float<Number> distance2(Color<Number, Alpha> const& x,
                         Color<Number, Alpha> const& y) {

@@ -24,16 +24,23 @@ struct Color {
     Alpha alpha;
 };
 
+/** Clears just the alpha channel, if any, setting it to maximum.
+    If the color has no alpha channel then there is no effect. */
 template <typename Number, typename Alpha>
-Color<Number, Alpha> color(Number r, Number g, Number b,
-                           Alpha a = level::maximum<Alpha>()) {
-    return {r, g, b, a};
-}
+void clearAlpha(Color<Number>&);
+
+/** Clears a color's components, setting them to zero, and its alpha channel,
+    if any. */
+template <typename Color>
+void clear(Color&);
+
+/** Create a new color from components and an alpha channel. */
+template <typename Number, typename Alpha>
+Color<Number, Alpha> color(Number r = 0, Number g = 0, Number b = 0,
+                           Alpha a = level::maximum<Alpha>());
 
 template <typename Number>
-Color<Number> color(Number r, Number g, Number b) {
-    return {r, g, b};
-}
+Color<Number> color(Number r = 0, Number g = 0, Number b = 0);
 
 template <typename Number, typename Alpha>
 Float<Number> distance2(
