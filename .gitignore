@@ -1,4 +1,5 @@
 .deps/
 bin/
 build/
+src/main.c
 *.so
