@@ -14,16 +14,11 @@ Float<Number> toFloat(Number n) {
     return convert<Float<Number>>(n);
 }
 
-template <
-    typename Number,
-    typename std::enable_if<std::is_floating_point<Number>::value, int> = 0>
-Number maximum() {
-    return static_cast<Number>(1.0);
-}
+template <> inline float maximum<float>() { return 1.0F; }
+template <> inline double maximum<double>() { return 1.0; }
+template <> inline long double maximum<long double>() { return 1.0L; }
 
-template <
-    typename Number,
-    typename std::enable_if<std::is_integral<Number>::value, int> = 0>
+template <typename Number>
 Number maximum() {
     return std::numeric_limits<Number>::max();
 }

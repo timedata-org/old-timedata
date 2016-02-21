@@ -1,35 +1,29 @@
 #pragma once
 
 #include <limits>
-#include <fcolor/color/color.h>
 #include <fcolor/base/number_inl.h>
 #include <fcolor/base/level_inl.h>
 
+#include <fcolor/color/color.h>
+
 namespace fcolor {
 
-template <typename Color>
-void clear(Color& c) {
+template <typename Number>
+void clear(Color<Number>& c) {
     c.red = c.green = c.blue = 0;
-    clearAlpha(c);
-}
-
-template <typename Number>
-void clearAlpha(Color<Number>&) {}
-
-template <typename Number, typename Alpha>
-void clearAlpha(Color<Number>& n) {
-    n.alpha = level::maximum<Alpha>();
 }
 
 template <typename Number, typename Alpha>
-Color<Number, Alpha> color(Number r, Number g, Number b,
-                           Alpha a) {
-    return {r, g, b, a};
+void clear(Color<Number, Alpha>& c) {
+    c.red = c.green = c.blue = 0;
+    c.alpha = level::maximum<Alpha>();
 }
 
-template <typename Number>
-Color<Number> color(Number r, Number g, Number b) {
-    return {r, g, b};
+template <typename T>
+T clear() {
+    T result;
+    clear(result);
+    return result;
 }
 
 template <typename N1, typename A1, typename N2>

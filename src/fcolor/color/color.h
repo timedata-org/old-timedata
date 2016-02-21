@@ -54,39 +54,30 @@ using ColorF = Color<float>;
 /** Floating point color with alpha. */
 using ColorAF = Color<float, float>;
 
-// Pack some integer colors into words.
-uint32_t pack(Color8);
-uint32_t pack(ColorA8);
-uint64_t pack(Color16);
-uint64_t pack(ColorA16);
-
-// Unpack some integer colors from words.
-Color8 unpack(uint32_t);
-ColorA8 unpackAlpha(uint32_t);
-Color16 unpack(uint64_t);
-ColorA16 unpackAlpha(uint64_t);
-
-/** Clears just the alpha channel, if any, setting it to maximum.
-    If the color has no alpha channel then there is no effect. */
-template <typename Number, typename Alpha>
-void clearAlpha(Color<Number>&);
+/** Return a cleared item. */
+template <typename T>
+T clear();
 
 /** Clears a color's components, setting them to zero, and its alpha channel,
     if any. */
 template <typename Color>
 void clear(Color&);
 
+// Pack some integer colors into integer words.
+uint32_t pack(Color8);
+uint32_t pack(ColorA8);
+uint64_t pack(Color16);
+uint64_t pack(ColorA16);
+
+// Unpack some integer colors from integer words.
+Color8 unpack(uint32_t);
+ColorA8 unpackAlpha(uint32_t);
+Color16 unpack(uint64_t);
+ColorA16 unpackAlpha(uint64_t);
+
 /** Convert between two different types of color. */
 template <typename N1, typename A1, typename N2, typename A2=A1>
 Color<N2, A2> convert(Color<N1, A1> const&);
-
-/** Create a new color from components and an alpha channel. */
-template <typename Number, typename Alpha>
-Color<Number, Alpha> color(Number r = 0, Number g = 0, Number b = 0,
-                           Alpha a = level::maximum<Alpha>());
-
-template <typename Number>
-Color<Number> color(Number r = 0, Number g = 0, Number b = 0);
 
 /** Return the square of the Cartesian distance between . */
 template <typename Number, typename Alpha>
