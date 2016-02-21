@@ -76,8 +76,8 @@ Color16 unpack(uint64_t);
 ColorA16 unpackAlpha(uint64_t);
 
 /** Convert between two different types of color. */
-template <typename N1, typename A1, typename N2, typename A2=A1>
-Color<N2, A2> convert(Color<N1, A1> const&);
+template <typename N1, typename A1, typename N2, typename A2>
+Color<N1, A1> convert(Color<N2, A2> const&);
 
 /** Return the square of the Cartesian distance between . */
 template <typename Number, typename Alpha>

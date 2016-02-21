@@ -7,16 +7,11 @@
 
 namespace fcolor {
 
-/** Returns a negative number x is if less than, 0 if equals, or positive if x
-    is greater than y. */
-template <typename T> int compare(T const& x, T const& y);
-
-template <typename T> bool operator==(T const&, T const&);
-template <typename T> bool operator!=(T const&, T const&);
-template <typename T> bool operator<(T const&, T const&);
-template <typename T> bool operator<=(T const&, T const&);
-template <typename T> bool operator>(T const&, T const&);
-template <typename T> bool operator>=(T const&, T const&);
-
+template <typename T> bool operator==(T, T);
+template <typename T> bool operator!=(T, T);
+template <typename T> bool operator<(T, T);
+template <typename T> bool operator<=(T, T);
+template <typename T> bool operator>(T, T);
+template <typename T> bool operator>=(T, T);
 
 }  // namespace fcolor
