@@ -7,40 +7,6 @@
 
 namespace fcolor {
 
-#if 0
-
-template <typename Color>
-bool operator==(Color const& x, Color const& y) {
-    return compare(x, y) == 0;
-}
-
-template <typename Color>
-bool operator!=(Color const& x, Color const& y) {
-    return compare(x, y) != 0;
-}
-
-template <typename Color>
-bool operator<(Color const& x, Color const& y) {
-    return compare(x, y) < 0;
-}
-
-template <typename Color>
-bool operator<=(Color const& x, Color const& y) {
-    return compare(x, y) <= 0;
-}
-
-template <typename Color>
-bool operator>(Color const& x, Color const& y) {
-    return compare(x, y) > 0;
-}
-
-template <typename Color>
-bool operator>=(Color const& x, Color const& y) {
-    return compare(x, y) >= 0;
-}
-
-#endif
-
 template <typename Color>
 void clear(Color& c) {
     c.red = c.green = c.blue = 0;
