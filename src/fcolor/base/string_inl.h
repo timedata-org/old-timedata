@@ -6,6 +6,7 @@ namespace fcolor {
 
 // String utilities.
 
+inline
 std::string replace(std::string subject,
                     std::string const& search,
                     std::string const& replace) {
@@ -17,12 +18,14 @@ std::string replace(std::string subject,
     return subject;
 }
 
+inline
 void lower(std::string* subject) {
     for (auto& ch: *subject)
         ch = tolower(ch);
 }
 
 // Return a float as "x.xxx".
+inline
 std::string toString(float f) {
     f = std::min(1.0f, std::max(0.0f, f));
     std::string result;
@@ -32,6 +35,7 @@ std::string toString(float f) {
 }
 
 // Return a float as "xx.x or 100.0".
+inline
 std::string toPercent(float g) {
     auto f = roundf(std::min(1.0f, std::max(0.0f, g)) * 1000.0f) / 10.0f;
     std::string result;
@@ -42,10 +46,12 @@ std::string toPercent(float g) {
     return result;
 }
 
+inline
 bool isHex(const std::string& s) {
     return strspn(s.data(), "abcdef0123456789") == s.size();
 }
 
+inline
 uint32_t fromHex(const char* s) {
     uint32_t decimalValue;
     sscanf(s, "%u", &decimalValue);
