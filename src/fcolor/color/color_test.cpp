@@ -11,6 +11,18 @@ TEST_CASE("colors in general", "[color]") {
     REQUIRE(colorf.red == 0);
     REQUIRE(coloraf.red == 0);
 
+    REQUIRE(color8.green == 0);
+    REQUIRE(colora8.green == 0);
+    REQUIRE(colorf.green == 0);
+    REQUIRE(coloraf.green == 0);
+
+    REQUIRE(color8.blue == 0);
+    REQUIRE(colora8.blue == 0);
+    REQUIRE(colorf.blue == 0);
+    REQUIRE(coloraf.blue == 0);
+
+    REQUIRE(colora8.alpha == 255);
+    REQUIRE(coloraf.alpha == 1.0);
 }
 
 }  // namespace fcolor
