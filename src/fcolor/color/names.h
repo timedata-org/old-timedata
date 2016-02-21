@@ -1,11 +1,18 @@
 #pragma once
 
 #include <fcolor/color/color.h>
+#include <fcolor/base/stl.h>
 
 namespace fcolor {
+namespace name {
 
-Color<uint8_t> fromName(const std::string& cname);
+using ToValue = std::map<std::string, uint32_t>;
+using FromValue = std::map<uint32_t, std::string>;
+using ToColor = std::map<std::string, Color8>;
 
-std::string toName(const Color<uint8_t>&);
+ToValue const& toValue();
+FromValue const& fromValue();
+ToColor const& toColor();
 
-}  // namespace fcolor
+} // name
+} // fcolor

@@ -23,4 +23,20 @@ Pair<Float> modf(Float);
 template <typename Float = double>
 Float pi();
 
+template <
+    typename T,
+    typename std::enable_if<std::is_signed<T>::value, int> = 0
+    >
+int signum(T x) {
+    return (T(0) < x) - (x < T(0));
+}
+
+template <
+    typename T,
+    typename std::enable_if<not std::is_signed<T>::value, int> = 0
+    >
+int signum(T x) {
+    return T(0) < x;
+}
+
 } // fcolor

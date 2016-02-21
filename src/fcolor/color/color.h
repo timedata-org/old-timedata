@@ -13,6 +13,11 @@ struct Color<Number, void> {
     Number red;
     Number green;
     Number blue;
+
+    using number_t = Number;
+    using alpha_t = void;
+
+    static const auto hasAlpha = false;
 };
 
 template <typename Number, typename Alpha>
@@ -23,6 +28,10 @@ struct Color {
 
     // See e. g. https://en.wikipedia.org/wiki/Alpha_compositing
     Alpha alpha;
+
+    using number_t = Number;
+    using alpha_t = Alpha;
+    static const auto hasAlpha = true;
 };
 
 // Useful color types.
@@ -53,9 +62,9 @@ uint64_t pack(ColorA16);
 
 // Unpack some integer colors from words.
 Color8 unpack(uint32_t);
-ColorA8 unpack(uint32_t);
+ColorA8 unpackAlpha(uint32_t);
 Color16 unpack(uint64_t);
-ColorA16 unpack(uint64_t);
+ColorA16 unpackAlpha(uint64_t);
 
 /** Clears just the alpha channel, if any, setting it to maximum.
     If the color has no alpha channel then there is no effect. */
