@@ -3,6 +3,7 @@
 #include <math.h>
 #include <stdint.h>
 #include <cmath>
+#include <memory>
 #include <type_traits>
 #include <fcolor/base/number.h>
 
@@ -25,6 +26,11 @@ template <> struct Traits<int32_t> { using Float = double; };
 
 template <> struct Traits<uint64_t> { using Float = long double; };
 template <> struct Traits<int64_t> { using Float = long double; };
+
+template <typename T>
+struct Traits<std::shared_ptr<T>> {
+    using Float = typename Traits<T>::Float;
+};
 
 template <typename Float>
 Pair<Float> modf(Float x) {

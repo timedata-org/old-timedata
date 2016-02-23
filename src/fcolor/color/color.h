@@ -137,10 +137,6 @@ Color<Number> withoutAlpha(Color<Number, Alpha>);
 template <typename Number, typename Alpha>
 Color<Number, Alpha> withAlpha(Color<Number>, Alpha);
 
-/** Interpolate between two colors. */
-template <typename Color, typename Float>
-void interpolate(Color& result, Color const& begin, Color const& end, Float);
-
 /** Combine two colors into one by component.*/
 template <typename Color, typename Function>
 void combineComponents(Color&, Color const&, Color const&, Function);
@@ -148,5 +144,25 @@ void combineComponents(Color&, Color const&, Color const&, Function);
 /** Apply a one-argument function to each component in a Color. */
 template <typename Color, typename Function>
 void applyToComponents(Color&, Function);
+
+template <typename Color, typename Function>
+auto componentCombiner(Function f) {
+    return [=](Color& to, Color const& c1, Color const& c2) {
+        to.red = f(c1.red, c2.red);
+        to.green = f(c1.green, c2.green);
+        to.blue = f(c1.blue, c2.blue);
+    };
+}
+
+/** This can be a variable interpolator if Float is std::shared_ptr! */
+template <typename Color, typename Float>
+auto interpolator(Float ratio) {
+    using Number = typename Color::number_t;
+    return componentCombiner(level::interpolator<Number>(ratio));
+}
+
+/** Interpolate between two colors. */
+template <typename Color, typename Float>
+void interpolate(Color& result, Color const& begin, Color const& end, Float);
 
 }  // namespace fcolor
