@@ -123,8 +123,33 @@ Color<Number, Alpha> withAlpha(Color<Number> c, Alpha alpha) {
     return {c.red, c.green, c.blue, alpha};
 }
 
-template <typename Color, typename Operator>
-Color applyToComponents(Operator op, Color const& color) {
+/** Apply a one-argument function to each component in a Color. */
+template <typename Color, typename Function>
+void applyToComponents(Color& color, Function f) {
+    color.red = f(color.red);
+    color.green = f(color.green);
+    color.blue = f(color.blue);
+}
+
+template <typename Color, typename Function>
+void combineComponents(Color& c, Color const& x, Color const& y, Function f) {
+    c.red = f(x.red, y.red);
+    c.green = f(x.green, y.green);
+    c.blue = f(x.blue, y.blue);
+}
+
+template <typename Color, typename Float>
+void interpolate(Color& c, Color const& begin, Color const& end, Float r) {
+    using Number = typename Color::number_t;
+    combineComponents(c, begin, end, [=] (Number b, Number e) {
+        return level::convert<Number>(Float(b) + r * (Float(e) - Float(b)));
+    });
+}
+
+#if 0
+
+template <typename Color, typename Function>
+Color applyToComponents(Function op, Color const& color) {
     auto c = color;
     c.red = op(c.red);
     c.green = op(c.green);
@@ -132,8 +157,8 @@ Color applyToComponents(Operator op, Color const& color) {
     return c;
 }
 
-template <typename Color, typename Operator>
-Color applyToComponents(Operator op, Color const& x, Color const& y) {
+template <typename Color, typename Function>
+Color applyToComponents(Function op, Color const& x, Color const& y) {
     auto c = x;
     c.red = op(x.red, y.red);
     c.green = op(x.green, y.green);
@@ -141,23 +166,23 @@ Color applyToComponents(Operator op, Color const& x, Color const& y) {
     return c;
 }
 
-template <typename Number, typename Alpha, typename Operator>
+template <typename Number, typename Alpha, typename Function>
 Color<Number, Alpha> applyToComponentsWithAlpha(
-        Operator op, Color<Number, Alpha> const& color) {
+        Function f, Color<Number, Alpha> const& color) {
     auto c = applyToComponents(op, color);
     c.alpha = op(color.alpha);
     return c;
 }
 
-template <typename Number, typename Operator>
+template <typename Number, typename Function>
 Color<Number> applyToComponentsWithAlpha(
-        Operator op, Color<Number> const& color) {
+        Function op, Color<Number> const& color) {
     return applyToComponents(op, color);
 }
 
-template <typename Number, typename Alpha, typename Operator>
+template <typename Number, typename Alpha, typename Function>
 Color<Number, Alpha> applyToComponentsWithAlpha(
-        Operator op,
+        Function op,
         Color<Number, Alpha> const& x,
         Color<Number, Alpha> const& y) {
     auto c = applyToComponents(op, x, y);
@@ -165,9 +190,9 @@ Color<Number, Alpha> applyToComponentsWithAlpha(
     return c;
 }
 
-template <typename Number, typename Alpha, typename Operator>
+template <typename Number, typename Alpha, typename Function>
 Color<Number> applyToComponentsWithAlpha(
-        Operator op,
+        Function op,
         Color<Number> const& x,
         Color<Number> const& y) {
     return applyToComponents(op, x, y);
@@ -182,4 +207,37 @@ Color<Number> interpolate(
         }, x, y);
 }
 
+
+/** Apply a one-argument function to each component in a Color. */
+template <typename Color, typename Function>
+Color applyToComponents(Function, Color const&);
+
+/** Apply a two-argument function to each component in two Colors. */
+template <typename Color, typename Function>
+Color applyToComponents(Function, Color const&, Color const&);
+
+/** Apply a one-argument function to each component in a Color, and
+    the alpha channel, if any. */
+template <typename Color, typename Function>
+Color applyToComponentsWithAlpha(Function, Color const&);
+
+/** Apply a two-argument function to each component in two Colors, and
+    the alpha channel, if any. */
+template <typename Color, typename Function>
+Color applyToComponentsWithAlpha(Function, Color const&, Color const&);
+
+/** Interpolate between two colors. */
+template <typename Number, typename Float>
+Color<Number> interpolate(Color<Number> const&, Color<Number> const&, Float);
+
+/** Apply a one-argument function to each component in a Color, and
+    the alpha channel, if any. */
+template <typename Color, typename Function>
+void applyToComponentsWithAlpha(Color&, Function);
+
+/** Apply a one-argument function to each component in a Color. */
+template <typename Color, typename Function>
+void applyToComponents(Color&, Function);
+
+#endif
 }  // namespace fcolor

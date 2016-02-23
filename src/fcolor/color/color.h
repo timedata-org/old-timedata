@@ -17,6 +17,10 @@ Color<Number, Alpha> operator/(Color<Number, Alpha> const&, Scalar);
 template <typename Number, typename Alpha, typename Scalar>
 Color<Number, Alpha> operator*(Scalar, Color<Number, Alpha> const&);
 
+template <typename Number, typename Alpha = void>
+using ColorPair = std::pair<Color<Number, Alpha>, Color<Number, Alpha>>;
+
+
 template <typename Number>
 struct Color<Number, void> {
     Number red;
@@ -26,6 +30,7 @@ struct Color<Number, void> {
     using self_t = Color<Number, void>;
     using number_t = Number;
     using alpha_t = void;
+
     static const auto hasAlpha = false;
 
     template <typename T>
@@ -63,6 +68,7 @@ struct Color {
         return (*this = (*this / r));
     }
 };
+
 
 // Useful color types.
 
@@ -114,7 +120,7 @@ ColorA16 unpackAlpha(uint64_t);
 template <typename N1, typename A1, typename N2, typename A2>
 Color<N1, A1> convert(Color<N2, A2> const&);
 
-/** Return the square of the Cartesian distance between . */
+/** Return the square of the Cartesian distance between two colors. */
 template <typename Number, typename Alpha>
 Float<Number> distance2(
     Color<Number, Alpha> const&, Color<Number, Alpha> const&);
@@ -131,26 +137,16 @@ Color<Number> withoutAlpha(Color<Number, Alpha>);
 template <typename Number, typename Alpha>
 Color<Number, Alpha> withAlpha(Color<Number>, Alpha);
 
-/** Apply a one-argument operator to each component in a Color. */
-template <typename Color, typename Operator>
-Color applyToComponents(Operator, Color const&);
-
-/** Apply a two-argument operator to each component in two Colors. */
-template <typename Color, typename Operator>
-Color applyToComponents(Operator, Color const&, Color const&);
-
-/** Apply a one-argument operator to each component in a Color, and
-    the alpha channel, if any. */
-template <typename Color, typename Operator>
-Color applyToComponentsWithAlpha(Operator, Color const&);
-
-/** Apply a two-argument operator to each component in two Colors, and
-    the alpha channel, if any. */
-template <typename Color, typename Operator>
-Color applyToComponentsWithAlpha(Operator, Color const&, Color const&);
-
 /** Interpolate between two colors. */
-template <typename Number, typename Float>
-Color<Number> interpolate(Color<Number> const&, Color<Number> const&, Float);
+template <typename Color, typename Float>
+void interpolate(Color& result, Color const& begin, Color const& end, Float);
+
+/** Combine two colors into one by component.*/
+template <typename Color, typename Function>
+void combineComponents(Color&, Color const&, Color const&, Function);
+
+/** Apply a one-argument function to each component in a Color. */
+template <typename Color, typename Function>
+void applyToComponents(Color&, Function);
 
 }  // namespace fcolor
