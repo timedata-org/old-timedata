@@ -1,4 +1,5 @@
 #include <fcolor/color/color.h>
+#include <fcolor/color2/color.h>
 #include <fcolor/color/compare_inl.h>
 
 namespace fcolor {
@@ -79,4 +80,14 @@ TEST_CASE("colors", "[color]") {
     }
 }
 
+namespace color2 {
+
+TEST_CASE("colors2", "[color]") {
+    SECTION("empty") {
+        auto c = RGB<>();
+
+    }
+}
+
+}  // namespace color2
 }  // namespace fcolor
