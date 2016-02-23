@@ -26,6 +26,49 @@ T clear() {
     return result;
 }
 
+template <typename Number, typename Alpha, typename Scalar>
+Color<Number, Alpha> operator*(Color<Number, Alpha> const& c, Scalar r) {
+    auto color = c;
+    color.red *= r;
+    color.green *= r;
+    color.blue *= r;
+    return color;
+}
+
+template <typename Number, typename Alpha, typename Scalar>
+Color<Number, Alpha> operator/(Color<Number, Alpha> const& c, Scalar r) {auto color = c;
+    color.red /= r;
+    color.green /= r;
+    color.blue /= r;
+    return color;
+}
+
+template <typename Number, typename Alpha, typename Scalar>
+Color<Number, Alpha> operator*(Scalar r, Color<Number, Alpha> const& c) {
+    return c * r;
+}
+
+template <class Color>
+Color red() {
+    auto c = clear<Color>();
+    c.red = level::maximum<typename Color::number_t>();
+    return c;
+}
+
+template <class Color>
+Color green() {
+    auto c = clear<Color>();
+    c.green = level::maximum<typename Color::number_t>();
+    return c;
+}
+
+template <class Color>
+Color blue() {
+    auto c = clear<Color>();
+    c.blue = level::maximum<typename Color::number_t>();
+    return c;
+}
+
 template <typename N1, typename A1, typename N2>
 Color<N2> convert(Color<N1> const& c) {
     return {convert<N2>(c.red), convert<N2>(c.green), convert<N2>(c.blue)};
@@ -59,7 +102,7 @@ Float<Number> distance2(Color<Number, Alpha> const& x,
 
 /** Return the sum of the squares of the color differences. */
 template <typename Number, typename Alpha>
-Float<Number> greyness2(Color<Number, Alpha> const& color) {
+Float<Number> colorfulness2(Color<Number, Alpha> const& color) {
     Float<Number>
         r = color.red,
         g = color.green,

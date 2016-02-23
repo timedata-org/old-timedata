@@ -59,6 +59,24 @@ TEST_CASE("colors", "[color]") {
         REQUIRE(colorf >= colorf);
         REQUIRE(coloraf >= coloraf);
     }
+
+    SECTION("red, green, blue") {
+        auto r = red<Color8>();
+        REQUIRE(r.red == 255);
+        REQUIRE(r.green == 0);
+        REQUIRE(r.blue == 0);
+    }
+
+    SECTION("mult") {
+        auto r = red<ColorF>();
+        REQUIRE(r.red == 1.0f);
+        REQUIRE(r.green == 0);
+        REQUIRE(r.blue == 0);
+        r /= 2;
+        REQUIRE(r.red == 0.5f);
+        REQUIRE(r.green == 0);
+        REQUIRE(r.blue == 0);
+    }
 }
 
 }  // namespace fcolor

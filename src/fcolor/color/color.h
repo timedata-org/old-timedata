@@ -8,16 +8,35 @@ namespace fcolor {
 template <typename Number, typename Alpha = void>
 struct Color;
 
+template <typename Number, typename Alpha, typename Scalar>
+Color<Number, Alpha> operator*(Color<Number, Alpha> const&, Scalar);
+
+template <typename Number, typename Alpha, typename Scalar>
+Color<Number, Alpha> operator/(Color<Number, Alpha> const&, Scalar);
+
+template <typename Number, typename Alpha, typename Scalar>
+Color<Number, Alpha> operator*(Scalar, Color<Number, Alpha> const&);
+
 template <typename Number>
 struct Color<Number, void> {
     Number red;
     Number green;
     Number blue;
 
+    using self_t = Color<Number, void>;
     using number_t = Number;
     using alpha_t = void;
-
     static const auto hasAlpha = false;
+
+    template <typename T>
+    self_t& operator*=(T r) {
+        return (*this = (*this * r));
+    }
+
+    template <typename T>
+    self_t& operator/=(T r) {
+        return (*this = (*this / r));
+    }
 };
 
 template <typename Number, typename Alpha>
@@ -29,9 +48,20 @@ struct Color {
     // See e. g. https://en.wikipedia.org/wiki/Alpha_compositing
     Alpha alpha;
 
+    using self_t = Color<Number, Alpha>;
     using number_t = Number;
     using alpha_t = Alpha;
     static const auto hasAlpha = true;
+
+    template <typename T>
+    self_t& operator*=(T r) {
+        return (*this = (*this * r));
+    }
+
+    template <typename T>
+    self_t& operator/=(T r) {
+        return (*this = (*this / r));
+    }
 };
 
 // Useful color types.
@@ -57,6 +87,11 @@ using ColorAF = Color<float, float>;
 /** Return a cleared item. */
 template <typename T>
 T clear();
+
+/** Create primary colors. */
+template <class Color> Color red();
+template <class Color> Color green();
+template <class Color> Color blue();
 
 /** Clears a color's components, setting them to zero, and its alpha channel,
     if any. */
@@ -86,7 +121,7 @@ Float<Number> distance2(
 
 /** Return the sum of the squares of the pairwise color deltas rg, gb, br. */
 template <typename Number, typename Alpha>
-Float<Number> greyness2(Color<Number, Alpha> const&);
+Float<Number> colorfulness2(Color<Number, Alpha> const&);
 
 /** Return a Color with the same components, but no alpha. */
 template <typename Number, typename Alpha>
