@@ -45,5 +45,17 @@ Number limit(Number);
 template <typename Number>
 Float<Number> toFloat(Number);
 
+template <typename Number, typename Float>
+Number interpolate(Number begin, Number end, Float ratio);
+
+/** This can be a variable interpolator if Float is std::shared_ptr! */
+template <typename Number, typename Float>
+auto interpolator(Float ratio) {
+    return [=] (Number begin, Number end) {
+        auto b = Float(begin), e = Float(end);
+        return Number(b + ratio * (e - b));
+    };
+}
+
 } // level
 } // fcolor

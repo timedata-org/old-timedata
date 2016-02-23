@@ -13,7 +13,7 @@
 
 COMPILER ?= g++
 OPTIMIZE ?= -O0
-STDLIB ?= c++11
+STDLIB ?= c++1y
 SYMBOLS ?= -g
 
 #

@@ -34,6 +34,12 @@ Number limit(Number x) {
    smaller in bitsize than From.
 */
 
+/** Convert a shared_ptr. */
+template <typename To, typename From>
+To convert(std::shared_ptr<From> const& from) {
+    return convert<To>(*from);
+}
+
 /** Are T and U the same class, ignoring `const` and `volatile` qualifiers?
 
     See http://en.cppreference.com/w/cpp/types/remove_cv
@@ -99,6 +105,12 @@ To convert(From from) {
     if (maximum<To>() > maximum<From>())
         return from * (maximum<To>() / maximum<From>());
     return static_cast<To>(from / (maximum<From>() / maximum<To>()));
+}
+
+
+template <typename Number, typename Float>
+Number interpolate(Number begin, Number end, Float ratio) {
+    return interpolator<Number>(ratio)(begin, end);
 }
 
 } // level
