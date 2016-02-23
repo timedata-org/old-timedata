@@ -42,19 +42,19 @@ template <typename Number = float>
 using RGB = Color<model::RGB<Number>>;
 
 
-template <typename Model>
+template <typename Color>
 struct Red {
-    static Number<Model> get(Color<Model> const&);
+    static Number<Color>& get(Color&);
 };
 
-template <typename T>
-struct Red<RGB<T>> {
-    static T get(Color<RGB<T>> const& rgb) { return rgb.array[0]; }
+template <typename Number>
+struct Red<RGB<Number>> {
+    static Number& get(RGB<Number>& rgb) { return rgb.array[0]; }
 };
 
-template <template<class> class Getter, typename Model>
-Number<Model> get(Color<Model> const& color) {
-    return Getter<Model>::get(color);
+template <template<class> class Getter, typename Color>
+Number<Color> get(Color& color) {
+    return Getter<Color>::get(color);
 }
 
 /*

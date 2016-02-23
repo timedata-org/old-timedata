@@ -85,7 +85,7 @@ namespace color2 {
 TEST_CASE("colors2", "[color]") {
     SECTION("empty") {
         auto c = RGB<>();
-
+        auto red = get<Red>(c);
     }
 }
 
