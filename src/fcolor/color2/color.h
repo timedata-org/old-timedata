@@ -26,29 +26,58 @@ namespace model {
 template <typename Number = float>
 struct RGB {
     using number_t = Number;
-    static auto const size = size_t(3);
-
+    static auto const size = 3;
 };
-
 
 template <typename Number = float>
 struct HSB {
     using number_t = Number;
-    static auto const size = size_t(3);
+    static auto const size = 3;
 };
+
 } // model
 
 template <typename Number = float>
 using RGB = Color<model::RGB<Number>>;
 
-
 template <typename Color>
-struct Red {
-    static Number<Color>& get(Color&);
-};
+struct Red;
 
 template <typename Number>
 struct Red<RGB<Number>> {
+    static Number& get(RGB<Number>& rgb) { return rgb.array[0]; }
+};
+
+template <template<class> class Getter, typename Color>
+Number<Color> get(Color const& color) {
+    return Getter<Color>::get(color);
+}
+
+template <template<class> class Getter, typename Color>
+Number<Color>& get(Color& color) {
+    return Getter<Color>::get(color);
+}
+
+/*
+template <typename Model, size_t index>
+Number<Model> get(Array<Model> const& array) {
+    static_assert(index < Model::size, "Index out of range");
+    return array[index];
+}
+
+template <typename Model, size_t index>
+Number<Model>& get(Array<Model>& array) {
+    static_assert(index < Model::size, "Index out of range");
+    return array[index];
+}
+
+template <typename Number>
+struct Green<RGB<Number>> {
+    static Number& get(RGB<Number>& rgb) { return rgb.array[0]; }
+};
+
+template <typename Number>
+struct Blue<RGB<Number>> {
     static Number& get(RGB<Number>& rgb) { return rgb.array[0]; }
 };
 
@@ -57,7 +86,6 @@ Number<Color> get(Color& color) {
     return Getter<Color>::get(color);
 }
 
-/*
 template <typename C> Number<C> red(C const&);
 template <typename C> Number<C> green(C const&);
 template <typename C> Number<C> blue(C const&);
