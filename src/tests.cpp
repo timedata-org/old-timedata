@@ -1,3 +1,6 @@
+#include <fcolor/color3/color.h>
+#include <fcolor/color3/strip.h>
+
 #define CATCH_CONFIG_MAIN
 
 #include <catch/catch.hpp>
