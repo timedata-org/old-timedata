@@ -83,7 +83,7 @@ void limitTo(FromStrip const& from, ToStrip& toStrip, Number limit) {
     auto fromComp = &from[0];
     auto toComp = &to[0];
     for (size_t i = 0; i < stripSize * colorSize; ++i) {
-        auto f = std::max(Number(0), std::min(fromComp[i], limit);
+        auto f = std::max(Number(0), limit * std::min(fromComp[i], 1.0f));
         toComp[i] = static_cast<ToComp>(f);
     }
 }
