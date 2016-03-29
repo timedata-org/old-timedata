@@ -43,6 +43,9 @@ struct Color {
     };
 };
 
+template <typename Color>
+using Component = typename Color::component_t;
+
 template <typename Color, typename Combiner>
 auto componentCombiner(Combiner combiner) {
     return [=] (Color const& from, Color& to) {
