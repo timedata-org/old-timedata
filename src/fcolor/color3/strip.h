@@ -1,5 +1,6 @@
 #pragma once
 
+#include <math.h>
 #include <string>
 #include <fcolor/color3/color.h>
 
@@ -84,12 +85,12 @@ Strip<Color> strip(Color& base, size_t size) {
 
 template <typename Color>
 Strip<Color> strip(typename Color::List& colorList) {
-    return {colorList[0], colorList.size(); }
+    return {colorList[0], colorList.size() };
 }
 
 template <typename Color>
 Strip<Color const> strip(typename Color::List const& colorList) {
-    return {colorList[0], colorList.size(); }
+    return {colorList[0], colorList.size() };
 }
 
 struct SubStrip {
@@ -98,7 +99,7 @@ struct SubStrip {
 
     template <typename Color, typename Combiner>
     void operator()(Strip<Color const> from, Strip<Color> to, Combiner comb) {
-        int fromSize = from.size(),
+        auto fromSize = from.size(),
             toSize = to.size(),
             begin = std::min(std::max(0, offset), toSize),
             end = std::max(begin, std::min(offset + int(from.size), toSize)),
@@ -118,7 +119,7 @@ struct Limiter {
     Number max;
 
     void operator()(Number& x) const {
-        n = std::max(min, std::min(max, x));
+        x = std::max(min, std::min(max, x));
     }
 };
 
@@ -133,7 +134,7 @@ auto brightnessMaker(float& brightness) {
 }
 
 template <typename F1, typename F2>
-auto composer(F1 f2, F2 f2) {
+auto composer(F1 f1, F2 f2) {
     return [&] (float& x) { f1(x); f2(x); };
 }
 
@@ -145,12 +146,12 @@ void staticCaster(From from, To& to) {
 template <typename Color>
 void limitStrip(Strip<Color> strip, Component<Color> max,
                 Component<Color> min = 0) {
-    forEach(strip.components(), Limiter{min, max});
+    forEach(strip.components(), Limiter<Color>{min, max});
 }
 
 template <typename Color1, typename Color2>
-void copyTo(Strip<Color1 const> from, Strip<Color2> toStrip) {
-    static_assert(Color1::SIZE == Color2::SIZE);
+void copyTo(Strip<Color1 const> from, Strip<Color2> to) {
+    static_assert(Color1::SIZE == Color2::SIZE, "color sizes differ");
     using C1 = Component<Color1>;
     using C2 = Component<Color2>;
     forEachPair(from.components(), to.Components(), staticCaster<C1, C2>);
