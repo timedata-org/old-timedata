@@ -1,13 +1,15 @@
+#!/usr/bin/env python3
+
 import platform
 
 from distutils.core import setup
 from distutils.extension import Extension
 from Cython.Build import cythonize
 
-libraries = ['m'] if platform.system() not in ('Darwin', 'Linux') else []
+libraries = [] if platform.system() in ('Darwin', 'Linux') else ['m']
 
 ext_modules=[
-    Extension('main', sources=['main.pyx'], libraries=libraries)
+    Extension('main', sources=['src/main.pyx'], libraries=libraries)
 ]
 
 setup(

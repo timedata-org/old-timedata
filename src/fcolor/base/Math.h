@@ -1,6 +1,6 @@
 #pragma once
 
-#include <fcolor/Fcolor.h>
+// #include <fcolor/Fcolor.h>
 
 namespace fcolor {
 
@@ -37,6 +37,28 @@ bool near(Number x, Number y, Number diff) {
 template <typename Number>
 bool near(Number x, Number y) {
     return near(x, y, Number(0.000001));
+}
+
+template <typename Number>
+bool shift(Number& number) {
+    auto result = bool(number & 1);
+    number /= 2;
+    return result;
+}
+
+/** Generically get the size of an enum whose last element is `size`. */
+template <typename Enum,
+          typename std::enable_if_t<std::is_enum<Enum>::value, int> = 0>
+constexpr size_t enumSize(Enum element = Enum::size) {
+    return static_cast<size_t>(element);
+}
+
+template <typename Enum,
+          typename Functor,
+          typename std::enable_if_t<std::is_enum<Enum>::value, int> = 0>
+void forEach(Functor f) {
+    for (size_t i = 0; i < enumSize<Enum>(); ++i)
+        f(static_cast<Enum>(i));
 }
 
 }  // namespace fcolor

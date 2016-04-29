@@ -4,9 +4,11 @@
 #include <string>
 #include <vector>
 
-#include <fcolor/color3/math.h>
+#include <fcolor/base/Math.h>
 
 namespace fcolor3 {
+
+using namespace fcolor;
 
 /** Color models are definined by scoped enumerations.
     `size` always has to be the last entry in each one so we
