@@ -1,3 +1,4 @@
+#include <fcolor/color4/signal.h>
 #include <fcolor/color3/color.h>
 #include <fcolor/color3/strip.h>
 
