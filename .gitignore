@@ -1,5 +1,5 @@
 .deps/
 bin/
 build/
-src/main.c
+src/fcolor.cpp
 *.so
