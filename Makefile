@@ -1,3 +1,7 @@
+# This file is DEPRECATED in favor of setup.py.
+#
+
+
 #
 # Optional command line arguments:
 # see http://stackoverflow.com/a/24264930/43839
