@@ -1,3 +1,5 @@
+include "fcolor/color4/color.pyx"
+
 import imp
 
 from libc.math cimport sqrt
