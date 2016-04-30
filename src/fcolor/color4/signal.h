@@ -5,6 +5,7 @@
 #include <vector>
 
 #include <fcolor/base/Math.h>
+#include <fcolor/base/enum.h>
 
 namespace fcolor4 {
 
@@ -23,36 +24,18 @@ using namespace fcolor;
 
 template <typename Name, typename Number>
 struct Traits {
-    using name_t = Name;
-    using number_t = Number;
-
-    using Frame = std::array<Number, enumSize(Name)>;
-    using FramePointer = std::array<Number*, enumSize(Name)>;
-};
-
-using FrameBase = std::array<Number, enumSize(Name)>;
-
-
-
-template <typename Name, typename Number>
-using FramePointerBase = std::array<Number*, enumSize(Name)>;
-
-template <typename Name, typename Number>
-struct FramePointer : FramePointerBase {
-    Number*& operator[](Name name) {
-        return FramePointerBase::operator[](static_cast<size_t>(name));
-    }
-};
-
-template <typename Name, typename Number>
-struct Striped {
     static const auto SIZE = enumSize<Name>();
 
-    using Frame = Number*;
     using name_t = Name;
     using number_t = Number;
 
-    static Number& get(Frame frame, size_t index, Name name) {
+    using Frame = std::array<Number, SIZE>;
+    using FramePointer = std::array<Number*, SIZE>;
+};
+
+template <typename Traits>
+struct Striped {
+    static Number& get(FramePointer frame, size_t index, Name name) {
         return frame[index * SIZE + enumSize(name)];
     }
 

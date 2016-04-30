@@ -1,5 +1,6 @@
 #pragma once
 
+#include <cmath>
 #include <type_traits>
 
 namespace fcolor {
@@ -27,14 +28,14 @@ using is_signed = std::is_signed<common_type<X, Y>>;
 
 template <typename X,
           typename Y,
-          typename std::enable_if_t<is_unsigned<X, Y>, int> = 0>
+          typename std::enable_if_t<is_unsigned<X, Y>::value, int> = 0>
 common_type<X, Y> mod(X dividend, Y divisor) {
     return dividend % divisor;
 }
 
 template <typename X,
           typename Y,
-          typename std::enable_if_t<is_signed<X, Y>, int> = 0>
+          typename std::enable_if_t<is_signed<X, Y>::value, int> = 0>
 common_type<X, Y> mod(X dividend, Y divisor) {
     return dividend % divisor;
 }
@@ -59,21 +60,6 @@ bool shift(Number& number) {
     auto result = bool(number & 1);
     number /= 2;
     return result;
-}
-
-/** Generically get the size of an enum whose last element is `size`. */
-template <typename Enum,
-          typename std::enable_if_t<std::is_enum<Enum>::value, int> = 0>
-constexpr size_t enumSize(Enum element = Enum::size) {
-    return static_cast<size_t>(element);
-}
-
-template <typename Enum,
-          typename Functor,
-          typename std::enable_if_t<std::is_enum<Enum>::value, int> = 0>
-void forEach(Functor f) {
-    for (size_t i = 0; i < enumSize<Enum>(); ++i)
-        f(static_cast<Enum>(i));
 }
 
 template <typename Number>
