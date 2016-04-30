@@ -5,6 +5,7 @@
 #include <vector>
 
 #include <fcolor/base/Math.h>
+#include <fcolor/base/enum.h>
 
 namespace fcolor3 {
 
