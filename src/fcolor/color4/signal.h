@@ -22,6 +22,29 @@ enum class Stereo { left, right };
 using namespace fcolor;
 
 template <typename Name, typename Number>
+struct Traits {
+    using name_t = Name;
+    using number_t = Number;
+
+    using Frame = std::array<Number, enumSize(Name)>;
+    using FramePointer = std::array<Number*, enumSize(Name)>;
+};
+
+using FrameBase = std::array<Number, enumSize(Name)>;
+
+
+
+template <typename Name, typename Number>
+using FramePointerBase = std::array<Number*, enumSize(Name)>;
+
+template <typename Name, typename Number>
+struct FramePointer : FramePointerBase {
+    Number*& operator[](Name name) {
+        return FramePointerBase::operator[](static_cast<size_t>(name));
+    }
+};
+
+template <typename Name, typename Number>
 struct Striped {
     static const auto SIZE = enumSize<Name>();
 

@@ -25,12 +25,17 @@ class Clean(distutils.core.Command):
 
 LIBRARIES = [] if platform.system() in ('Darwin', 'Linux') else ['m']
 
+COMPILE_ARGS = [
+    '-Wno-unused-function',
+    '-std=c++11',
+    ]
+
 EXTENSION = distutils.extension.Extension(
     name='fcolor',
     sources=['src/fcolor.pyx'],
     libraries=LIBRARIES,
     include_dirs=['src'],
-    extra_compile_args=['-Wno-unused-function'],
+    extra_compile_args=COMPILE_ARGS,
     language='c++',
     )
 

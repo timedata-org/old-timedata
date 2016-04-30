@@ -1,27 +1,42 @@
 #pragma once
 
-// #include <fcolor/Fcolor.h>
+#include <type_traits>
 
 namespace fcolor {
 
-template <typename Number>
-bool isNegative(Number n) { return n < 0; }
+template <typename Number,
+          typename std::enable_if_t<std::is_unsigned<Number>::value, int> = 0>
+Number abs(Number x) {
+    return x;
+}
 
-inline bool isNegative(unsigned char) { return false; }
-inline bool isNegative(unsigned short) { return false; }
-inline bool isNegative(unsigned int) { return false; }
-inline bool isNegative(unsigned long) { return false; }
-inline bool isNegative(unsigned long long) { return false; }
-
-template <typename Number>
-Number abs(Number x) { return isNegative(x) ? -x : x; }
+template <typename Number,
+          typename std::enable_if_t<std::is_signed<Number>::value, int> = 0>
+Number abs(Number x) {
+    return x >= 0 ? x : -x;
+}
 
 template <typename X, typename Y>
-auto mod(X dividend, Y divisor) -> decltype(dividend % divisor) {
-    auto modulo = dividend % divisor;
-    if (isNegative(modulo))
-        modulo += abs(divisor);
-    return modulo;
+using common_type = typename std::common_type<X, Y>::type;
+
+template <typename X, typename Y = X>
+using is_unsigned = std::is_unsigned<common_type<X, Y>>;
+
+template <typename X, typename Y = X>
+using is_signed = std::is_signed<common_type<X, Y>>;
+
+template <typename X,
+          typename Y,
+          typename std::enable_if_t<is_unsigned<X, Y>, int> = 0>
+common_type<X, Y> mod(X dividend, Y divisor) {
+    return dividend % divisor;
+}
+
+template <typename X,
+          typename Y,
+          typename std::enable_if_t<is_signed<X, Y>, int> = 0>
+common_type<X, Y> mod(X dividend, Y divisor) {
+    return dividend % divisor;
 }
 
 template <typename Number>
@@ -59,6 +74,21 @@ template <typename Enum,
 void forEach(Functor f) {
     for (size_t i = 0; i < enumSize<Enum>(); ++i)
         f(static_cast<Enum>(i));
+}
+
+template <typename Number>
+Number trunc(Number);
+
+template <typename T,
+          typename std::enable_if_t<std::is_integral<T>::value, int> = 0>
+T trunc(T x) {
+    return x;
+}
+
+template <typename T,
+          typename std::enable_if_t<std::is_floating_point<T>::value, int> = 0>
+T trunc(T x) {
+    return std::trunc(x);
 }
 
 }  // namespace fcolor
