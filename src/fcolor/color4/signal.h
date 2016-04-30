@@ -22,66 +22,60 @@ enum class Stereo { left, right };
 
 using namespace fcolor;
 
-template <typename Name, typename Number>
-struct Traits {
+template <typename T, size_t SIZE>
+using Arrays = std::array<std::unique_ptr<T[]>, SIZE>;
+
+template <typename T, size_t SIZE>
+Arrays<T, SIZE> makeArrays(size_t elements) {
+    Arrays<T, SIZE> result;
+    for (auto& r: result)
+        r = {new T[elements]};
+}
+
+template <typename Enum, typename T>
+struct Model {
+    using Name = Enum;
+    using Type = T;
+
     static const auto SIZE = enumSize<Name>();
 
-    using name_t = Name;
-    using number_t = Number;
-
-    using Frame = std::array<Number, SIZE>;
-    using FramePointer = std::array<Number*, SIZE>;
+    using Frame = std::array<Type, SIZE>;
+    using FrameRef = std::array<Type*, SIZE>;
 };
 
-template <typename Traits>
+template <typename Model>
 struct Striped {
-    static Number& get(FramePointer frame, size_t index, Name name) {
-        return frame[index * SIZE + enumSize(name)];
+    using model_t = Model;
+    using Name = typename Model::Name;
+    using Type = typename Model::Type;
+    using Array = Type;
+
+    static Type& get(Array* array, size_t index, Name name) {
+        return array[index * Model::SIZE + enumSize(name)];
     }
 
-    template <typename Function>
-    static void forEach(Frame frame, size_t begin, size_t end, Function func) {
-        while (auto i = begin; i < end; ++i) {
-            for (auto j = 0; j < SIZE; ++j, ++frame)
-                f(*frame, i, j);
-        }
-    }
-
-    template <typename Function>
-    static void forEachFrame(Frame frame, size_t b, size_t e, Function f) {
-        forEach(frame, b, e, f);
+    static Type get(Array const* array, size_t index, Name name) {
+        return array[index * Model::SIZE + enumSize(name)];
     }
 };
 
-template <typename Name, typename Number>
+template <typename Model>
 struct Parallel {
-    static const auto SIZE = enumSize<Name>();
+    using model_t = Model;
+    using Name = typename Model::Name;
+    using Type = typename Model::Type;
+    using Array = Type*;
 
-    using Frame = std::array<Number*, SIZE>;
-    using name_t = Name;
-    using number_t = Number;
-
-    static Number& get(Frame const& frame, size_t frameNumber, Name name) {
-        return frame[enumSize(name)][frameNumber];
+    static Type& get(Array* array, size_t index, Name name) {
+        return array[enumSize(name)][index];
     }
 
-    template <typename Function>
-    static void forEach(Frame frame, size_t begin, size_t end, Function f) {
-        for (auto n = 0; n < SIZE; ++n) {
-            auto fr = frame[n];
-            while (auto i = begin; i < end; ++i)
-                f(fr[i], i, static_cast<Name>(n));
-        }
-    }
-
-    template <typename Function>
-    static void forEachFrame(Frame frame, size_t begin, size_t end, Function f) {
-        while (auto i = begin; i < end; ++i) {
-            for (auto n = 0; n < SIZE; ++n)
-                f(frame[j][n], i, static_cast<Name>(n));
-        }
+    static Type get(Array const* array, size_t index, Name name) {
+        return array[enumSize(name)][index];
     }
 };
+
+#if 0
 
 template <typename Layout>
 struct Strip {
@@ -97,7 +91,6 @@ struct Strip {
     }
 };
 
-#if 0
     struct List {
         std::vector<Component> components;
 

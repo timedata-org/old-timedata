@@ -29,18 +29,14 @@ void forEach(Functor f) {
 template <typename T, typename Enum>
 struct EnumArray : std::array<T, enumSize<Enum>> {
     using Parent = std::array<T, enumSize<Enum>>;
+    using Parent::operator[];
+    using Parent::at;
 
-    using reference = Parent::reference;
-    using reference operator[](size_t);
-    using reference at(size_t);
-
+    using reference = typename Parent::reference;
     reference operator[] (Enum i) { return operator[](toUint8(i)); }
     reference at(Enum i)          { return at(toUint8(i)); }
 
-    using const_reference = Parent::const_reference;
-    using const_reference operator[](size_t);
-    using const_reference at(size_t);
-
+    using const_reference = typename Parent::const_reference;
     const_reference operator[] (Enum i) const { return operator[](toUint8(i)); }
     const_reference at(Enum i) const          { return at(toUint8(i)); }
 };
