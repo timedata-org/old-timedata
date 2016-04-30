@@ -1,4 +1,4 @@
-cdef class _ColorBase:
+cdef class Color:
     cdef float red
     cdef float green
     cdef float blue
@@ -20,8 +20,6 @@ cdef class _ColorBase:
     def blue(self):
         return self.blue
 
-
-cdef class Color(_ColorBase):
     def __len__(self):
         return 3
 
