@@ -1,5 +1,3 @@
-.deps/
-bin/
 build/
-src/fcolor.cpp
-*.so
+src/tdsp.cpp
+TAGS
