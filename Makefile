@@ -32,20 +32,20 @@ WARNINGS = -Wall -Wextra -Wno-strict-aliasing -Wpedantic
 
 DEFINES = -DDEBUG
 
-CXXFLAGS_BASE += \
+CXXFLAGS_BASE +=     \
   $(CODE_GENERATION) \
-  $(DEFINES) \
-  $(INCLUDES) \
-  $(LIBRARIES) \
-  $(WARNINGS) \
+  $(DEFINES)         \
+  $(INCLUDES)        \
+  $(LIBRARIES)       \
+  $(WARNINGS)        \
   $(DEPENDENCIES)
 
 CXXFLAGS = $(CXXFLAGS_BASE) $(DEPENDENCIES)
 CXXFLAGS_TEST = $(CXXFLAGS_BASE) $(GTEST_FLAGS)
 
-BINARIES = bin/tests
-OBJ = bin/obj
-DIRECTORIES = bin $(OBJ) .deps
+BINARIES = build/tests
+OBJ = build/obj
+DIRECTORIES = build $(OBJ) build/.deps
 
 #
 # Build rules
@@ -63,10 +63,10 @@ pre-build:
 binaries: pre-build
 	@$(MAKE) --no-print-directory $(BINARIES)
 
-bin/%: src/%.cpp
-	$(CXX) -o $@ $< $(CXXFLAGS) .deps/$*.d
+build/%: src/%.cpp
+	$(CXX) -o $@ $< $(CXXFLAGS) build/.deps/$*.d
 
 clean:
 	rm -Rf $(DIRECTORIES)
 
--include .deps/*.d
+-include build/.deps/*.d
