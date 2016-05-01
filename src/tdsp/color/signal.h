@@ -8,20 +8,13 @@
 #include <tdsp/base/math.h>
 #include <tdsp/base/enum.h>
 
-namespace tdsp4 {
+namespace tdsp {
 
 /** Signal models are definined by scoped enumerations.
 
     `size` always has to be the last entry in each one so we
     can generically get the number of elements in the enum class.
 */
-enum class RGB { red, green, blue, size };
-enum class RGBW { red, green, blue, white, size };
-enum class HSB { hue, saturation, brightness, size };
-enum class Stereo { left, right };
-// etc.
-
-using namespace tdsp;
 
 template <typename T, size_t SIZE>
 using Arrays = std::array<std::unique_ptr<T[]>, SIZE>;
@@ -44,7 +37,8 @@ struct Model {
     using FrameRef = std::array<Type*, SIZE>;
 };
 
-using RGBModel = Model<RGB>;
+template <typename Enum, typename T = float>
+using Frame = typename Model::Frame<Enum, T>;
 
 template <typename Model>
 struct Striped {

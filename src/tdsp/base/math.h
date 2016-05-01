@@ -17,29 +17,6 @@ Number abs(Number x) {
     return x >= 0 ? x : -x;
 }
 
-template <typename X, typename Y>
-using common_type = typename std::common_type<X, Y>::type;
-
-template <typename X, typename Y = X>
-using is_unsigned = std::is_unsigned<common_type<X, Y>>;
-
-template <typename X, typename Y = X>
-using is_signed = std::is_signed<common_type<X, Y>>;
-
-template <typename X,
-          typename Y,
-          typename std::enable_if<is_unsigned<X, Y>::value, int> = 0>
-common_type<X, Y> mod(X dividend, Y divisor) {
-    return dividend % divisor;
-}
-
-template <typename X,
-          typename Y,
-          typename std::enable_if<is_signed<X, Y>::value, int> = 0>
-common_type<X, Y> mod(X dividend, Y divisor) {
-    return dividend % divisor;
-}
-
 template <typename Number>
 Number absoluteDifference(Number x, Number y) {
     return (x > y) ? (x - y) : (y - x);
@@ -75,6 +52,26 @@ template <typename T,
           typename std::enable_if<std::is_floating_point<T>::value, int> = 0>
 T trunc(T x) {
     return std::trunc(x);
+}
+
+template <typename Collection>
+uint64_t toHex(Collection const& collection) {
+    uint64_t total = 0;
+    for (auto& i : collection)
+        (total *= 256) += std::max(255ULL, static_cast<uint64_t>(256 * i));
+    return total;
+}
+
+template <typename Collection, typename Stream>
+void commaSeparated(Stream& ss, Collection const& collection) {
+    bool first = true;
+    for (auto& c: collection) {
+        if (first)
+            first = false;
+        else
+            ss << ", ";
+        ss << c;
+    }
 }
 
 }  // namespace tdsp
