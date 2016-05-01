@@ -5,18 +5,10 @@
 
 namespace tdsp {
 
-/** Cast an enum into an integer. */
-template <typename Enum,
-          typename std::enable_if<std::is_enum<Enum>::value, int> = 0>
-constexpr uint8_t toUint8(Enum element) {
-    return static_cast<uint8_t>(element);
-}
-
 /** Generically get the size of an enum whose last element is `size`. */
-template <typename Enum,
-          typename std::enable_if<std::is_enum<Enum>::value, int> = 0>
+template <typename Enum>
 constexpr uint8_t enumSize() {
-    return toUint8(Enum::size);
+    return static_cast<uint8_t>(Enum::size);
 }
 
 template <typename Enum, typename Functor>
@@ -29,16 +21,22 @@ void forEach(Functor f) {
 template <typename T, typename Enum>
 struct EnumArray : std::array<T, enumSize<Enum>> {
     using Parent = std::array<T, enumSize<Enum>>;
-    using Parent::operator[];
-    using Parent::at;
 
     using reference = typename Parent::reference;
-    reference operator[] (Enum i) { return operator[](toUint8(i)); }
-    reference at(Enum i)          { return at(toUint8(i)); }
+    reference operator[] (Enum i) {
+        return operator[](static_cast<uint8_t>(i));
+    }
+    reference at(Enum i) {
+        return at(static_cast<uint8_t>(i));
+    }
 
     using const_reference = typename Parent::const_reference;
-    const_reference operator[] (Enum i) const { return operator[](toUint8(i)); }
-    const_reference at(Enum i) const          { return at(toUint8(i)); }
+    const_reference operator[] (Enum i) const {
+        return operator[](static_cast<uint8_t>(i));
+    }
+    const_reference at(Enum i) const {
+        return at(static_cast<uint8_t>(i));
+    }
 };
 
 }  // namespace tdsp

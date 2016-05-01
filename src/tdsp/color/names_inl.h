@@ -5,6 +5,7 @@
 #include <strstream>
 
 #include <tdsp/color/names.h>
+#include <tdsp/base/enum.h>
 #include <tdsp/base/math.h>
 #include <tdsp/base/stl.h>
 
@@ -14,7 +15,102 @@ using ColorNames = MapAndInverse<std::string, uint32_t>;
 
 ColorNames const& colorNames();
 
-inline Frame<RGB> toColor(uint32_t hex) {
+template <typename Collection, typename Function>
+void forEachPair(Collection const& coll, Function f) {
+    for (size_t i = 0; i + 1 < coll.size(); ++i)
+        for (size_t j = i + 1; j < coll.size(); ++j)
+            f(coll[i], coll[j]);
+}
+
+template <typename Collection>
+typename Collection::value_type maxPairedDistance(Collection const& coll) {
+    using Number = typename Collection::value_type;
+    Number result = 0;
+    forEachPair(coll, [&](Number x, Number y) {
+        result = std::max(result, std::abs(x - y));
+    });
+    return result;
+}
+
+inline std::string toString(Frame<RGB> color) {
+    auto stream = [] (int width, int precision) {
+        std::strstream ss;
+        ss << std::setw(width) << std::setprecision(precision);
+        return ss;
+    };
+
+    auto hex = fromHex(color);
+
+    auto i = colorNames().inverse.find(hex);
+    if (i != colorNames().inverse.end())
+        return i->second;
+
+    // Special case for grey and gray.
+    auto diff = maxPairedDistance(color);
+    if (diff < 0.0001)
+        return (stream(7, 2) << "gray " << 100 * color[0]).str();
+
+    auto ss = stream(7, 5);
+    return commaSeparated(ss, color).str();
+}
+
+inline Frame<RGB> toColor(std::string const& name) {
+    auto throwIf = [&] (bool cond, int i) {
+        if (cond) {
+            throw std::runtime_error("Bad color '" + name +
+                                     "' (" + std::to_string(i));
+        }
+    };
+
+    auto i = colorNames().map.find(name);
+    if (i != colorNames().map.end())
+        return toColor(i->second);
+
+    static const auto hexPrefixes = {"0x", "0X", "#"};
+    for (auto& prefix : hexPrefixes) {
+        if (not name.find(prefix))
+            return toColor(fromHex(name.substr(strlen(prefix))));
+    }
+
+    // strtod uses char* for some reason...
+    char* p = const_cast<char*>(&name[0]);
+
+    // Special case for grey and gray.
+    if (not (name.find("gray ") and name.find("grey "))) {
+        auto gray = static_cast<float>(strtod(p + 5, &p));
+        throwIf(*p, 1);
+        return {{gray / 100, gray / 100, gray / 100}};
+    }
+
+    // Otherwise, it has to be three comma-separated numbers.
+    auto skipSpaces = [&]() {
+        for (; isspace(*p); ++p);
+    };
+
+    auto getNumber = [&]() {
+        auto x = strtod(p, &p);
+        skipSpaces();
+        return static_cast<float>(x);
+    };
+
+    auto skipComma = [&]() {
+        throwIf(*p++ != ',', 2);
+        skipSpaces();
+    };
+
+    auto r = getNumber();
+    skipComma();
+
+    auto g = getNumber();
+    skipComma();
+
+    auto b = getNumber();
+    throwIf(*p, 3);
+
+    return {{r, g, b}};
+}
+
+inline Frame<RGB> toColor(unsigned int hex) {
     static const auto BYTE = 256;
     auto b = hex % BYTE;
     hex /= BYTE;
@@ -23,40 +119,11 @@ inline Frame<RGB> toColor(uint32_t hex) {
     hex /= BYTE;
 
     auto r = hex % BYTE;
-    return {r, g, b};
+    return {{r / 255.0f, g / 255.0f, b / 255.0f}};
 };
 
-inline std::string toString(Frame<RGB> color) {
-    auto hex = toHex(color);
-
-    auto i = colorNames().inverse.find(hex);
-    if (i != colorNames().inverse.end())
-        return i->second;
-
-    // Special case for grey and gray.
-    if (
-
-    std::strstream ss;
-    ss << std::setprecision(5) << std::setwidth(7);
-    commaSeparated(ss);
-    return ss.str();
-}
-
-inline Frame<RGB> toColor(std::string const& name) {
-    auto& map = colorNames().map;
-    auto i = map.find(name);
-    if (i != map.end())
-        return i->second;
-
-    // Now we need to parse this string!
-}
-
-/** Convert a string to a Color.  Throws an exception if the string
-    cannot be parsed into a color. */
-Frame<RGB> fromString(std::string const&);
-
 inline ColorNames const& colorNames() {
-    static ColorNames map{{
+    static ColorNames names{{
         {"alice blue", 0xf0f8ff},
         {"antique white 1", 0xffefdb},
         {"antique white 2", 0xeedfcc},
@@ -538,12 +605,7 @@ inline ColorNames const& colorNames() {
         {"yellow green", 0x9acd32},
         {"yellow", 0xffff00}
     }};
-    return nameMap;
+    return names;
 }
-
-}  // detail
-std::string toString(Frame<RGB>);
-Frame<RGB> fromString(std::string const&);
-
 
 }  // tdsp

@@ -6,6 +6,8 @@
 
 namespace tdsp {
 
+Frame<RGB> toColor(unsigned int hex);
+
 /** Convert a Color to a string. */
 std::string toString(Frame<RGB>);
 

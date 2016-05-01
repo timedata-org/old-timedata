@@ -4,14 +4,11 @@
 #include <tdsp/color/signal.h>
 
 namespace tdsp {
-namespace color {
 
 enum class RGB { red, green, blue, size };
 enum class RGBW { red, green, blue, white, size };
 enum class HSB { hue, saturation, brightness, size };
 // enum class Stereo { left, right };
-
-} // color
 
 // A Frame<RGB>
 
