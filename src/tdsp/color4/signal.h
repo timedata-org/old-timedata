@@ -5,7 +5,7 @@
 #include <type_traits>
 #include <vector>
 
-#include <tdsp/base/Math.h>
+#include <tdsp/base/math.h>
 #include <tdsp/base/enum.h>
 
 namespace tdsp4 {
