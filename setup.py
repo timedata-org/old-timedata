@@ -20,7 +20,7 @@ class Clean(distutils.core.Command):
 
     def run(self):
         assert os.getcwd() == self.cwd, 'Must be in package root: %s' % self.cwd
-        execute('rm -Rf ./build src/fcolor.cpp')
+        execute('rm -Rf ./build src/tdsp.cpp')
 
 
 LIBRARIES = [] if platform.system() in ('Darwin', 'Linux') else ['m']
@@ -36,8 +36,8 @@ if platform.system() == 'Darwin':
 
 
 EXTENSION = distutils.extension.Extension(
-    name='fcolor',
-    sources=['src/fcolor.pyx'],
+    name='tdsp',
+    sources=['src/tdsp.pyx'],
     libraries=LIBRARIES,
     include_dirs=['src'],
     extra_compile_args=COMPILE_ARGS,
@@ -50,7 +50,7 @@ EXT_MODULES=Cython.Build.cythonize(
     )
 
 distutils.core.setup(
-    name='fcolor',
+    name='tdsp',
     cmdclass={'clean': Clean},
     ext_modules=EXT_MODULES,
     )
