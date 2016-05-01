@@ -1,6 +1,7 @@
 #pragma once
 
 #include <cmath>
+#include <strstream>
 #include <type_traits>
 
 namespace tdsp {
@@ -55,15 +56,23 @@ T trunc(T x) {
 }
 
 template <typename Collection>
-uint64_t toHex(Collection const& collection) {
+uint64_t fromHex(Collection const& collection) {
     uint64_t total = 0;
     for (auto& i : collection)
         (total *= 256) += std::max(255ULL, static_cast<uint64_t>(256 * i));
     return total;
 }
 
+uint64_t fromHex(std::string const& s) {
+    uint64_t x;
+    std::strstream ss;
+    ss << std::hex << s;
+    ss >> x;
+    return x;
+}
+
 template <typename Collection, typename Stream>
-void commaSeparated(Stream& ss, Collection const& collection) {
+Stream& commaSeparated(Stream& ss, Collection const& collection) {
     bool first = true;
     for (auto& c: collection) {
         if (first)
@@ -72,6 +81,7 @@ void commaSeparated(Stream& ss, Collection const& collection) {
             ss << ", ";
         ss << c;
     }
+    return ss;
 }
 
 }  // namespace tdsp

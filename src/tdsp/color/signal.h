@@ -29,29 +29,30 @@ Arrays<T, SIZE> makeArrays(size_t elements) {
 template <typename Enum, typename T = float>
 struct Model {
     using Name = Enum;
-    using Type = T;
+    using Number = T;
 
     static const auto SIZE = enumSize<Name>();
 
-    using Frame = std::array<Type, SIZE>;
-    using FrameRef = std::array<Type*, SIZE>;
+    using Frame = std::array<Number, SIZE>;
+    using FrameRef = std::array<Number*, SIZE>;
 };
 
 template <typename Enum, typename T = float>
-using Frame = typename Model::Frame<Enum, T>;
+using Frame = typename Model<Enum, T>::Frame;
+
 
 template <typename Model>
 struct Striped {
     using model_t = Model;
     using Name = typename Model::Name;
-    using Type = typename Model::Type;
-    using Array = Type;
+    using Number = typename Model::Number;
+    using Array = Number;
 
-    static Type& get(Array* array, size_t index, Name name) {
+    static Number& get(Array* array, size_t index, Name name) {
         return array[index * Model::SIZE + enumSize(name)];
     }
 
-    static Type get(Array const* array, size_t index, Name name) {
+    static Number get(Array const* array, size_t index, Name name) {
         return array[index * Model::SIZE + enumSize(name)];
     }
 };
@@ -60,14 +61,14 @@ template <typename Model>
 struct Parallel {
     using model_t = Model;
     using Name = typename Model::Name;
-    using Type = typename Model::Type;
-    using Array = Type*;
+    using Number = typename Model::Number;
+    using Array = Number*;
 
-    static Type& get(Array* array, size_t index, Name name) {
+    static Number& get(Array* array, size_t index, Name name) {
         return array[enumSize(name)][index];
     }
 
-    static Type get(Array const* array, size_t index, Name name) {
+    static Number get(Array const* array, size_t index, Name name) {
         return array[enumSize(name)][index];
     }
 };
