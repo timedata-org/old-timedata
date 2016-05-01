@@ -12,8 +12,15 @@ std::map<To, From> invert(std::map<From, To> const& map) {
     return result;
 }
 
-template <class Map>
-using Inverse = decltype(invert(Map()));
+template <class From, class To>
+struct MapAndInverse {
+    std::map<From, To> map;
+    std::map<To, From> inverse;
+
+    MapAndInverse(std::map<From, To>&& m)
+            : map(std::move(m)), inverse(invert(map)) {
+    }
+};
 
 template <class From, class To, class Operator>
 auto operate(std::map<From, To> const& map, Operator op)

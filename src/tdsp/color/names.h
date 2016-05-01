@@ -1,18 +1,16 @@
 #pragma once
 
+#include <string>
+
 #include <tdsp/color/color.h>
-#include <tdsp/base/stl.h>
 
 namespace tdsp {
-namespace name {
 
-using ToValue = std::map<std::string, uint32_t>;
-using FromValue = std::map<uint32_t, std::string>;
-using ToColor = std::map<std::string, Color8>;
+/** Convert a Color to a string. */
+std::string toString(Frame<RGB>);
 
-ToValue const& toValue();
-FromValue const& fromValue();
-ToColor const& toColor();
+/** Convert a string to a Color.  Throws an exception if the string
+    cannot be parsed into a color. */
+Frame<RGB> toColor(std::string const&);
 
-} // name
 } // tdsp

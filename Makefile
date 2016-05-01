@@ -1,8 +1,3 @@
-# This file is DEPRECATED in favor of setup.py.
-#
-
-
-#
 # Optional command line arguments:
 # see http://stackoverflow.com/a/24264930/43839
 #
@@ -46,6 +41,16 @@ CXXFLAGS_TEST = $(CXXFLAGS_BASE) $(GTEST_FLAGS)
 BINARIES = build/tests
 OBJ = build/obj
 DIRECTORIES = build $(OBJ) build/.deps
+
+# Full build and test commands on my machine:
+#
+# $ source /development/env/cython/bin/activate && \
+#    rm -Rf build *.so && \
+#    python setup.py clean && \
+#    python setup.py build_ext && \
+#    make && \
+#    build/tests
+#
 
 #
 # Build rules

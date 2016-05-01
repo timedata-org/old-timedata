@@ -1,14 +1,62 @@
+#include <algorithm>
+#include <iomanip>
+#include <iostream>
 #include <map>
+#include <strstream>
 
-#include <tdsp/base/stl.h>
 #include <tdsp/color/names.h>
-#include <tdsp/color/pack_inl.h>
+#include <tdsp/base/math.h>
+#include <tdsp/base/stl.h>
 
 namespace tdsp {
-namespace name {
 
-ToValue const& toValue() {
-    static const std::map<std::string, uint32_t> map{
+using ColorNames = MapAndInverse<std::string, uint32_t>;
+
+ColorNames const& colorNames();
+
+inline Frame<RGB> toColor(uint32_t hex) {
+    static const auto BYTE = 256;
+    auto b = hex % BYTE;
+    hex /= BYTE;
+
+    auto g = hex % BYTE;
+    hex /= BYTE;
+
+    auto r = hex % BYTE;
+    return {r, g, b};
+};
+
+inline std::string toString(Frame<RGB> color) {
+    auto hex = toHex(color);
+
+    auto i = colorNames().inverse.find(hex);
+    if (i != colorNames().inverse.end())
+        return i->second;
+
+    // Special case for grey and gray.
+    if (
+
+    std::strstream ss;
+    ss << std::setprecision(5) << std::setwidth(7);
+    commaSeparated(ss);
+    return ss.str();
+}
+
+inline Frame<RGB> toColor(std::string const& name) {
+    auto& map = colorNames().map;
+    auto i = map.find(name);
+    if (i != map.end())
+        return i->second;
+
+    // Now we need to parse this string!
+}
+
+/** Convert a string to a Color.  Throws an exception if the string
+    cannot be parsed into a color. */
+Frame<RGB> fromString(std::string const&);
+
+inline ColorNames const& colorNames() {
+    static ColorNames map{{
         {"alice blue", 0xf0f8ff},
         {"antique white 1", 0xffefdb},
         {"antique white 2", 0xeedfcc},
@@ -488,21 +536,14 @@ ToValue const& toValue() {
         {"yellow 3", 0xcdcd00},
         {"yellow 4", 0x8b8b00},
         {"yellow green", 0x9acd32},
-        {"yellow", 0xffff00},
-    };
-
-    return map;
+        {"yellow", 0xffff00}
+    }};
+    return nameMap;
 }
 
-FromValue const& fromValue() {
-    static const auto map = invert(toValue());
-    return map;
-}
+}  // detail
+std::string toString(Frame<RGB>);
+Frame<RGB> fromString(std::string const&);
 
-ToColor const& toColor() {
-    static const auto map = operate(toValue(), unpack<Color8::number_t>);
-    return map;
-}
 
-}  // name
 }  // tdsp
