@@ -1,4 +1,4 @@
-cdef extern from "<tdsp/color4/signal.h>" namespace "tdsp4":
+cdef extern from "<tdsp/color/signal.h>" namespace "tdsp":
     pass
 
 cdef class Color:

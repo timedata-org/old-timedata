@@ -1,4 +1,4 @@
-#include <tdsp/color4/signal.h>
+#include <tdsp/color/signal.h>
 
 #define CATCH_CONFIG_MAIN
 
