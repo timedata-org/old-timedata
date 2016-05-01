@@ -1,3 +1,6 @@
+cdef extern from "<fcolor/color4/signal.h>" namespace "fcolor4":
+    pass
+
 cdef class Color:
     cdef float red
     cdef float green
@@ -23,7 +26,7 @@ cdef class Color:
     def __len__(self):
         return 3
 
-    def __getitem__(self, key):
+    def __getitem__(self, int key):
         if key == 0:
             return self.red
         if key == 1:

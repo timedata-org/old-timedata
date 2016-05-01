@@ -6,13 +6,13 @@
 namespace fcolor {
 
 template <typename Number,
-          typename std::enable_if_t<std::is_unsigned<Number>::value, int> = 0>
+          typename std::enable_if<std::is_unsigned<Number>::value, int> = 0>
 Number abs(Number x) {
     return x;
 }
 
 template <typename Number,
-          typename std::enable_if_t<std::is_signed<Number>::value, int> = 0>
+          typename std::enable_if<std::is_signed<Number>::value, int> = 0>
 Number abs(Number x) {
     return x >= 0 ? x : -x;
 }
@@ -28,14 +28,14 @@ using is_signed = std::is_signed<common_type<X, Y>>;
 
 template <typename X,
           typename Y,
-          typename std::enable_if_t<is_unsigned<X, Y>::value, int> = 0>
+          typename std::enable_if<is_unsigned<X, Y>::value, int> = 0>
 common_type<X, Y> mod(X dividend, Y divisor) {
     return dividend % divisor;
 }
 
 template <typename X,
           typename Y,
-          typename std::enable_if_t<is_signed<X, Y>::value, int> = 0>
+          typename std::enable_if<is_signed<X, Y>::value, int> = 0>
 common_type<X, Y> mod(X dividend, Y divisor) {
     return dividend % divisor;
 }
@@ -66,13 +66,13 @@ template <typename Number>
 Number trunc(Number);
 
 template <typename T,
-          typename std::enable_if_t<std::is_integral<T>::value, int> = 0>
+          typename std::enable_if<std::is_integral<T>::value, int> = 0>
 T trunc(T x) {
     return x;
 }
 
 template <typename T,
-          typename std::enable_if_t<std::is_floating_point<T>::value, int> = 0>
+          typename std::enable_if<std::is_floating_point<T>::value, int> = 0>
 T trunc(T x) {
     return std::trunc(x);
 }
