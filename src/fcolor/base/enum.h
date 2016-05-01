@@ -7,14 +7,14 @@ namespace fcolor {
 
 /** Cast an enum into an integer. */
 template <typename Enum,
-          typename std::enable_if_t<std::is_enum<Enum>::value, int> = 0>
+          typename std::enable_if<std::is_enum<Enum>::value, int> = 0>
 constexpr uint8_t toUint8(Enum element) {
     return static_cast<uint8_t>(element);
 }
 
 /** Generically get the size of an enum whose last element is `size`. */
 template <typename Enum,
-          typename std::enable_if_t<std::is_enum<Enum>::value, int> = 0>
+          typename std::enable_if<std::is_enum<Enum>::value, int> = 0>
 constexpr uint8_t enumSize() {
     return toUint8(Enum::size);
 }

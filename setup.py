@@ -28,7 +28,12 @@ LIBRARIES = [] if platform.system() in ('Darwin', 'Linux') else ['m']
 COMPILE_ARGS = [
     '-Wno-unused-function',
     '-std=c++11',
+#    '--version',
     ]
+
+if platform.system() == 'Darwin':
+    COMPILE_ARGS.append('-mmacosx-version-min=10.9')
+
 
 EXTENSION = distutils.extension.Extension(
     name='fcolor',
@@ -39,7 +44,10 @@ EXTENSION = distutils.extension.Extension(
     language='c++',
     )
 
-EXT_MODULES=Cython.Build.cythonize([EXTENSION])
+EXT_MODULES=Cython.Build.cythonize(
+    [EXTENSION],
+    language='c++',
+    )
 
 distutils.core.setup(
     name='fcolor',

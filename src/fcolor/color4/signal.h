@@ -2,6 +2,7 @@
 
 #include <array>
 #include <string>
+#include <type_traits>
 #include <vector>
 
 #include <fcolor/base/Math.h>
@@ -32,7 +33,7 @@ Arrays<T, SIZE> makeArrays(size_t elements) {
         r = {new T[elements]};
 }
 
-template <typename Enum, typename T>
+template <typename Enum, typename T = float>
 struct Model {
     using Name = Enum;
     using Type = T;
@@ -42,6 +43,8 @@ struct Model {
     using Frame = std::array<Type, SIZE>;
     using FrameRef = std::array<Type*, SIZE>;
 };
+
+using RGBModel = Model<RGB>;
 
 template <typename Model>
 struct Striped {
