@@ -10,22 +10,20 @@
 #   $ make COMPILER=g++-5 STDLIB=c++14
 #
 
-COMPILER ?= g++
 OPTIMIZE ?= -O0
-STDLIB ?= c++1y
+STDLIB ?= c++11
 SYMBOLS ?= -g
 
 #
 # Compilation variables.
 #
-CXX = $(COMPILER)
 CODE_GENERATION = $(OPTIMIZE) $(SYMBOLS) -std=$(STDLIB) -pthread
-DEPENDENCIES =  -MMD -MP -MF
+DEPENDENCIES = -MMD -MP -MF
 INCLUDES = -Isrc -Isrc/jsoncpp/include
 LIBRARIES = -lm -lstdc++
 WARNINGS = -Wall -Wextra -Wno-strict-aliasing -Wpedantic
 
-DEFINES = -DDEBUG
+DEFINES = -DDEBUG -DCATCH_CONFIG_COLOUR_NONE
 
 CXXFLAGS_BASE +=     \
   $(CODE_GENERATION) \
@@ -36,7 +34,7 @@ CXXFLAGS_BASE +=     \
   $(DEPENDENCIES)
 
 CXXFLAGS = $(CXXFLAGS_BASE) $(DEPENDENCIES)
-CXXFLAGS_TEST = $(CXXFLAGS_BASE) $(GTEST_FLAGS)
+CXXFLAGS_TEST = $(CXXFLAGS_BASE)
 
 BINARIES = build/tests
 OBJ = build/obj
