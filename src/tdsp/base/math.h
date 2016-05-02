@@ -6,6 +6,8 @@
 #include <strstream>
 #include <type_traits>
 
+#include <tdsp/base/throw.h>
+
 namespace tdsp {
 
 template <typename Number,
@@ -103,6 +105,18 @@ void skipSpaces(Pointer* p) {
 inline bool isNearFraction(float decimal, unsigned int denominator) {
     auto numerator = denominator * decimal;
     return std::abs(std::round(numerator) - numerator) < 0.0001f;
+}
+
+inline bool cmpToRichcmp(float cmp, int richcmp) {
+    switch (richcmp) {
+        case 0: return cmp < 0;
+        case 1: return cmp <= 0;
+        case 2: return cmp == 0;
+        case 3: return cmp != 0;
+        case 4: return cmp > 0;
+        case 5: return cmp >= 0;
+        default:  THROW("Bad richcmp", richcmp); return false;
+    }
 }
 
 }  // namespace tdsp
