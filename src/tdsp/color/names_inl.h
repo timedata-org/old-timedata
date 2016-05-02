@@ -80,7 +80,7 @@ inline std::string toString(Frame<RGB> color) {
         toCommaSeparated(color);
 }
 
-inline bool toColor(std::string const& name, Frame<RGB>& result) {
+inline bool toColor(char const* name, Frame<RGB>& result) {
     auto i = colorNames().find(name);
     if (i != colorNames().end()) {
         result = toColor(i->second);
@@ -89,47 +89,44 @@ inline bool toColor(std::string const& name, Frame<RGB>& result) {
 
     static const auto hexPrefixes = {"0x", "0X", "#"};
     for (auto& prefix : hexPrefixes) {
-        if (not name.find(prefix)) {
-            result = toColor(fromHex(name.substr(strlen(prefix))));
+        if (strstr(name, prefix) == name) {
+            result = toColor(fromHex(name + strlen(prefix)));
             return true;
         }
     }
 
-    // strtod uses char* for some reason...
-    char* p = const_cast<char*>(&name[0]);
+    char* endptr;
 
     // Special case for grey and gray.
-    if (not (name.find("gray ") and name.find("grey "))) {
-        auto gray = static_cast<float>(strtod(p + 5, &p)) / 100;
-        if (*p)
-            return false;
-        result = {{gray, gray, gray}};
-        return true;
+    if (not (strstr(name, "gray ") and strstr(name, "grey "))) {
+        auto gray = static_cast<float>(strtod(name + 5, &endptr)) / 100;
+        if (not *endptr) {
+            result = {{gray, gray, gray}};
+            return true;
+        }
+        return false;
     }
 
-    // Otherwise, it has to be three comma-separated numbers.
-    auto skipSpaces = [&]() {
-        for (; isspace(*p); ++p);
-    };
-
     auto getNumber = [&]() {
-        auto x = strtod(p, &p);
-        skipSpaces();
+        auto x = strtod(name, &endptr);
+        name = endptr;
+
+        skipSpaces(name);
         return static_cast<float>(x);
     };
 
     result[0] = getNumber(); // RGB::red
-    if (*p++ != ',')
+    if (*name++ != ',')
         return false;
-    skipSpaces();
+    skipSpaces(name);
 
     result[1] = getNumber();
-    if (*p++ != ',')
+    if (*name++ != ',')
         return false;
-    skipSpaces();
+    skipSpaces(name);
 
     result[2] = getNumber();
-    if (*p)
+    if (*name)
         return false;
     return true;
 }
@@ -159,7 +156,7 @@ inline Frame<RGB> colorFromCommaSeparated(char const* p) {
     return {{r, g, b}};
 }
 
-inline Frame<RGB> toColor(std::string const& name) {
+inline Frame<RGB> toColor(char const* name) {
     Frame<RGB> result;
     throwIf(not toColor(name, result), "Bad color name", name);
     return result;

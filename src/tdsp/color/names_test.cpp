@@ -9,7 +9,7 @@ TEST_CASE("color", "names") {
    REQUIRE(toString(Frame<RGB>{{0, 0, 0}}) == "black");
 
    for (auto& i : colorNamesInverse())
-       REQUIRE(toString(toColor(i.second)) == i.second);
+       REQUIRE(toString(toColor(i.second.c_str())) == i.second);
 }
 
 } // namespace
