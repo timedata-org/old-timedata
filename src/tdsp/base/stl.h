@@ -14,12 +14,11 @@ std::map<To, From> invert(std::map<From, To> const& map) {
 
 template <class From, class To>
 struct MapAndInverse {
-    std::map<From, To> map;
-    std::map<To, From> inverse;
+    using Map = std::map<From, To>;
+    using Inverse = std::map<To, From>;
 
-    MapAndInverse(std::map<From, To>&& m)
-            : map(std::move(m)), inverse(invert(map)) {
-    }
+    Map map;
+    Inverse inverse;
 };
 
 template <class From, class To, class Operator>
