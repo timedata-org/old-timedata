@@ -1,5 +1,6 @@
 #pragma once
 
+#include <strstream>
 #include <typeinfo>
 
 namespace tdsp {
@@ -29,14 +30,14 @@ inline std::string joinSpace() {
 
 template <typename Arg>
 std::string joinSpace(Arg&& arg) {
-    std::stringstream ss;
+    std::strstream ss;
     ss << arg;
     return ss.str();
 }
 
 template <typename Arg, typename ... Args>
 std::string joinSpace(Arg&& arg, Args&&... args) {
-    std::stringstream ss;
+    std::strstream ss;
     ss << arg;
     (void) detail::Expander{
         (spaceAppendTo(ss, std::forward<Args>(args)), void(), 0) ... };
@@ -70,7 +71,7 @@ std::string join() {
 
 template <typename ... Args>
 std::string join(Args&& ... args) {
-    std::stringstream ss;
+    std::strstream ss;
     (void) detail::Expander{(detail::appendTo(
         ss, std::forward<Args>(args)), void(), 0) ... };
     return ss.str();
