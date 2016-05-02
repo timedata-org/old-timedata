@@ -1,8 +1,10 @@
 #pragma once
 
+#include <set>
 #include <string>
 
 #include <tdsp/color/color.h>
+#include <tdsp/base/stl.h>
 
 namespace tdsp {
 
@@ -18,5 +20,17 @@ std::string toCommaSeparated(Frame<RGB>);
 /** Convert a string to a Color.  Throws an exception if the string
     cannot be parsed into a color. */
 Frame<RGB> toColor(std::string const&);
+
+using ColorNames = std::map<std::string, uint32_t>;
+using ColorNamesInverse = std::map<uint32_t, std::string>;
+
+/** Names of hex colors we recognize. */
+ColorNames const& colorNames();
+
+/** Best inverse of color names, taking into account secondaryColors. */
+ColorNamesInverse const& colorNamesInverse();
+
+/** Alternate color names we recognize. */
+std::set<std::string> const& secondaryColors();
 
 } // tdsp

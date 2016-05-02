@@ -23,9 +23,6 @@ cdef class Color:
     def blue(self):
         return self.blue
 
-    def __len__(self):
-        return 3
-
     def __getitem__(self, int key):
         if key == 0:
             return self.red
@@ -34,3 +31,6 @@ cdef class Color:
         if key == 2:
             return self.blue
         raise IndexError('Color index out of range')
+
+    def __len__(self):
+        return 3

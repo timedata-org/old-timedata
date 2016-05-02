@@ -87,9 +87,11 @@ Stream& commaSeparated(Stream& ss, Collection const& collection) {
     return ss;
 }
 
-inline std::strstream makeStream(int width, int precision) {
+inline std::strstream makeStream(int precision = 7, int width = 0) {
     std::strstream ss;
-    ss << std::setw(width) << std::setprecision(precision);
+    ss << std::setprecision(precision);
+    if (width)
+        ss << std::setw(width);
     return ss;
 }
 
@@ -97,5 +99,10 @@ template <typename Pointer>
 void skipSpaces(Pointer& p) {
     for (; isspace(*p); ++p);
 };
+
+inline bool isNearFraction(float decimal, unsigned int denominator) {
+    auto numerator = denominator * decimal;
+    return std::abs(std::round(numerator) - numerator) < 0.0001f;
+}
 
 }  // namespace tdsp

@@ -8,19 +8,9 @@
 #include <tdsp/color/names.h>
 #include <tdsp/base/enum.h>
 #include <tdsp/base/math.h>
-#include <tdsp/base/stl.h>
 #include <tdsp/base/throw.h>
 
 namespace tdsp {
-
-using ColorNames = MapAndInverse<std::string, uint32_t>;
-
-ColorNames makeColorNames();
-
-ColorNames& colorNames() {
-    static auto names = makeColorNames();
-    return names;
-}
 
 template <typename Collection, typename Function>
 void forEachPair(Collection const& coll, Function f) {
@@ -51,6 +41,14 @@ inline Frame<RGB> toColor(unsigned int hex) {
     return {{r / 255.0f, g / 255.0f, b / 255.0f}};
 };
 
+inline bool isNearHex(float decimal) {
+    return isNearFraction(decimal, 255);
+}
+
+inline bool isGray(Frame<RGB> color) {
+    return maxPairedDistance(color) < 0.0001;
+}
+
 inline float strtof(const char *nptr, char const **endptr) {
     char* ep;
     auto r = ::strtof(nptr, &ep);
@@ -59,22 +57,23 @@ inline float strtof(const char *nptr, char const **endptr) {
 }
 
 inline std::string toCommaSeparated(Frame<RGB> color) {
-    auto ss = makeStream(7, 5);
+    auto ss = makeStream();
     return commaSeparated(ss, color).str();
 }
 
 inline std::string toString(Frame<RGB> color) {
-    auto hex = fromHex(color);
+    if (std::all_of(color.begin(), color.end(), isNearHex)) {
+        auto hex = fromHex(color);
 
-    auto i = colorNames().inverse.find(hex);
-    if (i != colorNames().inverse.end())
-        return i->second;
+        auto i = colorNamesInverse().find(hex);
+        if (i != colorNamesInverse().end())
+            return i->second;
+    }
 
     // Special case for grey and gray.
-    auto diff = maxPairedDistance(color);
-    if (diff < 0.0001)
-        return (makeStream(7, 2) << "gray " << 100 * color[0]).str();
-    return toCommaSeparated(color);
+    return isGray(color) ?
+        (makeStream() << "gray " << 100 * color[0]).str() :
+        toCommaSeparated(color);
 }
 
 inline Frame<RGB> colorFromCommaSeparated(char const* p) {
@@ -103,8 +102,8 @@ inline Frame<RGB> colorFromCommaSeparated(char const* p) {
 }
 
 inline Frame<RGB> toColor(std::string const& name) {
-    auto i = colorNames().map.find(name);
-    if (i != colorNames().map.end())
+    auto i = colorNames().find(name);
+    if (i != colorNames().end())
         return toColor(i->second);
 
     static const auto hexPrefixes = {"0x", "0X", "#"};
@@ -151,8 +150,80 @@ inline Frame<RGB> toColor(std::string const& name) {
     return {{r, g, b}};
 }
 
-inline ColorNames makeColorNames() {
-    ColorNames::Map map{{
+inline ColorNamesInverse const& colorNamesInverse() {
+    auto construct = []() {
+        ColorNamesInverse inverse;
+        for (auto& i: colorNames()) {
+            auto& name = i.first;
+            auto& hex = i.second;
+            if (secondaryColors().count(name))
+                continue;
+            throwIf(inverse.count(hex), "Duplicate name", name, hex);
+            inverse[hex] = name;
+        }
+        return inverse;
+    };
+
+    auto static const inverse = construct();
+    return inverse;
+}
+
+inline std::set<std::string> const& secondaryColors() {
+    static const std::set<std::string> colors{
+        "aqua",
+        "aquamarine 1",
+        "aquamarine 3",
+        "azure 1",
+        "bisque 1",
+        "blue 3",
+        "blue 4",
+        "chartreuse 1",
+        "chocolate 4",
+        "corn silk 1",
+        "cyan 4",
+        "dark olivegreen",
+        "deep pink 1",
+        "deep sky blue 1",
+        "dodger blue 1",
+        "fuchsia",
+        "gold 1",
+        "grey",
+        "green 1",
+        "honeydew 1",
+        "ivory 1",
+        "lavender blush 1",
+        "lemon chiffon 1",
+        "light cyan 1",
+        "light salmon 1",
+        "light yellow 1",
+        "lime",
+        "limegreen",
+        "magenta 4",
+        "medium seagreen",
+        "medium slateblue",
+        "medium violetred",
+        "misty rose 1",
+        "navajo white 1",
+        "none",
+        "olive drab 3",
+        "orange 1",
+        "orange red 1",
+        "pale green 2",
+        "peachpuff 1",
+        "red 1",
+        "red 4",
+        "sea green 4",
+        "seashell 1",
+        "snow 1",
+        "tan 3",
+        "tomato 1",
+        "yellow 1"
+    };
+    return colors;
+}
+
+inline ColorNames const& colorNames() {
+    static const ColorNames names{{
         {"alice blue", 0xf0f8ff},
         {"antique white 1", 0xffefdb},
         {"antique white 2", 0xeedfcc},
@@ -635,69 +706,7 @@ inline ColorNames makeColorNames() {
         {"yellow green", 0x9acd32},
         {"yellow", 0xffff00}
     }};
-
-    std::set<std::string> secondaryNames{
-        "aqua",
-        "aquamarine 1",
-        "aquamarine 3",
-        "azure 1",
-        "bisque 1",
-        "blue 3",
-        "blue 4",
-        "chartreuse 1",
-        "chocolate 4",
-        "corn silk 1",
-        "cyan 4",
-        "dark olivegreen",
-        "deep pink 1",
-        "deep sky blue 1",
-        "dodger blue 1",
-        "fuchsia",
-        "gold 1",
-        "grey",
-        "green 1",
-        "honeydew 1",
-        "ivory 1",
-        "lavender blush 1",
-        "lemon chiffon 1",
-        "light cyan 1",
-        "light salmon 1",
-        "light yellow 1",
-        "lime",
-        "limegreen",
-        "magenta 4",
-        "medium seagreen",
-        "medium slateblue",
-        "medium violetred",
-        "misty rose 1",
-        "navajo white 1",
-        "none",
-        "olive drab 3",
-        "orange 1",
-        "orange red 1",
-        "pale green 2",
-        "peachpuff 1",
-        "red 1",
-        "red 4",
-        "sea green 4",
-        "seashell 1",
-        "snow 1",
-        "tan 3",
-        "tomato 1",
-        "yellow 1"
-    };
-
-    ColorNames::Inverse inverse;
-    for (auto& i: map) {
-        auto& name = i.first;
-        auto& hex = i.second;
-        if (secondaryNames.count(name))
-            continue;
-        throwIf(inverse.count(hex), "Duplicate name", name, hex);
-        inverse[hex] = name;
-    }
-
-    return {map, inverse};
+    return names;
 }
 
 }  // tdsp
