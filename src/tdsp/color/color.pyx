@@ -1,5 +1,15 @@
+from libcpp.string cimport string
+
 cdef extern from "<tdsp/color/names.h>" namespace "tdsp":
-    pass
+    cdef cppclass RGB:
+        pass
+
+    cdef cppclass Frame[T]:
+        float& at(int)
+
+    Frame[RGB] toColor(string)
+    string colorToString(float r, float g, float b)
+
 
 cdef class Color:
     cdef float red
@@ -34,3 +44,17 @@ cdef class Color:
 
     def __len__(self):
         return 3
+
+    def __str__(self):
+        return colorToString(self.red, self.green, self.blue)
+
+    def __repr__(self):
+        cl = self.__class__
+        return '%s.%s(%s)' % (cl.__module__, cl.__name__, str(self))
+
+    @staticmethod
+    def from_string(string s):
+        cdef Frame[RGB] frame
+        # exceptions!
+        frame = toColor(s)
+        return Color(frame.at(0), frame.at(1), frame.at(2))

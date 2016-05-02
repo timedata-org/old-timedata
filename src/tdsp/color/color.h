@@ -10,6 +10,4 @@ enum class RGBW { red, green, blue, white, size };
 enum class HSB { hue, saturation, brightness, size };
 // enum class Stereo { left, right };
 
-// A Frame<RGB>
-
 } // tdsp

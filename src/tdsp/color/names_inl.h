@@ -29,6 +29,10 @@ typename Collection::value_type maxPairedDistance(Collection const& coll) {
     return result;
 }
 
+inline std::string colorToString(float r, float g, float b) {
+    return toString(Frame<RGB>{{r, g, b}});
+}
+
 inline Frame<RGB> toColor(unsigned int hex) {
     static const auto BYTE = 256;
     auto b = hex % BYTE;
@@ -76,6 +80,60 @@ inline std::string toString(Frame<RGB> color) {
         toCommaSeparated(color);
 }
 
+inline bool toColor(std::string const& name, Frame<RGB>& result) {
+    auto i = colorNames().find(name);
+    if (i != colorNames().end()) {
+        result = toColor(i->second);
+        return true;
+    }
+
+    static const auto hexPrefixes = {"0x", "0X", "#"};
+    for (auto& prefix : hexPrefixes) {
+        if (not name.find(prefix)) {
+            result = toColor(fromHex(name.substr(strlen(prefix))));
+            return true;
+        }
+    }
+
+    // strtod uses char* for some reason...
+    char* p = const_cast<char*>(&name[0]);
+
+    // Special case for grey and gray.
+    if (not (name.find("gray ") and name.find("grey "))) {
+        auto gray = static_cast<float>(strtod(p + 5, &p)) / 100;
+        if (*p)
+            return false;
+        result = {{gray, gray, gray}};
+        return true;
+    }
+
+    // Otherwise, it has to be three comma-separated numbers.
+    auto skipSpaces = [&]() {
+        for (; isspace(*p); ++p);
+    };
+
+    auto getNumber = [&]() {
+        auto x = strtod(p, &p);
+        skipSpaces();
+        return static_cast<float>(x);
+    };
+
+    result[0] = getNumber(); // RGB::red
+    if (*p++ != ',')
+        return false;
+    skipSpaces();
+
+    result[1] = getNumber();
+    if (*p++ != ',')
+        return false;
+    skipSpaces();
+
+    result[2] = getNumber();
+    if (*p)
+        return false;
+    return true;
+}
+
 inline Frame<RGB> colorFromCommaSeparated(char const* p) {
     auto originalP = p;
     auto getNumber = [&]() {
@@ -102,52 +160,9 @@ inline Frame<RGB> colorFromCommaSeparated(char const* p) {
 }
 
 inline Frame<RGB> toColor(std::string const& name) {
-    auto i = colorNames().find(name);
-    if (i != colorNames().end())
-        return toColor(i->second);
-
-    static const auto hexPrefixes = {"0x", "0X", "#"};
-    for (auto& prefix : hexPrefixes) {
-        if (not name.find(prefix))
-            return toColor(fromHex(name.substr(strlen(prefix))));
-    }
-
-    // strtod uses char* for some reason...
-    char* p = const_cast<char*>(&name[0]);
-
-    // Special case for grey and gray.
-    if (not (name.find("gray ") and name.find("grey "))) {
-        auto gray = static_cast<float>(strtod(p + 5, &p));
-        throwIf(*p, "Bad color", name);
-        return {{gray / 100, gray / 100, gray / 100}};
-    }
-
-    // Otherwise, it has to be three comma-separated numbers.
-    auto skipSpaces = [&]() {
-        for (; isspace(*p); ++p);
-    };
-
-    auto getNumber = [&]() {
-        auto x = strtod(p, &p);
-        skipSpaces();
-        return static_cast<float>(x);
-    };
-
-    auto skipComma = [&]() {
-        throwIfNE(*p++, ',', name);
-        skipSpaces();
-    };
-
-    auto r = getNumber();
-    skipComma();
-
-    auto g = getNumber();
-    skipComma();
-
-    auto b = getNumber();
-    throwIf(*p, "Bad color", name);
-
-    return {{r, g, b}};
+    Frame<RGB> result;
+    throwIf(not toColor(name, result), "Bad color name", name);
+    return result;
 }
 
 inline ColorNamesInverse const& colorNamesInverse() {
