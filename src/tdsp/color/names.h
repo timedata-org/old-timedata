@@ -14,12 +14,19 @@ Frame<RGB> toColor(unsigned int);
 /** Convert a Color to a string. */
 std::string toString(Frame<RGB>);
 
+/** Convert a Color to a string. */
+std::string colorToString(float r, float g, float b);
+
 /** Convert a Color to a comma-separated triple of floats. */
 std::string toCommaSeparated(Frame<RGB>);
 
 /** Convert a string to a Color.  Throws an exception if the string
     cannot be parsed into a color. */
 Frame<RGB> toColor(std::string const&);
+
+/** Convert a string to a Color.  Returns true if the conversion succeeded. */
+bool toColor(std::string const&, Frame<RGB>&);
+
 
 using ColorNames = std::map<std::string, uint32_t>;
 using ColorNamesInverse = std::map<uint32_t, std::string>;
