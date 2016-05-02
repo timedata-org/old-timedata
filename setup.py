@@ -50,7 +50,7 @@ EXT_MODULES=Cython.Build.cythonize(
     language_level=3,
     compiler_directives=dict(
         c_string_encoding='ascii',
-        c_string_type='bytes',
+        # c_string_type='bytes', # Why doesn't this work?
         )
     )
 

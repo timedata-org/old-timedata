@@ -74,10 +74,13 @@ inline std::string toString(Frame<RGB> color) {
             return i->second;
     }
 
+    if (not isGray(color))
+        return toCommaSeparated(color);
+
     // Special case for grey and gray.
-    return isGray(color) ?
-        (makeStream() << "gray " << 100 * color[0]).str() :
-        toCommaSeparated(color);
+    auto ss = makeStream();
+    ss << "gray " << 100 * color[0];
+    return ss.str();
 }
 
 inline bool toColor(char const* name, Frame<RGB>& result) {
