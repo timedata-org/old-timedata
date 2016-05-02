@@ -1,5 +1,6 @@
 #pragma once
 
+#include <iostream>
 #include <strstream>
 #include <typeinfo>
 
@@ -45,12 +46,12 @@ std::string joinSpace(Arg&& arg, Args&&... args) {
 }
 
 inline
-void print() {
+void log() {
     std::cerr << '\n';
 }
 
 template <typename Arg>
-void print(Arg&& arg) {
+void log(Arg&& arg) {
     std::cerr << arg << '\n';
 }
 

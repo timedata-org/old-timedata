@@ -143,7 +143,7 @@ inline Frame<RGB> colorFromCommaSeparated(char const* p) {
     };
 
     auto skipComma = [&]() {
-        throwIfNE(*p++, ',', "Expected a comma", originalP);
+        THROW_IF_NE(*p++, ',', "Expected a comma", originalP);
         skipSpaces(p);
     };
 
@@ -154,14 +154,14 @@ inline Frame<RGB> colorFromCommaSeparated(char const* p) {
     skipComma();
 
     auto b = getNumber();
-    throwIf(*p, "Extra characters after end", originalP);
+    THROW_IF(*p, "Extra characters after end", originalP);
 
     return {{r, g, b}};
 }
 
 inline Frame<RGB> toColor(char const* name) {
     Frame<RGB> result;
-    throwIf(not toColor(name, result), "Bad color name", name);
+    THROW_IF(not toColor(name, result), "Bad color name", name);
     return result;
 }
 
@@ -173,7 +173,7 @@ inline ColorNamesInverse const& colorNamesInverse() {
             auto& hex = i.second;
             if (secondaryColors().count(name))
                 continue;
-            throwIf(inverse.count(hex), "Duplicate name", name, hex);
+            THROW_IF(inverse.count(hex), "Duplicate name", name, hex);
             inverse[hex] = name;
         }
         return inverse;
