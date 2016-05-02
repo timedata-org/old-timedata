@@ -452,7 +452,6 @@ inline ColorNames const& colorNames() {
         {"navajo white 4", 0x8b795e},
         {"navajo white", 0xffdead},
         {"navy", 0x000080},
-        {"none", 0x00000000},
         {"old lace", 0xfdf5e6},
         {"olive drab 1", 0xc0ff3e},
         {"olive drab 2", 0xb3ee3a},
