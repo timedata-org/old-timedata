@@ -5,9 +5,11 @@
 namespace tdsp {
 
 TEST_CASE("color", "names") {
-   REQUIRE(toString(Frame<RGB>{{0.5, 0.5, 0.5}}) == "gray");
+   REQUIRE(toString(Frame<RGB>{{0.5, 0.5, 0.5}}) == "gray 50");
    REQUIRE(toString(Frame<RGB>{{0, 0, 0}}) == "black");
-   REQUIRE(toString(Frame<RGB>{{0.5, 0.5, 0.5}}) == "gray");
+
+   for (auto& i : colorNamesInverse())
+       REQUIRE(toString(toColor(i.second)) == i.second);
 }
 
 } // namespace
