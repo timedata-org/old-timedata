@@ -1,3 +1,4 @@
+#include <stdlib.h>
 #include <algorithm>
 #include <iomanip>
 #include <iostream>
@@ -32,13 +33,31 @@ typename Collection::value_type maxPairedDistance(Collection const& coll) {
     return result;
 }
 
-inline std::string toString(Frame<RGB> color) {
-    auto stream = [] (int width, int precision) {
-        std::strstream ss;
-        ss << std::setw(width) << std::setprecision(precision);
-        return ss;
-    };
+inline Frame<RGB> toColor(unsigned int hex) {
+    static const auto BYTE = 256;
+    auto b = hex % BYTE;
+    hex /= BYTE;
 
+    auto g = hex % BYTE;
+    hex /= BYTE;
+
+    auto r = hex % BYTE;
+    return {{r / 255.0f, g / 255.0f, b / 255.0f}};
+};
+
+inline float strtof(const char *nptr, char const **endptr) {
+    char* ep;
+    auto r = ::strtof(nptr, &ep);
+    *endptr = ep;
+    return r;
+}
+
+inline std::string toCommaSeparated(Frame<RGB> color) {
+    auto ss = makeStream(7, 5);
+    return commaSeparated(ss, color).str();
+}
+
+inline std::string toString(Frame<RGB> color) {
     auto hex = fromHex(color);
 
     auto i = colorNames().inverse.find(hex);
@@ -48,20 +67,45 @@ inline std::string toString(Frame<RGB> color) {
     // Special case for grey and gray.
     auto diff = maxPairedDistance(color);
     if (diff < 0.0001)
-        return (stream(7, 2) << "gray " << 100 * color[0]).str();
-
-    auto ss = stream(7, 5);
-    return commaSeparated(ss, color).str();
+        return (makeStream(7, 2) << "gray " << 100 * color[0]).str();
+    return toCommaSeparated(color);
 }
 
-inline Frame<RGB> toColor(std::string const& name) {
-    auto throwIf = [&] (bool cond, int i) {
-        if (cond) {
-            throw std::runtime_error("Bad color '" + name +
-                                     "' (" + std::to_string(i));
-        }
+#if 0
+inline Frame<RGB> colorFromCommaSeparated(char const* p) {
+    // has to be three comma-separated numbers.
+    auto getNumber = [&]() {
+        auto x = strtof(p, &p);
+        skipSpaces();
+        return static_cast<float>(x);
     };
 
+    auto skipComma = [&]() {
+        throwIf(*p++ != ',', 2);
+        skipSpaces();
+    };
+
+    auto r = getNumber();
+    skipComma();
+
+    auto g = getNumber();
+    skipComma();
+
+    auto b = getNumber();
+    throwIf(*p, 3);
+
+    return {{r, g, b}};
+
+
+void throwIfColor = [&] (bool cond, int i) {
+    if (cond) {
+        throw std::runtime_error("Bad color '" + name +
+                                 "' (" + std::to_string(i));
+    }
+};
+
+
+inline Frame<RGB> toColor(std::string const& name) {
     auto i = colorNames().map.find(name);
     if (i != colorNames().map.end())
         return toColor(i->second);
@@ -110,17 +154,7 @@ inline Frame<RGB> toColor(std::string const& name) {
     return {{r, g, b}};
 }
 
-inline Frame<RGB> toColor(unsigned int hex) {
-    static const auto BYTE = 256;
-    auto b = hex % BYTE;
-    hex /= BYTE;
-
-    auto g = hex % BYTE;
-    hex /= BYTE;
-
-    auto r = hex % BYTE;
-    return {{r / 255.0f, g / 255.0f, b / 255.0f}};
-};
+#endif
 
 inline ColorNames const& colorNames() {
     static ColorNames names{{

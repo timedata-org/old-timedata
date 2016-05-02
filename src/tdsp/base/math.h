@@ -1,6 +1,8 @@
 #pragma once
 
+#include <ctype.h>
 #include <cmath>
+#include <iomanip>
 #include <strstream>
 #include <type_traits>
 
@@ -71,6 +73,7 @@ uint64_t fromHex(std::string const& s) {
     return x;
 }
 
+// TODO: move elsewhere.
 template <typename Collection, typename Stream>
 Stream& commaSeparated(Stream& ss, Collection const& collection) {
     bool first = true;
@@ -83,5 +86,16 @@ Stream& commaSeparated(Stream& ss, Collection const& collection) {
     }
     return ss;
 }
+
+inline std::strstream makeStream(int width, int precision) {
+    std::strstream ss;
+    ss << std::setw(width) << std::setprecision(precision);
+    return ss;
+}
+
+template <typename Pointer>
+void skipSpaces(Pointer& p) {
+    for (; isspace(*p); ++p);
+};
 
 }  // namespace tdsp
