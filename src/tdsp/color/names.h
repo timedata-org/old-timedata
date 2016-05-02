@@ -22,10 +22,10 @@ std::string toCommaSeparated(Frame<RGB>);
 
 /** Convert a string to a Color.  Throws an exception if the string
     cannot be parsed into a color. */
-Frame<RGB> toColor(std::string const&);
+Frame<RGB> toColor(char const*);
 
 /** Convert a string to a Color.  Returns true if the conversion succeeded. */
-bool toColor(std::string const&, Frame<RGB>&);
+bool toColor(char const*, Frame<RGB>&);
 
 
 using ColorNames = std::map<std::string, uint32_t>;

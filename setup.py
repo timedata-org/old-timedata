@@ -47,6 +47,11 @@ EXTENSION = distutils.extension.Extension(
 EXT_MODULES=Cython.Build.cythonize(
     [EXTENSION],
     language='c++',
+    language_level=3,
+    compiler_directives=dict(
+        c_string_encoding='ascii',
+        c_string_type='bytes',
+        )
     )
 
 distutils.core.setup(

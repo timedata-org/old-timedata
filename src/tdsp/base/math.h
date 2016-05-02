@@ -65,7 +65,7 @@ uint64_t fromHex(Collection const& collection) {
     return total;
 }
 
-uint64_t fromHex(std::string const& s) {
+inline uint64_t fromHex(char const* s) {
     uint64_t x;
     std::strstream ss;
     ss << std::hex << s;
@@ -96,7 +96,7 @@ inline std::strstream makeStream(int precision = 7, int width = 0) {
 }
 
 template <typename Pointer>
-void skipSpaces(Pointer& p) {
+void skipSpaces(Pointer* p) {
     for (; isspace(*p); ++p);
 };
 

@@ -7,7 +7,7 @@ cdef extern from "<tdsp/color/names_inl.h>" namespace "tdsp":
     cdef cppclass Frame[T]:
         float& at(int)
 
-    Frame[RGB] toColor(string)
+    Frame[RGB] toColor(const char*)
     string colorToString(float r, float g, float b)
 
 
@@ -56,5 +56,5 @@ cdef class Color:
     def from_string(string s):
         cdef Frame[RGB] frame
         # exceptions!
-        frame = toColor(s.encode('UTF-8'))
+
         return Color(frame.at(0), frame.at(1), frame.at(2))
