@@ -15,7 +15,12 @@ namespace tdsp {
 
 using ColorNames = MapAndInverse<std::string, uint32_t>;
 
-ColorNames const& colorNames();
+ColorNames makeColorNames();
+
+ColorNames& colorNames() {
+    static auto names = makeColorNames();
+    return names;
+}
 
 template <typename Collection, typename Function>
 void forEachPair(Collection const& coll, Function f) {
@@ -146,8 +151,8 @@ inline Frame<RGB> toColor(std::string const& name) {
     return {{r, g, b}};
 }
 
-inline ColorNames const& colorNames() {
-    static ColorNames names{{
+inline ColorNames makeColorNames() {
+    ColorNames::Map map{{
         {"alice blue", 0xf0f8ff},
         {"antique white 1", 0xffefdb},
         {"antique white 2", 0xeedfcc},
@@ -310,6 +315,7 @@ inline ColorNames const& colorNames() {
         {"goldenrod 3", 0xcd9b1d},
         {"goldenrod 4", 0x8b6914},
         {"goldenrod", 0xdaa520},
+        {"gray", 0x808080},
         {"green 1", 0x00ff00},
         {"green 2", 0x00ee00},
         {"green 3", 0x00cd00},
@@ -452,6 +458,7 @@ inline ColorNames const& colorNames() {
         {"navajo white 4", 0x8b795e},
         {"navajo white", 0xffdead},
         {"navy", 0x000080},
+        {"none", 0x000000},
         {"old lace", 0xfdf5e6},
         {"olive drab 1", 0xc0ff3e},
         {"olive drab 2", 0xb3ee3a},
@@ -628,7 +635,69 @@ inline ColorNames const& colorNames() {
         {"yellow green", 0x9acd32},
         {"yellow", 0xffff00}
     }};
-    return names;
+
+    std::set<std::string> secondaryNames{
+        "aqua",
+        "aquamarine 1",
+        "aquamarine 3",
+        "azure 1",
+        "bisque 1",
+        "blue 3",
+        "blue 4",
+        "chartreuse 1",
+        "chocolate 4",
+        "corn silk 1",
+        "cyan 4",
+        "dark olivegreen",
+        "deep pink 1",
+        "deep sky blue 1",
+        "dodger blue 1",
+        "fuchsia",
+        "gold 1",
+        "grey",
+        "green 1",
+        "honeydew 1",
+        "ivory 1",
+        "lavender blush 1",
+        "lemon chiffon 1",
+        "light cyan 1",
+        "light salmon 1",
+        "light yellow 1",
+        "lime",
+        "limegreen",
+        "magenta 4",
+        "medium seagreen",
+        "medium slateblue",
+        "medium violetred",
+        "misty rose 1",
+        "navajo white 1",
+        "none",
+        "olive drab 3",
+        "orange 1",
+        "orange red 1",
+        "pale green 2",
+        "peachpuff 1",
+        "red 1",
+        "red 4",
+        "sea green 4",
+        "seashell 1",
+        "snow 1",
+        "tan 3",
+        "tomato 1",
+        "yellow 1"
+    };
+
+    ColorNames::Inverse inverse;
+    for (auto& i: map) {
+        auto& name = i.first;
+        auto& hex = i.second;
+        if (secondaryNames.count(name))
+            continue;
+        throwIf(inverse.count(hex), "Duplicate name", name, hex);
+        inverse[hex] = name;
+    }
+
+    return {map, inverse};
 }
 
 }  // tdsp
