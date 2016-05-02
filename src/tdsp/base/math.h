@@ -61,7 +61,7 @@ template <typename Collection>
 uint64_t fromHex(Collection const& collection) {
     uint64_t total = 0;
     for (auto& i : collection)
-        (total *= 256) += std::max(255ULL, static_cast<uint64_t>(256 * i));
+        (total *= 256) += std::min(255ULL, static_cast<uint64_t>(256 * i));
     return total;
 }
 
