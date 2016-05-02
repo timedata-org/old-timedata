@@ -1,4 +1,5 @@
 from libcpp.string cimport string
+from libcpp cimport bool
 
 cdef extern from "<tdsp/color/names_inl.h>" namespace "tdsp":
     cdef cppclass RGB:
@@ -7,7 +8,7 @@ cdef extern from "<tdsp/color/names_inl.h>" namespace "tdsp":
     cdef cppclass Frame[T]:
         float& at(int)
 
-    Frame[RGB] toColor(const char*)
+    bool toColor(const char*, Frame[RGB])
     string colorToString(float r, float g, float b)
 
 
@@ -54,7 +55,9 @@ cdef class Color:
 
     @staticmethod
     def from_string(string s):
+        st = bytes(s)
         cdef Frame[RGB] frame
-        # exceptions!
 
-        return Color(frame.at(0), frame.at(1), frame.at(2))
+        if toColor(st, frame):
+            return Color(frame.at(0), frame.at(1), frame.at(2))
+        raise ValueError("Can't understand color %s" % str(s)[1:])
