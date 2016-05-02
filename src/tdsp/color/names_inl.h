@@ -9,6 +9,7 @@
 #include <tdsp/base/enum.h>
 #include <tdsp/base/math.h>
 #include <tdsp/base/stl.h>
+#include <tdsp/base/throw.h>
 
 namespace tdsp {
 
@@ -71,18 +72,17 @@ inline std::string toString(Frame<RGB> color) {
     return toCommaSeparated(color);
 }
 
-#if 0
 inline Frame<RGB> colorFromCommaSeparated(char const* p) {
-    // has to be three comma-separated numbers.
+    auto originalP = p;
     auto getNumber = [&]() {
         auto x = strtof(p, &p);
-        skipSpaces();
+        skipSpaces(p);
         return static_cast<float>(x);
     };
 
     auto skipComma = [&]() {
-        throwIf(*p++ != ',', 2);
-        skipSpaces();
+        throwIfNE(*p++, ',', "Expected a comma", originalP);
+        skipSpaces(p);
     };
 
     auto r = getNumber();
@@ -92,18 +92,10 @@ inline Frame<RGB> colorFromCommaSeparated(char const* p) {
     skipComma();
 
     auto b = getNumber();
-    throwIf(*p, 3);
+    throwIf(*p, "Extra characters after end", originalP);
 
     return {{r, g, b}};
-
-
-void throwIfColor = [&] (bool cond, int i) {
-    if (cond) {
-        throw std::runtime_error("Bad color '" + name +
-                                 "' (" + std::to_string(i));
-    }
-};
-
+}
 
 inline Frame<RGB> toColor(std::string const& name) {
     auto i = colorNames().map.find(name);
@@ -122,7 +114,7 @@ inline Frame<RGB> toColor(std::string const& name) {
     // Special case for grey and gray.
     if (not (name.find("gray ") and name.find("grey "))) {
         auto gray = static_cast<float>(strtod(p + 5, &p));
-        throwIf(*p, 1);
+        throwIf(*p, "Bad color", name);
         return {{gray / 100, gray / 100, gray / 100}};
     }
 
@@ -138,7 +130,7 @@ inline Frame<RGB> toColor(std::string const& name) {
     };
 
     auto skipComma = [&]() {
-        throwIf(*p++ != ',', 2);
+        throwIfNE(*p++, ',', name);
         skipSpaces();
     };
 
@@ -149,12 +141,10 @@ inline Frame<RGB> toColor(std::string const& name) {
     skipComma();
 
     auto b = getNumber();
-    throwIf(*p, 3);
+    throwIf(*p, "Bad color", name);
 
     return {{r, g, b}};
 }
-
-#endif
 
 inline ColorNames const& colorNames() {
     static ColorNames names{{
