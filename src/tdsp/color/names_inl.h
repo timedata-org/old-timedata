@@ -60,27 +60,16 @@ inline float strtof(const char *nptr, char const **endptr) {
     return r;
 }
 
-inline std::string toCommaSeparated(Frame<RGB> color) {
-    return commaSeparated(color, 6);
-}
-
-inline std::string toString(Frame<RGB> color) {
-    if (std::all_of(color.begin(), color.end(), isNearHex)) {
-        auto hex = fromHex(color);
+inline std::string toString(Frame<RGB> c) {
+    if (std::all_of(c.begin(), c.end(), isNearHex)) {
+        auto hex = fromHex(c);
 
         auto i = colorNamesInverse().find(hex);
         if (i != colorNamesInverse().end())
             return i->second;
     }
 
-    if (not isGray(color))
-        return toCommaSeparated(color);
-
-    // Special case for grey and gray.
-    std::strstream ss;
-    ss << "gray " << std::setprecision(7) << 100 * color[0];
-    log("??", ss.str());
-    return ss.str();
+    return isGray(c) ? "gray " + toString(100 * c[0], 5) : commaSeparated(c, 7);
 }
 
 inline bool toColor(char const* name, Frame<RGB>& result) {
