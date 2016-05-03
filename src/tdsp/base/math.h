@@ -89,6 +89,56 @@ Stream& commaSeparated(Stream& ss, Collection const& collection) {
     return ss;
 }
 
+const auto SIGNED_DIGITS = 19U;  // 9223372036854775807
+const auto UNSIGNED_DIGITS = SIGNED_DIGITS + 1;  // 18446744073709551614L
+
+inline uint64_t pow10(uint log) {
+    THROW_IF_GT(log, UNSIGNED_DIGITS, "Overflow.");
+    static uint64_t exp[] = {
+        1ULL,
+        10ULL,
+        100ULL,
+        1000ULL,
+        10000ULL,
+        100000ULL,
+        1000000ULL,
+        10000000ULL,
+        100000000ULL,
+        1000000000ULL,
+        10000000000ULL,
+        100000000000ULL,
+        1000000000000ULL,
+        10000000000000ULL,
+        100000000000000ULL,
+        1000000000000000ULL,
+        10000000000000000ULL,
+        100000000000000000ULL,
+        1000000000000000000ULL,
+        10000000000000000000ULL
+    };
+    return exp[log];
+}
+
+/** Convert a float to a string */
+
+enum class ToStringStrategy { raw, noTrailingZeroes };
+
+inline std::string toString(
+        float x, unsigned int decimals,
+        ToStringStrategy strat = ToStringStrategy::noTrailingZeroes) {
+    auto number = std::to_string(std::llround(x * pow10(decimals)));
+    if (decimals) {
+        number.insert(&number[number.size() - decimals], '.');
+        if (strat == ToStringStrategy::noTrailingZeroes) {
+            while (number.back() == '0')
+                number.resize(number.size() - 1);
+            if (number.back() == '.')
+                number.resize(number.size() - 1);
+        }
+    }
+    return number;
+}
+
 inline std::strstream makeStream(int precision = 7, int width = 0) {
     std::strstream ss;
     ss << std::setprecision(precision);
