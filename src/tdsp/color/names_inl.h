@@ -20,11 +20,11 @@ void forEachPair(Collection const& coll, Function f) {
 }
 
 template <typename Collection>
-typename Collection::value_type maxPairedDistance(Collection const& coll) {
+typename Collection::value_type maxPairedDistanceAbs(Collection const& coll) {
     using Number = typename Collection::value_type;
     Number result = 0;
     forEachPair(coll, [&](Number x, Number y) {
-        result = std::max(result, std::abs(x - y));
+        result = std::max(result, std::abs(std::abs(x) - std::abs(y)));
     });
     return result;
 }
@@ -50,7 +50,7 @@ inline bool isNearHex(float decimal) {
 }
 
 inline bool isGray(Sample<RGB> color) {
-    return maxPairedDistance(color) < 0.0001;
+    return maxPairedDistanceAbs(color) < 0.0001;
 }
 
 inline float strtof(const char *nptr, char const **endptr) {
@@ -60,16 +60,38 @@ inline float strtof(const char *nptr, char const **endptr) {
     return r;
 }
 
+inline uint32_t fromHex(Sample<RGB> c) {
+    uint32_t total = 0;
+    static uint32_t const max = 256;
+    for (auto& i : c)
+        (total *= max) += std::min(max - 1, uint32_t(256 * std::abs(i)));
+    return total;
+}
+
+
 inline std::string toString(Sample<RGB> c) {
+    auto addNegatives = [&](std::string const& value) {
+        auto s = value;
+        auto negative = Sample<RGB, bool>{{c[0] < 0, c[1] < 0, c[2] < 0}};
+        if (negative[0] or negative[1] or negative[2]) {
+            for (auto n : negative)
+                s += "+-"[n];
+        }
+        return s;
+    };
+
     if (std::all_of(c.begin(), c.end(), isNearHex)) {
         auto hex = fromHex(c);
 
         auto i = colorNamesInverse().find(hex);
         if (i != colorNamesInverse().end())
-            return i->second;
+            return addNegatives(i->second);
     }
 
-    return isGray(c) ? "gray " + toString(100 * c[0], 5) : commaSeparated(c, 7);
+    if (isGray(c))
+        return addNegatives("gray " + toString(100 * std::abs(c[0]), 5));
+
+    return commaSeparated(c, 7);
 }
 
 inline bool toColor(char const* name, Sample<RGB>& result) {

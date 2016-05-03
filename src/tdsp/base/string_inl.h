@@ -46,16 +46,4 @@ std::string toPercent(float g) {
     return result;
 }
 
-inline
-bool isHex(const std::string& s) {
-    return strspn(s.data(), "abcdef0123456789") == s.size();
-}
-
-inline
-uint32_t fromHex(const char* s) {
-    uint32_t decimalValue;
-    sscanf(s, "%u", &decimalValue);
-    return decimalValue;
-}
-
 }  // namespace tdsp

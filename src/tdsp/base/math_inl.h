@@ -59,20 +59,14 @@ T trunc(T x) {
     return std::trunc(x);
 }
 
-template <typename Collection>
-uint64_t fromHex(Collection const& collection) {
-    uint64_t total = 0;
-    for (auto& i : collection)
-        (total *= 256) += std::min(255ULL, static_cast<uint64_t>(256 * i));
-    return total;
+inline bool isHex(char const* s) {
+    return not s[strspn(s, "abcdef0123456789")];
 }
 
 inline uint64_t fromHex(char const* s) {
-    uint64_t x;
-    std::strstream ss;
-    ss << std::hex << s;
-    ss >> x;
-    return x;
+    uint64_t decimalValue;
+    sscanf(s, "%llu", &decimalValue);
+    return decimalValue;
 }
 
 // TODO: move elsewhere.

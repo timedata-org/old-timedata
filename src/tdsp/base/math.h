@@ -32,11 +32,6 @@ bool shift(Number&);
 template <typename Number>
 Number trunc(Number);
 
-template <typename Collection>
-uint64_t fromHex(Collection const&);
-
-uint64_t fromHex(char const*);
-
 // TODO: move elsewhere.
 template <typename Collection>
 std::string commaSeparated(Collection const&, int decimals = 0);
@@ -50,6 +45,8 @@ PowArray const& powArray();
 
 uint64_t pow10(uint);
 uint log10(uint64_t);
+uint64_t fromHex(char const*);
+bool isHex(char const*);
 
 void removeTrailing(std::string&, char ch);
 
