@@ -1,8 +1,10 @@
+#pragma once
+
 #include <tdsp/base/join_inl.h>
 
 namespace tdsp {
 
-TEST_CASE("Join", "All") {
+TEST_CASE("join", "All") {
     REQUIRE(join() == "");
     REQUIRE(join("test") == "test");
     REQUIRE(join(5) == "5");
@@ -10,7 +12,7 @@ TEST_CASE("Join", "All") {
     REQUIRE(join(5, "1", 2, 6.14) == "5126.14");
 }
 
-TEST_CASE("JoinSpace", "All") {
+TEST_CASE("joinSpace", "All") {
     REQUIRE(joinSpace() == "");
     REQUIRE(joinSpace("test") == "test");
     REQUIRE(joinSpace(5) == "5");
