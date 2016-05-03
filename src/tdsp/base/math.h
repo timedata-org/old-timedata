@@ -38,8 +38,8 @@ uint64_t fromHex(Collection const&);
 uint64_t fromHex(char const*);
 
 // TODO: move elsewhere.
-template <typename Collection, typename Stream>
-Stream& commaSeparated(Stream&, Collection const&);
+template <typename Collection>
+std::string commaSeparated(Collection const&, int decimals = 0);
 
 const auto SIGNED_DIGITS = 19U;  // 9223372036854775807
 const auto UNSIGNED_DIGITS = SIGNED_DIGITS + 1;  // 18446744073709551614L
@@ -55,8 +55,6 @@ void removeTrailing(std::string&, char ch);
 
 /** Convert a float to a string.  Perhaps misguided. */
 std::string toString(float, unsigned int decimals = 0);
-
-std::strstream makeStream(int precision = 7, int width = 0);
 
 template <typename T>
 void skipSpaces(T* p);

@@ -61,8 +61,7 @@ inline float strtof(const char *nptr, char const **endptr) {
 }
 
 inline std::string toCommaSeparated(Frame<RGB> color) {
-    auto ss = makeStream();
-    return commaSeparated(ss, color).str();
+    return commaSeparated(color, 6);
 }
 
 inline std::string toString(Frame<RGB> color) {
