@@ -80,6 +80,7 @@ inline std::string toString(Frame<RGB> color) {
     // Special case for grey and gray.
     auto ss = makeStream();
     ss << "gray " << 100 * color[0];
+    log("??", ss.str());
     return ss.str();
 }
 

@@ -45,13 +45,12 @@ cdef class Color:
 
     @staticmethod
     def make(x):
-        return Color.from_string(x) if isinstance(x, str) else Color(*x)
+        if not isinstance(x, str):
+            return Color(*x)
 
-    @staticmethod
-    def from_string(string s):
-        st = bytes(s)
+        st = bytes(x)
         cdef Frame[RGB] frame
 
         if toColor(st, frame):
             return Color(frame.at(0), frame.at(1), frame.at(2))
-        raise ValueError("Can't understand color %s" % str(s)[1:])
+        raise ValueError("Can't understand color %s" % str(x)[1:])
