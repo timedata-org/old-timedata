@@ -7,8 +7,8 @@
 
 #include <tdsp/color/names.h>
 #include <tdsp/base/enum.h>
-#include <tdsp/base/math.h>
 #include <tdsp/base/throw.h>
+#include <tdsp/base/math_inl.h>
 
 namespace tdsp {
 
