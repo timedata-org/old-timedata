@@ -1,18 +1,3 @@
-from libcpp.string cimport string
-from libcpp cimport bool
-
-cdef extern from "<tdsp/color/names_inl.h>" namespace "tdsp":
-    cdef cppclass RGB:
-        pass
-
-    cdef cppclass Frame[T]:
-        float& at(int)
-
-    bool toColor(const char*, Frame[RGB])
-    string colorToString(float r, float g, float b)
-    bool cmpToRichcmp(float cmp, int richcmp)
-
-
 cdef class Color:
     cdef float red
     cdef float green
@@ -57,6 +42,10 @@ cdef class Color:
     def __richcmp__(Color self, Color c, int cmp):
         return cmpToRichcmp((self.red - c.red) or (self.green - c.green) or
                             (self.blue - c.blue), cmp)
+
+    @staticmethod
+    def make(x):
+        return Color.from_string(x) if isinstance(x, str) else Color(*x)
 
     @staticmethod
     def from_string(string s):
