@@ -7,4 +7,4 @@ print(Color(1, 1, 1))
 for i in range(1000):
     Color(0.5, 0.5, 0.5)
     Color(0.25, 0.25, 0.25)
-# print(Color.make('red'))
+print(Color.make('red'))
