@@ -1,3 +1,15 @@
+cdef extern from "<tdsp/color/names_inl.h>" namespace "tdsp":
+    cdef cppclass RGB:
+        pass
+
+    cdef cppclass Sample[T]:
+        float& at(int)
+
+    bool toColor(const char*, Sample[RGB])
+    string colorToString(float r, float g, float b)
+    bool cmpToRichcmp(float cmp, int richcmp)
+
+
 cdef class Color:
     cdef float red
     cdef float green
@@ -48,9 +60,8 @@ cdef class Color:
         if not isinstance(x, str):
             return Color(*x)
 
-        st = bytes(x)
-        cdef Frame[RGB] frame
+        cdef Sample[RGB] frame
 
-        if toColor(st, frame):
+        if toColor(x, frame):
             return Color(frame.at(0), frame.at(1), frame.at(2))
-        raise ValueError("Can't understand color %s" % str(x)[1:])
+        raise ValueError("Can't understand color %s" % x)

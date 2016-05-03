@@ -33,12 +33,12 @@ struct Model {
 
     static const auto SIZE = enumSize<Name>();
 
-    using Frame = std::array<Number, SIZE>;
-    using FrameRef = std::array<Number*, SIZE>;
+    using Sample = std::array<Number, SIZE>;
+    using SampleRef = std::array<Number*, SIZE>;
 };
 
 template <typename Enum, typename T = float>
-using Frame = typename Model<Enum, T>::Frame;
+using Sample = typename Model<Enum, T>::Sample;
 
 
 template <typename Model>
@@ -78,9 +78,9 @@ struct Parallel {
 template <typename Layout>
 struct Strip {
     using layout_t = Layout;
-    using Frame = typename Layout::Frame;
+    using Sample = typename Layout::Sample;
 
-    Frame frame;
+    Sample frame;
     size_t begin, end;
 
     template <typename Function>

@@ -30,10 +30,10 @@ typename Collection::value_type maxPairedDistance(Collection const& coll) {
 }
 
 inline std::string colorToString(float r, float g, float b) {
-    return toString(Frame<RGB>{{r, g, b}});
+    return toString(Sample<RGB>{{r, g, b}});
 }
 
-inline Frame<RGB> toColor(unsigned int hex) {
+inline Sample<RGB> toColor(unsigned int hex) {
     static const auto BYTE = 256;
     auto b = hex % BYTE;
     hex /= BYTE;
@@ -49,7 +49,7 @@ inline bool isNearHex(float decimal) {
     return isNearFraction(decimal, 255);
 }
 
-inline bool isGray(Frame<RGB> color) {
+inline bool isGray(Sample<RGB> color) {
     return maxPairedDistance(color) < 0.0001;
 }
 
@@ -60,7 +60,7 @@ inline float strtof(const char *nptr, char const **endptr) {
     return r;
 }
 
-inline std::string toString(Frame<RGB> c) {
+inline std::string toString(Sample<RGB> c) {
     if (std::all_of(c.begin(), c.end(), isNearHex)) {
         auto hex = fromHex(c);
 
@@ -72,7 +72,7 @@ inline std::string toString(Frame<RGB> c) {
     return isGray(c) ? "gray " + toString(100 * c[0], 5) : commaSeparated(c, 7);
 }
 
-inline bool toColor(char const* name, Frame<RGB>& result) {
+inline bool toColor(char const* name, Sample<RGB>& result) {
     auto i = colorNames().find(name);
     if (i != colorNames().end()) {
         result = toColor(i->second);
@@ -123,7 +123,7 @@ inline bool toColor(char const* name, Frame<RGB>& result) {
     return true;
 }
 
-inline Frame<RGB> colorFromCommaSeparated(char const* p) {
+inline Sample<RGB> colorFromCommaSeparated(char const* p) {
     auto originalP = p;
     auto getNumber = [&]() {
         auto x = strtof(p, &p);
@@ -148,8 +148,8 @@ inline Frame<RGB> colorFromCommaSeparated(char const* p) {
     return {{r, g, b}};
 }
 
-inline Frame<RGB> toColor(char const* name) {
-    Frame<RGB> result;
+inline Sample<RGB> toColor(char const* name) {
+    Sample<RGB> result;
     THROW_IF(not toColor(name, result), "Bad color name", name);
     return result;
 }
