@@ -78,8 +78,8 @@ inline std::string toString(Frame<RGB> color) {
         return toCommaSeparated(color);
 
     // Special case for grey and gray.
-    auto ss = makeStream();
-    ss << "gray " << 100 * color[0];
+    std::strstream ss;
+    ss << "gray " << std::setprecision(7) << 100 * color[0];
     log("??", ss.str());
     return ss.str();
 }
