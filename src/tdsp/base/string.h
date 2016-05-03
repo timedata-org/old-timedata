@@ -20,6 +20,4 @@ std::string toPercent(float);
 
 bool isHex(const std::string&);
 
-uint32_t fromHex(const char* s);
-
 }  // namespace tdsp
