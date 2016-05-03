@@ -94,7 +94,7 @@ inline std::strstream makeStream(int precision = 7, int width = 0) {
     ss << std::setprecision(precision);
     if (width)
         ss << std::setw(width);
-    return ss;
+    return std::move(ss);
 }
 
 template <typename Pointer>
