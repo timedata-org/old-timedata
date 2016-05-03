@@ -4,6 +4,7 @@ from tdsp.tdsp import Color
 
 print(Color())
 print(Color(1, 1, 1))
-print(Color(0.5, 0.5, 0.5))
-print(Color(0.25, 0.25, 0.25))
+for i in range(1000):
+    Color(0.5, 0.5, 0.5)
+    Color(0.25, 0.25, 0.25)
 # print(Color.make('red'))
