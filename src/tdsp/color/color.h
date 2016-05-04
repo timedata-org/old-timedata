@@ -10,4 +10,6 @@ enum class RGBW { red, green, blue, white, size };
 enum class HSB { hue, saturation, brightness, size };
 // enum class Stereo { left, right };
 
+using Color = Sample<RGB>;
+
 } // tdsp
