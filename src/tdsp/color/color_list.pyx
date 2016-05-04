@@ -1,22 +1,15 @@
-
-
 cdef class ColorList:
     cdef vector[Color] colors
 
     def __cinit__(self):
         pass
 
-    # @property
-    # def red(self):
-    #     return self.red
-
-    # @property
-    # def green(self):
-    #     return self.green
-
-    # @property
-    # def blue(self):
-    #     return self.blue
+    def __getitem__(self, unsigned int key):
+        cdef Color c
+        if key < len(self):
+            c = self.colors[key]
+            return _Color(c.at(0), c.at(1), c.at(2))
+        raise IndexError('Color index out of range')
 
     # @staticmethod
     # def make(x):
