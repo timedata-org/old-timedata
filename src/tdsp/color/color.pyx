@@ -5,6 +5,7 @@ cdef extern from "<tdsp/color/names_inl.h>" namespace "tdsp":
     bool toColor(const char*, Color)
     string colorToString(float r, float g, float b)
     bool cmpToRichcmp(float cmp, int richcmp)
+    Color makeColor(float r, float g, float b)
 
 
 cdef class _Color:
