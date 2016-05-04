@@ -94,7 +94,10 @@ inline std::string toString(Sample<RGB> c) {
     return commaSeparated(c, 7);
 }
 
-inline bool toColor(char const* name, Sample<RGB>& result) {
+inline bool toColorNonNegative(char const* name, Sample<RGB>& result) {
+    if (not *name)
+        return false;
+
     auto i = colorNames().find(name);
     if (i != colorNames().end()) {
         result = toColor(i->second);
@@ -142,6 +145,28 @@ inline bool toColor(char const* name, Sample<RGB>& result) {
     result[2] = getNumber();
     if (*name)
         return false;
+    return true;
+}
+
+inline bool toColor(char const* name, Sample<RGB>& result) {
+    auto isSign = [](char ch) { return ch == '-' or ch == '+'; };
+    auto len = strlen(name), end = len;
+    for (; end > 0 && isSign(name[end - 1]); --end);
+
+    if (end == len)
+        return toColorNonNegative(name, result);
+
+    if ((not end) or len - end != 3)
+        return false;
+
+    std::string n(name, len - 3);
+    if (not toColorNonNegative(n.c_str(), result))
+        return false;
+
+    for (auto i = 0; i < 3; ++i) {
+        if (name[len - 3 + i] == '-')
+            result[i] = - result[i];
+    }
     return true;
 }
 
