@@ -1,8 +1,21 @@
-cdef class ColorList:
+cdef extern from "<tdsp/color/colorList.h>" namespace "tdsp":
+    vector[Color] duplicate(vector[Color], int)
+    void reverse(vector[Color])
+    string toString(vector[Color]&)
+
+cdef class _ColorList:
     cdef vector[Color] colors
 
-    cdef _append(self, float r, float g, float b):
-       self.colors.push_back(makeColor(r, g, b))
+    cdef _set(self, uint i, float r, float g, float b):
+       self.colors[i] = makeColor(r, g, b)
+
+    def _set_obj(self, uint i, object x):
+        if isinstance(x, str):
+            c = _Color.make(x)
+            self._set(i, c.red, c.green, c.blue)
+        else:
+            r, g, b = x
+            self._set(i, r, g, b)
 
     def __cinit__(self, items=None):
         if items:
@@ -12,53 +25,63 @@ cdef class ColorList:
             except:
                 # A list of integers
                 assert not (len(items) % 3)
+                self.colors.resize(items / 3)
                 for i in range(0, len(items), 3):
-                    self._append(items[i], items[i + 1], items[i + 2])
+                    self._set(i, items[i], items[i + 1], items[i + 2])
             else:
                 # A list of tuples, Colors or strings.
-                for i in items:
-                    if isinstance(i, str):
-                        c = _Color.make(i)
-                        self._append(c.red, c.green, c.blue)
+                self.colors.resize(len(items))
+                for i, item in enumerate(items):
+                    self._set_obj(i, item)
 
+    def _fix_key(self, int key):
+        if key >= len(self):
+            raise IndexError('Color index out of range')
+        if key < 0:
+            key += len(self)
+            if key < 0:
+                raise IndexError('Color index out of range')
+        return key
 
-    def __getitem__(self, unsigned int key):
+    def __getitem__(self, int key):
         cdef Color c
-        if key < len(self):
-            c = self.colors[key]
-            return _Color(c.at(0), c.at(1), c.at(2))
-        raise IndexError('Color index out of range')
+        c = self.colors[self._fix_key(key)]
+        return _Color(c.at(0), c.at(1), c.at(2))
 
-    # @staticmethod
-    # def make(x):
-    #     if isinstance(x, Color):
-    #         return x
+    def __setitem__(self, int key, object value):
+        self.set_obj(self._fix_key(key), value)
 
-    #     cdef Sample[RGB] frame
-    #     try:
-    #         if isinstance(x, str):
-    #             if toColor(x, frame):
-    #                 return Color(frame.at(0), frame.at(1), frame.at(2))
+    def append(self, object value):
+        cdef uint s
+        s = self.colors.size()
+        self.colors.resize(s + 1)
+        try:
+            self._set_obj(s, value)
+        except:
+            self.colors.resize(s)
+            raise
 
-    #         try:
-    #             len(x)
-    #         except:
-    #             return Color(x, x, x)
-    #         if len(x) == 3:
-    #             return Color(*x)
-    #         raise ValueError()
+    def clear(self):
+        self.colors.clear()
 
-    #     except:
-    #         raise ValueError("Can't understand color %s" % x)
+    def reverse(self):
+        reverse(self.colors)
 
-    # def __getitem__(self, int key):
-    #     if key == 0:
-    #         return self.red
-    #     if key == 1:
-    #         return self.green
-    #     if key == 2:
-    #         return self.blue
-    #     raise IndexError('Color index out of range')
+    def duplicate(self, uint count):
+        cl = _ColorList()
+        cl.colors = duplicate(self.colors, count)
+        return cl
+
+    def extend(self, object values):
+        cdef uint s
+        s = self.colors.size()
+        self.colors.resize(s + len(values))
+        try:
+            for i, v in enumerate(values):
+                self._set_obj(s + i, v)
+        except:
+            self.colors.resize(s)
+            raise
 
     # def __abs__(self):
     #     return Color(abs(self.red), abs(self.green), abs(self.blue))
@@ -82,8 +105,8 @@ cdef class ColorList:
     #     """Return the complementary color."""
     #     return Color(1.0 - self.red, 1.0 - self.green, 1.0 - self.blue)
 
-    # def __len__(self):
-    #     return 3
+    def __len__(self):
+        return self.colors.size()
 
     # def __mod__(self, c):
     #     c = Color.make(c)
@@ -161,9 +184,11 @@ cdef class ColorList:
     #     c = Color.make(c)
     #     return Color(c.red - self.red, c.green - self.green, c.blue - self.blue)
 
-    # def __str__(self):
-    #     return colorToString(self.red, self.green, self.blue).decode('ascii')
+    def __str__(self):
+        return toString(self.colors).decode('ascii')
 
     # def __sub__(self, c):
     #     c = Color.make(c)
     #     return Color(self.red - c.red, self.green - c.green, self.blue - c.blue)
+
+globals()['ColorList'] = _ColorList

@@ -53,11 +53,11 @@ cdef class _Color:
             raise ValueError("Can't understand color %s" % x)
 
     def __getitem__(self, int key):
-        if key == 0:
+        if key == 0 or key == -3:
             return self.red
-        if key == 1:
+        if key == 1 or key == -2:
             return self.green
-        if key == 2:
+        if key == 2 or key == -1:
             return self.blue
         raise IndexError('Color index out of range')
 
