@@ -30,10 +30,10 @@ typename Collection::value_type maxPairedDistanceAbs(Collection const& coll) {
 }
 
 inline std::string colorToString(float r, float g, float b) {
-    return toString(Sample<RGB>{{r, g, b}});
+    return toString(Color{{r, g, b}});
 }
 
-inline Sample<RGB> toColor(unsigned int hex) {
+inline Color toColor(unsigned int hex) {
     static const auto BYTE = 256;
     auto b = hex % BYTE;
     hex /= BYTE;
@@ -49,7 +49,7 @@ inline bool isNearHex(float decimal) {
     return isNearFraction(decimal, 255);
 }
 
-inline bool isGray(Sample<RGB> color) {
+inline bool isGray(Color color) {
     return maxPairedDistanceAbs(color) < 0.0001;
 }
 
@@ -60,7 +60,7 @@ inline float strtof(const char *nptr, char const **endptr) {
     return r;
 }
 
-inline uint32_t fromHex(Sample<RGB> c) {
+inline uint32_t fromHex(Color c) {
     uint32_t total = 0;
     static uint32_t const max = 256;
     for (auto& i : c)
@@ -69,7 +69,7 @@ inline uint32_t fromHex(Sample<RGB> c) {
 }
 
 
-inline std::string toString(Sample<RGB> c) {
+inline std::string toString(Color c) {
     auto addNegatives = [&](std::string const& value) {
         auto s = value;
         auto negative = Sample<RGB, bool>{{c[0] < 0, c[1] < 0, c[2] < 0}};
@@ -94,7 +94,7 @@ inline std::string toString(Sample<RGB> c) {
     return commaSeparated(c, 7);
 }
 
-inline bool toColorNonNegative(char const* name, Sample<RGB>& result) {
+inline bool toColorNonNegative(char const* name, Color& result) {
     if (not *name)
         return false;
 
@@ -148,7 +148,7 @@ inline bool toColorNonNegative(char const* name, Sample<RGB>& result) {
     return true;
 }
 
-inline bool toColor(char const* name, Sample<RGB>& result) {
+inline bool toColor(char const* name, Color& result) {
     auto isSign = [](char ch) { return ch == '-' or ch == '+'; };
     auto len = strlen(name), end = len;
     for (; end > 0 && isSign(name[end - 1]); --end);
@@ -170,7 +170,7 @@ inline bool toColor(char const* name, Sample<RGB>& result) {
     return true;
 }
 
-inline Sample<RGB> colorFromCommaSeparated(char const* p) {
+inline Color colorFromCommaSeparated(char const* p) {
     auto originalP = p;
     auto getNumber = [&]() {
         auto x = strtof(p, &p);
@@ -195,8 +195,8 @@ inline Sample<RGB> colorFromCommaSeparated(char const* p) {
     return {{r, g, b}};
 }
 
-inline Sample<RGB> toColor(char const* name) {
-    Sample<RGB> result;
+inline Color toColor(char const* name) {
+    Color result;
     THROW_IF(not toColor(name, result), "Bad color name", name);
     return result;
 }

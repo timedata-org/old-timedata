@@ -9,20 +9,20 @@
 namespace tdsp {
 
 /** Convert a hex number to an RGB color. */
-Sample<RGB> toColor(unsigned int);
+Color toColor(unsigned int);
 
 /** Convert a Color to a string. */
-std::string toString(Sample<RGB>);
+std::string toString(Color);
 
 /** Convert a Color to a string. */
 std::string colorToString(float r, float g, float b);
 
 /** Convert a string to a Color.  Throws an exception if the string
     cannot be parsed into a color. */
-Sample<RGB> toColor(char const*);
+Color toColor(char const*);
 
 /** Convert a string to a Color.  Returns true if the conversion succeeded. */
-bool toColor(char const*, Sample<RGB>&);
+bool toColor(char const*, Color&);
 
 
 using ColorNames = std::map<std::string, uint32_t>;
