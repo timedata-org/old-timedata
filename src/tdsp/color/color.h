@@ -12,4 +12,8 @@ enum class HSB { hue, saturation, brightness, size };
 
 using Color = Sample<RGB>;
 
+inline Color makeColor(float r, float g, float b) {
+    return {{r, g, b}};
+}
+
 } // tdsp

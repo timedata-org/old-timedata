@@ -1,8 +1,26 @@
 cdef class ColorList:
     cdef vector[Color] colors
 
-    def __cinit__(self):
-        pass
+    cdef _append(self, float r, float g, float b):
+       self.colors.push_back(makeColor(r, g, b))
+
+    def __cinit__(self, items=None):
+        if items:
+            # Make a guess as to whether it's a list of integers or not.
+            try:
+                len(items[0])
+            except:
+                # A list of integers
+                assert not (len(items) % 3)
+                for i in range(0, len(items), 3):
+                    self._append(items[i], items[i + 1], items[i + 2])
+            else:
+                # A list of tuples, Colors or strings.
+                for i in items:
+                    if isinstance(i, str):
+                        c = _Color.make(i)
+                        self._append(c.red, c.green, c.blue)
+
 
     def __getitem__(self, unsigned int key):
         cdef Color c
