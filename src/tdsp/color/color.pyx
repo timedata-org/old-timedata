@@ -13,10 +13,21 @@ cdef class _Color:
     cdef float green
     cdef float blue
 
-    def __cinit__(self, float red=0, float green=0, float blue=0):
-        self.red = red
-        self.green = green
-        self.blue = blue
+    def __cinit__(self, *args):
+        cdef Color frame
+        if len(args) == 1:
+            args = args[0]
+            if isinstance(args, str):
+                if not toColor(args, frame):
+                    raise ValueError("Can't understand color %s" % args)
+                self.red = frame.at(0)
+                self.green = frame.at(1)
+                self.blue = frame.at(2)
+                return
+
+        if len(args) != 3:
+            raise ValueError("Can't understand color %s" % args)
+        self.red, self.green, self.blue = args
 
     @property
     def red(self):
