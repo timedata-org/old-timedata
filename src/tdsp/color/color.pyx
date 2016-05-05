@@ -1,3 +1,5 @@
+import numbers
+
 cdef extern from "<tdsp/color/names_inl.h>" namespace "tdsp":
     cdef cppclass Color:
         float& at(int)
@@ -15,8 +17,16 @@ cdef class _Color:
 
     def __cinit__(self, *args):
         cdef Color frame
+        if not args:
+            self.red = self.green = self.blue = 0
+            return
+
         if len(args) == 1:
             args = args[0]
+            if isinstance(args, numbers.Number):
+                self.red = self.green = self.blue = args
+                return
+
             if isinstance(args, str):
                 if not toColor(args, frame):
                     raise ValueError("Can't understand color %s" % args)
@@ -25,9 +35,10 @@ cdef class _Color:
                 self.blue = frame.at(2)
                 return
 
-        if len(args) != 3:
+        if len(args) == 3:
+            self.red, self.green, self.blue = args
+        else:
             raise ValueError("Can't understand color %s" % args)
-        self.red, self.green, self.blue = args
 
     @property
     def red(self):
@@ -61,7 +72,7 @@ cdef class _Color:
         c = _Color(c)
         return _Color(self.red + c.red, self.green + c.green, self.blue + c.blue)
 
-    def __div__(self, c):
+    def __truediv__(self, c):
         c = _Color(c)
         return _Color(self.red / c.red, self.green / c.green, self.blue / c.blue)
 
