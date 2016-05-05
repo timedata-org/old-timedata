@@ -137,23 +137,33 @@ cdef class _ColorList:
     def negate(self):
         negateColor(self.colors)
 
+    # Mutating operations.
     def __iadd__(self, c):
         if isinstance(c, Number):
             addInto(self.colors, <float> c)
         else:
-          addInto(_toColorList(c).colors, self.colors)
+            addInto(_toColorList(c).colors, self.colors)
 
-    def __radd__(self, c):
-        return self + c
+    def __itruediv__(self, c):
+        if isinstance(c, Number):
+            divideInto(self.colors, <float> c)
+        else:
+            divideInto(_toColorList(c).colors, self.colors)
 
+    # Operations where self is on the left side.
     def __add__(self, c):
         cl = self[:]
         cl += c
         return cl
 
-    # def __truediv__(self, c):
-    #     c = _Color(c)
-    #     return Color(self.red / c.red, self.green / c.green, self.blue / c.blue)
+    def __truediv__(self, c):
+        cl = self[:]
+        cl /= c
+        return cl
+
+    # Operations where self is on the right side.
+    def __radd__(self, c):
+        return self + c
 
     # def __divmod__(self, c):
     #     c = _Color(c)
@@ -185,17 +195,9 @@ cdef class _ColorList:
     #                  pow(self.green, c.green, m.green),
     #                  pow(self.blue, c.blue, m.blue))
 
-    # def __radd__(self, c):
-    #     c = _Color(c)
-    #     return Color(self.red + c.red, self.green + c.green, self.blue + c.blue)
-
     # def __repr__(self):
     #     cl = self.__class__
     #     return '%s.%s(%s)' % (cl.__module__, cl.__name__, str(self))
-
-    # def __rdiv__(self, c):
-    #     c = _Color(c)
-    #     return Color(c.red / self.red, c.green / self.green, c.blue / self.blue)
 
     # def __rdivmod__(self, c):
     #     c = _Color(c)
