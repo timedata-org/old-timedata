@@ -1,6 +1,7 @@
 #pragma once
 
 #include <tdsp/base/make.h>
+#include <tdsp/base/math_inl.h>
 #include <tdsp/color/slice.h>
 #include <tdsp/color/color.h>
 #include <tdsp/color/names_inl.h>

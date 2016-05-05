@@ -12,3 +12,4 @@ class TestColorList(unittest.TestCase):
     def test_construct(self):
         cl = ColorList([1, 1, 1])
         self.assertEqual(str(cl), str(ColorList(['white'])))
+        self.assertEqual(cl, ColorList(['white']))

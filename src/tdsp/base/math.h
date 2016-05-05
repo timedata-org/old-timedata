@@ -60,4 +60,7 @@ bool isNearFraction(float decimal, unsigned int denominator);
 
 bool cmpToRichcmp(float cmp, int richcmp);
 
+template <typename C1, typename C2>
+int compareContainers(C1 const&, C2 const&);
+
 }  // namespace tdsp
