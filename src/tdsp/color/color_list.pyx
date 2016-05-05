@@ -9,6 +9,10 @@ cdef extern from "<tdsp/color/colorList.h>" namespace "tdsp":
     bool sliceIntoVector(ColorList& _in, ColorList& out,
                          int begin, int end, int step)
 
+    void absColor(ColorList&)
+    void negateColor(ColorList&)
+    void invertColor(ColorList&)
+
 cdef _ColorList _toColorList(object value):
     if isinstance(value, _ColorList):
         return <_ColorList> value
@@ -110,8 +114,8 @@ cdef class _ColorList:
             self.colors.resize(s)
             raise
 
-    # def __abs__(self):
-    #     return Color(abs(self.red), abs(self.green), abs(self.blue))
+    def abs(self):
+        absColor(self.colors)
 
     # def __add__(self, c):
     #     c = _Color(c)
@@ -128,9 +132,9 @@ cdef class _ColorList:
     #     db, mb = divmod(self.blue, c.blue)
     #     return Color(dr, dg, db), Color(mr, mg, mb)
 
-    # def __invert__(self):
-    #     """Return the complementary color."""
-    #     return Color(1.0 - self.red, 1.0 - self.green, 1.0 - self.blue)
+    def invert(self):
+        """Convert to complementary colors."""
+        invertColor(self.colors)
 
     def __len__(self):
         return self.colors.size()
@@ -143,8 +147,8 @@ cdef class _ColorList:
     #     c = _Color(c)
     #     return Color(self.red * c.red, self.green * c.green, self.blue * c.blue)
 
-    # def __neg__(self):
-    #     return Color(-self.red, -self.green, -self.blue)
+    def negate(self):
+        negateColor(self.colors)
 
     # def __pow__(self, c, mod):
     #     c = _Color(c)
@@ -187,11 +191,6 @@ cdef class _ColorList:
     # def __rmul__(self, c):
     #     c = _Color(c)
     #     return Color(c.red * self.red, c.green * self.green, c.blue * self.blue)
-
-    # def __round__(self, n):
-    #     return Color(round(self.red, n),
-    #                  round(self.green, n),
-    #                  round(self.blue, n))
 
     # def __rpow__(self, c, mod):
     #     c = _Color(c)
