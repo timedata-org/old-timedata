@@ -52,7 +52,11 @@ cdef class _Color:
         except:
             raise ValueError("Can't understand color %s" % x)
 
-    def __getitem__(self, int key):
+    def __getitem__(self, object key):
+        if isinstance(key, slice):
+            r = tuple(self[i] for i in range(*key.indices(len(self))))
+            return _Color(*r) if len(r) == 3 else r
+
         if key == 0 or key == -3:
             return self.red
         if key == 1 or key == -2:
