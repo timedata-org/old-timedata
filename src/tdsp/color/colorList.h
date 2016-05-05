@@ -75,4 +75,37 @@ bool sliceIntoVector(std::vector<T> const& in, std::vector<T>& out,
     return true;
 }
 
+template <typename Function>
+void forEachColorComponent(ColorList& colors, Function f) {
+    for (auto& color : colors)
+        for (auto& c : color)
+            f(c);
+}
+
+template <typename Function>
+bool forEachColorComponent(ColorList const& in, ColorList& out, Function f) {
+    if (in.size() != out.size())
+        return false;
+
+    for (size_t i = 0; i < in.size(); ++i) {
+        auto& cin = in[i];
+        auto& cout = out[i];
+        for (size_t j = 0; j < cin.size(); ++j)
+            f(cin[j], cout[j]);
+    }
+}
+
+inline void absColor(ColorList& in) {
+    forEachColorComponent(in, [](float& x) { x = std::abs(x); });
+}
+
+inline void negateColor(ColorList& in) {
+    forEachColorComponent(in, [](float& x) { x = -x; });
+}
+
+inline void invertColor(ColorList& in) {
+    forEachColorComponent(in, [](float& x) { x = 1.0 - x; });
+}
+
+
 } // tdsp
