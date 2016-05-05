@@ -6,7 +6,14 @@ cdef extern from "<tdsp/color/colorList.h>" namespace "tdsp":
     string toString(ColorList&)
     ColorList sliceVector(ColorList&, int begin, int end, int step)
     int compareContainers(ColorList&, ColorList&)
+    bool sliceIntoVector(ColorList& _in, ColorList& out,
+                         int begin, int end, int step)
 
+cdef _ColorList _toColorList(object value):
+    if isinstance(value, _ColorList):
+        return <_ColorList> value
+    else:
+        return _ColorList(value)
 
 cdef class _ColorList:
     cdef ColorList colors
@@ -40,10 +47,10 @@ cdef class _ColorList:
                     self._set_obj(i, item)
 
     def _fix_key(self, int key):
-        if key >= len(self):
+        if key >= self.colors.size():
             raise IndexError('Color index out of range')
         if key < 0:
-            key += len(self)
+            key += self.colors.size()
             if key < 0:
                 raise IndexError('Color index out of range')
         return key
@@ -51,7 +58,7 @@ cdef class _ColorList:
     def __getitem__(self, object key):
         cdef Color c
         if isinstance(key, slice):
-            begin, end, step = key.indices(len(self))
+            begin, end, step = key.indices(self.colors.size())
             cl = _ColorList()
             cl.colors = sliceVector(self.colors, begin, end, step)
             return cl
@@ -59,10 +66,17 @@ cdef class _ColorList:
         c = self.colors[self._fix_key(key)]
         return _Color(c.at(0), c.at(1), c.at(2))
 
-    def __setitem__(self, object key, object value):
+    def __setitem__(self, object key, object x):
+        cdef size_t length, slice_length
+        cdef int begin, end, step
         if isinstance(key, slice):
-            pass
-        self.set_obj(self._fix_key(key), value)
+            begin, end, step = key.indices(self.colors.size())
+            if not sliceIntoVector(_toColorList(x).colors,
+                                   self.colors, begin, end, step):
+                raise ValueError('attempt to assign sequence of one size '
+                                 'to extended slice of another size')
+        else:
+            self.set_obj(self._fix_key(key), x)
 
     def append(self, object value):
         cdef uint s
