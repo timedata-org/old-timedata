@@ -1,4 +1,4 @@
-from tdsp.tdsp import Color, ColorList
+from tdsp import Color, ColorList
 
 """Code to test the tdsp binary module."""
 

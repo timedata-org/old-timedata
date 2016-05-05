@@ -1,3 +1,6 @@
 build/
 src/tdsp.cpp
 TAGS
+.DS_Store
+__pycache__
+tdsp/tdsp
