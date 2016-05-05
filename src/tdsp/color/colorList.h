@@ -110,38 +110,33 @@ inline void invertColor(ColorList& out) {
 
 ////////////////////////////////////////////////////////////////////////////////
 
-inline void addInto(ColorList& out, float f) {
+inline void addInto(float f, ColorList& out) {
     forEachColorComponent(out, [=](float& x) { x += f; });
 }
-
-inline void subtractInto(ColorList& out, float f) {
-    forEachColorComponent(out, [=](float& x) { x -= f; });
-}
-
-inline void multiplyInto(ColorList& out, float f) {
-    forEachColorComponent(out, [=](float& x) { x *= f; });
-}
-
-inline void divideInto(ColorList& out, float f) {
-    forEachColorComponent(out, [=](float& x) { x /= f; });
-}
-
-////////////////////////////////////////////////////////////////////////////////
 inline void addInto(ColorList const& in, ColorList& out) {
     forEachColorComponent(in, out, [](float i, float& o) { o += i; });
 }
 
+inline void subtractInto(float f, ColorList& out) {
+    forEachColorComponent(out, [=](float& x) { x -= f; });
+}
 inline void subtractInto(ColorList const& in, ColorList& out) {
     forEachColorComponent(in, out, [](float i, float& o) { o -= i; });
 }
 
+
+inline void multiplyInto(float f, ColorList& out) {
+    forEachColorComponent(out, [=](float& x) { x *= f; });
+}
 inline void multiplyInto(ColorList const& in, ColorList& out) {
     forEachColorComponent(in, out, [](float i, float& o) { o *= i; });
 }
 
+inline void divideInto(float f, ColorList& out) {
+    forEachColorComponent(out, [=](float& x) { x /= f; });
+}
 inline void divideInto(ColorList const& in, ColorList& out) {
     forEachColorComponent(in, out, [](float i, float& o) { o /= i; });
 }
-
 
 } // tdsp

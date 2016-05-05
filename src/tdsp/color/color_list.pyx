@@ -14,16 +14,19 @@ cdef extern from "<tdsp/color/colorList.h>" namespace "tdsp":
     void absColor(ColorList&)
     void negateColor(ColorList&)
     void invertColor(ColorList&)
-    void addInto(ColorList&, float)
 
-    void addInto(ColorList& out, float f)
-    void subtractInto(ColorList& out, float f)
-    void multiplyInto(ColorList& out, float f)
-    void divideInto(ColorList& out, float f)
+    void addInto(float f, ColorList& out)
     void addInto(ColorList&, ColorList& out)
-    void subtractInto(ColorList&, ColorList& out)
-    void multiplyInto(ColorList&, ColorList& out)
+
+    void divideInto(float f, ColorList& out)
     void divideInto(ColorList&, ColorList& out)
+
+    void multiplyInto(float f, ColorList& out)
+    void multiplyInto(ColorList&, ColorList& out)
+
+    void subtractInto(float f, ColorList& out)
+    void subtractInto(ColorList&, ColorList& out)
+
 
 
 cdef _ColorList _toColorList(object value):
@@ -140,13 +143,25 @@ cdef class _ColorList:
     # Mutating operations.
     def __iadd__(self, c):
         if isinstance(c, Number):
-            addInto(self.colors, <float> c)
+            addInto(<float> c, self.colors)
         else:
             addInto(_toColorList(c).colors, self.colors)
 
+    def __imul__(self, c):
+        if isinstance(c, Number):
+            multiplyInto(<float> c, self.colors)
+        else:
+            multiplyInto(_toColorList(c).colors, self.colors)
+
+    def __isub__(self, c):
+        if isinstance(c, Number):
+             subtractInto(<float> c, self.colors)
+        else:
+             subtractInto(_toColorList(c).colors, self.colors)
+
     def __itruediv__(self, c):
         if isinstance(c, Number):
-            divideInto(self.colors, <float> c)
+            divideInto(<float> c, self.colors)
         else:
             divideInto(_toColorList(c).colors, self.colors)
 
@@ -154,6 +169,18 @@ cdef class _ColorList:
     def __add__(self, c):
         cl = self[:]
         cl += c
+        return cl
+
+    # Operations where self is on the left side.
+    def __mul__(self, c):
+        cl = self[:]
+        cl *= c
+        return cl
+
+    # Operations where self is on the left side.
+    def __sub__(self, c):
+        cl = self[:]
+        cl -= c
         return cl
 
     def __truediv__(self, c):
@@ -178,10 +205,6 @@ cdef class _ColorList:
     # def __mod__(self, c):
     #     c = _Color(c)
     #     return Color(self.red % c.red, self.green % c.green, self.blue % c.blue)
-
-    # def __mul__(self, c):
-    #     c = _Color(c)
-    #     return Color(self.red * c.red, self.green * c.green, self.blue * c.blue)
 
     # def __pow__(self, c, mod):
     #     c = _Color(c)
@@ -209,14 +232,6 @@ cdef class _ColorList:
     def __richcmp__(_ColorList self, _ColorList other, int rcmp):
         return cmpToRichcmp(compareContainers(self.colors, other.colors), rcmp)
 
-    # def __rmod__(self, c):
-    #     c = _Color(c)
-    #     return Color(c.red % self.red, c.green % self.green, c.blue % self.blue)
-
-    # def __rmul__(self, c):
-    #     c = _Color(c)
-    #     return Color(c.red * self.red, c.green * self.green, c.blue * self.blue)
-
     # def __rpow__(self, c, mod):
     #     c = _Color(c)
     #     if mod is None:
@@ -229,16 +244,8 @@ cdef class _ColorList:
     #                  pow(c.green, self.green, m.green),
     #                  pow(c.blue, self.blue, m.blue))
 
-    # def __rsub__(self, c):
-    #     c = _Color(c)
-    #     return Color(c.red - self.red, c.green - self.green, c.blue - self.blue)
-
     def __str__(self):
         return toString(self.colors).decode('ascii')
-
-    # def __sub__(self, c):
-    #     c = _Color(c)
-    #     return Color(self.red - c.red, self.green - c.green, self.blue - c.blue)
 
 
 globals()['ColorList'] = _ColorList
