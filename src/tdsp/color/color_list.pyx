@@ -82,6 +82,9 @@ cdef class _ColorList:
         else:
             self.set_obj(self._fix_key(key), x)
 
+    def abs(self):
+        absColor(self.colors)
+
     def append(self, object value):
         cdef uint s
         s = self.colors.size()
@@ -114,14 +117,18 @@ cdef class _ColorList:
             self.colors.resize(s)
             raise
 
-    def abs(self):
-        absColor(self.colors)
+    def invert(self):
+        """Convert to complementary colors."""
+        invertColor(self.colors)
+
+    def negate(self):
+        negateColor(self.colors)
 
     # def __add__(self, c):
     #     c = _Color(c)
     #     return Color(self.red + c.red, self.green + c.green, self.blue + c.blue)
 
-    # def __div__(self, c):
+    # def __truediv__(self, c):
     #     c = _Color(c)
     #     return Color(self.red / c.red, self.green / c.green, self.blue / c.blue)
 
@@ -131,10 +138,6 @@ cdef class _ColorList:
     #     dg, mg = divmod(self.green, c.green)
     #     db, mb = divmod(self.blue, c.blue)
     #     return Color(dr, dg, db), Color(mr, mg, mb)
-
-    def invert(self):
-        """Convert to complementary colors."""
-        invertColor(self.colors)
 
     def __len__(self):
         return self.colors.size()
@@ -146,9 +149,6 @@ cdef class _ColorList:
     # def __mul__(self, c):
     #     c = _Color(c)
     #     return Color(self.red * c.red, self.green * c.green, self.blue * c.blue)
-
-    def negate(self):
-        negateColor(self.colors)
 
     # def __pow__(self, c, mod):
     #     c = _Color(c)
