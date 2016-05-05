@@ -161,4 +161,22 @@ inline bool cmpToRichcmp(float cmp, int richcmp) {
     }
 }
 
+template <typename C1, typename C2>
+int compareContainers(C1 const& c1, C2 const& c2) {
+    auto i1 = c1.begin();
+    auto i2 = c2.begin();
+    for (; i1 != c1.end() and i2 != c2.end(); ++i1, ++i2) {
+        if (*i1 < *i2)
+            return -1;
+        else if (*i1 > *i2)
+            return 1;
+    }
+    if (i1 != c1.end())
+        return 1;
+    else if (i2 != c2.end())
+        return -1;
+    else
+        return 0;
+}
+
 }  // namespace tdsp

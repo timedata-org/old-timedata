@@ -1,12 +1,14 @@
 cdef extern from "<tdsp/color/colorList.h>" namespace "tdsp":
-    vector[Color] duplicate(vector[Color], int)
-    void reverse(vector[Color])
-    string toString(vector[Color]&)
-    vector[Color] sliceVector(vector[Color], int begin, int end, int step)
+    ctypedef vector[Color] ColorList
 
+    ColorList duplicate(ColorList, int)
+    void reverse(ColorList)
+    string toString(ColorList&)
+    ColorList sliceVector(ColorList, int begin, int end, int step)
+    int compareContainers(ColorList, ColorList)
 
 cdef class _ColorList:
-    cdef vector[Color] colors
+    cdef ColorList colors
 
     cdef _set(self, uint i, float r, float g, float b):
        self.colors[i] = makeColor(r, g, b)
@@ -158,10 +160,8 @@ cdef class _ColorList:
     #     db, mb = divmod(c.blue, self.blue)
     #     return Color(dr, dg, db), Color(mr, mg, mb)
 
-    # def __richcmp__(Color self, Color c, int cmp):
-    #     return cmpToRichcmp((self.red - c.red) or
-    #                         (self.green - c.green) or
-    #                         (self.blue - c.blue), cmp)
+    def __richcmp__(_ColorList self, _ColorList other, int rcmp):
+        return cmpToRichcmp(compareContainers(self.colors, other.colors), rcmp)
 
     # def __rmod__(self, c):
     #     c = _Color(c)
