@@ -1,3 +1,5 @@
+from numbers import Number
+
 cdef extern from "<tdsp/color/colorList.h>" namespace "tdsp":
     ctypedef vector[Color] ColorList
 
@@ -12,6 +14,17 @@ cdef extern from "<tdsp/color/colorList.h>" namespace "tdsp":
     void absColor(ColorList&)
     void negateColor(ColorList&)
     void invertColor(ColorList&)
+    void addInto(ColorList&, float)
+
+    void addInto(ColorList& out, float f)
+    void subtractInto(ColorList& out, float f)
+    void multiplyInto(ColorList& out, float f)
+    void divideInto(ColorList& out, float f)
+    void addInto(ColorList&, ColorList& out)
+    void subtractInto(ColorList&, ColorList& out)
+    void multiplyInto(ColorList&, ColorList& out)
+    void divideInto(ColorList&, ColorList& out)
+
 
 cdef _ColorList _toColorList(object value):
     if isinstance(value, _ColorList):
@@ -124,9 +137,19 @@ cdef class _ColorList:
     def negate(self):
         negateColor(self.colors)
 
-    # def __add__(self, c):
-    #     c = _Color(c)
-    #     return Color(self.red + c.red, self.green + c.green, self.blue + c.blue)
+    def __iadd__(self, c):
+        if isinstance(c, Number):
+            addInto(self.colors, <float> c)
+        else:
+          addInto(_toColorList(c).colors, self.colors)
+
+    def __radd__(self, c):
+        return self + c
+
+    def __add__(self, c):
+        cl = self[:]
+        cl += c
+        return cl
 
     # def __truediv__(self, c):
     #     c = _Color(c)
