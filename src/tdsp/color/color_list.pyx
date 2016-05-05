@@ -3,6 +3,7 @@ cdef extern from "<tdsp/color/colorList.h>" namespace "tdsp":
     void reverse(vector[Color])
     string toString(vector[Color]&)
 
+
 cdef class _ColorList:
     cdef vector[Color] colors
 
@@ -43,7 +44,7 @@ cdef class _ColorList:
                 raise IndexError('Color index out of range')
         return key
 
-    def __getitem__(self, int key):
+    def __getitem__(self, object key):
         cdef Color c
         c = self.colors[self._fix_key(key)]
         return _Color(c.at(0), c.at(1), c.at(2))
@@ -190,5 +191,6 @@ cdef class _ColorList:
     # def __sub__(self, c):
     #     c = Color.make(c)
     #     return Color(self.red - c.red, self.green - c.green, self.blue - c.blue)
+
 
 globals()['ColorList'] = _ColorList

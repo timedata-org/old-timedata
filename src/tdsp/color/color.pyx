@@ -41,28 +41,6 @@ cdef class _Color:
     def blue(self):
         return self.blue
 
-    @staticmethod
-    def make(x):
-        if isinstance(x, _Color):
-            return x
-
-        cdef Color frame
-        try:
-            if isinstance(x, str):
-                if toColor(x, frame):
-                    return _Color(frame.at(0), frame.at(1), frame.at(2))
-
-            try:
-                len(x)
-            except:
-                return _Color(x, x, x)
-            if len(x) == 3:
-                return _Color(*x)
-            raise ValueError()
-
-        except:
-            raise ValueError("Can't understand color %s" % x)
-
     def __getitem__(self, object key):
         if isinstance(key, slice):
             r = tuple(self[i] for i in range(*key.indices(len(self))))
@@ -183,5 +161,6 @@ cdef class _Color:
     def __sub__(self, c):
         c = _Color.make(c)
         return _Color(self.red - c.red, self.green - c.green, self.blue - c.blue)
+
 
 globals()['Color'] = _Color
