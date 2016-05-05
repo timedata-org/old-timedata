@@ -28,7 +28,7 @@ struct Slice {
 };
 
 template <typename Number,
-          typename std::enable_if_t<std::is_signed<Number>::value, int> = 0>
+          typename std::enable_if<std::is_signed<Number>::value, int> = 0>
 Number size(Slice<Number> s) {
     if (s.step > 0)
         return (s.begin < s.end) ? (s.end - s.begin) / s.step : 0;
@@ -47,24 +47,8 @@ void forEachWhile(Slice<Number> slice, Function f, Condition cond) {
 
 }
 
-template <typename Number,
-          typename Function,
-          typename std::enable_if_t<std::is_signed<Number>::value, int> = 0>
+template <typename Number, typename Function>
 void forEach(Slice<Number> slice, Function f) {
-    if (slice.step > 0)
-        forEachWhile(slice, f, [&](Number i) { return i < slice.end; });
-
-    else if (slice.step < 0)
-        forEachWhile(slice, f, [&](Number i) { return i > slice.end; });
-}
-
-template <typename Number,
-          typename Function,
-          typename std::enable_if_t<std::is_unsigned<Number>::value, int> = 0
-          >
-void forEach(Slice<Number> slice, Function f) {
-    /* All the fanciness is because there might be overflow or underflow when
-       evaluating the condition. */
     if (slice.step > 0) {
         forEachWhile(slice, f, [&](Number i) {
             return i < slice.end and (slice.end - i) < slice.step < slice.end;
