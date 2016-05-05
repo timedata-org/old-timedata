@@ -1,11 +1,12 @@
 cdef extern from "<tdsp/color/colorList.h>" namespace "tdsp":
     ctypedef vector[Color] ColorList
 
-    ColorList duplicate(ColorList, int)
-    void reverse(ColorList)
+    ColorList duplicate(ColorList&, int)
+    void reverse(ColorList&)
     string toString(ColorList&)
-    ColorList sliceVector(ColorList, int begin, int end, int step)
-    int compareContainers(ColorList, ColorList)
+    ColorList sliceVector(ColorList&, int begin, int end, int step)
+    int compareContainers(ColorList&, ColorList&)
+
 
 cdef class _ColorList:
     cdef ColorList colors
@@ -58,7 +59,9 @@ cdef class _ColorList:
         c = self.colors[self._fix_key(key)]
         return _Color(c.at(0), c.at(1), c.at(2))
 
-    def __setitem__(self, int key, object value):
+    def __setitem__(self, object key, object value):
+        if isinstance(key, slice):
+            pass
         self.set_obj(self._fix_key(key), value)
 
     def append(self, object value):
