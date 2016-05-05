@@ -58,15 +58,15 @@ cdef class _Color:
         return _Color(abs(self.red), abs(self.green), abs(self.blue))
 
     def __add__(self, c):
-        c = _Color.make(c)
+        c = _Color(c)
         return _Color(self.red + c.red, self.green + c.green, self.blue + c.blue)
 
     def __div__(self, c):
-        c = _Color.make(c)
+        c = _Color(c)
         return _Color(self.red / c.red, self.green / c.green, self.blue / c.blue)
 
     def __divmod__(self, c):
-        c = _Color.make(c)
+        c = _Color(c)
         dr, mr = divmod(self.red, c.red)
         dg, mg = divmod(self.green, c.green)
         db, mb = divmod(self.blue, c.blue)
@@ -80,30 +80,30 @@ cdef class _Color:
         return 3
 
     def __mod__(self, c):
-        c = _Color.make(c)
+        c = _Color(c)
         return _Color(self.red % c.red, self.green % c.green, self.blue % c.blue)
 
     def __mul__(self, c):
-        c = _Color.make(c)
+        c = _Color(c)
         return _Color(self.red * c.red, self.green * c.green, self.blue * c.blue)
 
     def __neg__(self):
         return _Color(-self.red, -self.green, -self.blue)
 
     def __pow__(self, c, mod):
-        c = _Color.make(c)
+        c = _Color(c)
         if mod is None:
             return _Color(self.red ** c.red,
                          self.green ** c.green,
                          self.blue ** c.blue)
 
-        m = _Color.make(mod)
+        m = _Color(mod)
         return _Color(pow(self.red, c.red, m.red),
                      pow(self.green, c.green, m.green),
                      pow(self.blue, c.blue, m.blue))
 
     def __radd__(self, c):
-        c = _Color.make(c)
+        c = _Color(c)
         return _Color(self.red + c.red, self.green + c.green, self.blue + c.blue)
 
     def __repr__(self):
@@ -111,11 +111,11 @@ cdef class _Color:
         return '%s.%s(%s)' % (cl.__module__, cl.__name__, str(self))
 
     def __rdiv__(self, c):
-        c = _Color.make(c)
+        c = _Color(c)
         return _Color(c.red / self.red, c.green / self.green, c.blue / self.blue)
 
     def __rdivmod__(self, c):
-        c = _Color.make(c)
+        c = _Color(c)
         dr, mr = divmod(c.red, self.red)
         dg, mg = divmod(c.green, self.green)
         db, mb = divmod(c.blue, self.blue)
@@ -127,11 +127,11 @@ cdef class _Color:
                             (self.blue - c.blue), cmp)
 
     def __rmod__(self, c):
-        c = _Color.make(c)
+        c = _Color(c)
         return _Color(c.red % self.red, c.green % self.green, c.blue % self.blue)
 
     def __rmul__(self, c):
-        c = _Color.make(c)
+        c = _Color(c)
         return _Color(c.red * self.red, c.green * self.green, c.blue * self.blue)
 
     def __round__(self, n):
@@ -140,26 +140,26 @@ cdef class _Color:
                      round(self.blue, n))
 
     def __rpow__(self, c, mod):
-        c = _Color.make(c)
+        c = _Color(c)
         if mod is None:
             return _Color(c.red ** self.red,
                          c.green ** self.green,
                          c.blue ** self.blue)
 
-        m = _Color.make(mod)
+        m = _Color(mod)
         return _Color(pow(c.red, self.red, m.red),
                      pow(c.green, self.green, m.green),
                      pow(c.blue, self.blue, m.blue))
 
     def __rsub__(self, c):
-        c = _Color.make(c)
+        c = _Color(c)
         return _Color(c.red - self.red, c.green - self.green, c.blue - self.blue)
 
     def __str__(self):
         return colorToString(self.red, self.green, self.blue).decode('ascii')
 
     def __sub__(self, c):
-        c = _Color.make(c)
+        c = _Color(c)
         return _Color(self.red - c.red, self.green - c.green, self.blue - c.blue)
 
 

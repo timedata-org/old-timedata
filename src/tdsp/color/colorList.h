@@ -1,5 +1,7 @@
 #pragma once
 
+#include <tdsp/base/make.h>
+#include <tdsp/color/slice.h>
 #include <tdsp/color/color.h>
 #include <tdsp/color/names_inl.h>
 
@@ -32,6 +34,15 @@ inline std::string toString(ColorList const& colors) {
     }
     result += ")";
     return result;
+}
+
+template <typename T>
+std::vector<T> sliceVector(
+        std::vector<T> const& in, int begin, int end, int step) {
+    auto slice = make<Slice>(begin, end, step);
+    std::vector<T> out;
+    forEach(slice, [&](int j) { out.push_back(in[j]); });
+    return out;
 }
 
 } // tdsp

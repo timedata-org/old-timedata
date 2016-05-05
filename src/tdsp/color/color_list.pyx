@@ -2,6 +2,7 @@ cdef extern from "<tdsp/color/colorList.h>" namespace "tdsp":
     vector[Color] duplicate(vector[Color], int)
     void reverse(vector[Color])
     string toString(vector[Color]&)
+    vector[Color] sliceVector(vector[Color], int begin, int end, int step)
 
 
 cdef class _ColorList:
@@ -12,7 +13,7 @@ cdef class _ColorList:
 
     def _set_obj(self, uint i, object x):
         if isinstance(x, str):
-            c = _Color.make(x)
+            c = _Color(x)
             self._set(i, c.red, c.green, c.blue)
         else:
             r, g, b = x
@@ -26,7 +27,7 @@ cdef class _ColorList:
             except:
                 # A list of integers
                 assert not (len(items) % 3)
-                self.colors.resize(items / 3)
+                self.colors.resize(<size_t> (len(items) / 3))
                 for i in range(0, len(items), 3):
                     self._set(i, items[i], items[i + 1], items[i + 2])
             else:
@@ -46,6 +47,12 @@ cdef class _ColorList:
 
     def __getitem__(self, object key):
         cdef Color c
+        if isinstance(key, slice):
+            begin, end, step = key.indices(len(self))
+            cl = _ColorList()
+            cl.colors = sliceVector(self.colors, begin, end, step)
+            return cl
+
         c = self.colors[self._fix_key(key)]
         return _Color(c.at(0), c.at(1), c.at(2))
 
@@ -88,15 +95,15 @@ cdef class _ColorList:
     #     return Color(abs(self.red), abs(self.green), abs(self.blue))
 
     # def __add__(self, c):
-    #     c = Color.make(c)
+    #     c = _Color(c)
     #     return Color(self.red + c.red, self.green + c.green, self.blue + c.blue)
 
     # def __div__(self, c):
-    #     c = Color.make(c)
+    #     c = _Color(c)
     #     return Color(self.red / c.red, self.green / c.green, self.blue / c.blue)
 
     # def __divmod__(self, c):
-    #     c = Color.make(c)
+    #     c = _Color(c)
     #     dr, mr = divmod(self.red, c.red)
     #     dg, mg = divmod(self.green, c.green)
     #     db, mb = divmod(self.blue, c.blue)
@@ -110,30 +117,30 @@ cdef class _ColorList:
         return self.colors.size()
 
     # def __mod__(self, c):
-    #     c = Color.make(c)
+    #     c = _Color(c)
     #     return Color(self.red % c.red, self.green % c.green, self.blue % c.blue)
 
     # def __mul__(self, c):
-    #     c = Color.make(c)
+    #     c = _Color(c)
     #     return Color(self.red * c.red, self.green * c.green, self.blue * c.blue)
 
     # def __neg__(self):
     #     return Color(-self.red, -self.green, -self.blue)
 
     # def __pow__(self, c, mod):
-    #     c = Color.make(c)
+    #     c = _Color(c)
     #     if mod is None:
     #         return Color(self.red ** c.red,
     #                      self.green ** c.green,
     #                      self.blue ** c.blue)
 
-    #     m = Color.make(mod)
+    #     m = _Color(mod)
     #     return Color(pow(self.red, c.red, m.red),
     #                  pow(self.green, c.green, m.green),
     #                  pow(self.blue, c.blue, m.blue))
 
     # def __radd__(self, c):
-    #     c = Color.make(c)
+    #     c = _Color(c)
     #     return Color(self.red + c.red, self.green + c.green, self.blue + c.blue)
 
     # def __repr__(self):
@@ -141,11 +148,11 @@ cdef class _ColorList:
     #     return '%s.%s(%s)' % (cl.__module__, cl.__name__, str(self))
 
     # def __rdiv__(self, c):
-    #     c = Color.make(c)
+    #     c = _Color(c)
     #     return Color(c.red / self.red, c.green / self.green, c.blue / self.blue)
 
     # def __rdivmod__(self, c):
-    #     c = Color.make(c)
+    #     c = _Color(c)
     #     dr, mr = divmod(c.red, self.red)
     #     dg, mg = divmod(c.green, self.green)
     #     db, mb = divmod(c.blue, self.blue)
@@ -157,11 +164,11 @@ cdef class _ColorList:
     #                         (self.blue - c.blue), cmp)
 
     # def __rmod__(self, c):
-    #     c = Color.make(c)
+    #     c = _Color(c)
     #     return Color(c.red % self.red, c.green % self.green, c.blue % self.blue)
 
     # def __rmul__(self, c):
-    #     c = Color.make(c)
+    #     c = _Color(c)
     #     return Color(c.red * self.red, c.green * self.green, c.blue * self.blue)
 
     # def __round__(self, n):
@@ -170,26 +177,26 @@ cdef class _ColorList:
     #                  round(self.blue, n))
 
     # def __rpow__(self, c, mod):
-    #     c = Color.make(c)
+    #     c = _Color(c)
     #     if mod is None:
     #         return Color(c.red ** self.red,
     #                      c.green ** self.green,
     #                      c.blue ** self.blue)
 
-    #     m = Color.make(mod)
+    #     m = _Color(mod)
     #     return Color(pow(c.red, self.red, m.red),
     #                  pow(c.green, self.green, m.green),
     #                  pow(c.blue, self.blue, m.blue))
 
     # def __rsub__(self, c):
-    #     c = Color.make(c)
+    #     c = _Color(c)
     #     return Color(c.red - self.red, c.green - self.green, c.blue - self.blue)
 
     def __str__(self):
         return toString(self.colors).decode('ascii')
 
     # def __sub__(self, c):
-    #     c = Color.make(c)
+    #     c = _Color(c)
     #     return Color(self.red - c.red, self.green - c.green, self.blue - c.blue)
 
 

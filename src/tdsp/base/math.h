@@ -50,7 +50,7 @@ bool isHex(char const*);
 
 void removeTrailing(std::string&, char ch);
 
-/** Convert a float to a string.  Perhaps misguided. */
+/** Convert a float to a string. */
 std::string toString(float, unsigned int decimals = 0);
 
 template <typename T>
