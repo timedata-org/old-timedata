@@ -8,6 +8,10 @@ namespace tdsp {
 template <typename Number>
 struct Range {
     Number begin, end;
+
+    Number size() const {
+        return (begin < end) ? (end - begin) : Number(0);
+    }
 };
 
 template <typename Number, typename Function>
@@ -16,26 +20,19 @@ void forEach(Range<Number> range, Function f) {
         f(i);
 }
 
-template <typename Number>
-Number size(Range<Number> r) {
-    return (r.begin < r.end) ? (r.end - r.begin) : 0;
-}
-
-template <typename Number>
+template <typename Number = float>
 struct Slice {
     Number begin, end;
     int step;
-};
 
-template <typename Number,
-          typename std::enable_if<std::is_signed<Number>::value, int> = 0>
-Number size(Slice<Number> s) {
-    if (s.step > 0)
-        return (s.begin < s.end) ? (s.end - s.begin) / s.step : 0;
-    if (s.step < 0)
-        return (s.begin > s.end) ? (s.begin - s.end) / -s.step : 0;
-    return 0;
-}
+    size_t size() const {
+        if (step > 0)
+            return begin < end ? ((end - begin) / step) : 0;
+        if (step < 0)
+            return begin > end ? ((begin - end) / -step) : 0;
+        return 0;
+    }
+};
 
 
 template <typename Number,
@@ -44,7 +41,6 @@ template <typename Number,
 void forEachWhile(Slice<Number> slice, Function f, Condition cond) {
     for (auto i = slice.begin; cond(i); i += slice.step)
         f(i);
-
 }
 
 template <typename Number, typename Function>

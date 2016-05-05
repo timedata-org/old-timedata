@@ -46,4 +46,33 @@ std::vector<T> sliceVector(
     return out;
 }
 
+template <typename T>
+bool sliceIntoVector(std::vector<T> const& in, std::vector<T>& out,
+                     int begin, int end, int step) {
+    auto slice = make<Slice>(begin, end, step);
+
+    if (slice.size() == in.size()) {
+        auto i = in.begin();
+        forEach(slice, [&](int j) { out[j] = *(i++); });
+        return true;
+    }
+
+    if (step != 1)
+        return false;
+
+    auto beginOut = out.begin() + begin;
+    if (slice.size() > in.size()) {
+        // Shrink!  Copy the input, then erase the remains.
+        std::copy(in.begin(), in.end(), beginOut);
+        out.erase(beginOut + in.size(), beginOut + slice.size());
+    } else {
+        // Grow!  Copy the first segment, then insert the second.
+        auto split = in.begin() + slice.size();
+        std::copy(in.begin(), split, beginOut);
+        out.insert(beginOut + slice.begin, split, in.end());
+    }
+
+    return true;
+}
+
 } // tdsp
