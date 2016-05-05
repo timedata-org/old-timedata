@@ -93,18 +93,54 @@ bool forEachColorComponent(ColorList const& in, ColorList& out, Function f) {
         for (size_t j = 0; j < cin.size(); ++j)
             f(cin[j], cout[j]);
     }
+    return true;
 }
 
-inline void absColor(ColorList& in) {
-    forEachColorComponent(in, [](float& x) { x = std::abs(x); });
+inline void absColor(ColorList& out) {
+    forEachColorComponent(out, [](float& x) { x = std::abs(x); });
 }
 
-inline void negateColor(ColorList& in) {
-    forEachColorComponent(in, [](float& x) { x = -x; });
+inline void negateColor(ColorList& out) {
+    forEachColorComponent(out, [](float& x) { x = -x; });
 }
 
-inline void invertColor(ColorList& in) {
-    forEachColorComponent(in, [](float& x) { x = 1.0 - x; });
+inline void invertColor(ColorList& out) {
+    forEachColorComponent(out, [](float& x) { x = 1.0 - x; });
+}
+
+////////////////////////////////////////////////////////////////////////////////
+
+inline void addInto(ColorList& out, float f) {
+    forEachColorComponent(out, [=](float& x) { x += f; });
+}
+
+inline void subtractInto(ColorList& out, float f) {
+    forEachColorComponent(out, [=](float& x) { x -= f; });
+}
+
+inline void multiplyInto(ColorList& out, float f) {
+    forEachColorComponent(out, [=](float& x) { x *= f; });
+}
+
+inline void divideInto(ColorList& out, float f) {
+    forEachColorComponent(out, [=](float& x) { x /= f; });
+}
+
+////////////////////////////////////////////////////////////////////////////////
+inline void addInto(ColorList const& in, ColorList& out) {
+    forEachColorComponent(in, out, [](float i, float& o) { o += i; });
+}
+
+inline void subtractInto(ColorList const& in, ColorList& out) {
+    forEachColorComponent(in, out, [](float i, float& o) { o -= i; });
+}
+
+inline void multiplyInto(ColorList const& in, ColorList& out) {
+    forEachColorComponent(in, out, [](float i, float& o) { o *= i; });
+}
+
+inline void divideInto(ColorList const& in, ColorList& out) {
+    forEachColorComponent(in, out, [](float i, float& o) { o /= i; });
 }
 
 

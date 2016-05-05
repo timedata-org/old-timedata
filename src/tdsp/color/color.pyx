@@ -1,4 +1,4 @@
-import numbers
+from numbers import Number
 
 cdef extern from "<tdsp/color/names_inl.h>" namespace "tdsp":
     cdef cppclass Color:
@@ -23,7 +23,7 @@ cdef class _Color:
 
         if len(args) == 1:
             args = args[0]
-            if isinstance(args, numbers.Number):
+            if isinstance(args, Number):
                 self.red = self.green = self.blue = args
                 return
 
