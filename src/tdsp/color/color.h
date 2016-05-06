@@ -11,6 +11,7 @@ enum class HSB { hue, saturation, brightness, size };
 // enum class Stereo { left, right };
 
 using Color = Sample<RGB>;
+using Color256 = Sample<RGB, uint8_t>;
 
 inline Color makeColor(float r, float g, float b) {
     return {{r, g, b}};

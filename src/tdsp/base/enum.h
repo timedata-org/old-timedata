@@ -5,19 +5,37 @@
 
 namespace tdsp {
 
-/** Generically get the size of an enum whose last element is `size`. */
+/** We often want to generically operate on an enum class and do things like
+    "get the number of elements" or "iterate over all elements".
+
+    There's no direct way to do this in C++, so we define an enum class to be
+    "sized" if:
+
+       1. There are no gaps.
+       2. The lowest element is 0.
+       3. The highest element is named `size`.
+
+    The easiest way to do this is just to not assign numbers to any of the
+    values and make `size` the last value, like this:
+
+        enum class Foo { foo, bar, baz, bang, size };
+
+*/
+
+/** Generically get the size of a sized enum class. */
 template <typename Enum>
 constexpr uint8_t enumSize() {
     return static_cast<uint8_t>(Enum::size);
 }
 
+/** Iterate over elements of a sized enum class. */
 template <typename Enum, typename Functor>
 void forEach(Functor f) {
     for (uint8_t i = 0; i < enumSize<Enum>(); ++i)
         f(static_cast<Enum>(i));
 }
 
-/** An array that can be accessed by number or by Enum. */
+/** An array indexed by a sized enum class. */
 template <typename T, typename Enum>
 struct EnumArray : std::array<T, enumSize<Enum>> {
     using Parent = std::array<T, enumSize<Enum>>;

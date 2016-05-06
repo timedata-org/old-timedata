@@ -29,7 +29,7 @@ template <typename Function>
 void forEachColorComponent(ColorList& colors, Function f);
 
 template <typename Function>
-bool forEachColorComponent(ColorList const& in, ColorList& out, Function f);
+void forEachColorComponent(ColorList const& in, ColorList& out, Function f);
 
 void absColor(ColorList& out);
 void negateColor(ColorList& out);

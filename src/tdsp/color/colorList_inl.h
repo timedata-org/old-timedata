@@ -81,17 +81,13 @@ void forEachColorComponent(ColorList& colors, Function f) {
 }
 
 template <typename Function>
-bool forEachColorComponent(ColorList const& in, ColorList& out, Function f) {
-    if (in.size() != out.size())
-        return false;
+void forEachColorComponent(ColorList const& in, ColorList& out, Function f) {
+    if (out.size() < in.size())
+        out.resize(in.size());
 
-    for (size_t i = 0; i < in.size(); ++i) {
-        auto& cin = in[i];
-        auto& cout = out[i];
-        for (size_t j = 0; j < cin.size(); ++j)
-            f(cin[j], cout[j]);
-    }
-    return true;
+    for (size_t i = 0; i < in.size(); ++i)
+        for (size_t j = 0; j < in[i].size(); ++j)
+            f(in[i][j], out[i][j]);
 }
 
 inline void absColor(ColorList& out) {
