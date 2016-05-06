@@ -166,4 +166,20 @@ inline void subtractInto(ColorList const& in, ColorList& out) {
     forEachColorComponent(in, out, [](float i, float& o) { o -= i; });
 }
 
+inline void minInto(float f, ColorList& out) {
+    forEachColorComponent(out, [=](float& x) { x = std::min(f, x); });
+}
+inline void minInto(ColorList const& in, ColorList& out) {
+    forEachColorComponent(in, out,
+                          [](float i, float& o) { o = std::min(i, o); });
+}
+
+inline void maxInto(float f, ColorList& out) {
+    forEachColorComponent(out, [=](float& x) { x = std::max(f, x); });
+}
+inline void maxInto(ColorList const& in, ColorList& out) {
+    forEachColorComponent(in, out,
+                          [](float i, float& o) { o = std::max(i, o); });
+}
+
 } // tdsp

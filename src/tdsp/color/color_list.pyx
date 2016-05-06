@@ -21,6 +21,12 @@ cdef extern from "<tdsp/color/colorList.h>" namespace "tdsp":
     void divideInto(float f, ColorList& out)
     void divideInto(ColorList&, ColorList& out)
 
+    void minInto(float f, ColorList& out)
+    void minInto(ColorList&, ColorList& out)
+
+    void maxInto(float f, ColorList& out)
+    void maxInto(ColorList&, ColorList& out)
+
     void multiplyInto(float f, ColorList& out)
     void multiplyInto(ColorList&, ColorList& out)
 
@@ -148,8 +154,32 @@ cdef class _ColorList:
         """Convert to complementary colors."""
         invertColor(self.colors)
 
+    def max(self, c):
+        if isinstance(c, Number):
+            maxInto(<float> c, self.colors)
+        else:
+            maxInto(_toColorList(c).colors, self.colors)
+
+    def min(self, c):
+        if isinstance(c, Number):
+            minInto(<float> c, self.colors)
+        else:
+            minInto(_toColorList(c).colors, self.colors)
+
     def negate(self):
         negateColor(self.colors)
+
+    def pow(self, c):
+        if isinstance(c, Number):
+            powInto(<float> c, self.colors)
+        else:
+            powInto(_toColorList(c).colors, self.colors)
+
+    def rpow(self, c):
+        if isinstance(c, Number):
+            rpowInto(<float> c, self.colors)
+        else:
+            rpowInto(_toColorList(c).colors, self.colors)
 
     # Mutating operations.
     def __iadd__(self, c):
@@ -175,18 +205,6 @@ cdef class _ColorList:
             divideInto(<float> c, self.colors)
         else:
             divideInto(_toColorList(c).colors, self.colors)
-
-    def pow(self, c):
-        if isinstance(c, Number):
-            powInto(<float> c, self.colors)
-        else:
-            powInto(_toColorList(c).colors, self.colors)
-
-    def rpow(self, c):
-        if isinstance(c, Number):
-            rpowInto(<float> c, self.colors)
-        else:
-            rpowInto(_toColorList(c).colors, self.colors)
 
     #         return Color(self.red ** c.red,
     #                      self.green ** c.green,
