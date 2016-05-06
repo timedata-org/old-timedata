@@ -24,9 +24,20 @@ cdef extern from "<tdsp/color/colorList.h>" namespace "tdsp":
     void multiplyInto(float f, ColorList& out)
     void multiplyInto(ColorList&, ColorList& out)
 
+    void powInto(float f, ColorList& out)
+    void powInto(ColorList&, ColorList& out)
+
+    void rdivideInto(float f, ColorList& out)
+    void rdivideInto(ColorList&, ColorList& out)
+
+    void rpowInto(float f, ColorList& out)
+    void rpowInto(ColorList&, ColorList& out)
+
+    void rsubtractInto(float f, ColorList& out)
+    void rsubtractInto(ColorList&, ColorList& out)
+
     void subtractInto(float f, ColorList& out)
     void subtractInto(ColorList&, ColorList& out)
-
 
 
 cdef _ColorList _toColorList(object value):
@@ -165,6 +176,27 @@ cdef class _ColorList:
         else:
             divideInto(_toColorList(c).colors, self.colors)
 
+    def pow(self, c):
+        if isinstance(c, Number):
+            powInto(<float> c, self.colors)
+        else:
+            powInto(_toColorList(c).colors, self.colors)
+
+    def rpow(self, c):
+        if isinstance(c, Number):
+            rpowInto(<float> c, self.colors)
+        else:
+            rpowInto(_toColorList(c).colors, self.colors)
+
+    #         return Color(self.red ** c.red,
+    #                      self.green ** c.green,
+    #                      self.blue ** c.blue)
+
+    #     m = _Color(mod)
+    #     return Color(pow(self.red, c.red, m.red),
+    #                  pow(self.green, c.green, m.green),
+    #                  pow(self.blue, c.blue, m.blue))
+
     # Operations where self is on the left side.
     def __add__(self, c):
         cl = self[:]
@@ -188,61 +220,47 @@ cdef class _ColorList:
         cl /= c
         return cl
 
+    def __pow__(self, c, mod):
+        if mod is not None:
+            raise ValueError("Don't understand three-operator mod")
+        cl = self[:]
+        cl.pow(c)
+        return c
+
     # Operations where self is on the right side.
     def __radd__(self, c):
         return self + c
 
-    # def __divmod__(self, c):
-    #     c = _Color(c)
-    #     dr, mr = divmod(self.red, c.red)
-    #     dg, mg = divmod(self.green, c.green)
-    #     db, mb = divmod(self.blue, c.blue)
-    #     return Color(dr, dg, db), Color(mr, mg, mb)
+    def __rdiv__(self, c):
+        if isinstance(c, Number):
+             rdivideInto(<float> c, self.colors)
+        else:
+             rdivideInto(_toColorList(c).colors, self.colors)
+
+    def __rmul__(self, c):
+        return self * c
+
+    def __rpow__(self, c, mod):
+        if mod is not None:
+            raise ValueError("Don't understand three-operator mod")
+        cl = self[:]
+        cl.rpow(c)
+        return c
+
+    def __rsub__(self, c):
+        if isinstance(c, Number):
+             rsubtractInto(<float> c, self.colors)
+        else:
+             rsubtractInto(_toColorList(c).colors, self.colors)
 
     def __len__(self):
         return self.colors.size()
 
-    # def __mod__(self, c):
-    #     c = _Color(c)
-    #     return Color(self.red % c.red, self.green % c.green, self.blue % c.blue)
-
-    # def __pow__(self, c, mod):
-    #     c = _Color(c)
-    #     if mod is None:
-    #         return Color(self.red ** c.red,
-    #                      self.green ** c.green,
-    #                      self.blue ** c.blue)
-
-    #     m = _Color(mod)
-    #     return Color(pow(self.red, c.red, m.red),
-    #                  pow(self.green, c.green, m.green),
-    #                  pow(self.blue, c.blue, m.blue))
-
-    # def __repr__(self):
-    #     cl = self.__class__
-    #     return '%s.%s(%s)' % (cl.__module__, cl.__name__, str(self))
-
-    # def __rdivmod__(self, c):
-    #     c = _Color(c)
-    #     dr, mr = divmod(c.red, self.red)
-    #     dg, mg = divmod(c.green, self.green)
-    #     db, mb = divmod(c.blue, self.blue)
-    #     return Color(dr, dg, db), Color(mr, mg, mb)
+    def __repr__(self):
+        return '%s.ColorList(%s)' % (self.__class__.__module__, str(self))
 
     def __richcmp__(_ColorList self, _ColorList other, int rcmp):
         return cmpToRichcmp(compareContainers(self.colors, other.colors), rcmp)
-
-    # def __rpow__(self, c, mod):
-    #     c = _Color(c)
-    #     if mod is None:
-    #         return Color(c.red ** self.red,
-    #                      c.green ** self.green,
-    #                      c.blue ** self.blue)
-
-    #     m = _Color(mod)
-    #     return Color(pow(c.red, self.red, m.red),
-    #                  pow(c.green, self.green, m.green),
-    #                  pow(c.blue, self.blue, m.blue))
 
     def __str__(self):
         return toString(self.colors).decode('ascii')
