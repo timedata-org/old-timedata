@@ -1,6 +1,6 @@
 from numbers import Number
 
-cdef extern from "<tdsp/color/colorList.h>" namespace "tdsp":
+cdef extern from "<tdsp/color/colorList_inl.h>" namespace "tdsp":
     ctypedef vector[Color] ColorList
 
     ColorList duplicate(ColorList&, int)
