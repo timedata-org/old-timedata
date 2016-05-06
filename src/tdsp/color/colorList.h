@@ -117,13 +117,12 @@ inline void addInto(ColorList const& in, ColorList& out) {
     forEachColorComponent(in, out, [](float i, float& o) { o += i; });
 }
 
-inline void subtractInto(float f, ColorList& out) {
-    forEachColorComponent(out, [=](float& x) { x -= f; });
+inline void divideInto(float f, ColorList& out) {
+    forEachColorComponent(out, [=](float& x) { x /= f; });
 }
-inline void subtractInto(ColorList const& in, ColorList& out) {
-    forEachColorComponent(in, out, [](float i, float& o) { o -= i; });
+inline void divideInto(ColorList const& in, ColorList& out) {
+    forEachColorComponent(in, out, [](float i, float& o) { o /= i; });
 }
-
 
 inline void multiplyInto(float f, ColorList& out) {
     forEachColorComponent(out, [=](float& x) { x *= f; });
@@ -132,11 +131,39 @@ inline void multiplyInto(ColorList const& in, ColorList& out) {
     forEachColorComponent(in, out, [](float i, float& o) { o *= i; });
 }
 
-inline void divideInto(float f, ColorList& out) {
-    forEachColorComponent(out, [=](float& x) { x /= f; });
+inline void powInto(float f, ColorList& out) {
+    forEachColorComponent(out, [=](float& x) { x = pow(x, f); });
 }
-inline void divideInto(ColorList const& in, ColorList& out) {
-    forEachColorComponent(in, out, [](float i, float& o) { o /= i; });
+inline void powInto(ColorList const& in, ColorList& out) {
+    forEachColorComponent(in, out, [](float i, float& o) { o = pow(o, i); });
+}
+
+inline void rdivideInto(float f, ColorList& out) {
+    forEachColorComponent(out, [=](float& x) { x = f / x; });
+}
+inline void rdivideInto(ColorList const& in, ColorList& out) {
+    forEachColorComponent(in, out, [](float i, float& o) { o = i = o; });
+}
+
+inline void rpowInto(float f, ColorList& out) {
+    forEachColorComponent(out, [=](float& x) { x = pow(f, x); });
+}
+inline void rpowInto(ColorList const& in, ColorList& out) {
+    forEachColorComponent(in, out, [](float i, float& o) { o = pow(o, i); });
+}
+
+inline void rsubtractInto(float f, ColorList& out) {
+    forEachColorComponent(out, [=](float& x) { x = f - x; });
+}
+inline void rsubtractInto(ColorList const& in, ColorList& out) {
+    forEachColorComponent(in, out, [](float i, float& o) { o = i - o; });
+}
+
+inline void subtractInto(float f, ColorList& out) {
+    forEachColorComponent(out, [=](float& x) { x -= f; });
+}
+inline void subtractInto(ColorList const& in, ColorList& out) {
+    forEachColorComponent(in, out, [](float i, float& o) { o -= i; });
 }
 
 } // tdsp

@@ -105,13 +105,13 @@ cdef class _Color:
         c = _Color(c)
         if mod is None:
             return _Color(self.red ** c.red,
-                         self.green ** c.green,
-                         self.blue ** c.blue)
+                          self.green ** c.green,
+                          self.blue ** c.blue)
 
         m = _Color(mod)
         return _Color(pow(self.red, c.red, m.red),
-                     pow(self.green, c.green, m.green),
-                     pow(self.blue, c.blue, m.blue))
+                      pow(self.green, c.green, m.green),
+                      pow(self.blue, c.blue, m.blue))
 
     def __radd__(self, c):
         c = _Color(c)
