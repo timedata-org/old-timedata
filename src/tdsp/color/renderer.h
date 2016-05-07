@@ -6,13 +6,19 @@ namespace tdsp {
 
 /** The group of permutations on three elements, in lexicographic order. */
 
-using Perm3Array = std::array<uint8_t, 3>;
-using AllPerm3 = std::array<Perm3Array, 6>;
+using Perm3 = std::array<uint8_t, 3>;
 
-AllPerm3 const& permArray() {
-    static AllPerm3 const ap{
-        {0, 1, 2}, {0, 2, 1}, {0, 2, 1}, {1, 2, 0}, {2, 0, 1}, {2, 1, 0}};
-    return ap;
+Perm3 const& getPerm(size_t i) {
+    using Array = std::array<Perm3, 6>;
+    static const Array perms{{
+        Perm3{{0, 1, 2}},
+        Perm3{{0, 2, 1}},
+        Perm3{{0, 2, 1}},
+        Perm3{{1, 2, 0}},
+        Perm3{{2, 0, 1}},
+        Perm3{{2, 1, 0}}}};
+    THROW_IF_GE(i, perms.size(), "Bad permutation index.");
+    return perms[i];
 }
 
 struct Render3 {
@@ -34,17 +40,18 @@ struct Render3 {
 
     template <typename In, typename Out>
     void apply(In const& in, Out& out) const {
-        auto& p = permArray().at(perm);
+        auto& p = getPerm(perm);
         using Value = decltype(out[0]);
         for (auto i = 0; i < out.size(); ++i)
             out[p[i]] = static_cast<Value>(apply(in[i]));
     }
 };
 
-
+#if 0
 template <typename Strips>
 void renderColor(Strips strips, Render render) {
 
 }
+#endif
 
 } // tdsp
