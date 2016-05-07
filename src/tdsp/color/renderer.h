@@ -45,6 +45,9 @@ struct Render3 {
         for (auto i = 0; i < out.size(); ++i)
             out[p[i]] = static_cast<Value>(apply(in[i]));
     }
+
+    void apply(ColorList const& in, char* buffer, uint offset) {
+    }
 };
 
 #if 0
