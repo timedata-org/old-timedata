@@ -1,9 +1,11 @@
 cdef extern from "<tdsp/color/renderer.h>" namespace "tdsp":
     struct Render3:
         float min, max, brightness, gamma
-        uint perm
+        uint permutation
+        char* buffer
+        size_t size
 
-        void apply(ColorList& input, char* message, uint offset)
+        void apply(ColorList&)
 
 
 cdef class Renderer3:
@@ -11,6 +13,7 @@ cdef class Renderer3:
     cdef uint _size, _offset
     cdef bytearray _message
 
+    PERMUTATIONS = 'rgb', 'rbg', 'grb', 'gbr', 'brg', 'bgr'
 
     def __cinit__(self, object driver):
         self._size = driver.size
@@ -18,11 +21,12 @@ cdef class Renderer3:
         self.byte_size = 3 * self._size
 
     def render(self, _ColorList cl):
-        self._render.apply(cl.colors, self._message, self._offset)
+        self._render.apply(cl.colors)
 
     property message:
-        def __get__(self):              return self._message
-        def __set__(self, bytearray x): self._message = x
+        def __set__(self, bytearray x):
+            self._render.buffer = self._message
+            self._render.buffer += self._offset
 
     property min:
         def __get__(self):              return self._render.min
@@ -40,6 +44,13 @@ cdef class Renderer3:
         def __get__(self):              return self._render.gamma
         def __set__(self, float x):     self._render.gamma = x
 
-    property perm:
-        def __get__(self):              return self._render.gamma
-        def __set__(self, float x):     self._render.gamma = x
+    property permutation:
+        def __get__(self):
+            return self.PERMUTATIONS[self._render.permutation]
+
+        def __set__(self, object p):
+            try:
+                p = self.PERMS.index(p)
+            except ValueError:
+                pass
+            self._render.permutation = p

@@ -28,6 +28,7 @@ LIBRARIES = [] if platform.system() in ('Darwin', 'Linux') else ['m']
 COMPILE_ARGS = [
     '-Wno-unused-function',
     '-std=c++11',
+    '-Wno-tautological-constant-out-of-range-compare',
 #    '--version',
     ]
 
