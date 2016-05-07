@@ -4,6 +4,7 @@ cdef extern from "<tdsp/color/names_inl.h>" namespace "tdsp":
     cdef cppclass Color:
         float& at(int)
 
+    float invert(float)
     bool toColor(const char*, Color)
     string colorToString(float r, float g, float b)
     bool cmpToRichcmp(float cmp, int richcmp)
@@ -70,11 +71,15 @@ cdef class _Color:
 
     def __add__(self, c):
         c = _Color(c)
-        return _Color(self.red + c.red, self.green + c.green, self.blue + c.blue)
+        return _Color(self.red + c.red,
+                      self.green + c.green,
+                      self.blue + c.blue)
 
     def __truediv__(self, c):
         c = _Color(c)
-        return _Color(self.red / c.red, self.green / c.green, self.blue / c.blue)
+        return _Color(self.red / c.red,
+                      self.green / c.green,
+                      self.blue / c.blue)
 
     def __divmod__(self, c):
         c = _Color(c)
@@ -85,18 +90,22 @@ cdef class _Color:
 
     def __invert__(self):
         """Return the complementary color."""
-        return _Color(1.0 - self.red, 1.0 - self.green, 1.0 - self.blue)
+        return _Color(invert(self.red), invert(self.green), invert(self.blue))
 
     def __len__(self):
         return 3
 
     def __mod__(self, c):
         c = _Color(c)
-        return _Color(self.red % c.red, self.green % c.green, self.blue % c.blue)
+        return _Color(self.red % c.red,
+                      self.green % c.green,
+                      self.blue % c.blue)
 
     def __mul__(self, c):
         c = _Color(c)
-        return _Color(self.red * c.red, self.green * c.green, self.blue * c.blue)
+        return _Color(self.red * c.red,
+                      self.green * c.green,
+                      self.blue * c.blue)
 
     def __neg__(self):
         return _Color(-self.red, -self.green, -self.blue)
@@ -115,7 +124,9 @@ cdef class _Color:
 
     def __radd__(self, c):
         c = _Color(c)
-        return _Color(self.red + c.red, self.green + c.green, self.blue + c.blue)
+        return _Color(self.red + c.red,
+                      self.green + c.green,
+                      self.blue + c.blue)
 
     def __repr__(self):
         cl = self.__class__
@@ -123,7 +134,9 @@ cdef class _Color:
 
     def __rdiv__(self, c):
         c = _Color(c)
-        return _Color(c.red / self.red, c.green / self.green, c.blue / self.blue)
+        return _Color(c.red / self.red,
+                      c.green / self.green,
+                      c.blue / self.blue)
 
     def __rdivmod__(self, c):
         c = _Color(c)
@@ -147,20 +160,20 @@ cdef class _Color:
 
     def __round__(self, n):
         return _Color(round(self.red, n),
-                     round(self.green, n),
-                     round(self.blue, n))
+                      round(self.green, n),
+                      round(self.blue, n))
 
     def __rpow__(self, c, mod):
         c = _Color(c)
         if mod is None:
             return _Color(c.red ** self.red,
-                         c.green ** self.green,
-                         c.blue ** self.blue)
+                          c.green ** self.green,
+                          c.blue ** self.blue)
 
         m = _Color(mod)
         return _Color(pow(c.red, self.red, m.red),
-                     pow(c.green, self.green, m.green),
-                     pow(c.blue, self.blue, m.blue))
+                      pow(c.green, self.green, m.green),
+                      pow(c.blue, self.blue, m.blue))
 
     def __rsub__(self, c):
         c = _Color(c)

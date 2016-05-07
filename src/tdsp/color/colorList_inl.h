@@ -99,7 +99,7 @@ inline void negateColor(ColorList& out) {
 }
 
 inline void invertColor(ColorList& out) {
-    forEachColorComponent(out, [](float& x) { x = 1.0 - x; });
+    forEachColorComponent(out, [](float& x) { x = (x > 0 ? 1.0 : -1.0) - x; });
 }
 
 ////////////////////////////////////////////////////////////////////////////////
