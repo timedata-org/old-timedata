@@ -26,7 +26,7 @@ struct Render3 {
     float min, max, brightness, gamma;
     uint8_t permutation;
     char* buffer;
-    size_t size;
+    size_t offset, size;
 
     float apply(float s) const {
         s = std::min(1.0f, std::max(0.0f, brightness * s));
@@ -35,9 +35,9 @@ struct Render3 {
         return std::min(max, min + (max - min + 1) * s);
     }
 
-    void apply(ColorList const& in) {
+    void render(ColorList const& in) {
         // DANGER: C-style cast here.  Should work.  :-D
-        auto out = (Color256*) buffer;
+        auto out = (Color256*) (buffer + offset);
         auto& p = getPermutation(permutation);
         for (auto i = 0; i < size; ++i) {
             auto& colorOut = out[i];
@@ -47,12 +47,5 @@ struct Render3 {
         }
     }
 };
-
-#if 0
-template <typename Strips>
-void renderColor(Strips strips, Render render) {
-
-}
-#endif
 
 } // tdsp
