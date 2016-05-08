@@ -6,49 +6,56 @@
 namespace tdsp {
 
 struct Stripe {
-    /*
-      ....d.a.b.c ->  .....2...3...1
-
-     */
-
-    /* Also, these variables might be negative.
-
-       0, 0, 1:  abcd... -> 1234...
-
-     */
-    int begin, skip;
-    size_t repeats = 1;
+    int begin = 0, skip = 1;
+    size_t repeats = 1;  // Repeats == 0 means "repeat forever".
     bool reflect = false;
 
-    class Iterator {
-      public:
-        Iterator(Stripe const&, size_t size);
-        bool hasValue() const;
-        size_t value() const { return static_cast<size_t>(index_)>; }
-        bool done() const { return done_; }
-        void next();
+    class Iterator;
+    class PairIterator;
+};
 
-      private:
-        void adjustIndex();
+class Stripe::Iterator {
+  public:
+    Iterator(Stripe const&, size_t);
 
-        Stripe const& stripe_;
-        size_t const size_;
-        bool done_;
-        int index_, repeat_ = 0;
-    };
+    bool hasValue() const { return index_ >= 0 and index < size_; }
+    size_t value() const { return static_cast<size_t>(index_); }
+    bool done() const { return done_; }
+    void next();
+    Stripe const& stripe() const { return stripe_; }
 
-    class Pair {
-      public:
-        Pair(Stripe const& s1, Stripe const& s2) : i1_(s1), i2_(s2) {}
+  private:
+    void adjustIndex();
 
-        bool hasValue() const { return i1.hasValue() and i2.hasValue(); }
-        std::pair<size_t> value() const { return {i1.value(), i2.value()}; }
-        bool done() const { return i1.done() or i2.done(); }
-        void next() { i1.next(); i2.next(); }
+    Stripe const& stripe_;
+    size_t const size_;
+    bool done_ = false;
+    int index_, repeat_ = 0_;
+};
 
-      private:
-        Iterator i1_, i2_;
+struct Combiner {
+    Stripe in, out;
+
+    template <typename C1, typename C2, typename, Function>
+    void operator()(C1& cin, C2& cout, Function f) {
+        THROW_IF(not (in.repeats or out.repeats), "Infinite loop");
+        Iterator ii(in, cin.size()), io(out, cout.size())
+        for (; not (ii.done() or io.done()); ii.next(), io.next())
+            if (ii.hasValue() and io.hasValue())
+                f(ci[ii], co[io]);
     }
 };
+
+template <typename Iterator1, typename Iterator2, typename Combiner>
+void combiner(Iterator1 i, Iterator2 j, Combiner combiner) {
+    for (auto k = 0;
+         k < j.size() and not i1.done() and not i2.done();
+         i1.next(), i2.next(), k++);
+
+}
+
+struct StripeInto {
+    Stripe input, output;
+
 
 } // tdsp
