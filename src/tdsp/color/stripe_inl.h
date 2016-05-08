@@ -5,25 +5,17 @@
 
 namespace tdsp {
 
-inline Stripe::Iterator(Stripe const& stripe, size_t size)
+template <typename Collection>
+Stripe::Iterator(Stripe const& stripe, size_t size)
         : stripe_(stripe),
           size_(size),
           index_(stripe.begin),
           done_(not stripe.skip) {
     adjustIndex();
+    first_ = index_;
 }
 
-inline bool Stripe::hasValue() const {
-    return index_ >= 0 and index < size_;
-}
-
-void Stripe::next() {
-    THROW_IF(done_, "Can't call next() on a completed iterator");
-    index_ += stripe_.skip;
-    adjustIndex();
-}
-
-void Stripe::adjustIndex() {
+inline void Stripe::Iterator::adjustIndex() {
     auto repeat = []() {
         done_ = (stripe_.repeats <= ++repeat_ or not stripe_.repeats);
         return done_;
@@ -39,6 +31,13 @@ void Stripe::adjustIndex() {
         else
             return;
     }
+}
+
+inline void Stripe::Iterator::next() {
+    THROW_IF(done_, "Can't call next() on a completed iterator");
+    index_ += stripe_.skip;
+    adjustIndex();
+    hasRepeated_ = hasRepeated_ or index_ == firstIndex_;
 }
 
 };
