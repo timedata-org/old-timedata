@@ -1,6 +1,6 @@
 cdef extern from "<tdsp/color/renderer.h>" namespace "tdsp":
     struct Render3:
-        float min, max, brightness, gamma
+        float min, max, scale, gamma
         uint permutation
         char* buffer
         size_t offset, size
@@ -34,9 +34,9 @@ cdef class Renderer3:
         def __get__(self):           return self._render.max
         def __set__(self, float x):  self._render.max = x
 
-    property brightness:
-        def __get__(self):           return self._render.brightness
-        def __set__(self, float x):  self._render.brightness = x
+    property scale:
+        def __get__(self):           return self._render.scale
+        def __set__(self, float x):  self._render.scale = x
 
     property gamma:
         def __get__(self):           return self._render.gamma

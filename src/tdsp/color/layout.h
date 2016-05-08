@@ -55,24 +55,6 @@ struct Strip {
     }
 };
 
-    struct List {
-        std::vector<Component> components;
-
-        explicit List(size_t size) : components(SIZE * size) {}
-
-        size_t size() const { return components.size() / SIZE; }
-
-        // DANGEROUS old style C casts - but no other neat way to do it?
-        Sample*       begin()       { return (Sample*)(&components[0]); }
-        Sample const* begin() const { return (Sample const*)(&components[0]); }
-        Sample*       end()         { return begin() + size(); }
-        Sample const* end() const   { return begin() + size(); }
-
-        Sample&       operator[](size_t i)       { return begin()[i]; }
-        Sample const& operator[](size_t i) const { return begin()[i]; }
-    };
-};
-
 template <typename Sample>
 using Component = typename Sample::component_t;
 
@@ -83,29 +65,5 @@ auto componentCombiner(Combiner combiner) {
             combiner(from[i], to[i]);
     };
 }
-
-struct Mask {
-    // A bit flag - is a color component muted?
-    int mute;
-
-    // A bit flag - is a color component inverted?
-    int invert;
-
-    float brightness;
-
-    template <typename Sample, typename Combiner>
-    void operator()(Sample const& from, Sample& to, Combiner const& comb) const {
-        auto mute = this->mute, invert = this->invert;
-        for (auto i = 0; i < Sample::SIZE; ++i) {
-            if (shift(mute))
-                continue;
-            auto c = from[i];
-            if (shift(invert))
-                c = 1.0f - c;
-            comb(c * brightness, to[i]);
-        }
-    }
-};
-#endif
 
 }  // tdsp

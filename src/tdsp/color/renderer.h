@@ -23,13 +23,13 @@ Permutation3 const& getPermutation(size_t i) {
 }
 
 struct Render3 {
-    float min, max, brightness, gamma;
+    float min, max, scale, gamma;
     uint8_t permutation;
     char* buffer;
     size_t offset, size;
 
     float apply(float s) const {
-        s = std::min(1.0f, std::max(0.0f, brightness * s));
+        s = std::min(1.0f, std::max(0.0f, scale * s));
         if (gamma != 1)
             s = pow(s, gamma);
         return std::min(max, min + (max - min + 1) * s);
