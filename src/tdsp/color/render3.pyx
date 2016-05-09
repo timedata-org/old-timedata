@@ -1,4 +1,4 @@
-# Automatically generated on 2016-05-09T21:08:12.838894
+# Automatically generated on 2016-05-09T21:50:28.331232
 # by https://github.com/rec/make_pyx/make_pyx.py
 
 cdef extern from "<tdsp/color/render3.h>" namespace "tdsp":
@@ -7,6 +7,7 @@ cdef extern from "<tdsp/color/render3.h>" namespace "tdsp":
         uint8_t permutation
         char* buffer
         size_t offset, size
+
 
 cdef class _Render3(_Wrapper):
     cdef Render3 _render3;
@@ -62,6 +63,3 @@ cdef class _Render3(_Wrapper):
             return self._render3.size
         def __set__(self, size_t x):
             self._render3.size = x
-
-
-globals()['Render3'] = _Render3
