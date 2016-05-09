@@ -5,10 +5,9 @@
 namespace tdsp {
 
 struct Render3 {
-    float min, max, scale, gamma;
-    uint8_t permutation;
-    char* buffer;
-    size_t offset, size;
+    float min = 0, max = 255, scale = 1, gamma = 1;
+    uint8_t permutation = 0;
+    size_t offset = 0, size = 0;
 };
 
 } // tdsp

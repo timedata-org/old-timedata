@@ -29,9 +29,9 @@ inline float apply(Render3 const& r3, float s) {
     return std::min(r3.max, r3.min + (r3.max - r3.min + 1) * s);
 }
 
-inline void renderColorList(Render3 const& r3, ColorList const& in) {
+inline void renderColorList(Render3 const& r3, ColorList const& in, char* s) {
     // DANGER: C-style cast here.  Should work.  :-D
-    auto out = (Color256*) (r3.buffer + r3.offset);
+    auto out = (Color256*) (s + r3.offset);
     auto& p = getPermutation(r3.permutation);
     for (auto i = 0; i < r3.size; ++i) {
         auto& colorOut = out[i];

@@ -63,4 +63,9 @@ bool cmpToRichcmp(float cmp, int richcmp);
 template <typename C1, typename C2>
 int compareContainers(C1 const&, C2 const&);
 
+template <typename Struct>
+void clearStruct(Struct& s) {
+    s = Struct{};
+}
+
 }  // namespace tdsp
