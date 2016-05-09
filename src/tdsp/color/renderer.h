@@ -1,6 +1,6 @@
 #pragma once
 
-#include <tdsp/color/color.h>
+#include <tdsp/color/render3.h>
 
 namespace tdsp {
 
@@ -8,7 +8,7 @@ namespace tdsp {
 
 using Permutation3 = std::array<uint8_t, 3>;
 
-Permutation3 const& getPermutation(size_t i) {
+inline Permutation3 const& getPermutation(size_t i) {
     using P3 = Permutation3;
     using Array = std::array<P3, 6>;
     static const Array perms{{
@@ -22,30 +22,23 @@ Permutation3 const& getPermutation(size_t i) {
     return perms[i];
 }
 
-struct Render3 {
-    float min, max, scale, gamma;
-    uint8_t permutation;
-    char* buffer;
-    size_t offset, size;
+inline float apply(Render3 const& r3, float s) {
+    s = std::min(1.0f, std::max(0.0f, r3.scale * s));
+    if (r3.gamma != 1)
+        s = pow(s, r3.gamma);
+    return std::min(r3.max, r3.min + (r3.max - r3.min + 1) * s);
+}
 
-    float apply(float s) const {
-        s = std::min(1.0f, std::max(0.0f, scale * s));
-        if (gamma != 1)
-            s = pow(s, gamma);
-        return std::min(max, min + (max - min + 1) * s);
+inline void renderColorList(Render3 const& r3, ColorList const& in) {
+    // DANGER: C-style cast here.  Should work.  :-D
+    auto out = (Color256*) (r3.buffer + r3.offset);
+    auto& p = getPermutation(r3.permutation);
+    for (auto i = 0; i < r3.size; ++i) {
+        auto& colorOut = out[i];
+        auto& colorIn = in[i];
+        for (auto j = 0; j < colorIn.size(); ++j)
+            colorOut[p[j]] = apply(r3, colorIn[j]);
     }
-
-    void render(ColorList const& in) {
-        // DANGER: C-style cast here.  Should work.  :-D
-        auto out = (Color256*) (buffer + offset);
-        auto& p = getPermutation(permutation);
-        for (auto i = 0; i < size; ++i) {
-            auto& colorOut = out[i];
-            auto& colorIn = in[i];
-            for (auto j = 0; j < colorIn.size(); ++j)
-                colorOut[p[j]] = apply(colorIn[j]);
-        }
-    }
-};
+}
 
 } // tdsp
