@@ -1,15 +1,9 @@
 cdef extern from "<tdsp/color/renderer.h>" namespace "tdsp":
-    struct Render3:
-        float min, max, scale, gamma
-        uint permutation
-        char* buffer
-        size_t offset, size
-
-        void render(ColorList&)
+    void renderColorList(Render3&, ColorList&);
 
 
 cdef class Renderer3:
-    cdef Render3 _render
+    cdef _Render3 _render
 
     PERMUTATIONS = 'rgb', 'rbg', 'grb', 'gbr', 'brg', 'bgr'
 
@@ -19,7 +13,7 @@ cdef class Renderer3:
         self._render.offset = len(driver.header)
 
     def render(self, _ColorList cl):
-        self._render.render(cl.colors)
+        renderColorList(self._render, cl.colors)
 
     property message:
         def __set__(self, bytearray x):
