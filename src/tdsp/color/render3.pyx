@@ -1,4 +1,4 @@
-# Automatically generated on 2016-05-09T21:50:28.331232
+# Automatically generated on 2016-05-09T23:02:40.257483
 # by https://github.com/rec/make_pyx/make_pyx.py
 
 cdef extern from "<tdsp/color/render3.h>" namespace "tdsp":
@@ -11,6 +11,9 @@ cdef extern from "<tdsp/color/render3.h>" namespace "tdsp":
 
 cdef class _Render3(_Wrapper):
     cdef Render3 _render3;
+
+    def __cinit__(self):
+        self._render3 = Render3()
 
     def __str__(self):
         return '(min=%s, max=%s, scale=%s, gamma=%s, permutation=%s, buffer=%s, offset=%s, size=%s)' % (
