@@ -1,4 +1,4 @@
-# Automatically generated on 2016-05-09T21:50:28.330498
+# Automatically generated on 2016-05-09T23:02:40.256869
 # by https://github.com/rec/make_pyx/make_pyx.py
 
 cdef extern from "<tdsp/color/combiner.h>" namespace "tdsp":
@@ -10,6 +10,9 @@ cdef extern from "<tdsp/color/combiner.h>" namespace "tdsp":
 
 cdef class _Combiner(_Wrapper):
     cdef Combiner _combiner;
+
+    def __cinit__(self):
+        self._combiner = Combiner()
 
     def __str__(self):
         return '(scale=%s, offset=%s, mute=%s, invert=%s)' % (

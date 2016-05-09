@@ -1,4 +1,4 @@
-# Automatically generated on 2016-05-09T21:50:28.330986
+# Automatically generated on 2016-05-09T23:02:40.257282
 # by https://github.com/rec/make_pyx/make_pyx.py
 
 cdef extern from "<tdsp/color/stripe.h>" namespace "tdsp":
@@ -10,6 +10,9 @@ cdef extern from "<tdsp/color/stripe.h>" namespace "tdsp":
 
 cdef class _Stripe(_Wrapper):
     cdef Stripe _stripe;
+
+    def __cinit__(self):
+        self._stripe = Stripe()
 
     def __str__(self):
         return '(begin=%s, skip=%s, repeats=%s, reflect=%s)' % (
