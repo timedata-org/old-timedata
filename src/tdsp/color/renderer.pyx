@@ -1,9 +1,10 @@
 cdef extern from "<tdsp/color/renderer.h>" namespace "tdsp":
-    void renderColorList(Render3&, ColorList&);
+    void renderColorList(Render3&, ColorList&, char*);
 
 
 cdef class _Renderer3:
     cdef _Render3 _render
+    cdef char* buffer
 
     PERMUTATIONS = 'rgb', 'rbg', 'grb', 'gbr', 'brg', 'bgr'
 
@@ -13,12 +14,12 @@ cdef class _Renderer3:
         self._render.offset = len(driver.header)
 
     def render(self, _ColorList cl):
-        renderColorList(self._render, cl.colors)
+        renderColorList(self._render, cl.colors, self.buffer)
 
     property message:
         def __set__(self, bytearray x):
-            self._render.buffer = x
-            self._render.buffer += self._offset
+            self.buffer = x
+            self.buffer += self._offset
 
     property min:
         def __get__(self):           return self._render.min
