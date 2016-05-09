@@ -1,4 +1,4 @@
-# Automatically generated on 2016-05-09T21:03:55.580853
+# Automatically generated on 2016-05-09T21:50:28.330986
 # by https://github.com/rec/make_pyx/make_pyx.py
 
 cdef extern from "<tdsp/color/stripe.h>" namespace "tdsp":
@@ -6,6 +6,7 @@ cdef extern from "<tdsp/color/stripe.h>" namespace "tdsp":
         int begin, skip
         size_t repeats
         bool reflect
+
 
 cdef class _Stripe(_Wrapper):
     cdef Stripe _stripe;
@@ -37,6 +38,3 @@ cdef class _Stripe(_Wrapper):
             return self._stripe.reflect
         def __set__(self, bool x):
             self._stripe.reflect = x
-
-
-globals()['Stripe'] = _Stripe

@@ -2,7 +2,7 @@ cdef extern from "<tdsp/color/renderer.h>" namespace "tdsp":
     void renderColorList(Render3&, ColorList&);
 
 
-cdef class Renderer3:
+cdef class _Renderer3:
     cdef _Render3 _render
 
     PERMUTATIONS = 'rgb', 'rbg', 'grb', 'gbr', 'brg', 'bgr'
