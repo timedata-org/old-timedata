@@ -1,5 +1,5 @@
 cdef class _Wrapper:
-    def __cinit__(self, **kwds):
+    def __init__(self, **kwds):
         for k, v in kwds.items():
             if not k in self.__dict__:
                 raise ValueError('Bad key ' + str(k))
@@ -9,4 +9,4 @@ cdef class _Wrapper:
         return '%s.%s(%s)' % (
             self.__class__.__module__,
             self.__class__.__name__[1:],
-            str(self))
+            str(self)[1:-1])
