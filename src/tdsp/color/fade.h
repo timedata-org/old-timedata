@@ -8,14 +8,14 @@ namespace tdsp {
 enum class FadeType {linear, sqr, sqrt, size};
 
 struct Fade {
-    float begin = 0, end = 1;
+    float begin = 0, end = 1, fader = 0;
     uint8_t type = static_cast<uint8_t>(FadeType::linear);
 };
 
-inline float apply(Fade const& fade, float fader, float x, float y) {
+inline float apply(Fade const& fade, float x, float y) {
     THROW_IF_GE(fade.type, enumSize<FadeType>(), "Don't understand type");
-    auto xratio = fade.begin + fader * fade.end;
-    auto yratio = fade.begin + invert(fader) * fade.end;
+    auto xratio = fade.begin + fade.fader * fade.end;
+    auto yratio = fade.begin + invert(fade.fader) * fade.end;
 
     switch (static_cast<FadeType>(fade.type)) {
         default:
@@ -34,15 +34,13 @@ inline float apply(Fade const& fade, float fader, float x, float y) {
 }
 
 template <typename Coll>
-void applySame(Fade const& fade, float fader, Coll const& in1, Coll const& in2,
-               Coll& out) {
+void applySame(Fade const& fade, Coll const& in1, Coll const& in2, Coll& out) {
     for (size_t i = 0; i < out.size(); ++i)
-        out[i] = apply(fade, fader, in1[i], in2[i]);
+        out[i] = apply(fade, in1[i], in2[i]);
 }
 
 template <typename Coll>
-void applyExtend(Fade const& fade, float fader,
-                 Coll const& in1, Coll const& in2, Coll& out) {
+void applyExtend(Fade const& fade, Coll const& in1, Coll const& in2, Coll& out) {
     // This is wrong - I shouldn't be changing the size.
     auto size = std::max(in1.size(), in2.size());
     out.resize(size);
@@ -52,7 +50,7 @@ void applyExtend(Fade const& fade, float fader,
     };
 
     for (size_t i = 0; i < size; ++i)
-        applySame(fade, fader, get(in1, i), get(in2, i), out[i]);
+        applySame(fade, get(in1, i), get(in2, i), out[i]);
 }
 
 } // tdsp
