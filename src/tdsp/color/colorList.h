@@ -31,10 +31,6 @@ void forEachColorComponent(ColorList& colors, Function f);
 template <typename Function>
 void forEachColorComponent(ColorList const& in, ColorList& out, Function f);
 
-inline float invert(float x) {
-    return (x >= 0 ? 1.0f : -1.0f) - x;
-}
-
 void absColor(ColorList& out);
 void negateColor(ColorList& out);
 void invertColor(ColorList& out);

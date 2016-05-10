@@ -68,6 +68,10 @@ void clear(Struct& s) {
     s = Struct{};
 }
 
+inline float invert(float x) {
+    return (x >= 0 ? 1.0f : -1.0f) - x;
+}
+
 template <typename T>
 T signum(T x) {
     return static_cast<T>(x > 0 ? 1 : x < 0 ? -1 : 0);
