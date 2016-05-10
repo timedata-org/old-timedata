@@ -1,4 +1,4 @@
-# Automatically generated on 2016-05-10T00:07:09.680418
+# Automatically generated on 2016-05-10T03:49:08.264119
 # by https://github.com/rec/make_pyx/make_pyx.py
 
 cdef extern from "<tdsp/color/fade.h>" namespace "tdsp":
@@ -19,8 +19,8 @@ cdef class _Fade(_Wrapper):
         clear(self._fade)
 
     def __str__(self):
-        return '(begin=%s, end=%s, speed=%s, type=%s)' % (
-            self.begin, self.end, self.speed, self.type)
+        return '(begin=%s, end=%s, type=%s)' % (
+            self.begin, self.end, self.type)
 
     property begin:
         def __get__(self):

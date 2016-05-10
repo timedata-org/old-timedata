@@ -1,6 +1,7 @@
 #pragma once
 
 #include <tdsp/base/math.h>
+#include <tdsp/base/enum.h>
 
 namespace tdsp {
 

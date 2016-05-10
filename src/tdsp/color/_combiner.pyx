@@ -1,4 +1,4 @@
-# Automatically generated on 2016-05-10T00:07:09.680961
+# Automatically generated on 2016-05-10T03:49:08.264676
 # by https://github.com/rec/make_pyx/make_pyx.py
 
 cdef extern from "<tdsp/color/combiner.h>" namespace "tdsp":

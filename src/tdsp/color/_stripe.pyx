@@ -1,4 +1,4 @@
-# Automatically generated on 2016-05-10T00:07:09.681204
+# Automatically generated on 2016-05-10T03:49:08.265014
 # by https://github.com/rec/make_pyx/make_pyx.py
 
 cdef extern from "<tdsp/color/stripe.h>" namespace "tdsp":
