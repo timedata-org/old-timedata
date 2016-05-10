@@ -1,7 +1,5 @@
-# Automatically generated on 2016-05-10T19:17:47.154734
+# Automatically generated on 2016-05-10T19:23:23.752164
 # by https://github.com/rec/make_pyx/make_pyx.py
-
-
 
 cdef extern from "<tdsp/color/stripe.h>" namespace "tdsp":
     struct Stripe:

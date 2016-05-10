@@ -1,7 +1,5 @@
-# Automatically generated on 2016-05-10T19:17:47.154432
+# Automatically generated on 2016-05-10T19:23:23.751949
 # by https://github.com/rec/make_pyx/make_pyx.py
-
-
 
 cdef extern from "<tdsp/color/combiner.h>" namespace "tdsp":
     struct Combiner:

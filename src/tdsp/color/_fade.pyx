@@ -1,4 +1,4 @@
-# Automatically generated on 2016-05-10T19:17:47.153864
+# Automatically generated on 2016-05-10T19:23:23.751455
 # by https://github.com/rec/make_pyx/make_pyx.py
 
 cdef extern from "<tdsp/color/fade.h>" namespace "tdsp::Fade":
