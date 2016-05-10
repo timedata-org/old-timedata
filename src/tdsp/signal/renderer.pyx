@@ -1,4 +1,4 @@
-cdef extern from "<tdsp/color/renderer.h>" namespace "tdsp":
+cdef extern from "<tdsp/signal/renderer.h>" namespace "tdsp":
     void renderColorList(Render3&, ColorList&, char*);
 
 

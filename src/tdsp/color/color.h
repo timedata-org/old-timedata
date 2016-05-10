@@ -1,7 +1,7 @@
 #pragma once
 
 #include <tdsp/base/enum.h>
-#include <tdsp/color/signal.h>
+#include <tdsp/signal/signal.h>
 
 namespace tdsp {
 

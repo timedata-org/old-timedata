@@ -1,7 +1,7 @@
 # Automatically generated on 2016-05-10T19:23:23.751949
 # by https://github.com/rec/make_pyx/make_pyx.py
 
-cdef extern from "<tdsp/color/combiner.h>" namespace "tdsp":
+cdef extern from "<tdsp/signal/combiner.h>" namespace "tdsp":
     struct Combiner:
         float scale, offset
         uint mute

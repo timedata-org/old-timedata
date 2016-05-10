@@ -1,6 +1,6 @@
 #pragma once
 
-#include <tdsp/color/render3.h>
+#include <tdsp/signal/render3.h>
 
 namespace tdsp {
 

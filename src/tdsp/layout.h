@@ -5,7 +5,7 @@
 
 #pragma once
 
-#include <tdsp/color/strip.h>
+#include <tdsp/signal/strip.h>
 
 namespace tdsp {
 

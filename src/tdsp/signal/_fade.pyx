@@ -1,17 +1,17 @@
 # Automatically generated on 2016-05-10T19:23:23.751455
 # by https://github.com/rec/make_pyx/make_pyx.py
 
-cdef extern from "<tdsp/color/fade.h>" namespace "tdsp::Fade":
+cdef extern from "<tdsp/signal/fade.h>" namespace "tdsp::Fade":
     cdef cppclass Type:
         pass
 
-cdef extern from "<tdsp/color/fade.h>" namespace "tdsp::Fade::Type":
+cdef extern from "<tdsp/signal/fade.h>" namespace "tdsp::Fade::Type":
     cdef Type linear
     cdef Type sqr
     cdef Type sqrt
     cdef Type size
 
-cdef extern from "<tdsp/color/fade.h>" namespace "tdsp":
+cdef extern from "<tdsp/signal/fade.h>" namespace "tdsp":
     struct Fade:
         float begin, end, fader
         Type type
