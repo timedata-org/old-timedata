@@ -1,4 +1,4 @@
-# Automatically generated on 2016-05-09T23:37:22.657263
+# Automatically generated on 2016-05-10T00:07:09.681204
 # by https://github.com/rec/make_pyx/make_pyx.py
 
 cdef extern from "<tdsp/color/stripe.h>" namespace "tdsp":
@@ -6,16 +6,18 @@ cdef extern from "<tdsp/color/stripe.h>" namespace "tdsp":
         int begin, skip
         size_t repeats
         bool reflect
-    void clearStruct(Stripe&)
+
+    void clear(Stripe&)
+
 
 cdef class _Stripe(_Wrapper):
     cdef Stripe _stripe;
 
     def __cinit__(self):
-        clearStruct(self._stripe)
+        clear(self._stripe)
 
     def clear(self):
-        clearStruct(self._stripe)
+        clear(self._stripe)
 
     def __str__(self):
         return '(begin=%s, skip=%s, repeats=%s, reflect=%s)' % (

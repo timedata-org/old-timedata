@@ -1,4 +1,4 @@
-# Automatically generated on 2016-05-09T23:58:11.673995
+# Automatically generated on 2016-05-10T00:07:09.680418
 # by https://github.com/rec/make_pyx/make_pyx.py
 
 cdef extern from "<tdsp/color/fade.h>" namespace "tdsp":
@@ -6,16 +6,18 @@ cdef extern from "<tdsp/color/fade.h>" namespace "tdsp":
         float begin, end
         float speed
         uint8_t type
-    void clearStruct(Fade&)
+
+    void clear(Fade&)
+
 
 cdef class _Fade(_Wrapper):
     cdef Fade _fade;
 
     def __cinit__(self):
-        clearStruct(self._fade)
+        clear(self._fade)
 
     def clear(self):
-        clearStruct(self._fade)
+        clear(self._fade)
 
     def __str__(self):
         return '(begin=%s, end=%s, speed=%s, type=%s)' % (
