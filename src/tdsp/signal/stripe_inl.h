@@ -1,6 +1,6 @@
 #pragma once
 
-#include <tdsp/color/stripe.h>
+#include <tdsp/signal/stripe.h>
 
 namespace tdsp {
 

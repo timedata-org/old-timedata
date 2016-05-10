@@ -1,6 +1,6 @@
 include "_fade.pyx"
 
-cdef extern from "<tdsp/color/fade.h>" namespace "tdsp":
+cdef extern from "<tdsp/signal/fade.h>" namespace "tdsp":
     void applyExtend(Fade& fade, ColorList& in1, ColorList& in2, ColorList& out)
 
 
