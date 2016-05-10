@@ -1,4 +1,4 @@
-# Automatically generated on 2016-05-10T17:35:09.832214
+# Automatically generated on 2016-05-10T18:55:26.594135
 # by https://github.com/rec/make_pyx/make_pyx.py
 
 cdef extern from "<tdsp/color/fade.h>" namespace "tdsp::Fade":
@@ -21,7 +21,8 @@ cdef extern from "<tdsp/color/fade.h>" namespace "tdsp":
 
 cdef class _Fade(_Wrapper):
     cdef Fade thisptr;
-    TYPE_NAMES = ('linear', 'sqr', 'sqrt')
+
+    TYPE_NAMES = 'linear', 'sqr', 'sqrt', 'size'
 
     def __cinit__(self):
         clear(self.thisptr)
