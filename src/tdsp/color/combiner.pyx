@@ -1,4 +1,4 @@
-# Automatically generated on 2016-05-09T23:37:22.656817
+# Automatically generated on 2016-05-10T00:07:09.680961
 # by https://github.com/rec/make_pyx/make_pyx.py
 
 cdef extern from "<tdsp/color/combiner.h>" namespace "tdsp":
@@ -6,16 +6,18 @@ cdef extern from "<tdsp/color/combiner.h>" namespace "tdsp":
         float scale, offset
         uint mute
         uint invert
-    void clearStruct(Combiner&)
+
+    void clear(Combiner&)
+
 
 cdef class _Combiner(_Wrapper):
     cdef Combiner _combiner;
 
     def __cinit__(self):
-        clearStruct(self._combiner)
+        clear(self._combiner)
 
     def clear(self):
-        clearStruct(self._combiner)
+        clear(self._combiner)
 
     def __str__(self):
         return '(scale=%s, offset=%s, mute=%s, invert=%s)' % (
