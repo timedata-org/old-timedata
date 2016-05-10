@@ -64,7 +64,7 @@ template <typename C1, typename C2>
 int compareContainers(C1 const&, C2 const&);
 
 template <typename Struct>
-void clear(Struct& s) {
+void clearStruct(Struct& s) {
     s = Struct{};
 }
 
