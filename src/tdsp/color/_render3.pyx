@@ -1,5 +1,7 @@
-# Automatically generated on 2016-05-10T03:49:08.265380
+# Automatically generated on 2016-05-10T19:17:47.155148
 # by https://github.com/rec/make_pyx/make_pyx.py
+
+
 
 cdef extern from "<tdsp/color/render3.h>" namespace "tdsp":
     struct Render3:
@@ -7,17 +9,15 @@ cdef extern from "<tdsp/color/render3.h>" namespace "tdsp":
         uint8_t permutation
         size_t offset, size
 
-    void clear(Render3&)
-
 
 cdef class _Render3(_Wrapper):
-    cdef Render3 _render3;
+    cdef Render3 thisptr;
 
     def __cinit__(self):
-        clear(self._render3)
+        clearStruct(self.thisptr)
 
     def clear(self):
-        clear(self._render3)
+        clearStruct(self.thisptr)
 
     def __str__(self):
         return '(min=%s, max=%s, scale=%s, gamma=%s, permutation=%s, offset=%s, size=%s)' % (
@@ -25,42 +25,42 @@ cdef class _Render3(_Wrapper):
 
     property min:
         def __get__(self):
-            return self._render3.min
+            return self.thisptr.min
         def __set__(self, float x):
-            self._render3.min = x
+            self.thisptr.min = x
 
     property max:
         def __get__(self):
-            return self._render3.max
+            return self.thisptr.max
         def __set__(self, float x):
-            self._render3.max = x
+            self.thisptr.max = x
 
     property scale:
         def __get__(self):
-            return self._render3.scale
+            return self.thisptr.scale
         def __set__(self, float x):
-            self._render3.scale = x
+            self.thisptr.scale = x
 
     property gamma:
         def __get__(self):
-            return self._render3.gamma
+            return self.thisptr.gamma
         def __set__(self, float x):
-            self._render3.gamma = x
+            self.thisptr.gamma = x
 
     property permutation:
         def __get__(self):
-            return self._render3.permutation
+            return self.thisptr.permutation
         def __set__(self, uint8_t x):
-            self._render3.permutation = x
+            self.thisptr.permutation = x
 
     property offset:
         def __get__(self):
-            return self._render3.offset
+            return self.thisptr.offset
         def __set__(self, size_t x):
-            self._render3.offset = x
+            self.thisptr.offset = x
 
     property size:
         def __get__(self):
-            return self._render3.size
+            return self.thisptr.size
         def __set__(self, size_t x):
-            self._render3.size = x
+            self.thisptr.size = x
