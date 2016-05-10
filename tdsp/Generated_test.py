@@ -16,4 +16,4 @@ class TestGenerated(unittest.TestCase):
     def test_render(self):
         s = Render3()
         self.assertEqual(str(s), '(min=0.0, max=255.0, scale=1.0, gamma=1.0, '
-                         'permutation=rgb, offset=0, size=0)')
+                         'permutation=\'rgb\', offset=0, size=0)')

@@ -1,4 +1,4 @@
-# Automatically generated on 2016-05-10T19:23:23.752164
+# Automatically generated on 2016-05-10T22:56:19.806791
 # by https://github.com/rec/make_pyx/make_pyx.py
 
 cdef extern from "<tdsp/signal/stripe.h>" namespace "tdsp":
@@ -18,7 +18,7 @@ cdef class _Stripe(_Wrapper):
         clearStruct(self.thisptr)
 
     def __str__(self):
-        return '(begin=%s, skip=%s, repeats=%s, reflect=%s)' % (
+        return "(begin=%s, skip=%s, repeats=%s, reflect=%s)" % (
             self.begin, self.skip, self.repeats, self.reflect)
 
     property begin:

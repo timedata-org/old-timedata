@@ -1,4 +1,4 @@
-# Automatically generated on 2016-05-10T21:39:51.190834
+# Automatically generated on 2016-05-10T22:56:19.806587
 # by https://github.com/rec/make_pyx/make_pyx.py
 
 cdef extern from "<tdsp/signal/render3.h>" namespace "tdsp::Render3":
@@ -32,7 +32,7 @@ cdef class _Render3(_Wrapper):
         clearStruct(self.thisptr)
 
     def __str__(self):
-        return '(min=%s, max=%s, scale=%s, gamma=%s, permutation=%s, offset=%s, size=%s)' % (
+        return "(min=%s, max=%s, scale=%s, gamma=%s, permutation='%s', offset=%s, size=%s)" % (
             self.min, self.max, self.scale, self.gamma, self.permutation, self.offset, self.size)
 
     property min:

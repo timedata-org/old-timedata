@@ -1,4 +1,4 @@
-# Automatically generated on 2016-05-10T19:23:23.751455
+# Automatically generated on 2016-05-10T22:56:19.805892
 # by https://github.com/rec/make_pyx/make_pyx.py
 
 cdef extern from "<tdsp/signal/fade.h>" namespace "tdsp::Fade":
@@ -29,7 +29,7 @@ cdef class _Fade(_Wrapper):
         clearStruct(self.thisptr)
 
     def __str__(self):
-        return '(begin=%s, end=%s, fader=%s, type=%s)' % (
+        return "(begin=%s, end=%s, fader=%s, type='%s')" % (
             self.begin, self.end, self.fader, self.type)
 
     property begin:

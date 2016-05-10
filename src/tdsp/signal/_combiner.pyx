@@ -1,4 +1,4 @@
-# Automatically generated on 2016-05-10T19:23:23.751949
+# Automatically generated on 2016-05-10T22:56:19.806349
 # by https://github.com/rec/make_pyx/make_pyx.py
 
 cdef extern from "<tdsp/signal/combiner.h>" namespace "tdsp":
@@ -18,7 +18,7 @@ cdef class _Combiner(_Wrapper):
         clearStruct(self.thisptr)
 
     def __str__(self):
-        return '(scale=%s, offset=%s, mute=%s, invert=%s)' % (
+        return "(scale=%s, offset=%s, mute=%s, invert=%s)" % (
             self.scale, self.offset, self.mute, self.invert)
 
     property scale:
