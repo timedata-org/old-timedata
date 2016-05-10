@@ -1,9 +1,9 @@
-# Automatically generated on 2016-05-10T03:49:08.264119
+# Automatically generated on 2016-05-10T16:28:32.260679
 # by https://github.com/rec/make_pyx/make_pyx.py
 
 cdef extern from "<tdsp/color/fade.h>" namespace "tdsp":
     struct Fade:
-        float begin, end
+        float begin, end, fader
         uint8_t type
 
     void clear(Fade&)
@@ -19,8 +19,8 @@ cdef class _Fade(_Wrapper):
         clear(self._fade)
 
     def __str__(self):
-        return '(begin=%s, end=%s, type=%s)' % (
-            self.begin, self.end, self.type)
+        return '(begin=%s, end=%s, fader=%s, type=%s)' % (
+            self.begin, self.end, self.fader, self.type)
 
     property begin:
         def __get__(self):
@@ -33,6 +33,12 @@ cdef class _Fade(_Wrapper):
             return self._fade.end
         def __set__(self, float x):
             self._fade.end = x
+
+    property fader:
+        def __get__(self):
+            return self._fade.fader
+        def __set__(self, float x):
+            self._fade.fader = x
 
     property type:
         def __get__(self):
