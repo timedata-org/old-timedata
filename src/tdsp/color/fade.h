@@ -5,26 +5,24 @@
 
 namespace tdsp {
 
-enum class FadeType {linear, sqr, sqrt, size};
-
 struct Fade {
+    enum class Type {linear, sqr, sqrt, size};
     float begin = 0, end = 1, fader = 0;
-    uint8_t type = static_cast<uint8_t>(FadeType::linear);
+    Type type = Type::linear;
 };
 
 inline float apply(Fade const& fade, float x, float y) {
-    THROW_IF_GE(fade.type, enumSize<FadeType>(), "Don't understand type");
     auto xratio = fade.begin + fade.fader * fade.end;
     auto yratio = fade.begin + invert(fade.fader) * fade.end;
 
-    switch (static_cast<FadeType>(fade.type)) {
+    switch (fade.type) {
         default:
             break;
-        case FadeType::sqr:
+        case Fade::Type::sqr:
             xratio = xratio * xratio * signum(xratio);
             yratio = yratio * yratio * signum(yratio);
             break;
-        case FadeType::sqrt:
+        case Fade::Type::sqrt:
             xratio = sqrt(std::abs(xratio)) * signum(xratio);
             yratio = sqrt(std::abs(yratio)) * signum(yratio);
             break;

@@ -1,22 +1,33 @@
-# Automatically generated on 2016-05-10T16:28:32.260679
+# Automatically generated on 2016-05-10T17:35:09.832214
 # by https://github.com/rec/make_pyx/make_pyx.py
+
+cdef extern from "<tdsp/color/fade.h>" namespace "tdsp::Fade":
+    cdef cppclass Type:
+        pass
+
+cdef extern from "<tdsp/color/fade.h>" namespace "tdsp::Fade::Type":
+    cdef Type linear
+    cdef Type sqr
+    cdef Type sqrt
+    cdef Type size
 
 cdef extern from "<tdsp/color/fade.h>" namespace "tdsp":
     struct Fade:
         float begin, end, fader
-        uint8_t type
+        Type type
 
     void clear(Fade&)
 
 
 cdef class _Fade(_Wrapper):
-    cdef Fade _fade;
+    cdef Fade thisptr;
+    TYPE_NAMES = ('linear', 'sqr', 'sqrt')
 
     def __cinit__(self):
-        clear(self._fade)
+        clear(self.thisptr)
 
     def clear(self):
-        clear(self._fade)
+        clear(self.thisptr)
 
     def __str__(self):
         return '(begin=%s, end=%s, fader=%s, type=%s)' % (
@@ -24,24 +35,26 @@ cdef class _Fade(_Wrapper):
 
     property begin:
         def __get__(self):
-            return self._fade.begin
+            return self.thisptr.begin
         def __set__(self, float x):
-            self._fade.begin = x
+            self.thisptr.begin = x
 
     property end:
         def __get__(self):
-            return self._fade.end
+            return self.thisptr.end
         def __set__(self, float x):
-            self._fade.end = x
+            self.thisptr.end = x
 
     property fader:
         def __get__(self):
-            return self._fade.fader
+            return self.thisptr.fader
         def __set__(self, float x):
-            self._fade.fader = x
+            self.thisptr.fader = x
 
     property type:
         def __get__(self):
-            return self._fade.type
-        def __set__(self, uint8_t x):
-            self._fade.type = x
+            return self.TYPE_NAMES[<int> self.thisptr.type]
+        def __set__(self, string x):
+            cdef uint8_t i
+            i = self.TYPE_NAMES.index(x)
+            self.thisptr.type = <Type>(i)
