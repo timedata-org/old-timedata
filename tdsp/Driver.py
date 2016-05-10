@@ -17,14 +17,14 @@ class Driver(object):
     PERMUTATION = 0
     RENDERER = tdsp.Renderer
 
-    def __init__(self, size, renderer=None, **kwds):
+    def __init__(self, size, renderer=self.RENDERER, **kwds):
         unknown = set(kwds) - set(self.PARAMS)
         if unknown:
             raise ValueError('Unknown keywords: ' + ''.join(unknown))
 
         self.size = size
         self.header = bytearray(self.header(), encoding='ascii')
-        self.renderer = (renderer or self.RENDERER)(self)
+        self.renderer = renderer(size=size, offset=len(self.header))
         self.footer = bytearray(self.footer(), encoding='ascii')
         self.message = (
             self.header + bytearray(self.renderer.byte_size) + self.footer)
@@ -34,7 +34,7 @@ class Driver(object):
             setattr(self.renderer, p, kwds.get(p, getattr(self, p.upper())))
 
         # If we don't have a render method, use the one from the renderer.
-        self.render = getattr(self, 'render', self.renderer.render)
+        self.render = getattr(self, 'render', self.renderer)
 
     def _body_size(self):
         # Override for non-RGB, etc.

@@ -1,15 +1,29 @@
-# Automatically generated on 2016-05-10T19:23:23.752407
+# Automatically generated on 2016-05-10T21:39:51.190834
 # by https://github.com/rec/make_pyx/make_pyx.py
+
+cdef extern from "<tdsp/signal/render3.h>" namespace "tdsp::Render3":
+    cdef cppclass Permutation:
+        pass
+
+cdef extern from "<tdsp/signal/render3.h>" namespace "tdsp::Render3::Permutation":
+    cdef Permutation rgb
+    cdef Permutation rbg
+    cdef Permutation grb
+    cdef Permutation gbr
+    cdef Permutation brg
+    cdef Permutation bgr
 
 cdef extern from "<tdsp/signal/render3.h>" namespace "tdsp":
     struct Render3:
         float min, max, scale, gamma
-        uint8_t permutation
+        Permutation permutation
         size_t offset, size
 
 
 cdef class _Render3(_Wrapper):
     cdef Render3 thisptr;
+
+    PERMUTATION_NAMES = 'rgb', 'rbg', 'grb', 'gbr', 'brg', 'bgr'
 
     def __cinit__(self):
         clearStruct(self.thisptr)
@@ -47,9 +61,11 @@ cdef class _Render3(_Wrapper):
 
     property permutation:
         def __get__(self):
-            return self.thisptr.permutation
-        def __set__(self, uint8_t x):
-            self.thisptr.permutation = x
+            return self.PERMUTATION_NAMES[<int> self.thisptr.permutation]
+        def __set__(self, string x):
+            cdef uint8_t i
+            i = self.PERMUTATION_NAMES.index(x)
+            self.thisptr.permutation = <Permutation>(i)
 
     property offset:
         def __get__(self):

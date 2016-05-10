@@ -1,6 +1,6 @@
 import unittest
 
-from tdsp import Stripe, Combiner, Renderer3, Render3
+from tdsp import Stripe, Combiner, Render3
 
 class TestGenerated(unittest.TestCase):
     def test_stripe(self):
@@ -16,4 +16,4 @@ class TestGenerated(unittest.TestCase):
     def test_render(self):
         s = Render3()
         self.assertEqual(str(s), '(min=0.0, max=255.0, scale=1.0, gamma=1.0, '
-                         'permutation=0, offset=0, size=0)')
+                         'permutation=rgb, offset=0, size=0)')
