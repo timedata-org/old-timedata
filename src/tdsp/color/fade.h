@@ -45,10 +45,13 @@ void applyExtend(Fade const& fade, float fader,
                  Coll const& in1, Coll const& in2, Coll& out) {
     auto size = std::max(in1.size(), in2.size());
     out.resize(size);
-    auto get = [] (Coll const& c, size_t i) { return i < c.size() ? c[i] : 0; };
+    decltype(in1[0]) zero = {{0}};
+    auto get = [&] (Coll const& c, size_t i) {
+        return i < c.size() ? c[i] : zero;
+    };
 
     for (size_t i = 0; i < size; ++i)
-        out[i] = applySame(fade, fader, get(in1, i), get(in2, i));
+        applySame(fade, fader, get(in1, i), get(in2, i), out[i]);
 }
 
 } // tdsp
