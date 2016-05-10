@@ -16,11 +16,6 @@ cdef class _Renderer3:
     def render(self, _ColorList cl):
         renderColorList(self._render, cl.colors, self.buffer)
 
-    property message:
-        def __set__(self, bytearray x):
-            self.buffer = x
-            self.buffer += self._offset
-
     property min:
         def __get__(self):           return self._render.min
         def __set__(self, float x):  self._render.min = x

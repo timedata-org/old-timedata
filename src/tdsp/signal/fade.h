@@ -7,34 +7,36 @@ namespace tdsp {
 
 struct Fade {
     enum class Type {linear, sqr, sqrt, size};
+
     float begin = 0, end = 1, fader = 0;
     Type type = Type::linear;
-};
 
-inline float apply(Fade const& fade, float x, float y) {
-    auto xratio = fade.begin + fade.fader * fade.end;
-    auto yratio = fade.begin + invert(fade.fader) * fade.end;
+    float operator()(float x, float y) const {
+        auto xratio = begin + fader * (end - begin);
+        auto yratio = begin + invert(fader) * (end - begin);
 
-    switch (fade.type) {
-        default:
-            break;
-        case Fade::Type::sqr:
-            xratio = xratio * xratio * signum(xratio);
-            yratio = yratio * yratio * signum(yratio);
-            break;
-        case Fade::Type::sqrt:
-            xratio = sqrt(std::abs(xratio)) * signum(xratio);
-            yratio = sqrt(std::abs(yratio)) * signum(yratio);
-            break;
+        switch (type) {
+            default:
+                break;
+            case Fade::Type::sqr:
+                xratio = xratio * xratio * signum(xratio);
+                yratio = yratio * yratio * signum(yratio);
+                break;
+            case Fade::Type::sqrt:
+                xratio = sqrt(std::abs(xratio)) * signum(xratio);
+                yratio = sqrt(std::abs(yratio)) * signum(yratio);
+                break;
+        }
+
+        // TODO: perhaps we should be applying end and begin after this step?
+        return xratio * x + yratio + y;
     }
-
-    return xratio * x + yratio + y;
-}
+};
 
 template <typename Coll>
 void applySame(Fade const& fade, Coll const& in1, Coll const& in2, Coll& out) {
     for (size_t i = 0; i < out.size(); ++i)
-        out[i] = apply(fade, in1[i], in2[i]);
+        out[i] = fade(in1[i], in2[i]);
 }
 
 template <typename Coll>
