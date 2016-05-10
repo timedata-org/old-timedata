@@ -6,4 +6,4 @@ cdef extern from "<tdsp/color/fade.h>" namespace "tdsp":
 
 cdef class _FadeImpl(_Fade):
     def __call__(self, _ColorList in1, _ColorList in2, _ColorList out):
-        applyExtend(self._fade, in1.colors, in2.colors, out.colors)
+        applyExtend(self.thisptr, in1.colors, in2.colors, out.colors)
