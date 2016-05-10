@@ -68,4 +68,9 @@ void clear(Struct& s) {
     s = Struct{};
 }
 
+template <typename T>
+T signum(T x) {
+    return static_cast<T>(x > 0 ? 1 : x < 0 ? -1 : 0);
+}
+
 }  // namespace tdsp

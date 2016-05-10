@@ -4,7 +4,6 @@
 cdef extern from "<tdsp/color/fade.h>" namespace "tdsp":
     struct Fade:
         float begin, end
-        float speed
         uint8_t type
 
     void clear(Fade&)
@@ -34,12 +33,6 @@ cdef class _Fade(_Wrapper):
             return self._fade.end
         def __set__(self, float x):
             self._fade.end = x
-
-    property speed:
-        def __get__(self):
-            return self._fade.speed
-        def __set__(self, float x):
-            self._fade.speed = x
 
     property type:
         def __get__(self):
