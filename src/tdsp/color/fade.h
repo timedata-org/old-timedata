@@ -43,6 +43,7 @@ void applySame(Fade const& fade, float fader, Coll const& in1, Coll const& in2,
 template <typename Coll>
 void applyExtend(Fade const& fade, float fader,
                  Coll const& in1, Coll const& in2, Coll& out) {
+    // This is wrong - I shouldn't be changing the size.
     auto size = std::max(in1.size(), in2.size());
     out.resize(size);
     decltype(in1[0]) zero = {{0}};
