@@ -77,4 +77,8 @@ T signum(T x) {
     return static_cast<T>(x > 0 ? 1 : x < 0 ? -1 : 0);
 }
 
+inline uint8_t to256(float x) {
+    return static_cast<uint8_t>(std::min(255.0f, std::max(0.0f, x * 256)));
+}
+
 }  // namespace tdsp

@@ -1,6 +1,7 @@
 #pragma once
 
 #include <tdsp/color/color.h>
+#include <tdsp/color/colorList.h>
 
 namespace tdsp {
 

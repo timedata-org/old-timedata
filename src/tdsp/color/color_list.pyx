@@ -206,15 +206,6 @@ cdef class _ColorList:
         else:
             divideInto(_toColorList(c).colors, self.colors)
 
-    #         return Color(self.red ** c.red,
-    #                      self.green ** c.green,
-    #                      self.blue ** c.blue)
-
-    #     m = _Color(mod)
-    #     return Color(pow(self.red, c.red, m.red),
-    #                  pow(self.green, c.green, m.green),
-    #                  pow(self.blue, c.blue, m.blue))
-
     # Operations where self is on the left side.
     def __add__(self, c):
         cl = self[:]
@@ -282,6 +273,3 @@ cdef class _ColorList:
 
     def __str__(self):
         return toString(self.colors).decode('ascii')
-
-
-globals()['ColorList'] = _ColorList

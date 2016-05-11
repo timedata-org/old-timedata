@@ -185,6 +185,3 @@ cdef class _Color:
     def __sub__(self, c):
         c = _Color(c)
         return _Color(self.red - c.red, self.green - c.green, self.blue - c.blue)
-
-
-globals()['Color'] = _Color
