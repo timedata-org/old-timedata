@@ -1,6 +1,15 @@
 from numbers import Number
 
 cdef extern from "<tdsp/color/names_inl.h>" namespace "tdsp":
+    cdef cppclass Base:
+        pass
+
+cdef extern from "<tdsp/color/names_inl.h>" namespace "tdsp::Base":
+    cdef Base normal
+    cdef Base integer
+
+
+cdef extern from "<tdsp/color/names_inl.h>" namespace "tdsp":
     cdef cppclass Color:
         float& at(int)
 
@@ -15,6 +24,9 @@ cdef class _Color:
     cdef float red
     cdef float green
     cdef float blue
+
+    cdef Base _base(self):
+        return normal
 
     def __cinit__(self, *args):
         cdef Color frame
@@ -185,3 +197,8 @@ cdef class _Color:
     def __sub__(self, c):
         c = _Color(c)
         return _Color(self.red - c.red, self.green - c.green, self.blue - c.blue)
+
+
+cdef class _Color256(_Color):
+    cdef Base _base(self):
+        return integer

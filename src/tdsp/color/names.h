@@ -12,23 +12,23 @@ namespace tdsp {
 Color toColor(unsigned int);
 
 /** Computational base - 0..1 float or 0..255 integer? */
-enum class Base {Base1, Base256};
+enum class Base {normal, integer};
 
 /** Convert a Color to a string. */
-template <Base base = Base::Base1>
+template <Base base = Base::normal>
 std::string toString(Color);
 
 /** Convert a Color to a string. */
-template <Base base = Base::Base1>
+template <Base base = Base::normal>
 std::string colorToString(float r, float g, float b);
 
 /** Convert a string to a Color.  Throws an exception if the string
     cannot be parsed into a color. */
-template <Base base = Base::Base1>
+template <Base base = Base::normal>
 Color toColor(char const*);
 
 /** Convert a string to a Color.  Returns true if the conversion succeeded. */
-template <Base base = Base::Base1>
+template <Base base = Base::normal>
 bool toColor(char const*, Color&);
 
 
