@@ -11,17 +11,24 @@ namespace tdsp {
 /** Convert a hex number to an RGB color. */
 Color toColor(unsigned int);
 
+/** Computational base - 0..1 float or 0..255 integer? */
+enum class Base {Base1, Base256};
+
 /** Convert a Color to a string. */
+template <Base base = Base::Base1>
 std::string toString(Color);
 
 /** Convert a Color to a string. */
+template <Base base = Base::Base1>
 std::string colorToString(float r, float g, float b);
 
 /** Convert a string to a Color.  Throws an exception if the string
     cannot be parsed into a color. */
+template <Base base = Base::Base1>
 Color toColor(char const*);
 
 /** Convert a string to a Color.  Returns true if the conversion succeeded. */
+template <Base base = Base::Base1>
 bool toColor(char const*, Color&);
 
 
