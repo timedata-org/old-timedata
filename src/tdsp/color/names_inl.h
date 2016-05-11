@@ -78,6 +78,31 @@ struct ColorTraits {
         return commaSeparated(c, 7);
     }
 
+    static Color colorFromCommaSeparated(char const* p) {
+        auto originalP = p;
+        auto getNumber = [&]() {
+            auto x = strtof(p, &p);
+            skipSpaces(p);
+            return static_cast<float>(x);
+        };
+
+        auto skipComma = [&]() {
+            THROW_IF_NE(*p++, ',', "Expected a comma", originalP);
+            skipSpaces(p);
+        };
+
+        auto r = getNumber();
+        skipComma();
+
+        auto g = getNumber();
+        skipComma();
+
+        auto b = getNumber();
+        THROW_IF(*p, "Extra characters after end", originalP);
+
+        return {{r, g, b}};
+    }
+
     static bool toColorNonNegative(char const* name, Color& result) {
         if (not *name)
             return false;
@@ -108,28 +133,12 @@ struct ColorTraits {
             return false;
         }
 
-        auto getNumber = [&]() {
-            auto x = strtod(name, &endptr);
-            name = endptr;
-
-            skipSpaces(name);
-            return static_cast<float>(x);
-        };
-
-        result[0] = getNumber(); // RGB::red
-        if (*name++ != ',')
+        try {
+            result = colorFromCommaSeparated(name);
+            return true;
+        } catch (...) {
             return false;
-        skipSpaces(name);
-
-        result[1] = getNumber();
-        if (*name++ != ',')
-            return false;
-        skipSpaces(name);
-
-        result[2] = getNumber();
-        if (*name)
-            return false;
-        return true;
+        }
     }
 
     static bool toColor(char const* name, Color& result) {
@@ -152,31 +161,6 @@ struct ColorTraits {
                 result[i] = - result[i];
         }
         return true;
-    }
-
-    static Color colorFromCommaSeparated(char const* p) {
-        auto originalP = p;
-        auto getNumber = [&]() {
-            auto x = strtof(p, &p);
-            skipSpaces(p);
-            return static_cast<float>(x);
-        };
-
-        auto skipComma = [&]() {
-            THROW_IF_NE(*p++, ',', "Expected a comma", originalP);
-            skipSpaces(p);
-        };
-
-        auto r = getNumber();
-        skipComma();
-
-        auto g = getNumber();
-        skipComma();
-
-        auto b = getNumber();
-        THROW_IF(*p, "Extra characters after end", originalP);
-
-        return {{r, g, b}};
     }
 
     static Color toColor(char const* name) {
