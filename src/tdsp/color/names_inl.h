@@ -17,24 +17,33 @@ namespace tdsp {
 
 template <Base base>
 struct ColorTraits {
+    static float denormalize(float x) {
+        return (base == Base::normal) ? x / 255.0 : x;
+    }
+    static float normalize(float x) {
+        return (base == Base::integer) ? x * 255.0 : x;
+    }
+
     static Color toColor(unsigned int hex) {
         static const auto BYTE = 256;
         auto b = hex % BYTE;
-        hex /= BYTE;
 
+        hex /= BYTE;
         auto g = hex % BYTE;
-        hex /= BYTE;
 
+        hex /= BYTE;
         auto r = hex % BYTE;
-        return {{r / 255.0f, g / 255.0f, b / 255.0f}};
+
+        return {{denormalize(r), denormalize(g), denormalize(b)}};
     };
 
     static bool isNearHex(float decimal) {
-        return isNearFraction(decimal, 255);
+        auto denominator = (base == Base::normal) ? 255 : 1;
+        return isNearFraction(decimal, denominator);
     }
 
     static bool isGray(Color color) {
-        return colorfulness(color) < 0.0001;
+        return denormalize(colorfulness(color)) < 0.0001;
     }
 
     static float strtof(const char *nptr, char const **endptr) {
@@ -47,8 +56,13 @@ struct ColorTraits {
     static uint32_t fromHex(Color c) {
         uint32_t total = 0;
         static uint32_t const max = 256;
-        for (auto& i : c)
-            (total *= max) += std::min(max - 1, uint32_t(256 * std::abs(i)));
+        for (auto i : c) {
+            total *= max;
+            i = std::abs(i);
+            if (base == Base::normal)
+                i *= max;
+            total += std::min(max - 1, static_cast<uint32_t>(i));
+        }
         return total;
     }
 
@@ -71,10 +85,11 @@ struct ColorTraits {
                 return addNegatives(i->second);
         }
 
-        if (isGray(c))
-            return addNegatives("gray " + tdsp::toString(100 * std::abs(c[0]), 5));
+        if (isGray(c)) {
+            auto gray = 100.0f * normalize(std::abs(c[0]));
+            return addNegatives("gray " + tdsp::toString(gray, 5));
+        }
 
-        // base!
         return commaSeparated(c, 7);
     }
 
@@ -127,6 +142,7 @@ struct ColorTraits {
         if (not (strstr(name, "gray ") and strstr(name, "grey "))) {
             auto gray = static_cast<float>(strtod(name + 5, &endptr)) / 100;
             if (not *endptr) {
+                gray = normalize(gray);
                 result = {{gray, gray, gray}};
                 return true;
             }
