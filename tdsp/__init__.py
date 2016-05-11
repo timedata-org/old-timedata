@@ -1,6 +1,7 @@
 from . tdsp import tdsp as _tdsp
 
 Color = _tdsp._Color
+Color256 = _tdsp._Color256
 ColorList = _tdsp._ColorList
 Combiner = _tdsp._Combiner
 Fade = _tdsp._FadeImpl
