@@ -15,7 +15,7 @@ std::vector<T> duplicate(std::vector<T> const&, size_t count);
 template <typename T>
 void reverse(std::vector<T>&);
 
-std::string toString(ColorList const&);
+std::string toString(ColorList const&, Base base = Base::normal);
 
 template <typename T>
 std::vector<T> sliceVector(
