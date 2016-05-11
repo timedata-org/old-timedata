@@ -212,4 +212,14 @@ std::string colorToString(float r, float g, float b) {
     return toString<base>(Color{{r, g, b}});
 }
 
+inline bool toColor(char const* s, Color& c, Base base) {
+    return base == Base::normal ? toColor<Base::normal>(s, c) :
+            toColor<Base::integer>(s, c);
+}
+
+inline std::string colorToString(float r, float g, float b, Base base) {
+    return base == Base::normal ? colorToString<Base::normal>(r, g, b) :
+            colorToString<Base::integer>(r, g, b);
+}
+
 }  // tdsp
