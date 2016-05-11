@@ -14,8 +14,8 @@ cdef extern from "<tdsp/color/names_inl.h>" namespace "tdsp":
         float& at(int)
 
     float invert(float)
-    bool toColor(const char*, Color)
-    string colorToString(float r, float g, float b)
+    bool toColor(const char*, Color, Base)
+    string colorToString(float r, float g, float b, Base)
     bool cmpToRichcmp(float cmp, int richcmp)
     Color makeColor(float r, float g, float b)
 
@@ -41,7 +41,7 @@ cdef class _Color:
                 return
 
             if isinstance(args, str):
-                if not toColor(args, frame):
+                if not toColor(args, frame, self._base()):
                     raise ValueError("Can't understand color %s" % args)
                 self.red = frame.at(0)
                 self.green = frame.at(1)
@@ -192,7 +192,8 @@ cdef class _Color:
         return _Color(c.red - self.red, c.green - self.green, c.blue - self.blue)
 
     def __str__(self):
-        return colorToString(self.red, self.green, self.blue).decode('ascii')
+        return colorToString(self.red, self.green, self.blue, self._base()
+                             ).decode('ascii')
 
     def __sub__(self, c):
         c = _Color(c)
