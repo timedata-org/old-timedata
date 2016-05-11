@@ -12,21 +12,13 @@ namespace tdsp {
 enum class Base {normal, integer};
 
 /** Convert a string to a Color.  Returns true if the conversion succeeded. */
-template <Base base = Base::normal>
-bool toColor(char const*, Color&);
-bool toColor(char const*, Color&, Base);
+bool toColor(char const*, Color&, Base base = Base::normal);
 
 /** Convert a string to a Color.  Throws an exception on failure. */
-template <Base base = Base::normal>
-Color toColor(char const* name);
-Color toColor(char const* name, Base);
+Color toColor(char const* name, Base base = Base::normal);
 
 /** Convert a Color to a string. */
-template <Base base = Base::normal>
-std::string toString(Color c);
-
-/** Convert a Color to a string. */
-template <Base base = Base::normal>
-std::string colorToString(float r, float g, float b);
+std::string colorToString(Color c, Base base = Base::normal);
+std::string colorToString(float r, float g, float b, Base base = Base::normal);
 
 } // tdsp

@@ -21,12 +21,12 @@ void reverse(std::vector<T>& v) {
     std::reverse(v.begin(), v.end());
 }
 
-inline std::string toString(ColorList const& colors) {
+inline std::string toString(ColorList const& colors, Base base) {
     std::string result = "(";
     for (auto& c : colors) {
         if (result.size() > 1)
             result += ", ";
-        auto s = toString(c);
+        auto s = colorToString(c, base);
         result += "'("[isdigit(s[0])];
         result += s;
         result += "')"[isdigit(s[0])];
