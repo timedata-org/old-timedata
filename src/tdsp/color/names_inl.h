@@ -190,19 +190,21 @@ struct ColorTraits {
     }
 };
 
-inline bool toColor(char const* s, Color& c, Base base) {
+inline bool stringToColor(char const* s, Color& c, Base base) {
     return base == Base::normal ?
             ColorTraits<Base::normal>::toColor(s, c) :
             ColorTraits<Base::integer>::toColor(s, c);
 }
 
-inline Color toColor(char const* name, Base base) {
+inline Color stringToColor(char const* name, Base base) {
     return base == Base::normal ?
             ColorTraits<Base::normal>::toColor(name) :
             ColorTraits<Base::integer>::toColor(name);
 }
 
 inline std::string colorToString(Color c, Base base) {
+    log(static_cast<int>(base), c[0], c[1], c[2]);
+
     return base == Base::normal ?
             ColorTraits<Base::normal>::toString(c) :
             ColorTraits<Base::integer>::toString(c);

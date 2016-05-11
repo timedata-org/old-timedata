@@ -68,8 +68,8 @@ void clearStruct(Struct& s) {
     s = Struct{};
 }
 
-inline float invert(float x) {
-    return (x >= 0 ? 1.0f : -1.0f) - x;
+inline float invert(float x, float center = 1.0f) {
+    return (x >= 0 ? center : -center) - x;
 }
 
 template <typename T>
