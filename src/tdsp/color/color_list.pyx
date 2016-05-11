@@ -58,13 +58,22 @@ cdef class _ColorList:
     cdef _set(self, uint i, float r, float g, float b):
        self.colors[i] = makeColor(r, g, b)
 
-    def _set_obj(self, uint i, object x):
+    cdef _set_obj(self, uint i, object x):
         if isinstance(x, str):
             c = _Color(x)
             self._set(i, c.red, c.green, c.blue)
         else:
             r, g, b = x
             self._set(i, r, g, b)
+
+    cdef _fix_key(self, int key):
+        if key >= self.colors.size():
+            raise IndexError('Color index out of range')
+        if key < 0:
+            key += self.colors.size()
+            if key < 0:
+                raise IndexError('Color index out of range')
+        return key
 
     def __cinit__(self, items=None):
         if items:
@@ -82,15 +91,6 @@ cdef class _ColorList:
                 self.colors.resize(len(items))
                 for i, item in enumerate(items):
                     self._set_obj(i, item)
-
-    def _fix_key(self, int key):
-        if key >= self.colors.size():
-            raise IndexError('Color index out of range')
-        if key < 0:
-            key += self.colors.size()
-            if key < 0:
-                raise IndexError('Color index out of range')
-        return key
 
     def __getitem__(self, object key):
         cdef Color c
