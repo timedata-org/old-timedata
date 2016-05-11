@@ -31,11 +31,13 @@ typename Collection::value_type maxPairedDistanceAbs(Collection const& coll) {
     return result;
 }
 
+template <Base base>
 inline std::string colorToString(float r, float g, float b) {
-    return toString(Color{{r, g, b}});
+    return toString<base>(Color{{r, g, b}});
 }
 
-inline Color toColor(unsigned int hex) {
+template <Base base>
+Color toColor(unsigned int hex) {
     static const auto BYTE = 256;
     auto b = hex % BYTE;
     hex /= BYTE;
@@ -62,7 +64,8 @@ inline float strtof(const char *nptr, char const **endptr) {
     return r;
 }
 
-inline uint32_t fromHex(Color c) {
+template <Base base>
+uint32_t fromHex(Color c) {
     uint32_t total = 0;
     static uint32_t const max = 256;
     for (auto& i : c)
@@ -71,7 +74,8 @@ inline uint32_t fromHex(Color c) {
 }
 
 
-inline std::string toString(Color c) {
+template <Base base>
+std::string toString(Color c) {
     auto addNegatives = [&](std::string const& value) {
         auto s = value;
         auto negative = Sample<RGB, bool>{{c[0] < 0, c[1] < 0, c[2] < 0}};
@@ -83,7 +87,7 @@ inline std::string toString(Color c) {
     };
 
     if (std::all_of(c.begin(), c.end(), isNearHex)) {
-        auto hex = fromHex(c);
+        auto hex = fromHex<base>(c);
 
         auto i = colorNamesInverse().find(hex);
         if (i != colorNamesInverse().end())
@@ -93,23 +97,25 @@ inline std::string toString(Color c) {
     if (isGray(c))
         return addNegatives("gray " + toString(100 * std::abs(c[0]), 5));
 
+    // base!
     return commaSeparated(c, 7);
 }
 
-inline bool toColorNonNegative(char const* name, Color& result) {
+template <Base base>
+bool toColorNonNegative(char const* name, Color& result) {
     if (not *name)
         return false;
 
     auto i = colorNames().find(name);
     if (i != colorNames().end()) {
-        result = toColor(i->second);
+        result = toColor<base>(i->second);
         return true;
     }
 
     static const auto hexPrefixes = {"0x", "0X", "#"};
     for (auto& prefix : hexPrefixes) {
         if (strstr(name, prefix) == name) {
-            result = toColor(fromHex(name + strlen(prefix)));
+            result = toColor<base>(fromHex(name + strlen(prefix)));
             return true;
         }
     }
@@ -150,19 +156,20 @@ inline bool toColorNonNegative(char const* name, Color& result) {
     return true;
 }
 
-inline bool toColor(char const* name, Color& result) {
+template <Base base>
+bool toColor(char const* name, Color& result) {
     auto isSign = [](char ch) { return ch == '-' or ch == '+'; };
     auto len = strlen(name), end = len;
     for (; end > 0 && isSign(name[end - 1]); --end);
 
     if (end == len)
-        return toColorNonNegative(name, result);
+        return toColorNonNegative<base>(name, result);
 
     if ((not end) or len - end != 3)
         return false;
 
     std::string n(name, len - 3);
-    if (not toColorNonNegative(n.c_str(), result))
+    if (not toColorNonNegative<base>(n.c_str(), result))
         return false;
 
     for (auto i = 0; i < 3; ++i) {
@@ -172,7 +179,8 @@ inline bool toColor(char const* name, Color& result) {
     return true;
 }
 
-inline Color colorFromCommaSeparated(char const* p) {
+template <Base base>
+Color colorFromCommaSeparated(char const* p) {
     auto originalP = p;
     auto getNumber = [&]() {
         auto x = strtof(p, &p);
@@ -197,9 +205,10 @@ inline Color colorFromCommaSeparated(char const* p) {
     return {{r, g, b}};
 }
 
-inline Color toColor(char const* name) {
+template <Base base>
+Color toColor(char const* name) {
     Color result;
-    THROW_IF(not toColor(name, result), "Bad color name", name);
+    THROW_IF(not toColor<base>(name, result), "Bad color name", name);
     return result;
 }
 
