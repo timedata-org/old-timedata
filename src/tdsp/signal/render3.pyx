@@ -17,4 +17,4 @@ cdef class _Render3Impl(_Render3):
             self.buffer = x
 
     def __call__(self, _ColorList cl):
-        renderColorList(self.thisptr, cl.colors, self.buffer + self.offset)
+        renderColorList(self._instance, cl.colors, self.buffer + self.offset)
