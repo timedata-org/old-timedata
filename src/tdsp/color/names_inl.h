@@ -10,26 +10,10 @@
 #include <tdsp/base/enum.h>
 #include <tdsp/base/throw.h>
 #include <tdsp/base/math_inl.h>
+#include <tdsp/color/colorfulness.h>
 #include <tdsp/color/names_table_inl.h>
 
 namespace tdsp {
-
-template <typename Collection, typename Function>
-void forEachPair(Collection const& coll, Function f) {
-    for (size_t i = 0; i + 1 < coll.size(); ++i)
-        for (size_t j = i + 1; j < coll.size(); ++j)
-            f(coll[i], coll[j]);
-}
-
-template <typename Collection>
-typename Collection::value_type maxPairedDistanceAbs(Collection const& coll) {
-    using Number = typename Collection::value_type;
-    Number result = 0;
-    forEachPair(coll, [&](Number x, Number y) {
-        result = std::max(result, std::abs(std::abs(x) - std::abs(y)));
-    });
-    return result;
-}
 
 template <Base base>
 Color toColor(unsigned int hex) {
@@ -49,7 +33,7 @@ inline bool isNearHex(float decimal) {
 }
 
 inline bool isGray(Color color) {
-    return maxPairedDistanceAbs(color) < 0.0001;
+    return colorfulness(color) < 0.0001;
 }
 
 inline float strtof(const char *nptr, char const **endptr) {
