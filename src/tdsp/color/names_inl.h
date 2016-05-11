@@ -14,6 +14,30 @@
 
 namespace tdsp {
 
+/** Convert a hex number to an RGB color. */
+Color toColor(unsigned int);
+
+/** Convert a Color to a string. */
+template <Base base = Base::normal>
+std::string toString(Color);
+
+/** Convert a string to a Color.  Throws an exception if the string
+    cannot be parsed into a color. */
+template <Base base = Base::normal>
+Color toColor(char const*);
+
+using ColorNames = std::map<std::string, uint32_t>;
+using ColorNamesInverse = std::map<uint32_t, std::string>;
+
+/** Names of hex colors we recognize. */
+ColorNames const& colorNames();
+
+/** Best inverse of color names, taking into account secondaryColors. */
+ColorNamesInverse const& colorNamesInverse();
+
+/** Alternate color names we recognize. */
+std::set<std::string> const& secondaryColors();
+
 template <typename Collection, typename Function>
 void forEachPair(Collection const& coll, Function f) {
     for (size_t i = 0; i + 1 < coll.size(); ++i)
