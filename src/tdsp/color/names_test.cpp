@@ -6,16 +6,20 @@ namespace tdsp {
 namespace color {
 
 TEST_CASE("color", "names") {
-   REQUIRE(colorToString(Color{{0.5, 0.5, 0.5}}) == "gray 50");
-   REQUIRE(colorToString(Color{{0, 0, 0}}) == "black");
-   REQUIRE(colorToString(Color{{-0.5, 0.5, 0.5}}) == "gray 50-++");
+    REQUIRE(colorToString(Color{{0.5, 0.5, 0.5}}, Base::normal) == "gray 50");
+    REQUIRE(colorToString(Color{{0, 0, 0}}, Base::normal) == "black");
+    REQUIRE(colorToString(Color{{-0.5, 0.5, 0.5}}, Base::normal) ==
+            "gray 50-++");
 
-   auto c = toColor("gray 50-++");
-   REQUIRE(c[0] < 0);
-   REQUIRE(colorToString(c) == "gray 50-++");
-   for (auto& i : colorNamesInverse())
-       REQUIRE(colorToString(toColor(i.second.c_str())) == i.second);
-
+    auto c = stringToColor("gray 50-++", Base::normal);
+    REQUIRE(c[0] < 0);
+    REQUIRE(colorToString(c, Base::normal) == "gray 50-++");
+    forEach<Base>([](Base base) {
+        for (auto& i : colorNamesInverse()) {
+            auto c = stringToColor(i.second.c_str(), base);
+            REQUIRE(colorToString(c, base) == i.second);
+        }
+    });
 }
 
 } // color

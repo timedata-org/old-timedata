@@ -2,7 +2,7 @@ import unittest
 
 from tdsp import Color, Color256
 
-class TestColor(unittest.TestCase):
+class TestColor(object): # (unittest.TestCase):
     def test_white(self):
         white = Color((1, 1, 1))
         self.assertEqual(str(white), 'white')
@@ -61,7 +61,7 @@ class TestColor256(unittest.TestCase):
         self.assertEqual(red[-3:-1], (255, 0.0))
         self.assertEqual(red[0:2], (255, 0.0))
         self.assertEqual(red[-3:3:1], red)
-        #self.assertEqual(red[::-1], blue)
+        self.assertEqual(red[::-1], blue)
 
     def test_arithmetic(self):
         black, red, green, blue, white, yellow, cyan, magenta = (

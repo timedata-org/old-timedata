@@ -9,16 +9,16 @@
 namespace tdsp {
 
 /** Computational base - 0..1 float or 0..255 integer? */
-enum class Base {normal, integer};
+enum class Base {normal, integer, size};
 
 /** Convert a string to a Color.  Returns true if the conversion succeeded. */
-bool toColor(char const*, Color&, Base base = Base::normal);
+bool stringToColor(char const*, Color&, Base base);
 
 /** Convert a string to a Color.  Throws an exception on failure. */
-Color toColor(char const* name, Base base = Base::normal);
+Color stringToColor(char const* name, Base base);
 
 /** Convert a Color to a string. */
-std::string colorToString(Color c, Base base = Base::normal);
-std::string colorToString(float r, float g, float b, Base base = Base::normal);
+std::string colorToString(Color c, Base base);
+std::string colorToString(float r, float g, float b);
 
 } // tdsp
