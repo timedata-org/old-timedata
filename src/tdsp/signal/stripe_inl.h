@@ -18,8 +18,6 @@ inline void Stripe::Iterator::adjustIndex() {
         return done_;
     };
 
-    /* TODO: this is pretty neat, but inefficient if index_ is
-       either very much bigger than size_ or very negative. */
     while (not done_) {
         if (stripe_.skip > 0 and index_ > size_ and repeat())
             index_ = stripe_.reflect ? 2 * size_ - index_ : index_ - size_;
@@ -28,6 +26,8 @@ inline void Stripe::Iterator::adjustIndex() {
         else
             return;
     }
+    /* TODO: this is pretty neat, but inefficient if index_ is
+       either very much bigger than size_ or very negative. */
 }
 
 inline void Stripe::Iterator::next() {
