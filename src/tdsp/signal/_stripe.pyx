@@ -1,4 +1,4 @@
-# Automatically generated on 2016-05-10T22:56:19.806791
+# Automatically generated on 2016-05-11T15:46:21.243293
 # by https://github.com/rec/make_pyx/make_pyx.py
 
 cdef extern from "<tdsp/signal/stripe.h>" namespace "tdsp":
@@ -9,13 +9,13 @@ cdef extern from "<tdsp/signal/stripe.h>" namespace "tdsp":
 
 
 cdef class _Stripe(_Wrapper):
-    cdef Stripe thisptr;
+    cdef Stripe _instance;
 
     def __cinit__(self):
-        clearStruct(self.thisptr)
+        clearStruct(self._instance)
 
     def clear(self):
-        clearStruct(self.thisptr)
+        clearStruct(self._instance)
 
     def __str__(self):
         return "(begin=%s, skip=%s, repeats=%s, reflect=%s)" % (
@@ -23,24 +23,24 @@ cdef class _Stripe(_Wrapper):
 
     property begin:
         def __get__(self):
-            return self.thisptr.begin
+            return self._instance.begin
         def __set__(self, int x):
-            self.thisptr.begin = x
+            self._instance.begin = x
 
     property skip:
         def __get__(self):
-            return self.thisptr.skip
+            return self._instance.skip
         def __set__(self, int x):
-            self.thisptr.skip = x
+            self._instance.skip = x
 
     property repeats:
         def __get__(self):
-            return self.thisptr.repeats
+            return self._instance.repeats
         def __set__(self, size_t x):
-            self.thisptr.repeats = x
+            self._instance.repeats = x
 
     property reflect:
         def __get__(self):
-            return self.thisptr.reflect
+            return self._instance.reflect
         def __set__(self, bool x):
-            self.thisptr.reflect = x
+            self._instance.reflect = x

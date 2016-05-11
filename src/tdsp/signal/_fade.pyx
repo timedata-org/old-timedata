@@ -1,4 +1,4 @@
-# Automatically generated on 2016-05-10T22:56:19.805892
+# Automatically generated on 2016-05-11T15:46:21.242300
 # by https://github.com/rec/make_pyx/make_pyx.py
 
 cdef extern from "<tdsp/signal/fade.h>" namespace "tdsp::Fade":
@@ -18,15 +18,15 @@ cdef extern from "<tdsp/signal/fade.h>" namespace "tdsp":
 
 
 cdef class _Fade(_Wrapper):
-    cdef Fade thisptr;
+    cdef Fade _instance;
 
     TYPE_NAMES = 'linear', 'sqr', 'sqrt', 'size'
 
     def __cinit__(self):
-        clearStruct(self.thisptr)
+        clearStruct(self._instance)
 
     def clear(self):
-        clearStruct(self.thisptr)
+        clearStruct(self._instance)
 
     def __str__(self):
         return "(begin=%s, end=%s, fader=%s, type='%s')" % (
@@ -34,26 +34,26 @@ cdef class _Fade(_Wrapper):
 
     property begin:
         def __get__(self):
-            return self.thisptr.begin
+            return self._instance.begin
         def __set__(self, float x):
-            self.thisptr.begin = x
+            self._instance.begin = x
 
     property end:
         def __get__(self):
-            return self.thisptr.end
+            return self._instance.end
         def __set__(self, float x):
-            self.thisptr.end = x
+            self._instance.end = x
 
     property fader:
         def __get__(self):
-            return self.thisptr.fader
+            return self._instance.fader
         def __set__(self, float x):
-            self.thisptr.fader = x
+            self._instance.fader = x
 
     property type:
         def __get__(self):
-            return self.TYPE_NAMES[<int> self.thisptr.type]
+            return self.TYPE_NAMES[<int> self._instance.type]
         def __set__(self, string x):
             cdef uint8_t i
             i = self.TYPE_NAMES.index(x)
-            self.thisptr.type = <Type>(i)
+            self._instance.type = <Type>(i)

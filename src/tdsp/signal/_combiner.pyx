@@ -1,4 +1,4 @@
-# Automatically generated on 2016-05-10T22:56:19.806349
+# Automatically generated on 2016-05-11T15:46:21.242841
 # by https://github.com/rec/make_pyx/make_pyx.py
 
 cdef extern from "<tdsp/signal/combiner.h>" namespace "tdsp":
@@ -9,13 +9,13 @@ cdef extern from "<tdsp/signal/combiner.h>" namespace "tdsp":
 
 
 cdef class _Combiner(_Wrapper):
-    cdef Combiner thisptr;
+    cdef Combiner _instance;
 
     def __cinit__(self):
-        clearStruct(self.thisptr)
+        clearStruct(self._instance)
 
     def clear(self):
-        clearStruct(self.thisptr)
+        clearStruct(self._instance)
 
     def __str__(self):
         return "(scale=%s, offset=%s, mute=%s, invert=%s)" % (
@@ -23,24 +23,24 @@ cdef class _Combiner(_Wrapper):
 
     property scale:
         def __get__(self):
-            return self.thisptr.scale
+            return self._instance.scale
         def __set__(self, float x):
-            self.thisptr.scale = x
+            self._instance.scale = x
 
     property offset:
         def __get__(self):
-            return self.thisptr.offset
+            return self._instance.offset
         def __set__(self, float x):
-            self.thisptr.offset = x
+            self._instance.offset = x
 
     property mute:
         def __get__(self):
-            return self.thisptr.mute
+            return self._instance.mute
         def __set__(self, uint x):
-            self.thisptr.mute = x
+            self._instance.mute = x
 
     property invert:
         def __get__(self):
-            return self.thisptr.invert
+            return self._instance.invert
         def __set__(self, uint x):
-            self.thisptr.invert = x
+            self._instance.invert = x
