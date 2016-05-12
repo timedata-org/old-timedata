@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
-import os, platform, distutils.core, distutils.extension, Cython.Build
+import os, platform, shutil
+import distutils.core, distutils.extension, Cython.Build
 
 def execute(command):
     result = os.system(command)
@@ -21,6 +22,23 @@ class Clean(distutils.core.Command):
     def run(self):
         assert os.getcwd() == self.cwd, 'Must be in package root: %s' % self.cwd
         execute('rm -Rf ./build src/tdsp.cpp')
+
+
+class Local(distutils.core.Command):
+    description = 'Install the .so locally'
+    user_options = []
+
+    FILE_LOCATION = 'build/lib.macosx-10.6-intel-3.4/tdsp.so'
+    # TODO: need to get this from distutils somehow.
+
+    def initialize_options(self):
+        pass
+
+    def finalize_options(self):
+        pass
+
+    def run(self):
+        shutil.copy2(self.FILE_LOCATION, 'tdsp/')
 
 
 LIBRARIES = [] if platform.system() in ('Darwin', 'Linux') else ['m']
@@ -57,6 +75,6 @@ EXT_MODULES=Cython.Build.cythonize(
 
 distutils.core.setup(
     name='tdsp',
-    cmdclass={'clean': Clean},
+    cmdclass={'clean': Clean, 'local': Local},
     ext_modules=EXT_MODULES,
     )
