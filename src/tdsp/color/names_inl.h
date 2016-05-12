@@ -17,10 +17,10 @@ namespace tdsp {
 
 template <Base base>
 struct ColorTraits {
-    static float denormalize(float x) {
+    static constexpr float denormalize(float x) {
         return (base == Base::normal) ? x / 255.0 : x;
     }
-    static float normalize(float x) {
+    static constexpr float normalize(float x) {
         return (base == Base::integer) ? x * 255.0 : x;
     }
 
@@ -77,17 +77,21 @@ struct ColorTraits {
             return s;
         };
 
-        if (std::all_of(c.begin(), c.end(), isNearHex)) {
-            auto hex = fromHex(c);
+        auto max = normalize(1.0);
+        auto isMax = [=](float x) { return x <= max; };
+        if (std::all_of(c.begin(), c.end(), isMax)) {
+            if (std::all_of(c.begin(), c.end(), isNearHex)) {
+                auto hex = fromHex(c);
 
-            auto i = colorNamesInverse().find(hex);
-            if (i != colorNamesInverse().end())
-                return addNegatives(i->second);
-        }
+                auto i = colorNamesInverse().find(hex);
+                if (i != colorNamesInverse().end())
+                    return addNegatives(i->second);
+            }
 
-        if (isGray(c)) {
-            auto gray = 100.0f * normalize(std::abs(c[0]));
-            return addNegatives("gray " + tdsp::toString(gray, 5));
+            if (isGray(c)) {
+                auto gray = 100.0f * normalize(std::abs(c[0]));
+                return addNegatives("gray " + tdsp::toString(gray, 5));
+            }
         }
 
         return commaSeparated(c, 7);
@@ -184,10 +188,6 @@ struct ColorTraits {
         THROW_IF(not toColor(name, result), "Bad color name", name);
         return result;
     }
-
-    static std::string toString(float r, float g, float b) {
-        return toString(Color{{r, g, b}});
-    }
 };
 
 inline bool stringToColor(char const* s, Color& c, Base base) {
@@ -203,17 +203,13 @@ inline Color stringToColor(char const* name, Base base) {
 }
 
 inline std::string colorToString(Color c, Base base) {
-    log(static_cast<int>(base), c[0], c[1], c[2]);
-
     return base == Base::normal ?
             ColorTraits<Base::normal>::toString(c) :
             ColorTraits<Base::integer>::toString(c);
 }
 
 inline std::string colorToString(float r, float g, float b, Base base) {
-    return base == Base::normal ?
-            ColorTraits<Base::normal>::toString(r, g, b) :
-            ColorTraits<Base::integer>::toString(r, g, b);
+    return colorToString({{r, g, b}}, base);
 }
 
 }  // tdsp

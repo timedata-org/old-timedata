@@ -18,6 +18,7 @@ struct Render3 {
             s = pow(s, gamma);
         return std::min(max, min + (max - min + 1) * s);
     }
+  
 
     template <typename ColorType = Color>
     ColorType apply(Color c) const {
@@ -29,6 +30,7 @@ struct Render3 {
             {2, 0, 1},
             {2, 1, 0}};
         auto& perm = perms[static_cast<int>(permutation)];
+	    
 
         using Type = typename ColorType::value_type;
         auto r = static_cast<Type>(apply(c[perm[0]]));
