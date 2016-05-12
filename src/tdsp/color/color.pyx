@@ -25,6 +25,8 @@ cdef class _Color:
     cdef float green
     cdef float blue
 
+    class_name = 'Color'
+
     cdef Base _base(self):
         return normal
 
@@ -149,8 +151,7 @@ cdef class _Color:
                       self.blue + c.blue)
 
     def __repr__(self):
-        cl = self.__class__
-        return '%s.%s(%s)' % (cl.__module__, cl.__name__, str(self))
+        return '%s(%s)' % (self.class_name, str(self))
 
     def __rdiv__(self, c):
         c = self.__class__(c)
@@ -218,5 +219,7 @@ cdef class _Color:
 
 
 cdef class _Color256(_Color):
+    class_name = 'Color256'
+
     cdef Base _base(self):
         return integer
