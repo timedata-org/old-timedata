@@ -50,6 +50,7 @@ cdef extern from "<tdsp/color/colorList_inl.h>" namespace "tdsp":
 cdef class _ColorList:
     cdef ColorList colors
     cdef object _color_maker
+    cdef unicode class_name
 
     cdef _set(self, uint i, float r, float g, float b):
        self.colors[i] = makeColor(r, g, b)
@@ -71,14 +72,20 @@ cdef class _ColorList:
                 raise IndexError('Color index out of range')
         return key
 
+    cdef _ColorList _make(self, object value=None):
+        _ColorList(value, color_maker=self._color_maker,
+                   class_name=self.class_name)
+
     cdef _ColorList _toColorList(self, object value):
         if isinstance(value, _ColorList):
             return <_ColorList> value
         else:
-            return _ColorList(value, color_maker=self._color_maker)
+            return self._make(value)
 
-    def __cinit__(self, items=None, *, color_maker=_Color):
+    def __cinit__(self, items=None, *,
+                  color_maker=_Color, class_name=u'ColorList'):
         self._color_maker = color_maker
+        self.class_name = class_name
         if items:
             # Make a guess as to whether it's a list of integers or not.
             try:
@@ -99,7 +106,7 @@ cdef class _ColorList:
         cdef Color c
         if isinstance(key, slice):
             begin, end, step = key.indices(self.colors.size())
-            cl = _ColorList(color_maker = self._color_maker)
+            cl = self._make()
             cl.colors = sliceVector(self.colors, begin, end, step)
             return cl
 
@@ -138,7 +145,7 @@ cdef class _ColorList:
         reverse(self.colors)
 
     def duplicate(self, uint count):
-        cl = _ColorList(color_maker=self._color_maker)
+        cl = self._make()
         cl.colors = duplicate(self.colors, count)
         return cl
 
@@ -269,7 +276,7 @@ cdef class _ColorList:
         return self.colors.size()
 
     def __repr__(self):
-        return '%s.ColorList(%s)' % (self.__class__.__module__, str(self))
+        return '%s(%s)' % (self.class_name, str(self))
 
     def __richcmp__(_ColorList self, _ColorList other, int rcmp):
         if self._color_maker is not other._color_maker:
@@ -280,5 +287,8 @@ cdef class _ColorList:
         return toString(self.colors, (<_Color> self._color_maker())._base()
                         ).decode('ascii')
 
+
 def _ColorList256(*args, **kwds):
-    return _ColorList(*args, color_maker=_Color256, **kwds)
+    cl = _ColorList(*args, color_maker=_Color256, class_name=u'ColorList256',
+                    **kwds)
+    return cl
