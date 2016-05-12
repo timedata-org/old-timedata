@@ -220,15 +220,3 @@ cdef class _Color:
 cdef class _Color256(_Color):
     cdef Base _base(self):
         return integer
-
-    def __mul__(self, c):
-        c = self.__class__(c)
-        return self.__class__(self.red * c.red / 255,
-                              self.green * c.green / 255,
-                              self.blue * c.blue / 255)
-
-    def __rmul__(self, c):
-        c = self.__class__(c)
-        return self.__class__(c.red * self.red / 255,
-                              c.green * self.green / 255,
-                              c.blue * self.blue / 255)

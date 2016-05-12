@@ -80,5 +80,5 @@ class TestColor256(unittest.TestCase):
         self.assertEqual(~white, black)
         self.assertEqual(~black, white)
 
-        self.assertEqual(white * red, red)
-        self.assertEqual(white * cyan, cyan)
+        self.assertEqual(white * red / 255, red)
+        self.assertEqual(white * cyan / 255, cyan)

@@ -46,21 +46,16 @@ cdef extern from "<tdsp/color/colorList_inl.h>" namespace "tdsp":
     void subtractInto(ColorList&, ColorList& out)
 
 
-cdef _ColorList _toColorList(object value):
-    if isinstance(value, _ColorList):
-        return <_ColorList> value
-    else:
-        return _ColorList(value)
-
 cdef class _ColorList:
     cdef ColorList colors
+    cdef object _color_maker
 
     cdef _set(self, uint i, float r, float g, float b):
        self.colors[i] = makeColor(r, g, b)
 
-    cdef _set_obj(self, uint i, object x):
+    def _set_obj(self, uint i, object x):
         if isinstance(x, str):
-            c = _Color(x)
+            c = self._color_maker(x)
             self._set(i, c.red, c.green, c.blue)
         else:
             r, g, b = x
@@ -75,7 +70,14 @@ cdef class _ColorList:
                 raise IndexError('Color index out of range')
         return key
 
-    def __cinit__(self, items=None):
+    cdef _ColorList _toColorList(self, object value):
+        if isinstance(value, _ColorList):
+            return <_ColorList> value
+        else:
+            return _ColorList(value, color_maker=self._color_maker)
+
+    def __cinit__(self, items=None, *, color_maker=_Color):
+        self._color_maker = color_maker
         if items:
             # Make a guess as to whether it's a list of integers or not.
             try:
@@ -96,19 +98,19 @@ cdef class _ColorList:
         cdef Color c
         if isinstance(key, slice):
             begin, end, step = key.indices(self.colors.size())
-            cl = _ColorList()
+            cl = _ColorList(color_maker = self._color_maker)
             cl.colors = sliceVector(self.colors, begin, end, step)
             return cl
 
         c = self.colors[self._fix_key(key)]
-        return _Color(c.at(0), c.at(1), c.at(2))
+        return self._color_maker(c.at(0), c.at(1), c.at(2))
 
     def __setitem__(self, object key, object x):
         cdef size_t length, slice_length
         cdef int begin, end, step
         if isinstance(key, slice):
             begin, end, step = key.indices(self.colors.size())
-            if not sliceIntoVector(_toColorList(x).colors,
+            if not sliceIntoVector(self._toColorList(x).colors,
                                    self.colors, begin, end, step):
                 raise ValueError('attempt to assign sequence of one size '
                                  'to extended slice of another size')
@@ -135,7 +137,7 @@ cdef class _ColorList:
         reverse(self.colors)
 
     def duplicate(self, uint count):
-        cl = _ColorList()
+        cl = _ColorList(color_maker=self._color_maker)
         cl.colors = duplicate(self.colors, count)
         return cl
 
@@ -158,13 +160,13 @@ cdef class _ColorList:
         if isinstance(c, Number):
             maxInto(<float> c, self.colors)
         else:
-            maxInto(_toColorList(c).colors, self.colors)
+            maxInto(self._toColorList(c).colors, self.colors)
 
     def min(self, c):
         if isinstance(c, Number):
             minInto(<float> c, self.colors)
         else:
-            minInto(_toColorList(c).colors, self.colors)
+            minInto(self._toColorList(c).colors, self.colors)
 
     def negate(self):
         negateColor(self.colors)
@@ -173,38 +175,38 @@ cdef class _ColorList:
         if isinstance(c, Number):
             powInto(<float> c, self.colors)
         else:
-            powInto(_toColorList(c).colors, self.colors)
+            powInto(self._toColorList(c).colors, self.colors)
 
     def rpow(self, c):
         if isinstance(c, Number):
             rpowInto(<float> c, self.colors)
         else:
-            rpowInto(_toColorList(c).colors, self.colors)
+            rpowInto(self._toColorList(c).colors, self.colors)
 
     # Mutating operations.
     def __iadd__(self, c):
         if isinstance(c, Number):
             addInto(<float> c, self.colors)
         else:
-            addInto(_toColorList(c).colors, self.colors)
+            addInto(self._toColorList(c).colors, self.colors)
 
     def __imul__(self, c):
         if isinstance(c, Number):
             multiplyInto(<float> c, self.colors)
         else:
-            multiplyInto(_toColorList(c).colors, self.colors)
+            multiplyInto(self._toColorList(c).colors, self.colors)
 
     def __isub__(self, c):
         if isinstance(c, Number):
              subtractInto(<float> c, self.colors)
         else:
-             subtractInto(_toColorList(c).colors, self.colors)
+             subtractInto(self._toColorList(c).colors, self.colors)
 
     def __itruediv__(self, c):
         if isinstance(c, Number):
             divideInto(<float> c, self.colors)
         else:
-            divideInto(_toColorList(c).colors, self.colors)
+            divideInto(self._toColorList(c).colors, self.colors)
 
     # Operations where self is on the left side.
     def __add__(self, c):
@@ -244,7 +246,7 @@ cdef class _ColorList:
         if isinstance(c, Number):
              rdivideInto(<float> c, self.colors)
         else:
-             rdivideInto(_toColorList(c).colors, self.colors)
+             rdivideInto(self._toColorList(c).colors, self.colors)
 
     def __rmul__(self, c):
         return self * c
@@ -260,7 +262,7 @@ cdef class _ColorList:
         if isinstance(c, Number):
              rsubtractInto(<float> c, self.colors)
         else:
-             rsubtractInto(_toColorList(c).colors, self.colors)
+             rsubtractInto(self._toColorList(c).colors, self.colors)
 
     def __len__(self):
         return self.colors.size()
@@ -269,7 +271,12 @@ cdef class _ColorList:
         return '%s.ColorList(%s)' % (self.__class__.__module__, str(self))
 
     def __richcmp__(_ColorList self, _ColorList other, int rcmp):
+        if self._color_maker is not other._color_maker:
+            raise ValueError('Can\'t compare two different color models.')
         return cmpToRichcmp(compareContainers(self.colors, other.colors), rcmp)
 
     def __str__(self):
         return toString(self.colors).decode('ascii')
+
+def _ColorList256(*args, **kwds):
+    return _ColorList(*args, color_maker=_Color256, **kwds)
