@@ -6,6 +6,7 @@ cdef extern from "<tdsp/color/colorList_inl.h>" namespace "tdsp":
     ColorList duplicate(ColorList&, int)
     void reverse(ColorList&)
     string toString(ColorList&)
+    string toString(ColorList&, Base)
     ColorList sliceVector(ColorList&, int begin, int end, int step)
     int compareContainers(ColorList&, ColorList&)
     bool sliceIntoVector(ColorList& _in, ColorList& out,
@@ -276,7 +277,8 @@ cdef class _ColorList:
         return cmpToRichcmp(compareContainers(self.colors, other.colors), rcmp)
 
     def __str__(self):
-        return toString(self.colors).decode('ascii')
+        return toString(self.colors, (<_Color> self._color_maker())._base()
+                        ).decode('ascii')
 
 def _ColorList256(*args, **kwds):
     return _ColorList(*args, color_maker=_Color256, **kwds)
