@@ -13,3 +13,8 @@ class TestColorList(unittest.TestCase):
         cl = ColorList([1, 1, 1])
         self.assertEqual(str(cl), str(ColorList(['white'])))
         self.assertEqual(cl, ColorList(['white']))
+
+    def test_slicing(self):
+        cl = ColorList()
+        cl[:] = 'red', 'green', 'blue'
+        self.assertEqual(cl, ColorList(['red', 'green', 'blue']))

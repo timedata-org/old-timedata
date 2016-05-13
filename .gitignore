@@ -1,4 +1,4 @@
-gbuild/
+build/
 src/tdsp.cpp
 TAGS
 .DS_Store
