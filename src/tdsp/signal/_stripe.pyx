@@ -1,4 +1,4 @@
-# Automatically generated on 2016-05-11T15:46:21.243293
+# Automatically generated on 2016-05-13T19:42:09.188911
 # by https://github.com/rec/make_pyx/make_pyx.py
 
 cdef extern from "<tdsp/signal/stripe.h>" namespace "tdsp":
@@ -6,7 +6,6 @@ cdef extern from "<tdsp/signal/stripe.h>" namespace "tdsp":
         int begin, skip
         size_t repeats
         bool reflect
-
 
 cdef class _Stripe(_Wrapper):
     cdef Stripe _instance;

@@ -1,4 +1,4 @@
-# Automatically generated on 2016-05-11T15:46:21.242841
+# Automatically generated on 2016-05-13T19:42:09.188338
 # by https://github.com/rec/make_pyx/make_pyx.py
 
 cdef extern from "<tdsp/signal/combiner.h>" namespace "tdsp":
@@ -6,7 +6,6 @@ cdef extern from "<tdsp/signal/combiner.h>" namespace "tdsp":
         float scale, offset
         uint mute
         uint invert
-
 
 cdef class _Combiner(_Wrapper):
     cdef Combiner _instance;

@@ -1,4 +1,4 @@
-# Automatically generated on 2016-05-13T19:13:59.870813
+# Automatically generated on 2016-05-13T19:42:09.187873
 # by https://github.com/rec/make_pyx/make_pyx.py
 cdef extern from "<tdsp/signal/fade.h>" namespace "tdsp::Fade":
     cdef cppclass Type:
