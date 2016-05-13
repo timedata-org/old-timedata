@@ -31,6 +31,9 @@ class Local(distutils.core.Command):
     FILE_LOCATION = 'build/lib.macosx-10.6-intel-3.4/tdsp.so'
     # TODO: need to get this from distutils somehow.
 
+    TARGET_LOCATIONS = 'tdsp', '/development/BiblioPixel'
+    # TODO: awful hack.
+
     def initialize_options(self):
         pass
 
@@ -38,7 +41,12 @@ class Local(distutils.core.Command):
         pass
 
     def run(self):
-        shutil.copy2(self.FILE_LOCATION, 'tdsp/')
+        for target in self.TARGET_LOCATIONS:
+            try:
+                os.remove(target)
+            except:
+                pass
+            shutil.copy2(self.FILE_LOCATION, target)
 
 
 LIBRARIES = [] if platform.system() in ('Darwin', 'Linux') else ['m']

@@ -1,6 +1,5 @@
-# Automatically generated on 2016-05-11T15:46:21.242300
+# Automatically generated on 2016-05-13T19:13:59.870813
 # by https://github.com/rec/make_pyx/make_pyx.py
-
 cdef extern from "<tdsp/signal/fade.h>" namespace "tdsp::Fade":
     cdef cppclass Type:
         pass
@@ -9,18 +8,16 @@ cdef extern from "<tdsp/signal/fade.h>" namespace "tdsp::Fade::Type":
     cdef Type linear
     cdef Type sqr
     cdef Type sqrt
-    cdef Type size
 
 cdef extern from "<tdsp/signal/fade.h>" namespace "tdsp":
     struct Fade:
         float begin, end, fader
         Type type
 
-
 cdef class _Fade(_Wrapper):
     cdef Fade _instance;
 
-    TYPE_NAMES = 'linear', 'sqr', 'sqrt', 'size'
+    TYPE_NAMES = 'linear', 'sqr', 'sqrt'
 
     def __cinit__(self):
         clearStruct(self._instance)
