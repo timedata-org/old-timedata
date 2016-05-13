@@ -8,9 +8,6 @@
 
 namespace tdsp {
 
-/** Computational base - 0..1 float or 0..255 integer? */
-enum class Base {normal, integer, size};
-
 /** Convert a string to a Color.  Returns true if the conversion succeeded. */
 bool stringToColor(char const*, Color&, Base base);
 

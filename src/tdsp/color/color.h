@@ -17,4 +17,7 @@ inline Color makeColor(float r, float g, float b) {
     return {{r, g, b}};
 }
 
+/** Computational base - 0..1 float or 0..255 integer? */
+enum class Base {normal, integer, size};
+
 } // tdsp
