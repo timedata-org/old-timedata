@@ -124,7 +124,7 @@ cdef class _ColorList:
                 raise ValueError('attempt to assign sequence of one size '
                                  'to extended slice of another size')
         else:
-            self.set_obj(self._fix_key(key), x)
+            self._set_obj(self._fix_key(key), x)
 
     def abs(self):
         absColor(self.colors)
