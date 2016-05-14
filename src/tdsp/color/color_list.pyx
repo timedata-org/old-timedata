@@ -71,8 +71,8 @@ cdef class _ColorList:
         return key
 
     cdef _ColorList _make(self, object value=None):
-        _ColorList(value, color_maker=self._color_maker,
-                   class_name=self.class_name)
+        return _ColorList(value, color_maker=self._color_maker,
+                          class_name=self.class_name)
 
     cdef _ColorList _toColorList(self, object value):
         if isinstance(value, _ColorList):
@@ -114,10 +114,12 @@ cdef class _ColorList:
     def __setitem__(self, object key, object x):
         cdef size_t length, slice_length
         cdef int begin, end, step
+        cdef _ColorList cl
         if isinstance(key, slice):
             begin, end, step = key.indices(self.colors.size())
-            if not sliceIntoVector(self._toColorList(x).colors,
-                                   self.colors, begin, end, step):
+            print(type(x))
+            cl = self._toColorList(x)
+            if not sliceIntoVector(cl.colors, self.colors, begin, end, step):
                 raise ValueError('attempt to assign sequence of one size '
                                  'to extended slice of another size')
         else:
