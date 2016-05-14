@@ -67,7 +67,6 @@ bool sliceIntoVector(std::vector<T> const& in, std::vector<T>& out,
         out.erase(ob + in.size(), ob + size);
     } else {
         // Grow!  Copy the first segment, then insert the second.
-        log("sliceIntoVector", size, in.size(), in.end() - in.begin());
         std::copy(in.begin(), in.begin() + size, ob);
         out.insert(ob + slice.begin, in.begin() + size, in.end());
     }
