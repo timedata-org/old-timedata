@@ -248,6 +248,12 @@ cdef class _ColorList:
         else:
             multiplyInto(self._toColorList(c).colors, self.colors)
 
+    def __ipow__(self, c):
+        if isinstance(c, Number):
+             powInto(<float> c, self.colors)
+        else:
+             powInto(self._toColorList(c).colors, self.colors)
+
     def __isub__(self, c):
         if isinstance(c, Number):
              subtractInto(<float> c, self.colors)

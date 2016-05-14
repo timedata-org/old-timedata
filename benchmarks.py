@@ -24,6 +24,24 @@ def scale_tdsp(colors):
 def run(command, value, number=1000):
     return timeit.Timer(lambda: command(value)).timeit(number=number)
 
+print('scale\n')
 print('classic', run(scale_classic, CLASSIC))
 print('triples', run(scale_triples, TRIPLES))
 print('tdsp', run(scale_tdsp, TDSP))
+
+def gamma_classic(colors):
+    for i in range(len(colors)):
+        colors[i] **= 1.2
+
+def gamma_triples(colors):
+    for i, c in enumerate(colors):
+        r, g, b = c
+        colors[i] = (r ** 1.2, g ** 1.2, g ** 1.2)
+
+def gamma_tdsp(colors):
+    colors **= 1.2
+
+print('\n\ngamma\n')
+print('classic', run(gamma_classic, CLASSIC))
+print('triples', run(gamma_triples, TRIPLES))
+print('tdsp', run(gamma_tdsp, TDSP))
