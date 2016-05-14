@@ -9,8 +9,8 @@ cdef extern from "<tdsp/base/math.h>" namespace "tdsp":
     void clearStruct[T](T&)
 
 include "tdsp/base/wrapper.pyx"
-include "tdsp/color/_operation.pyx"
 include "tdsp/color/color.pyx"
+include "tdsp/color/operation.pyx"
 include "tdsp/color/color_list.pyx"
 include "tdsp/signal/_combiner.pyx"
 include "tdsp/signal/_stripe.pyx"
