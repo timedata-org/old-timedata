@@ -7,8 +7,8 @@ namespace tdsp {
 
 template <typename Collection>
 void rotate(Collection& coll, int pos) {
-    if (auto size = coll.size()) {
-        pos = pos % size;
+    if (int size = coll.size()) {
+        pos %= size;
         if (pos < 0)
             pos += size;
         std::rotate(coll.begin(), coll.begin() + pos, coll.end());

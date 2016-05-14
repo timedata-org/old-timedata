@@ -48,6 +48,25 @@ cdef extern from "<tdsp/color/colorList_inl.h>" namespace "tdsp":
 
 
 cdef class _ColorList:
+    """A list of RGB floating point Colors, with many mutating functions.
+
+       A ColorList looks quite like a Python list of Colors (which look like
+       tuples) with the big interface difference that operations like + and *
+       perform arithmetic and not list construction.
+
+       Written in C++, this class should consume significantly fewer memory and
+       CPU resources than a corresponding Python list, as well as providing a
+       range of useful facilities.
+
+       While ColorList provides a full set of functions and operations that
+       create new ColorLists, in each case there is a corresponding mutating
+       function or operation that works "in-place" with no heap allocations
+       at all, for best performance.
+
+       The base class ColorList is a list of Color, which are normalized to
+       [0, 1]; the derived class ColorList256 is a list of Color256, which
+       are normalized to [0, 255].
+"""
     cdef ColorList colors
     cdef object _color_maker
     cdef unicode class_name
@@ -64,12 +83,12 @@ cdef class _ColorList:
             self._set(i, r, g, b)
 
     cdef _fix_key(self, int key):
-        if key >= self.colors.size():
-            raise IndexError('Color index out of range')
         if key < 0:
             key += self.colors.size()
             if key < 0:
-                raise IndexError('Color index out of range')
+                raise IndexError('Color index out of range (1)')
+        if key >= self.colors.size():
+            raise IndexError('Color index out of range (2)')
         return key
 
     cdef _ColorList _make(self, object value=None):
@@ -84,6 +103,8 @@ cdef class _ColorList:
 
     def __cinit__(self, items=None, *,
                   color_maker=_Color, class_name=u'ColorList'):
+        """Construct a ColorList with an iterator of items, each of which looks
+           like a Color."""
         self._color_maker = color_maker
         self.class_name = class_name
         if items:
@@ -127,33 +148,42 @@ cdef class _ColorList:
             self._set_obj(self._fix_key(key), x)
 
     def abs(self):
+        """Replace each color by its absolute value."""
         absColor(self.colors)
 
     def append(self, object value):
+        """Append to the list of colors."""
         cdef uint s
         s = self.colors.size()
         self.colors.resize(s + 1)
         try:
             self._set_obj(s, value)
         except:
+            # TODO: this is a little inefficient, but only happens
+            # in error cases, which only happen in development.
             self.colors.resize(s)
             raise
 
     def clear(self):
+        """Set all colors to black."""
         self.colors.clear()
 
-    def rotate(self, int positions):
-        rotate(self.colors, positions)
+    def rotate(self, int pos):
+        """Rotate the colors forward by `pos` positions."""
+        rotate(self.colors, pos)
 
     def reverse(self):
+        """Reverse the colors in place."""
         reverse(self.colors)
 
     def duplicate(self, uint count):
+        """Return a new `ColorList` with `count` copies of this one."""
         cl = self._make()
         cl.colors = duplicate(self.colors, count)
         return cl
 
     def extend(self, object values):
+        """Extend the colors from an iterator."""
         cdef uint s
         s = self.colors.size()
         self.colors.resize(s + len(values))
@@ -165,31 +195,41 @@ cdef class _ColorList:
             raise
 
     def invert(self):
-        """Convert to complementary colors."""
+        """Invert each colors to its complement."""
         invertColor(self.colors)
 
     def max(self, c):
+        """Mutate each color by max-ing it with a number or a ColorList."""
         if isinstance(c, Number):
             maxInto(<float> c, self.colors)
         else:
             maxInto(self._toColorList(c).colors, self.colors)
 
     def min(self, c):
+        """Mutate each color by min-ing it with a number or a ColorList."""
         if isinstance(c, Number):
             minInto(<float> c, self.colors)
         else:
             minInto(self._toColorList(c).colors, self.colors)
 
     def negate(self):
+        """Negate each color."""
         negateColor(self.colors)
 
-    def pow(self, c):
+    def pow(self, float c):
+        """Raise each color to the given power (gamma correction)."""
+        powInto(<float> c, self.colors)
         if isinstance(c, Number):
             powInto(<float> c, self.colors)
         else:
             powInto(self._toColorList(c).colors, self.colors)
 
+    def resize(self, size_t size):
+        """Set the size of the ColorList, filling with black if needed."""
+        self.colors.resize(size)
+
     def rpow(self, c):
+        """Right-hand (reversed) reverse of pow()."""
         if isinstance(c, Number):
             rpowInto(<float> c, self.colors)
         else:
