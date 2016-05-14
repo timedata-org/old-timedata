@@ -1,4 +1,4 @@
-# Automatically generated on 2016-05-13T19:42:09.188624
+# Automatically generated on 2016-05-14T15:42:56.467663
 # by https://github.com/rec/make_pyx/make_pyx.py
 cdef extern from "<tdsp/color/operation.h>" namespace "tdsp::Operation":
     cdef cppclass Unary:
@@ -11,20 +11,14 @@ cdef extern from "<tdsp/color/operation.h>" namespace "tdsp::Operation::Unary":
     cdef Unary NEGATE
 
 cdef extern from "<tdsp/color/operation.h>" namespace "tdsp::Operation":
-    cdef cppclass Commutative:
+    cdef cppclass Binary:
         pass
 
-cdef extern from "<tdsp/color/operation.h>" namespace "tdsp::Operation::Commutative":
-    cdef Commutative ADD
-    cdef Commutative MAX
-    cdef Commutative MIN
-    cdef Commutative MUL
-
-cdef extern from "<tdsp/color/operation.h>" namespace "tdsp::Operation":
-    cdef cppclass NonCommutative:
-        pass
-
-cdef extern from "<tdsp/color/operation.h>" namespace "tdsp::Operation::NonCommutative":
-    cdef NonCommutative DIV
-    cdef NonCommutative SUB
-    cdef NonCommutative POW
+cdef extern from "<tdsp/color/operation.h>" namespace "tdsp::Operation::Binary":
+    cdef Binary ADD
+    cdef Binary DIV
+    cdef Binary MAX
+    cdef Binary MIN
+    cdef Binary MUL
+    cdef Binary POW
+    cdef Binary SUB

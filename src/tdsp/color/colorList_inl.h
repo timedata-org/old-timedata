@@ -11,7 +11,7 @@ namespace tdsp {
 template <typename T>
 std::vector<T> duplicate(std::vector<T> const& v, size_t count) {
     std::vector<T> result;
-    for (auto i = 0; i < count; ++i)
+    for (size_t i = 0; i < count; ++i)
         result.insert(result.end(), v.begin(), v.end());
     return result;
 }
