@@ -12,12 +12,12 @@ struct Operation {
     enum class Binary {ADD, DIV, MAX, MIN, MUL, POW, SUB, size};
 };
 
-void run(Operation::Unary, ColorList&);
+void run(Operation::Unary, ColorList& out);
 
-void runLeft(Operation::Binary, float, ColorList&);
-void runLeft(Operation::Binary, ColorList const&, ColorList&);
+void runLeft(Operation::Binary, float, ColorList& out);
+void runLeft(Operation::Binary, ColorList const&, ColorList& out);
 
-void runRight(Operation::Binary, float, ColorList&);
-void runRight(Operation::Binary, ColorList const&, ColorList&);
+void runRight(Operation::Binary, float, ColorList& out);
+void runRight(Operation::Binary, ColorList const&, ColorList& out);
 
 } // tdsp
