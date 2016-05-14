@@ -14,6 +14,8 @@ cdef extern from "<tdsp/color/names_inl.h>" namespace "tdsp":
         float& at(int)
 
     float invert(float, float)
+    float normalize(float, float)
+    void rotate(Color&, int)
     bool stringToColor(const char*, Color, Base)
     string colorToString(float r, float g, float b, Base)
     bool cmpToRichcmp(float cmp, int richcmp)
@@ -21,6 +23,29 @@ cdef extern from "<tdsp/color/names_inl.h>" namespace "tdsp":
 
 
 cdef class _Color:
+    """A Color is an immutable RGB floating point color.
+
+       A Color looks very much like a Python tuple with three floating point
+       numbers, with the big exception that operators like + and * perform
+       arithmetic, not list-style operations.
+
+       The constructor for Color takes a triple of numbers but also strings
+       representing human-readable color names like "red" and "green".
+
+       Color supports the operations +, -, *, /, %, pow, and ~ (which means
+       "take the complementary color").
+
+       Colors are very lightweight - about half the size of a corresponding
+       Python tuple and more than twice as fast to create and copy.  Colors are
+       also immutable - all operations on Colors have to create a new Color.
+
+       There are two models of color.  The base class Color is normalized so
+       that the standard range for output signals - that is, outout color
+       components - is [0.0, 1.0].  As always, intermediate signals can be
+       greater than 1 or even negative.
+
+       The derived class Color256 has a standard output range of [0, 255] to
+    """
     cdef float red
     cdef float green
     cdef float blue
@@ -29,6 +54,12 @@ cdef class _Color:
 
     cdef Base _base(self):
         return normal
+
+    cdef float _ratio(self):
+        return 255.0 if (<int> self._base()) else 1.0
+
+    cdef float _norm(self, float x):
+        return normalize(x, self._ratio())
 
     def __init__(self, *args):
         cdef Color frame
@@ -68,8 +99,23 @@ cdef class _Color:
         return self.blue
 
     @property
-    def base(self):
-        return <int> self._base()
+    def ratio(self):
+        """Return the maximum ratio for this color range:  1.0 for Color
+           and 255.0 for Color256."""
+        return self._ratio()
+
+    def normalized(self):
+        """Return a color normalized into this color range."""
+        return self.__class__(self._norm(self.red),
+                              self._norm(self.green),
+                              self._norm(self.blue))
+
+    def rotated(self, int positions):
+        """Return a color with the components rotated."""
+        cdef Color c
+        c = makeColor(self.red, self.green, self.blue)
+        rotate(c, positions)
+        return self.__class__(c.at(0), c.at(1), c.at(2))
 
     def __getitem__(self, object key):
         if isinstance(key, slice):
@@ -90,14 +136,14 @@ cdef class _Color:
     def __add__(self, c):
         c = self.__class__(c)
         return self.__class__(self.red + c.red,
-                      self.green + c.green,
-                      self.blue + c.blue)
+                              self.green + c.green,
+                              self.blue + c.blue)
 
     def __truediv__(self, c):
         c = self.__class__(c)
         return self.__class__(self.red / c.red,
-                      self.green / c.green,
-                      self.blue / c.blue)
+                              self.green / c.green,
+                              self.blue / c.blue)
 
     def __divmod__(self, c):
         c = self.__class__(c)
@@ -111,8 +157,8 @@ cdef class _Color:
         cdef float i
         i = 255 if (<int> self._base() == 1) else 1
         return self.__class__(invert(self.red, i),
-                      invert(self.green, i),
-                      invert(self.blue, i))
+                              invert(self.green, i),
+                              invert(self.blue, i))
 
     def __len__(self):
         return 3
@@ -120,8 +166,8 @@ cdef class _Color:
     def __mod__(self, c):
         c = self.__class__(c)
         return self.__class__(self.red % c.red,
-                      self.green % c.green,
-                      self.blue % c.blue)
+                              self.green % c.green,
+                              self.blue % c.blue)
 
     def __mul__(self, c):
         c = self.__class__(c)
