@@ -10,6 +10,8 @@ cdef extern from "<tdsp/color/colorList_inl.h>" namespace "tdsp":
     bool sliceIntoVector(ColorList& _in, ColorList& out,
                          int begin, int end, int step)
 
+    void rotate(ColorList&, int positions)
+
     void absColor(ColorList&)
     void negateColor(ColorList&)
     void invertColor(ColorList&)
@@ -117,9 +119,8 @@ cdef class _ColorList:
         cdef _ColorList cl
         if isinstance(key, slice):
             begin, end, step = key.indices(self.colors.size())
-            print(type(x))
-            cl = self._toColorList(x)
-            if not sliceIntoVector(cl.colors, self.colors, begin, end, step):
+            if not sliceIntoVector(self._toColorList(x).colors, self.colors,
+                                   begin, end, step):
                 raise ValueError('attempt to assign sequence of one size '
                                  'to extended slice of another size')
         else:
@@ -140,6 +141,9 @@ cdef class _ColorList:
 
     def clear(self):
         self.colors.clear()
+
+    def rotate(self, int positions):
+        rotate(self.colors, positions)
 
     def reverse(self):
         reverse(self.colors)

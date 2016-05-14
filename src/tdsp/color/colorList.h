@@ -3,6 +3,7 @@
 #include <string>
 #include <vector>
 
+#include <tdsp/base/rotate.h>
 #include <tdsp/color/color.h>
 
 namespace tdsp {
