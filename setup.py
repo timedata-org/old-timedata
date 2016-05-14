@@ -52,6 +52,8 @@ class Local(distutils.core.Command):
 LIBRARIES = [] if platform.system() in ('Darwin', 'Linux') else ['m']
 
 COMPILE_ARGS = [
+    '-O3',
+    '-DNDEBUG',
     '-Wno-unused-function',
     '-std=c++11',
     '-Wno-tautological-constant-out-of-range-compare',
