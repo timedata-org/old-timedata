@@ -6,18 +6,19 @@
 #include <tdsp/color/colorList.h>
 
 namespace tdsp {
+namespace operation {
 
-struct Operation {
-    enum class Unary {ABS, CLEAR, INVERT, NEGATE, size};
-    enum class Binary {ADD, DIV, MAX, MIN, MUL, POW, SUB, size};
-};
+enum class Unary {ABS, CLEAR, INVERT, NEGATE, size};
+enum class Binary {ADD, DIV, MAX, MIN, MUL, POW, SUB, size};
+enum class Side {LEFT, RIGHT, size};
 
-void run(Operation::Unary, ColorList& out);
+void run(Unary, ColorList&);
 
-void runLeft(Operation::Binary, float, ColorList& out);
-void runLeft(Operation::Binary, ColorList const&, ColorList& out);
+template <typename X>
+void run(Binary, Side, X const&, ColorList&);
 
-void runRight(Operation::Binary, float, ColorList& out);
-void runRight(Operation::Binary, ColorList const&, ColorList& out);
+template <typename X, typename Y>
+void run(Binary, Side, X const&, Y const&, ColorList&);
 
+} // operation
 } // tdsp

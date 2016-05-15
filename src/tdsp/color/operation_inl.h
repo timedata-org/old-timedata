@@ -1,20 +1,24 @@
 #pragma once
 
+#include <limits>
+
 #include <tdsp/color/operation.h>
 #include <tdsp/color/colorList_inl.h>
 
 namespace tdsp {
+namespace operation {
 namespace detail {
 
-using Unary = Operation::Unary;
-using Binary = Operation::Binary;
+/*
+ Unary functions.
+*/
 
-template <Unary> float unary(float);
+template <Unary> float run(float);
 
-template <> inline float unary<Unary::ABS>(float x)    { return std::abs(x); }
-template <> inline float unary<Unary::CLEAR>(float)    { return 0.0f; }
-template <> inline float unary<Unary::INVERT>(float x) { return invert(x); }
-template <> inline float unary<Unary::NEGATE>(float x) { return -x; }
+template <> float run<Unary::ABS>(float x)    { return std::abs(x); }
+template <> float run<Unary::CLEAR>(float)    { return 0.0f; }
+template <> float run<Unary::INVERT>(float x) { return invert(x); }
+template <> float run<Unary::NEGATE>(float x) { return -x; }
 
 template <typename Function>
 void assignEach(ColorList& colors, Function f) {
@@ -23,95 +27,97 @@ void assignEach(ColorList& colors, Function f) {
             c = f(c);
 }
 
-template <Binary> float binary(float x, float y);
-
-template <> float binary<Binary::ADD>(float x, float y) { return x + y; }
-template <> float binary<Binary::DIV>(float x, float y) { return x / y; }
-template <> float binary<Binary::MAX>(float x, float y) { return std::max(x, y); }
-template <> float binary<Binary::MIN>(float x, float y) { return std::min(x, y); }
-template <> float binary<Binary::MUL>(float x, float y) { return x * y; }
-template <> float binary<Binary::POW>(float x, float y) { return pow(x, y); }
-template <> float binary<Binary::SUB>(float x, float y) { return x - y; }
-
-template <Binary bin>
-float reverse(float x, float y) { return binary<bin>(y, x); }
-
-template <typename Function>
-void assign(float in, ColorList& out, Function f) {
-    for (auto& color: out)
-        for (auto& c: color)
-            c = f(in, c);
-}
-
-template <typename Function>
-void assign(ColorList const& in, ColorList& out, Function f) {
-    auto size = std::min(in.size(), out.size());
-    for (size_t i = 0; i < size; ++i) {
-        for (auto j = 0; j < 3; ++j) {
-            auto& c = out[i][j];
-            c = f(in[i][j], c);
-        }
-    }
-}
-
-template <typename Input>
-void runLeft(Binary op, Input const& in, ColorList& out) {
-    switch (op) {
-        case Binary::ADD: return assign(in, out, binary<Binary::ADD>);
-        case Binary::DIV: return assign(in, out, binary<Binary::DIV>);
-        case Binary::MAX: return assign(in, out, binary<Binary::MAX>);
-        case Binary::MIN: return assign(in, out, binary<Binary::MIN>);
-        case Binary::MUL: return assign(in, out, binary<Binary::MUL>);
-        case Binary::POW: return assign(in, out, binary<Binary::POW>);
-        case Binary::SUB: return assign(in, out, binary<Binary::SUB>);
-        case Binary::size: return;
-    }
-}
-
-template <typename Input>
-void runRight(Binary op, Input const& in, ColorList& out) {
-    switch (op) {
-        case Binary::ADD: return assign(in, out, reverse<Binary::ADD>);
-        case Binary::DIV: return assign(in, out, reverse<Binary::DIV>);
-        case Binary::MAX: return assign(in, out, reverse<Binary::MAX>);
-        case Binary::MIN: return assign(in, out, reverse<Binary::MIN>);
-        case Binary::MUL: return assign(in, out, reverse<Binary::MUL>);
-        case Binary::POW: return assign(in, out, reverse<Binary::POW>);
-        case Binary::SUB: return assign(in, out, reverse<Binary::SUB>);
-        case Binary::size: return;
-    }
-}
-
 inline void run(Unary op, ColorList& out) {
     switch (op) {
-        case Unary::ABS:    return assignEach(out, unary<Unary::ABS>);
-        case Unary::CLEAR:  return assignEach(out, unary<Unary::CLEAR>);
-        case Unary::INVERT: return assignEach(out, unary<Unary::INVERT>);
-        case Unary::NEGATE: return assignEach(out, unary<Unary::NEGATE>);
+        case Unary::ABS:    return assignEach(out, run<Unary::ABS>);
+        case Unary::CLEAR:  return assignEach(out, run<Unary::CLEAR>);
+        case Unary::INVERT: return assignEach(out, run<Unary::INVERT>);
+        case Unary::NEGATE: return assignEach(out, run<Unary::NEGATE>);
         case Unary::size:   return;
     }
 }
 
+/*
+ Binary functions.
+*/
+
+template <Binary> float run(float x, float y);
+
+template <> float run<Binary::ADD>(float x, float y) { return x + y; }
+template <> float run<Binary::DIV>(float x, float y) { return x / y; }
+template <> float run<Binary::MAX>(float x, float y) { return std::max(x, y); }
+template <> float run<Binary::MIN>(float x, float y) { return std::min(x, y); }
+template <> float run<Binary::MUL>(float x, float y) { return x * y; }
+template <> float run<Binary::POW>(float x, float y) { return pow(x, y); }
+template <> float run<Binary::SUB>(float x, float y) { return x - y; }
+
+inline size_t listSize(float) {
+    return std::numeric_limits<size_t>::max();
+}
+
+inline size_t listSize(ColorList const& cl) {
+    return cl.size();
+}
+
+inline float get(float x, size_t, size_t) {
+    return x;
+}
+
+inline float get(ColorList const& x, size_t i, size_t j) {
+    return x[i][j];
+}
+
+template <Binary op, Side side, typename X, typename Y>
+void run(size_t size, X const& x, Y const& y, ColorList& out) {
+    for (size_t i = 0; i < size; ++i) {
+        for (auto j = 0; j < 3; ++j) {
+            auto a = get(x, i, j), b = get(y, i, j);
+            out[i][j] = (side == Side::LEFT) ? run<op>(a, b) : run<op>(b, a);
+        }
+    }
+}
+
+template <Side side, typename X, typename Y>
+void run(Binary op, size_t size, X const& x, Y const& y, ColorList& out) {
+    switch (op) {
+        case Binary::ADD: return run<Binary::ADD, side>(size, x, y, out);
+        case Binary::DIV: return run<Binary::DIV, side>(size, x, y, out);
+        case Binary::MAX: return run<Binary::MAX, side>(size, x, y, out);
+        case Binary::MIN: return run<Binary::MIN, side>(size, x, y, out);
+        case Binary::MUL: return run<Binary::MUL, side>(size, x, y, out);
+        case Binary::POW: return run<Binary::POW, side>(size, x, y, out);
+        case Binary::SUB: return run<Binary::SUB, side>(size, x, y, out);
+        case Binary::size: return;
+    }
+}
+
+template <typename X, typename Y>
+void run(Side s, Binary op, size_t size, X const& x, Y const& y, ColorList& o) {
+    if (s == Side::LEFT)
+        run<Side::LEFT>(op, size, x, y, o);
+    else
+        run<Side::RIGHT>(op, size, x, y, o);
+}
+
 } // namespace detail
 
-void run(Operation::Unary op, ColorList& out) {
+inline
+void run(Unary op, ColorList& out) {
     return detail::run(op, out);
 }
 
-void runLeft(Operation::Binary op, float in, ColorList& out) {
-    return detail::runLeft(op, in, out);
+template <typename Y>
+void run(Binary op, Side side, Y const& y, ColorList& out) {
+    auto size = std::min(out.size(), y.size());
+    detail::run(side, op, size, out, y, out);
 }
 
-void runLeft(Operation::Binary op, ColorList const& in, ColorList& out) {
-    return detail::runLeft(op, in, out);
+template <typename X, typename Y>
+void run(Binary op, Side side, X const& x, Y const& y, ColorList& out) {
+    auto size = std::min(x.size(), y.size());
+    out.resize(size);
+    detail::run(side, op, size, x, y, out);
 }
 
-void runRight(Operation::Binary op, float in, ColorList& out) {
-    return detail::runRight(op, in, out);
-}
-
-void runRight(Operation::Binary op, ColorList const& in, ColorList& out) {
-    return detail::runRight(op, in, out);
-}
-
+} // operation
 } // tdsp
