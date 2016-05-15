@@ -24,6 +24,9 @@ def scale_triples(colors):
 def scale_tdsp(colors):
     colors *= 2
 
+def scale_new(colors):
+    colors = colors * 2
+
 def run(command, value, number=1000):
     return timeit.Timer(lambda: command(value)).timeit(number=number)
 
@@ -32,6 +35,8 @@ print('func:   ', run(scale_functional, CLASSIC))
 print('classic:', run(scale_classic, CLASSIC))
 print('triples:', run(scale_triples, TRIPLES))
 print('tdsp:   ', run(scale_tdsp, TDSP))
+print('tdsp2:  ', run(scale_new, TDSP))
+
 
 def gamma_classic(colors):
     for i in range(len(colors)):
@@ -44,6 +49,9 @@ def gamma_triples(colors):
 
 def gamma_tdsp(colors):
     colors **= 1.2
+
+def gamma_new(colors):
+    colors = colors ** 1.2
 
 # From https://github.com/scottjgibson/PixelPi/blob/master/pixelpi.py
 LPD8806 = [int(pow(float(i) / 255.0, 2.5) * 255.0 + 0.5) for i in range(256)]
@@ -66,6 +74,7 @@ CLASSIC = [int(c) for c in CLASSIC] # clear it out!
 print('classic table:', run(gamma_classic_table, CLASSIC))
 print('triples:      ', run(gamma_triples, TRIPLES))
 print('tdsp:         ', run(gamma_tdsp, TDSP))
+print('tdsp new:     ', run(gamma_new, TDSP))
 
 
 # From https://stackoverflow.com/questions/449560
