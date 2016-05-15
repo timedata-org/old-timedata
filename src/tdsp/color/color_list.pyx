@@ -268,6 +268,7 @@ cdef class _ColorList:
 
     # Operations where self is on the left side.
     def __add__(self, c):
+        # TODO: self might not be ColorList!!
         cl = self[:]
         cl += c
         return cl
