@@ -34,7 +34,7 @@ cdef extern from "<tdsp/color/operation.h>" namespace "tdsp::operation::Side":
     cdef Side LEFT
     cdef Side RIGHT
 
-cdef extern from "<tdsp/color/operation.h>" namespace "tdsp::operation":
+cdef extern from "<tdsp/color/operation_inl.h>" namespace "tdsp::operation":
     void run(Unary, ColorList& out)
-    void run[X](Binary, Side, X, ColorList& out)
-    void run[X, Y](Binary, Side, X, Y, ColorList& out)
+    void run[X](Binary, Side, X&, ColorList& out)
+    void run[X, Y](Binary, Side, X&, Y&, ColorList& out)
