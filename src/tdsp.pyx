@@ -12,6 +12,7 @@ include "tdsp/base/wrapper.pyx"
 include "tdsp/color/color.pyx"
 include "tdsp/color/operation.pyx"
 include "tdsp/color/color_list.pyx"
+include "tdsp/color/old_color_list.pyx"
 include "tdsp/signal/_combiner.pyx"
 include "tdsp/signal/_stripe.pyx"
 include "tdsp/signal/fade.pyx"
@@ -24,6 +25,8 @@ locals().update(
     ColorList256=_ColorList256,
     Combiner=_Combiner,
     Fade=_FadeImpl,
+    OldColorList=_OldColorList,
+    OldColorList256=_OldColorList256,
     Render3=_Render3Impl,
     Stripe=_Stripe,
     )
