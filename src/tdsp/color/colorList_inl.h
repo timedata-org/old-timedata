@@ -8,16 +8,16 @@
 
 namespace tdsp {
 
-template <typename T>
-std::vector<T> duplicate(std::vector<T> const& v, size_t count) {
-    std::vector<T> result;
+inline
+ColorList duplicate(ColorList const& v, size_t count) {
+    ColorList result;
     for (size_t i = 0; i < count; ++i)
         result.insert(result.end(), v.begin(), v.end());
     return result;
 }
 
-template <typename T>
-void reverse(std::vector<T>& v) {
+inline
+void reverse(ColorList& v) {
     std::reverse(v.begin(), v.end());
 }
 
@@ -35,18 +35,18 @@ inline std::string toString(ColorList const& colors, Base base) {
     return result;
 }
 
-template <typename T>
-std::vector<T> sliceVector(
-        std::vector<T> const& in, int begin, int end, int step) {
+inline
+ColorList sliceVector(
+        ColorList const& in, int begin, int end, int step) {
     // TODO: is this used?
     auto slice = make<Slice>(begin, end, step);
-    std::vector<T> out;
+    ColorList out;
     forEach(slice, [&](int j) { out.push_back(in[j]); });
     return out;
 }
 
-template <typename T>
-bool sliceIntoVector(std::vector<T> const& in, std::vector<T>& out,
+inline
+bool sliceIntoVector(ColorList const& in, ColorList& out,
                      int begin, int end, int step) {
     auto slice = make<Slice>(begin, end, step);
     auto size = slice.size();
