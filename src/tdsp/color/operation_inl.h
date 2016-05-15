@@ -106,13 +106,13 @@ void run(Unary op, ColorList& out) {
 
 template <typename Y>
 void run(Binary op, Side side, Y const& y, ColorList& out) {
-    auto size = std::min(out.size(), y.size());
+    auto size = std::min(detail::listSize(out), detail::listSize(y));
     detail::run(side, op, size, out, y, out);
 }
 
 template <typename X, typename Y>
 void run(Binary op, Side side, X const& x, Y const& y, ColorList& out) {
-    auto size = std::min(x.size(), y.size());
+    auto size = std::min(detail::listSize(x), detail::listSize(y));
     out.resize(size);
     detail::run(side, op, size, x, y, out);
 }

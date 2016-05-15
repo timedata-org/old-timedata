@@ -101,6 +101,24 @@ cdef class _ColorList:
         else:
             return self._make(value)
 
+    cdef _new_operation(self, object x, Binary op, Side side):
+        """An operation that creates a new ColorList."""
+        cdef _ColorList cl
+        cl = self._make()
+        if isinstance(x, Number):
+            run(op, side, <float> x, self.colors, cl.colors)
+        else:
+            run(op, side, self._toColorList(x).colors, self.colors, cl.colors)
+        return cl
+
+    cdef _into_operation(self, object x, Binary op, Side side):
+        """An operation that mutates this ColorList."""
+        if isinstance(x, Number):
+            run(op, side, <float> x, self.colors)
+        else:
+            run(op, side, self._toColorList(x).colors, self.colors)
+
+
     def __cinit__(self, items=None, *,
                   color_maker=_Color, class_name=u'ColorList'):
         """Construct a ColorList with an iterator of items, each of which looks
