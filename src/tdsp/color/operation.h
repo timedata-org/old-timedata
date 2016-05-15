@@ -12,13 +12,13 @@ enum class Unary {ABS, CLEAR, INVERT, NEGATE, last = NEGATE};
 enum class Binary {ADD, DIV, MAX, MIN, MUL, POW, SUB, last = SUB};
 enum class Side {LEFT, RIGHT, last = RIGHT};
 
-void run(Unary, ColorList&);
+void runUnary(Unary, ColorList& out);
 
-template <typename X>
-void run(Binary, Side, X const&, ColorList&);
+void runInto(Binary, Side, float, ColorList&);
+void runInto(Binary, Side, ColorList const&, ColorList&);
 
-template <typename X, typename Y>
-void run(Binary, Side, X const&, Y const&, ColorList&);
+void runTogether(Binary, Side, ColorList const&, float, ColorList&);
+void runTogether(Binary, Side, ColorList const&, ColorList const&, ColorList&);
 
 } // operation
 } // tdsp

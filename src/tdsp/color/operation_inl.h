@@ -20,19 +20,19 @@ template <> float run<Unary::CLEAR>(float)    { return 0.0f; }
 template <> float run<Unary::INVERT>(float x) { return invert(x); }
 template <> float run<Unary::NEGATE>(float x) { return -x; }
 
-template <typename Function>
-void assignEach(ColorList& colors, Function f) {
+template <Unary op>
+void apply(ColorList& colors) {
     for (auto& color: colors)
         for (auto& c: color)
-            c = f(c);
+            c = run<op>(c);
 }
 
 inline void run(Unary op, ColorList& out) {
     switch (op) {
-        case Unary::ABS:    return assignEach(out, run<Unary::ABS>);
-        case Unary::CLEAR:  return assignEach(out, run<Unary::CLEAR>);
-        case Unary::INVERT: return assignEach(out, run<Unary::INVERT>);
-        case Unary::NEGATE: return assignEach(out, run<Unary::NEGATE>);
+        case Unary::ABS:    return apply<Unary::ABS>(out);
+        case Unary::CLEAR:  return apply<Unary::CLEAR>(out);
+        case Unary::INVERT: return apply<Unary::INVERT>(out);
+        case Unary::NEGATE: return apply<Unary::NEGATE>(out);
     }
 }
 
@@ -49,14 +49,6 @@ template <> float run<Binary::MIN>(float x, float y) { return std::min(x, y); }
 template <> float run<Binary::MUL>(float x, float y) { return x * y; }
 template <> float run<Binary::POW>(float x, float y) { return pow(x, y); }
 template <> float run<Binary::SUB>(float x, float y) { return x - y; }
-
-inline size_t listSize(float) {
-    return std::numeric_limits<size_t>::max();
-}
-
-inline size_t listSize(ColorList const& cl) {
-    return cl.size();
-}
 
 inline float get(float x, size_t, size_t) {
     return x;
@@ -99,20 +91,29 @@ void run(Side s, Binary op, size_t size, X const& x, Y const& y, ColorList& o) {
 
 } // namespace detail
 
-inline
-void run(Unary op, ColorList& out) {
+inline void runUnary(Unary op, ColorList& out) {
     return detail::run(op, out);
 }
 
-template <typename Y>
-void run(Binary op, Side side, Y const& y, ColorList& out) {
-    auto size = std::min(detail::listSize(out), detail::listSize(y));
-    detail::run(side, op, size, out, y, out);
+inline void runInto(Binary op, Side side, float x, ColorList& out) {
+    detail::run(side, op, out.size(), x, out, out);
 }
 
-template <typename X, typename Y>
-void run(Binary op, Side side, X const& x, Y const& y, ColorList& out) {
-    auto size = std::min(detail::listSize(x), detail::listSize(y));
+inline void runInto(Binary op, Side side, ColorList& x, ColorList& out) {
+    detail::run(side, op, std::min(x.size(), out.size()), x, out, out);
+}
+
+inline void runTogether(Binary op, Side side,
+                        ColorList const& x, float y,
+                        ColorList& out) {
+    out.resize(x.size());
+    detail::run(side, op, x.size(), x, y, out);
+}
+
+inline void runTogether(Binary op, Side side,
+                        ColorList const& x, ColorList const& y,
+                        ColorList& out) {
+    auto size = std::min(x.size(), y.size());
     out.resize(size);
     detail::run(side, op, size, x, y, out);
 }
