@@ -334,6 +334,10 @@ cdef class _ColorList:
             raise ValueError('Can\'t compare two different color models.')
         return cmpToRichcmp(compareContainers(self.colors, other.colors), rcmp)
 
+    def __sizeof__(self):
+        # 12 bytes per color plus two pointers.
+        return 12 * self.colors.size() + 8 + 8
+
     def __str__(self):
         return toString(self.colors, (<_Color> self._color_maker())._base()
                         ).decode('ascii')
