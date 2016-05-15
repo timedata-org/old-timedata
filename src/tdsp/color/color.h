@@ -5,9 +5,9 @@
 
 namespace tdsp {
 
-enum class RGB { red, green, blue, size };
-enum class RGBW { red, green, blue, white, size };
-enum class HSB { hue, saturation, brightness, size };
+enum class RGB { red, green, blue, last = blue };
+enum class RGBW { red, green, blue, white, last = white };
+enum class HSB { hue, saturation, brightness, last = brightness };
 // enum class Stereo { left, right };
 
 using Color = Sample<RGB>;
@@ -18,6 +18,6 @@ inline Color makeColor(float r, float g, float b) {
 }
 
 /** Computational base - 0..1 float or 0..255 integer? */
-enum class Base {normal, integer, size};
+enum class Base {normal, integer, last = integer};
 
 } // tdsp

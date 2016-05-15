@@ -33,7 +33,6 @@ inline void run(Unary op, ColorList& out) {
         case Unary::CLEAR:  return assignEach(out, run<Unary::CLEAR>);
         case Unary::INVERT: return assignEach(out, run<Unary::INVERT>);
         case Unary::NEGATE: return assignEach(out, run<Unary::NEGATE>);
-        case Unary::size:   return;
     }
 }
 
@@ -87,7 +86,6 @@ void run(Binary op, size_t size, X const& x, Y const& y, ColorList& out) {
         case Binary::MUL: return run<Binary::MUL, side>(size, x, y, out);
         case Binary::POW: return run<Binary::POW, side>(size, x, y, out);
         case Binary::SUB: return run<Binary::SUB, side>(size, x, y, out);
-        case Binary::size: return;
     }
 }
 

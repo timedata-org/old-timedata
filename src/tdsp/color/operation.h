@@ -8,9 +8,9 @@
 namespace tdsp {
 namespace operation {
 
-enum class Unary {ABS, CLEAR, INVERT, NEGATE, size};
-enum class Binary {ADD, DIV, MAX, MIN, MUL, POW, SUB, size};
-enum class Side {LEFT, RIGHT, size};
+enum class Unary {ABS, CLEAR, INVERT, NEGATE, last = NEGATE};
+enum class Binary {ADD, DIV, MAX, MIN, MUL, POW, SUB, last = SUB};
+enum class Side {LEFT, RIGHT, last = RIGHT};
 
 void run(Unary, ColorList&);
 

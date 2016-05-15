@@ -14,6 +14,11 @@ class TestColorList(unittest.TestCase):
         self.assertEqual(str(cl), str(ColorList(['white'])))
         self.assertEqual(cl, ColorList(['white']))
 
+    def test_arithmetic(self):
+        cl = ColorList(('red', 'green', 'blue'))
+        cl = self.assertEqual(cl + cl, cl * 2)
+        # self.assertEqual(2 + (2 * cl * 3) + 2 - 2 * cl, 4 + 4 * cl)
+
     def test_slicing(self):
         cl = ColorList()
         cl[:] = 'red', 'green', 'blue'
