@@ -257,6 +257,9 @@ cdef class _Color:
         return colorToString(self.red, self.green, self.blue, self._base()
                              ).decode('ascii')
 
+    def __sizeof__(self):
+        return 12  # 3 4-byte floats.
+
     def __sub__(self, c):
         c = self.__class__(c)
         return self.__class__(self.red - c.red,
