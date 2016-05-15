@@ -1,4 +1,4 @@
-from numbers import Number
+import math, numbers
 
 cdef extern from "<tdsp/color/names_inl.h>" namespace "tdsp":
     cdef cppclass Base:
@@ -69,7 +69,7 @@ cdef class _Color:
 
         if len(args) == 1:
             args = args[0]
-            if isinstance(args, Number):
+            if isinstance(args, numbers.Number):
                 self.red = self.green = self.blue = args
                 return
 
@@ -139,6 +139,11 @@ cdef class _Color:
                               self.green + c.green,
                               self.blue + c.blue)
 
+    def __ceil__(self):
+        return self.__class__(math.ceil(self.red),
+                              math.ceil(self.green),
+                              math.ceil(self.blue))
+
     def __truediv__(self, c):
         c = self.__class__(c)
         return self.__class__(self.red / c.red,
@@ -151,6 +156,11 @@ cdef class _Color:
         dg, mg = divmod(self.green, c.green)
         db, mb = divmod(self.blue, c.blue)
         return self.__class__(dr, dg, db), self.__class__(mr, mg, mb)
+
+    def __floor__(self):
+        return self.__class__(math.floor(self.red),
+                              math.floor(self.green),
+                              math.floor(self.blue))
 
     def __invert__(self):
         """Return the complementary color."""
@@ -265,6 +275,11 @@ cdef class _Color:
         return self.__class__(self.red - c.red,
                               self.green - c.green,
                               self.blue - c.blue)
+
+    def __trunc__(self):
+        return self.__class__(math.trunc(self.red),
+                              math.trunc(self.green),
+                              math.trunc(self.blue))
 
 
 cdef class _Color256(_Color):
