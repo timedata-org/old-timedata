@@ -1,7 +1,10 @@
 # include "_operation.pyx"
 
 cdef extern from "<tdsp/color/operation.h>" namespace "tdsp":
-    ctypedef vector[Color] ColorList
+    cppclass ColorList:
+        Color& operator[](size_t)
+        size_t size()
+        void resize(size_t)
 
 cdef extern from "<tdsp/color/operation.h>" namespace "tdsp::operation":
     cdef cppclass Unary:

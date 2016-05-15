@@ -8,22 +8,31 @@
 
 namespace tdsp {
 
-using ColorList = std::vector<Color>;
+using ColorListBase = std::vector<Color>;
 
-template <typename T>
-std::vector<T> duplicate(std::vector<T> const&, size_t count);
+#if 0
 
-template <typename T>
-void reverse(std::vector<T>&);
+using ColorList = ColorListBase;
+
+#else
+
+struct ColorList : public ColorListBase {
+    using ColorListBase::ColorListBase;
+
+};
+
+#endif
+
+ColorList duplicate(ColorList const&, size_t count);
+
+void reverse(ColorList&);
 
 std::string toString(ColorList const&, Base base = Base::normal);
 
-template <typename T>
-std::vector<T> sliceVector(
-    std::vector<T> const& in, int begin, int end, int step);
+ColorList sliceVector(
+    ColorList const& in, int begin, int end, int step);
 
-template <typename T>
-bool sliceIntoVector(std::vector<T> const& in, std::vector<T>& out,
+bool sliceIntoVector(ColorList const& in, ColorList& out,
                      int begin, int end, int step);
 
 template <typename Function>

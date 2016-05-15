@@ -122,7 +122,7 @@ inline void runInto(Binary op, Side side, float x, ColorList& out) {
     detail::run(side, op, out.size(), x, out, out);
 }
 
-inline void runInto(Binary op, Side side, ColorList& x, ColorList& out) {
+inline void runInto(Binary op, Side side, ColorList const& x, ColorList& out) {
     detail::run(side, op, std::min(x.size(), out.size()), x, out, out);
 }
 
