@@ -101,23 +101,33 @@ cdef class _ColorList:
         else:
             return self._make(value)
 
-    cdef _new_operation(self, object x, Binary op, Side side):
+    @staticmethod
+    cdef _new_operation(object x, object y, Binary op):
         """An operation that creates a new ColorList."""
-        cdef _ColorList cl
-        cl = self._make()
-        if isinstance(x, Number):
-            run(op, side, <float> x, self.colors, cl.colors)
+        cdef _ColorList cl, result
+        cdef Side side
+        if isinstance(x, _ColorList):
+            side = LEFT
+            cl = x
         else:
-            run(op, side, self._toColorList(x).colors, self.colors, cl.colors)
+            side = RIGHT
+            cl = y
+            y = x
+        result = x._make()
+
+        if isinstance(y, Number):
+            runTogether(op, side, cl.colors, <float> y, result.colors)
+        else:
+            runTogether(
+                op, side, cl.colors, cl._toColorList(y).colors, result.colors)
         return cl
 
-    cdef _into_operation(self, object x, Binary op, Side side):
+    cdef _into_operation(self, object x, Binary op, Side side=LEFT):
         """An operation that mutates this ColorList."""
         if isinstance(x, Number):
-            run(op, side, <float> x, self.colors)
+            runInto(op, side, <float> x, self.colors)
         else:
-            run(op, side, self._toColorList(x).colors, self.colors)
-
+            runInto(op, side, self._toColorList(x).colors, self.colors)
 
     def __cinit__(self, items=None, *,
                   color_maker=_Color, class_name=u'ColorList'):
