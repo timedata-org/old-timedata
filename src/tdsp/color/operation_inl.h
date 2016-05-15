@@ -9,6 +9,15 @@ namespace tdsp {
 namespace operation {
 namespace detail {
 
+/// Helper functions to let us treat integers and lists the same way.
+inline float get(float x, size_t, size_t) {
+    return x;
+}
+
+inline float get(ColorList const& x, size_t i, size_t j) {
+    return x[i][j];
+}
+
 /*
  Unary functions.
 */
@@ -21,8 +30,15 @@ template <> float run<Unary::INVERT>(float x) { return invert(x); }
 template <> float run<Unary::NEGATE>(float x) { return -x; }
 
 template <Unary op>
-void apply(ColorList& colors) {
-    for (auto& color: colors)
+void apply(ColorList const& in, ColorList& out) {
+    for (auto i = 0; i < out.size(); ++i)
+        for (auto j = 0; j < 3; ++j)
+            out[i][j] = run<op>(get(in, i, j));
+}
+
+template <Unary op>
+void apply(ColorList& out) {
+    for (auto& color: out)
         for (auto& c: color)
             c = run<op>(c);
 }
@@ -33,6 +49,16 @@ inline void run(Unary op, ColorList& out) {
         case Unary::CLEAR:  return apply<Unary::CLEAR>(out);
         case Unary::INVERT: return apply<Unary::INVERT>(out);
         case Unary::NEGATE: return apply<Unary::NEGATE>(out);
+    }
+}
+
+template <typename Input>
+void run(Unary op, Input const& in, ColorList& out) {
+    switch (op) {
+        case Unary::ABS:    return apply<Unary::ABS>(in, out);
+        case Unary::CLEAR:  return apply<Unary::CLEAR>(in, out);
+        case Unary::INVERT: return apply<Unary::INVERT>(in, out);
+        case Unary::NEGATE: return apply<Unary::NEGATE>(in, out);
     }
 }
 
@@ -49,14 +75,6 @@ template <> float run<Binary::MIN>(float x, float y) { return std::min(x, y); }
 template <> float run<Binary::MUL>(float x, float y) { return x * y; }
 template <> float run<Binary::POW>(float x, float y) { return pow(x, y); }
 template <> float run<Binary::SUB>(float x, float y) { return x - y; }
-
-inline float get(float x, size_t, size_t) {
-    return x;
-}
-
-inline float get(ColorList const& x, size_t i, size_t j) {
-    return x[i][j];
-}
 
 template <Binary op, Side side, typename X, typename Y>
 void run(size_t size, X const& x, Y const& y, ColorList& out) {
@@ -91,8 +109,13 @@ void run(Side s, Binary op, size_t size, X const& x, Y const& y, ColorList& o) {
 
 } // namespace detail
 
-inline void runUnary(Unary op, ColorList& out) {
+inline void runInto(Unary op, ColorList& out) {
     return detail::run(op, out);
+}
+
+inline void runTogether(Unary op, ColorList const& in, ColorList& out) {
+    out.resize(in.size());
+    return detail::run(op, in, out);
 }
 
 inline void runInto(Binary op, Side side, float x, ColorList& out) {
