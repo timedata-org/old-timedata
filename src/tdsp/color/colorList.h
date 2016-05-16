@@ -89,4 +89,10 @@ void minInto(ColorList const& in, ColorList& out);
 void maxInto(float f, ColorList& out);
 void maxInto(ColorList const& in, ColorList& out);
 
+#if 0
+void addOver(ColorList const& x, ColorList const& y, ColorList&);
+void addOver(float x, ColorList const& y, ColorList&);
+void addOver(ColorList const& x, float y, ColorList&);
+#else
+#endif
 } // tdsp
