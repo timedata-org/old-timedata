@@ -21,8 +21,12 @@ cdef extern from "<tdsp/color/colorList_inl.h>" namespace "tdsp":
     void rotate(ColorList&, int positions)
 
     void absColor(ColorList&)
-    void negateColor(ColorList&)
+    void ceilColor(ColorList&)
+    void floorColor(ColorList&)
     void invertColor(ColorList&)
+    void negateColor(ColorList&)
+    void roundColor(ColorList&)
+    void truncColor(ColorList&)
 
     void addInto(float f, ColorList& out)
     void addInto(ColorList&, ColorList& out)
