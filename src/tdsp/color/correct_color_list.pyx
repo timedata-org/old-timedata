@@ -48,7 +48,7 @@ cdef class CColorList:
                              'to extended slice of another size')
         index = key
         if not self.colors.fixKey(index):
-            raise IndexError('ColorList index out of range')
+            raise IndexError('ColorList index out of range ' + str(index))
         if isinstance(x, str):
             x = _Color(x)
         r, g, b = x
@@ -192,6 +192,35 @@ cdef class CColorList:
             addOver(<float> self, _toCL(c).colors, cl.colors)
         else:
             addOver(CColorList(self).colors, (<CColorList> c).colors, cl.colors)
+        return cl
+
+    def __mul__(self, c):
+        cdef CColorList cl
+        cl = CColorList()
+        if isinstance(c, Number):
+            mulOver((<CColorList> self).colors, <float> c, cl.colors)
+        elif isinstance(self, CColorList):
+            mulOver((<CColorList> self).colors, _toCL(c).colors, cl.colors)
+        elif isinstance(self, Number):
+            mulOver(<float> self, _toCL(c).colors, cl.colors)
+        else:
+            mulOver(CColorList(self).colors, (<CColorList> c).colors, cl.colors)
+        return cl
+
+    def __pow__(self, c, mod):
+        cdef CColorList cl
+        if mod:
+            raise ValueError('Can\'t handle three operator pow')
+
+        cl = CColorList()
+        if isinstance(c, Number):
+            powOver((<CColorList> self).colors, <float> c, cl.colors)
+        elif isinstance(self, CColorList):
+            powOver((<CColorList> self).colors, _toCL(c).colors, cl.colors)
+        elif isinstance(self, Number):
+            powOver(<float> self, _toCL(c).colors, cl.colors)
+        else:
+            powOver(CColorList(self).colors, (<CColorList> c).colors, cl.colors)
         return cl
 
     def __len__(self):
