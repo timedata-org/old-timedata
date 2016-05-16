@@ -5,16 +5,20 @@
 
 namespace tdsp {
 
-using ColorNames = std::map<std::string, uint32_t>;
-using ColorNamesInverse = std::map<uint32_t, std::string>;
+using ColorMap = std::map<std::string, uint32_t>;
+using ColorMapInverse = std::map<uint32_t, std::string>;
+using ColorNames = std::set<std::string>;
+
+/** Names of hex colors we recognize. */
+ColorMap const& colorMap();
 
 /** Names of hex colors we recognize. */
 ColorNames const& colorNames();
 
-/** Best inverse of color names, taking into account secondaryColors. */
-ColorNamesInverse const& colorNamesInverse();
+/** Best inverse of color map, taking into account secondaryColors. */
+ColorMapInverse const& colorMapInverse();
 
 /** Alternate color names we recognize. */
-std::set<std::string> const& secondaryColors();
+ColorNames const& secondaryColors();
 
 }  // tdsp

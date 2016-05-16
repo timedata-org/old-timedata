@@ -15,7 +15,7 @@ TEST_CASE("color", "names") {
     REQUIRE(c[0] < 0);
     REQUIRE(colorToString(c, Base::normal) == "gray 50-++");
     forEach<Base>([](Base base) {
-        for (auto& i : colorNamesInverse()) {
+        for (auto& i : colorMapInverse()) {
             auto c = stringToColor(i.second.c_str(), base);
             REQUIRE(colorToString(c, base) == i.second);
         }

@@ -4,10 +4,10 @@
 
 namespace tdsp {
 
-inline ColorNamesInverse const& colorNamesInverse() {
+inline ColorMapInverse const& colorMapInverse() {
     auto construct = []() {
-        ColorNamesInverse inverse;
-        for (auto& i: colorNames()) {
+        ColorMapInverse inverse;
+        for (auto& i: colorMap()) {
             auto& name = i.first;
             auto& hex = i.second;
             if (secondaryColors().count(name))
@@ -22,8 +22,13 @@ inline ColorNamesInverse const& colorNamesInverse() {
     return inverse;
 }
 
-inline std::set<std::string> const& secondaryColors() {
-    static const std::set<std::string> colors{
+ColorNames const& colorNames() {
+    static const auto names = keySet(colorMap());
+    return names;
+}
+
+inline ColorNames const& secondaryColors() {
+    static const ColorNames colors{
         "aqua",
         "aquamarine 1",
         "aquamarine 3",
@@ -76,8 +81,8 @@ inline std::set<std::string> const& secondaryColors() {
     return colors;
 }
 
-inline ColorNames const& colorNames() {
-    static const ColorNames names{{
+inline ColorMap const& colorMap() {
+    static const ColorMap names{{
         {"alice blue", 0xf0f8ff},
         {"antique white 1", 0xffefdb},
         {"antique white 2", 0xeedfcc},
