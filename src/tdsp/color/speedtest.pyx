@@ -22,12 +22,34 @@ cdef class OperatorTest:
 """
     cdef ColorList colors
 
+    cdef _ColorList _make(self, object value=None):
+        return _ColorList(value, color_maker=self._color_maker,
+                          class_name=self.class_name)
+
+    cdef _ColorList _toColorList(self, object value):
+        if isinstance(value, _ColorList):
+            return <_ColorList> value
+        else:
+            return self._make(value)
+
+    cdef _run_into(self, object x, Binary op, Side side=LEFT):
+        """An operation that mutates this ColorList."""
+        if isinstance(x, Number):
+            runInto(op, side, <float> x, self.colors)
+        else:
+            runInto(op, side, self._toColorList(x).colors, self.colors)
+        return self
+
     def operator_add(self, float x):
         """An operation that mutates this ColorList."""
-        runInto(ADD, LEFT, x, self.colors)
+        self._run_into(x, ADD)
 
     def class_add(self, float x):
-        addInto(x, self.colors)
+        if isinstance(x, Number):
+            addInto(<float> x, self.colors)
+        else:
+            addInto(self._toColorList(x).colors, self.colors)
+        return self
 
     def __str__(self):
         return toString(self.colors, (<_Color> self._color_maker())._base()
