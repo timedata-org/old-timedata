@@ -22,6 +22,10 @@ cdef extern from "<tdsp/color/names_inl.h>" namespace "tdsp":
     Color makeColor(float r, float g, float b)
     vector[string] colorNames()
 
+cdef extern from "<tdsp/color/hsv.h>" namespace "tdsp":
+    Color hsvToRgb(Color, Base)
+    Color rgbToHsv(Color, Base)
+
 
 cdef class _Color:
     """A Color is an immutable RGB floating point color.
@@ -104,6 +108,18 @@ cdef class _Color:
         """Return the maximum ratio for this color range:  1.0 for Color
            and 255.0 for Color256."""
         return self._ratio()
+
+    def rgb_to_hsv(self):
+        """Convert this RGB color to an HSV."""
+        c = makeColor(self.red, self.green, self.blue)
+        c = rgbToHsv(c, self._base());
+        return self.__class__(c.at(0), c.at(1), c.at(2))
+
+    def hsv_to_rgb(self):
+        """Convert this HSV color to an RGB."""
+        c = makeColor(self.red, self.green, self.blue)
+        c = hsvToRgb(c, self._base());
+        return self.__class__(c.at(0), c.at(1), c.at(2))
 
     def normalized(self):
         """Return a color normalized into this color range."""

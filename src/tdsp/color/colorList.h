@@ -95,4 +95,7 @@ void powOver(X const& x, Y const& y, ColorList& out);
 template <typename X, typename Y>
 void subOver(X const& x, Y const& y, ColorList& out);
 
+void hsvToRgbInto(ColorList&);
+void rgbToHsvInto(ColorList&);
+
 } // tdsp
