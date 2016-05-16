@@ -223,6 +223,32 @@ cdef class CColorList:
             powOver(CColorList(self).colors, (<CColorList> c).colors, cl.colors)
         return cl
 
+    def __sub__(self, c):
+        cdef CColorList cl
+        cl = CColorList()
+        if isinstance(c, Number):
+            subOver((<CColorList> self).colors, <float> c, cl.colors)
+        elif isinstance(self, CColorList):
+            subOver((<CColorList> self).colors, _toCL(c).colors, cl.colors)
+        elif isinstance(self, Number):
+            subOver(<float> self, _toCL(c).colors, cl.colors)
+        else:
+            subOver(CColorList(self).colors, (<CColorList> c).colors, cl.colors)
+        return cl
+
+    def __truediv__(self, c):
+        cdef CColorList cl
+        cl = CColorList()
+        if isinstance(c, Number):
+            divOver((<CColorList> self).colors, <float> c, cl.colors)
+        elif isinstance(self, CColorList):
+            divOver((<CColorList> self).colors, _toCL(c).colors, cl.colors)
+        elif isinstance(self, Number):
+            divOver(<float> self, _toCL(c).colors, cl.colors)
+        else:
+            divOver(CColorList(self).colors, (<CColorList> c).colors, cl.colors)
+        return cl
+
     def __len__(self):
         return self.colors.size()
 
