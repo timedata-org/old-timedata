@@ -85,4 +85,19 @@ inline uint8_t to256(float x) {
     return static_cast<uint8_t>(std::min(255.0f, std::max(0.0f, x * 256)));
 }
 
+/** A version of / that always returns a value.
+    Dividing a positive number by zero returns inf;
+    dividing a negative number by zero returns -inf;
+    dividing zero by zero returns nan.
+*/
+float divFixed(float x, float y);
+
+/** A version of pow that always returns a value and preserve sign.
+    If x > 0, returns pow(x, y).
+    If x < 0, returns -pow(-x, y)
+    If x == 0 and y == 1, returns 1
+    Otherwise, returns 0.
+*/
+float powFixed(float x, float y);
+
 }  // namespace tdsp

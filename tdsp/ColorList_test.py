@@ -55,3 +55,13 @@ class TestColorList(unittest.TestCase):
         cl.append('red')
         cl.append((1, 1, 1))
         self.assertEqual(cl, ColorList(('red', 'white')))
+
+    def test_div_pow(self):
+        c = ColorList(('red', 'green', 'blue'))
+        c[1] = -c[1]
+        cl = c / 0
+        self.assertEqual(cl[0][0], float('inf'))
+        self.assertFalse(cl[0][1] == cl[0][1])
+        self.assertEqual(cl[1][1], float('-inf'))
+
+        self.assertEqual(0 ** c, ColorList(('cyan', 'magenta', 'yellow')))

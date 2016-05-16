@@ -138,7 +138,7 @@ inline void addInto(ColorList const& in, ColorList& out) {
 }
 
 inline void divideInto(float f, ColorList& out) {
-    forEachColorComponent(out, [=](float& x) { x /= f; });
+    forEachColorComponent(out, [=](float& x) { x /= (f ? f : 1); });
 }
 inline void divideInto(ColorList const& in, ColorList& out) {
     forEachColorComponent(in, out, [](float i, float& o) { o /= i; });
@@ -152,10 +152,10 @@ inline void multiplyInto(ColorList const& in, ColorList& out) {
 }
 
 inline void powInto(float f, ColorList& out) {
-    forEachColorComponent(out, [=](float& x) { x = pow(x, f); });
+    forEachColorComponent(out, [=](float& x) { x = powFixed(x, f); });
 }
 inline void powInto(ColorList const& in, ColorList& out) {
-    forEachColorComponent(in, out, [](float i, float& o) { o = pow(o, i); });
+    forEachColorComponent(in, out, [](float i, float& o) { o = powFixed(o, i); });
 }
 
 inline void rdivideInto(float f, ColorList& out) {
@@ -166,10 +166,10 @@ inline void rdivideInto(ColorList const& in, ColorList& out) {
 }
 
 inline void rpowInto(float f, ColorList& out) {
-    forEachColorComponent(out, [=](float& x) { x = pow(f, x); });
+    forEachColorComponent(out, [=](float& x) { x = powFixed(f, x); });
 }
 inline void rpowInto(ColorList const& in, ColorList& out) {
-    forEachColorComponent(in, out, [](float i, float& o) { o = pow(o, i); });
+    forEachColorComponent(in, out, [](float i, float& o) { o = powFixed(o, i); });
 }
 
 inline void rsubtractInto(float f, ColorList& out) {
@@ -247,7 +247,7 @@ void mulOver(X const& x, Y const& y, ColorList& out) {
 
 template <typename X, typename Y>
 void powOver(X const& x, Y const& y, ColorList& out) {
-    doOver(x, y, out, [](float x, float y) { return pow(x, y); });
+    doOver(x, y, out, [](float x, float y) { return powFixed(x, y); });
 }
 
 template <typename X, typename Y>

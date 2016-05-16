@@ -147,9 +147,9 @@ cdef class _Color:
 
     def __truediv__(self, c):
         c = self.__class__(c)
-        return self.__class__(self.red / c.red,
-                              self.green / c.green,
-                              self.blue / c.blue)
+        return self.__class__(divFixed(self.red, c.red),
+                              divFixed(self.green, c.green),
+                              divFixed(self.blue, c.blue))
 
     def __divmod__(self, c):
         c = self.__class__(c)
@@ -192,9 +192,9 @@ cdef class _Color:
     def __pow__(self, c, mod):
         c = self.__class__(c)
         if mod is None:
-            return self.__class__(self.red ** c.red,
-                                  self.green ** c.green,
-                                  self.blue ** c.blue)
+            return self.__class__(powFixed(self.red, c.red),
+                                  powFixed(self.green, c.green),
+                                  powFixed(self.blue, c.blue))
 
         m = self.__class__(mod)
         return self.__class__(pow(self.red, c.red, m.red),
@@ -204,17 +204,17 @@ cdef class _Color:
     def __radd__(self, c):
         c = self.__class__(c)
         return self.__class__(self.red + c.red,
-                      self.green + c.green,
-                      self.blue + c.blue)
+                              self.green + c.green,
+                              self.blue + c.blue)
 
     def __repr__(self):
         return '%s(%s)' % (self.class_name, str(self))
 
     def __rdiv__(self, c):
         c = self.__class__(c)
-        return self.__class__(c.red / self.red,
-                      c.green / self.green,
-                      c.blue / self.blue)
+        return self.__class__(divFixed(c.red, self.red),
+                              divFixed(c.green, self.green),
+                              divFixed(c.blue, self.blue))
 
     def __rdivmod__(self, c):
         c = self.__class__(c)
@@ -249,9 +249,9 @@ cdef class _Color:
     def __rpow__(self, c, mod):
         c = self.__class__(c)
         if mod is None:
-            return self.__class__(c.red ** self.red,
-                                  c.green ** self.green,
-                                  c.blue ** self.blue)
+            return self.__class__(powFixed(c.red, self.red),
+                                  powFixed(c.green, self.green),
+                                  powFixed(c.blue, self.blue))
 
         m = self.__class__(mod)
         return self.__class__(pow(c.red, self.red, m.red),
