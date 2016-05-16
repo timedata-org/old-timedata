@@ -22,8 +22,8 @@ inline ColorMapInverse const& colorMapInverse() {
     return inverse;
 }
 
-ColorNames const& colorNames() {
-    static const auto names = keySet(colorMap());
+std::vector<std::string> const& colorNames() {
+    static const auto names = keyVector(colorMap());
     return names;
 }
 

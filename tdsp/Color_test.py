@@ -153,3 +153,18 @@ class TestColor256(unittest.TestCase):
         self.assertEqual(Color256(300, -500, 1000).normalized(),
                          Color256('red') + Color256('blue'))
         self.assertEqual(Color256().ratio, 255.0)
+
+    def test_names(self):
+        names = Color.names()
+        self.assertEqual(len(names), 481)
+        self.assertEqual(names[:10], [
+            'alice blue',
+            'antique white',
+            'antique white 1',
+            'antique white 2',
+            'antique white 3',
+            'antique white 4',
+            'aqua',
+            'aquamarine',
+            'aquamarine 1',
+            'aquamarine 2'])
