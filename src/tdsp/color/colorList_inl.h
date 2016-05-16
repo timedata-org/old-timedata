@@ -76,10 +76,17 @@ bool sliceIntoVector(ColorList const& in, ColorList& out,
 
 template <typename Function>
 void forEachColorComponent(ColorList& colors, Function f) {
-    // TODO: WRONG!
+    // WRONG!
     for (auto& color : colors)
         for (auto& c : color)
             f(c);
+}
+
+template <typename Function>
+void forEachComponent(ColorList& colors, Function f) {
+    for (auto& color : colors)
+        for (auto& c : color)
+            c = f(c);
 }
 
 template <typename Function>
@@ -93,16 +100,33 @@ void forEachColorComponent(ColorList const& in, ColorList& out, Function f) {
 }
 
 inline void absColor(ColorList& out) {
-    forEachColorComponent(out, [](float& x) { x = std::abs(x); });
+    forEachComponent(out, [](float x) { return std::abs(x); });
 }
 
-inline void negateColor(ColorList& out) {
-    forEachColorComponent(out, [](float& x) { x = -x; });
+inline void ceilColor(ColorList& out) {
+    forEachComponent(out, [](float x) { return std::ceil(x); });
+}
+
+inline void floorColor(ColorList& out) {
+    forEachComponent(out, [](float x) { return std::floor(x); });
 }
 
 inline void invertColor(ColorList& out) {
-    forEachColorComponent(out, [](float& x) { x = (x > 0 ? 1.0 : -1.0) - x; });
+    forEachComponent(out, [](float x) { return (x > 0 ? 1.0 : -1.0) - x; });
 }
+
+inline void negateColor(ColorList& out) {
+    forEachComponent(out, [](float x) { return -x; });
+}
+
+inline void roundColor(ColorList& out) {
+    forEachComponent(out, [](float x) { return round(x); });
+}
+
+inline void truncColor(ColorList& out) {
+    forEachComponent(out, [](float x) { return std::trunc(x); });
+}
+
 
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -138,8 +162,7 @@ inline void rdivideInto(float f, ColorList& out) {
     forEachColorComponent(out, [=](float& x) { x = f / x; });
 }
 inline void rdivideInto(ColorList const& in, ColorList& out) {
-    // TODO: PROBLEM HERE!
-    forEachColorComponent(in, out, [](float i, float& o) { o = i = o; });
+    forEachColorComponent(in, out, [](float i, float& o) { o = i / o; });
 }
 
 inline void rpowInto(float f, ColorList& out) {

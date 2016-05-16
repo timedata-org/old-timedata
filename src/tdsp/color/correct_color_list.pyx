@@ -70,10 +70,78 @@ cdef class CColorList:
         c = self.colors[index]
         return _Color(c.at(0), c.at(1), c.at(2))
 
+    # Unary operators and corresponding mutators.
     def abs(self):
         """Replace each color by its absolute value."""
         absColor(self.colors)
 
+    def __abs__(self):
+        cdef CColorList cl;
+        cl = self[:]
+        cl.abs()
+        return cl
+
+    def ceil(self):
+        """Replace each color by its absolute value."""
+        ceilColor(self.colors)
+
+    def __ceil__(self):
+        cdef CColorList cl;
+        cl = self[:]
+        cl.ceil()
+        return cl
+
+    def floor(self):
+        """Replace each color by its floorolute value."""
+        floorColor(self.colors)
+
+    def __floor__(self):
+        cdef CColorList cl;
+        cl = self[:]
+        cl.floor()
+        return cl
+
+    def invert(self):
+        """Invert each color to its complement."""
+        invertColor(self.colors)
+
+    def __invert__(self):
+        cdef CColorList cl;
+        cl = self[:]
+        cl.invert()
+        return cl
+
+    def neg(self):
+        """Negate each color."""
+        negateColor(self.colors)
+
+    def __negative__(self):
+        cdef CColorList cl;
+        cl = self[:]
+        cl.negative()
+        return cl
+
+    def round(self):
+        """Round each color value to the nearest integer."""
+        roundColor(self.colors)
+
+    def __round__(self):
+        cdef CColorList cl;
+        cl = self[:]
+        cl.round()
+        return cl
+
+    def trunc(self):
+        """Truncate each value to an integer."""
+        truncColor(self.colors)
+
+    def __trunc__(self):
+        cdef CColorList cl;
+        cl = self[:]
+        cl.trunc()
+        return cl
+
+    # List-like operations.
     def append(self, object value):
         """Append to the list of colors."""
         cdef uint s
@@ -114,10 +182,6 @@ cdef class CColorList:
             self.colors.resize(s)
             raise
 
-    def invert(self):
-        """Invert each colors to its complement."""
-        invertColor(self.colors)
-
     def max(self, c):
         """Mutate each color by max-ing it with a number or a ColorList."""
         if isinstance(c, Number):
@@ -131,10 +195,6 @@ cdef class CColorList:
             minInto(<float> c, self.colors)
         else:
             minInto(_toCL(c).colors, self.colors)
-
-    def negate(self):
-        """Negate each color."""
-        negateColor(self.colors)
 
     def pow(self, float c):
         """Raise each color to the given power (gamma correction)."""

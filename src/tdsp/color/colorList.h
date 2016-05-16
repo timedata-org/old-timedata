@@ -40,14 +40,15 @@ bool sliceIntoVector(ColorList const& in, ColorList& out,
                      int begin, int end, int step);
 
 template <typename Function>
-void forEachColorComponent(ColorList& colors, Function f);
-
-template <typename Function>
 void forEachColorComponent(ColorList const& in, ColorList& out, Function f);
 
 void absColor(ColorList& out);
-void negateColor(ColorList& out);
+void ceilColor(ColorList& out);
+void floorColor(ColorList& out);
 void invertColor(ColorList& out);
+void negateColor(ColorList& out);  // rename to neg
+void roundColor(ColorList& out);
+void truncColor(ColorList& out);
 
 void addInto(float f, ColorList& out);
 void addInto(ColorList const& in, ColorList& out);
