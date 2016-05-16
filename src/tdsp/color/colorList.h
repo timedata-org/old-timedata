@@ -10,25 +10,32 @@ namespace tdsp {
 
 using ColorListBase = std::vector<Color>;
 
-#if 1
-
-using ColorList = ColorListBase;
-
-#else
-
 struct ColorList : public ColorListBase {
-    ColorList() {
-        log("creating");
+    void setColor(size_t i, float r, float g, float b) {
+        (*this)[i] = {{r, g, b}};
     }
 
-    ColorListBase& operator=(ColorListBase const&x) {
-        log("copying");
-        ColorListBase::operator=(x);
-        return *this;
+    // Returns negative for a bad key.
+    bool fixKey(int& key) const {
+        if (key >= size())
+            return false;
+        if (key < 0)
+            key += size();
+        return key < 0;
+    }
+
+    bool getColor(int key, Color& color) {
+        key = fixKey(key);
+        if (key < 0)
+            return false;
+        color = at(key);
+        return true;
+    }
+
+    size_t getSizeOf() const {
+        return sizeof(ColorList) + size() * sizeof(Color);
     }
 };
-
-#endif
 
 ColorList duplicate(ColorList const&, size_t count);
 

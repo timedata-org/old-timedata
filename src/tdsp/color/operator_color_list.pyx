@@ -1,6 +1,53 @@
 from numbers import Number
 
-cdef class _OldColorList:
+cdef extern from "<tdsp/color/colorList_inl.h>" namespace "tdsp":
+    ColorList duplicate(ColorList&, int)
+    void reverse(ColorList&)
+    string toString(ColorList&)
+    string toString(ColorList&, Base)
+    ColorList sliceVector(ColorList&, int begin, int end, int step)
+    int compareContainers(ColorList&, ColorList&)
+    bool sliceIntoVector(ColorList& _in, ColorList& out,
+                         int begin, int end, int step)
+
+    void rotate(ColorList&, int positions)
+
+    void absColor(ColorList&)
+    void negateColor(ColorList&)
+    void invertColor(ColorList&)
+
+    void addInto(float f, ColorList& out)
+    void addInto(ColorList&, ColorList& out)
+
+    void divideInto(float f, ColorList& out)
+    void divideInto(ColorList&, ColorList& out)
+
+    void minInto(float f, ColorList& out)
+    void minInto(ColorList&, ColorList& out)
+
+    void maxInto(float f, ColorList& out)
+    void maxInto(ColorList&, ColorList& out)
+
+    void multiplyInto(float f, ColorList& out)
+    void multiplyInto(ColorList&, ColorList& out)
+
+    void powInto(float f, ColorList& out)
+    void powInto(ColorList&, ColorList& out)
+
+    void rdivideInto(float f, ColorList& out)
+    void rdivideInto(ColorList&, ColorList& out)
+
+    void rpowInto(float f, ColorList& out)
+    void rpowInto(ColorList&, ColorList& out)
+
+    void rsubtractInto(float f, ColorList& out)
+    void rsubtractInto(ColorList&, ColorList& out)
+
+    void subtractInto(float f, ColorList& out)
+    void subtractInto(ColorList&, ColorList& out)
+
+
+cdef class OperatorColorList:
     """A list of RGB floating point Colors, with many mutating functions.
 
        A ColorList looks quite like a Python list of Colors (which look like
@@ -44,43 +91,49 @@ cdef class _OldColorList:
             raise IndexError('Color index out of range (2)')
         return key
 
-    cdef _OldColorList _make(self, object value=None):
-        return _OldColorList(value, color_maker=self._color_maker,
+    cdef OperatorColorList _make(self, object value=None):
+        return OperatorColorList(value, color_maker=self._color_maker,
                           class_name=self.class_name)
 
-    cdef _OldColorList _toColorList(self, object value):
-        if isinstance(value, _OldColorList):
-            return <_OldColorList> value
+    cdef OperatorColorList _toColorList(self, object value):
+        if isinstance(value, OperatorColorList):
+            return <OperatorColorList> value
         else:
             return self._make(value)
 
+    cdef OperatorColorList _run_new_unary(self, Unary op):
+        cdef OperatorColorList result
+        result = self._make()
+        runTogether(op, self.colors, result.colors)
+        return result
+
     @staticmethod
-    cdef _new_operation(object x, object y, Binary op):
+    cdef OperatorColorList _run_new(object x, object y, Binary op):
         """An operation that creates a new ColorList."""
-        cdef _OldColorList cl, result
+        cdef OperatorColorList cl, result
         cdef Side side
-        if isinstance(x, _OldColorList):
+        if isinstance(x, OperatorColorList):
             side = LEFT
             cl = x
         else:
             side = RIGHT
             cl = y
             y = x
-        result = x._make()
-
+        result = cl._make()
         if isinstance(y, Number):
             runTogether(op, side, cl.colors, <float> y, result.colors)
         else:
             runTogether(
                 op, side, cl.colors, cl._toColorList(y).colors, result.colors)
-        return cl
+        return result
 
-    cdef _into_operation(self, object x, Binary op, Side side=LEFT):
+    cdef _run_into(self, object x, Binary op, Side side=LEFT):
         """An operation that mutates this ColorList."""
         if isinstance(x, Number):
             runInto(op, side, <float> x, self.colors)
         else:
             runInto(op, side, self._toColorList(x).colors, self.colors)
+        return self
 
     def __cinit__(self, items=None, *,
                   color_maker=_Color, class_name=u'ColorList'):
@@ -118,7 +171,7 @@ cdef class _OldColorList:
     def __setitem__(self, object key, object x):
         cdef size_t length, slice_length
         cdef int begin, end, step
-        cdef _OldColorList cl
+        cdef OperatorColorList cl
         if isinstance(key, slice):
             begin, end, step = key.indices(self.colors.size())
             if not sliceIntoVector(self._toColorList(x).colors, self.colors,
@@ -130,7 +183,7 @@ cdef class _OldColorList:
 
     def abs(self):
         """Replace each color by its absolute value."""
-        absColor(self.colors)
+        runInto(ABS, self.colors)
 
     def append(self, object value):
         """Append to the list of colors."""
@@ -147,7 +200,7 @@ cdef class _OldColorList:
 
     def clear(self):
         """Set all colors to black."""
-        self.colors.clear()
+        runInto(CLEAR, self.colors)
 
     def rotate(self, int pos):
         """Rotate the colors forward by `pos` positions."""
@@ -176,134 +229,43 @@ cdef class _OldColorList:
             raise
 
     def invert(self):
-        """Invert each colors to its complement."""
-        invertColor(self.colors)
+        """Invert each color to its complement."""
+        runInto(INVERT, self.colors)
 
-    def max(self, c):
+    def max(self, object x):
         """Mutate each color by max-ing it with a number or a ColorList."""
-        if isinstance(c, Number):
-            maxInto(<float> c, self.colors)
-        else:
-            maxInto(self._toColorList(c).colors, self.colors)
+        return self._run_into(x, MAX)
 
-    def min(self, c):
+    def min(self, x):
         """Mutate each color by min-ing it with a number or a ColorList."""
-        if isinstance(c, Number):
-            minInto(<float> c, self.colors)
-        else:
-            minInto(self._toColorList(c).colors, self.colors)
+        return self._run_into(x, MIN)
 
     def negate(self):
         """Negate each color."""
-        negateColor(self.colors)
-
-    def pow(self, float c):
-        """Raise each color to the given power (gamma correction)."""
-        powInto(<float> c, self.colors)
-        if isinstance(c, Number):
-            powInto(<float> c, self.colors)
-        else:
-            powInto(self._toColorList(c).colors, self.colors)
+        runInto(INVERT, self.colors)
 
     def resize(self, size_t size):
         """Set the size of the ColorList, filling with black if needed."""
         self.colors.resize(size)
 
-    def rpow(self, c):
+    def rpow(self, x):
         """Right-hand (reversed) reverse of pow()."""
-        if isinstance(c, Number):
-            rpowInto(<float> c, self.colors)
-        else:
-            rpowInto(self._toColorList(c).colors, self.colors)
+        return self._run_into(x, POW, RIGHT)
 
-    # Mutating operations.
-    def __iadd__(self, c):
-        if isinstance(c, Number):
-            addInto(<float> c, self.colors)
-        else:
-            addInto(self._toColorList(c).colors, self.colors)
-        return self
+    def __iadd__(self, x):     return self._run_into(x, ADD)
+    def __imul__(self, x):     return self._run_into(x, MUL)
+    def __ipow__(self, x):     return self._run_into(x, POW)
+    def __isub__(self, x):     return self._run_into(x, SUB)
+    def __itruediv__(self, x): return self._run_into(x, DIV)
 
-    def __imul__(self, c):
-        if isinstance(c, Number):
-            multiplyInto(<float> c, self.colors)
-        else:
-            multiplyInto(self._toColorList(c).colors, self.colors)
+    def __add__(self, x):      return OperatorColorList._run_new(self, x, ADD)
+    def __mul__(self, x):      return OperatorColorList._run_new(self, x, MUL)
+    def __sub__(self, x):      return OperatorColorList._run_new(self, x, SUB)
+    def __truediv__(self, x):  return OperatorColorList._run_new(self, x, DIV)
 
-    def __ipow__(self, c):
-        if isinstance(c, Number):
-             powInto(<float> c, self.colors)
-        else:
-             powInto(self._toColorList(c).colors, self.colors)
-
-    def __isub__(self, c):
-        if isinstance(c, Number):
-             subtractInto(<float> c, self.colors)
-        else:
-             subtractInto(self._toColorList(c).colors, self.colors)
-
-    def __itruediv__(self, c):
-        if isinstance(c, Number):
-            divideInto(<float> c, self.colors)
-        else:
-            divideInto(self._toColorList(c).colors, self.colors)
-
-    # Operations where self is on the left side.
-    def __add__(self, c):
-        # TODO: self might not be ColorList!!
-        cl = self[:]
-        cl += c
-        return cl
-
-    # Operations where self is on the left side.
-    def __mul__(self, c):
-        cl = self[:]
-        cl *= c
-        return cl
-
-    # Operations where self is on the left side.
-    def __sub__(self, c):
-        cl = self[:]
-        cl -= c
-        return cl
-
-    def __truediv__(self, c):
-        cl = self[:]
-        cl /= c
-        return cl
-
-    def __pow__(self, c, mod):
-        if mod is not None:
-            raise ValueError("Don't understand three-operator mod")
-        cl = self[:]
-        cl.pow(c)
-        return c
-
-    # Operations where self is on the right side.
-    def __radd__(self, c):
-        return self + c
-
-    def __rdiv__(self, c):
-        if isinstance(c, Number):
-             rdivideInto(<float> c, self.colors)
-        else:
-             rdivideInto(self._toColorList(c).colors, self.colors)
-
-    def __rmul__(self, c):
-        return self * c
-
-    def __rpow__(self, c, mod):
-        if mod is not None:
-            raise ValueError("Don't understand three-operator mod")
-        cl = self[:]
-        cl.rpow(c)
-        return c
-
-    def __rsub__(self, c):
-        if isinstance(c, Number):
-             rsubtractInto(<float> c, self.colors)
-        else:
-             rsubtractInto(self._toColorList(c).colors, self.colors)
+    def __pow__(self, x, mod):
+        assert not mod, 'Don\'t understand three color mod'
+        return OperatorColorList._run_new(self, x, POW)
 
     def __len__(self):
         return self.colors.size()
@@ -311,7 +273,10 @@ cdef class _OldColorList:
     def __repr__(self):
         return '%s(%s)' % (self.class_name, str(self))
 
-    def __richcmp__(_OldColorList self, _OldColorList other, int rcmp):
+    def __richcmp__(OperatorColorList self, OperatorColorList other, int rcmp):
+        if not other:
+            raise TypeError('Can\'t order with None')
+
         if self._color_maker is not other._color_maker:
             raise ValueError('Can\'t compare two different color models.')
         return cmpToRichcmp(compareContainers(self.colors, other.colors), rcmp)
@@ -321,11 +286,11 @@ cdef class _OldColorList:
         return 12 * self.colors.size() + 8 + 8
 
     def __str__(self):
-        return toString(self.colors, (<_Color> self._color_maker())._base()
-                        ).decode('ascii')
+        s = toString(self.colors, (<_Color> self._color_maker())._base())
+        return s.decode('ascii')
 
 
-def _OldColorList256(*args, **kwds):
-    cl = _OldColorList(*args, color_maker=_Color256, class_name=u'ColorList256',
-                       **kwds)
+def OperatorColorList256(*args, **kwds):
+    cl = OperatorColorList(*args, color_maker=_Color256, class_name=u'ColorList256',
+                    **kwds)
     return cl
