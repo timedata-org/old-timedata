@@ -13,8 +13,6 @@ def make_list(maker):
     return m
 
 TDSP = make_list(tdsp.ColorList)
-TDSP_OPERATOR = make_list(tdsp.OperatorColorList)
-TDSP_CORRECT = make_list(tdsp.CColorList)
 
 def scale_functional(colors):
     return [c * 2 for c in colors]
@@ -45,11 +43,7 @@ print('func:     ', run(scale_functional, CLASSIC))
 print('classic:  ', run(scale_classic, CLASSIC))
 print('triples:  ', run(scale_triples, TRIPLES))
 print('tdsp:     ', run(scale_tdsp, TDSP))
-print('tdsp operator: ', run(scale_tdsp, TDSP_OPERATOR))
-print('tdsp correct: ', run(scale_tdsp, TDSP_CORRECT))
 print('tdsp2:    ', run(scale_new, TDSP))
-print('tdsp2 operator:', run(scale_new, TDSP_OPERATOR))
-print('tdsp2 correct:', run(scale_new, TDSP_CORRECT))
 
 
 def gamma_classic(colors):
@@ -89,10 +83,6 @@ print('classic table:', run(gamma_classic_table, CLASSIC))
 print('triples:      ', run(gamma_triples, TRIPLES))
 print('tdsp:         ', run(gamma_tdsp, TDSP))
 print('tdsp new:     ', run(gamma_new, TDSP))
-print('tdsp operator:     ', run(gamma_tdsp, TDSP_OPERATOR))
-print('tdsp operator new: ', run(gamma_new, TDSP_OPERATOR))
-print('tdsp correct:     ', run(gamma_tdsp, TDSP_CORRECT))
-print('tdsp correct new: ', run(gamma_new, TDSP_CORRECT))
 
 
 # From https://stackoverflow.com/questions/449560
@@ -137,4 +127,3 @@ print('\n\nsizes\n')
 print('classic:', getsize(CLASSIC))
 print('triples:', getsize(TRIPLES))
 print('tdsp:   ', getsize(TDSP))
-print('tdsp correct:   ', getsize(TDSP_CORRECT))
