@@ -77,3 +77,8 @@ cdef extern from "<tdsp/color/colorList_inl.h>" namespace "tdsp":
     void subOver(ColorList& x, ColorList& y, ColorList&)
     void subOver(float x, ColorList& y, ColorList&)
     void subOver(ColorList& x, float y, ColorList&)
+
+
+cdef extern from "<tdsp/color/hsv_inl.h>" namespace "tdsp":
+    void hsvToRgbInto(ColorList&, Base)
+    void rgbToHsvInto(ColorList&, Base)

@@ -78,9 +78,10 @@ cdef class {class_name}:
     def abs(self):
         """Replace each color by its absolute value."""
         absColor(self.colors)
+        return self
 
     def __abs__(self):
-        cdef {class_name} cl;
+        cdef {class_name} cl
         cl = self[:]
         cl.abs()
         return cl
@@ -88,9 +89,10 @@ cdef class {class_name}:
     def ceil(self):
         """Replace each color by its absolute value."""
         ceilColor(self.colors)
+        return self
 
     def __ceil__(self):
-        cdef {class_name} cl;
+        cdef {class_name} cl
         cl = self[:]
         cl.ceil()
         return cl
@@ -98,9 +100,10 @@ cdef class {class_name}:
     def floor(self):
         """Replace each color by its floorolute value."""
         floorColor(self.colors)
+        return self
 
     def __floor__(self):
-        cdef {class_name} cl;
+        cdef {class_name} cl
         cl = self[:]
         cl.floor()
         return cl
@@ -108,9 +111,10 @@ cdef class {class_name}:
     def invert(self):
         """Invert each color to its complement."""
         invertColor(self.colors)
+        return self
 
     def __invert__(self):
-        cdef {class_name} cl;
+        cdef {class_name} cl
         cl = self[:]
         cl.invert()
         return cl
@@ -118,9 +122,10 @@ cdef class {class_name}:
     def neg(self):
         """Negate each color."""
         negateColor(self.colors)
+        return self
 
     def __negative__(self):
-        cdef {class_name} cl;
+        cdef {class_name} cl
         cl = self[:]
         cl.negative()
         return cl
@@ -128,9 +133,10 @@ cdef class {class_name}:
     def round(self):
         """Round each color value to the nearest integer."""
         roundColor(self.colors)
+        return self
 
     def __round__(self):
-        cdef {class_name} cl;
+        cdef {class_name} cl
         cl = self[:]
         cl.round()
         return cl
@@ -138,14 +144,14 @@ cdef class {class_name}:
     def trunc(self):
         """Truncate each value to an integer."""
         truncColor(self.colors)
+        return self
 
     def __trunc__(self):
-        cdef {class_name} cl;
+        cdef {class_name} cl
         cl = self[:]
         cl.trunc()
         return cl
 
-    # List-like operations.
     def append(self, object value):
         """Append to the list of colors."""
         cdef uint s
@@ -156,18 +162,32 @@ cdef class {class_name}:
         except:
             self.colors.resize(s)
             raise
+        return self
+
+    def hsv_to_rgb(self):
+        """Convert HSV colors to RGB."""
+        hsvToRgbInto(self.colors, {base})
+        return self
+
+    def rgb_to_hsv(self):
+        """Convert HSV colors to RGB."""
+        rgbToHsvInto(self.colors, {base})
+        return self
 
     def clear(self):
         """Set all colors to black."""
         self.colors.clear()
+        return self
 
     def rotate(self, int pos):
         """Rotate the colors forward by `pos` positions."""
         rotate(self.colors, pos)
+        return self
 
     def reverse(self):
         """Reverse the colors in place."""
         reverse(self.colors)
+        return self
 
     def duplicate(self, uint count):
         """Return a new `ColorList` with `count` copies of this one."""
@@ -185,6 +205,7 @@ cdef class {class_name}:
         except:
             self.colors.resize(s)
             raise
+        return self
 
     def max(self, c):
         """Mutate each color by max-ing it with a number or a ColorList."""
@@ -192,6 +213,7 @@ cdef class {class_name}:
             maxInto(<float> c, self.colors)
         else:
             maxInto(_to{class_name}(c).colors, self.colors)
+        return self
 
     def min(self, c):
         """Mutate each color by min-ing it with a number or a ColorList."""
@@ -199,6 +221,7 @@ cdef class {class_name}:
             minInto(<float> c, self.colors)
         else:
             minInto(_to{class_name}(c).colors, self.colors)
+        return self
 
     def pow(self, float c):
         """Raise each color to the given power (gamma correction)."""
@@ -206,10 +229,12 @@ cdef class {class_name}:
             powInto(<float> c, self.colors)
         else:
             powInto(_to{class_name}(c).colors, self.colors)
+        return self
 
     def resize(self, size_t size):
         """Set the size of the ColorList, filling with black if needed."""
         self.colors.resize(size)
+        return self
 
     def rpow(self, c):
         """Right-hand (reversed) reverse of pow()."""
@@ -217,6 +242,7 @@ cdef class {class_name}:
             rpowInto(<float> c, self.colors)
         else:
             rpowInto(_to{class_name}(c).colors, self.colors)
+        return self
 
     # Mutating operations.
     def __iadd__(self, c):
@@ -231,24 +257,28 @@ cdef class {class_name}:
             multiplyInto(<float> c, self.colors)
         else:
             multiplyInto(_to{class_name}(c).colors, self.colors)
+        return self
 
     def __ipow__(self, c):
         if isinstance(c, Number):
              powInto(<float> c, self.colors)
         else:
              powInto(_to{class_name}(c).colors, self.colors)
+        return self
 
     def __isub__(self, c):
         if isinstance(c, Number):
              subtractInto(<float> c, self.colors)
         else:
              subtractInto(_to{class_name}(c).colors, self.colors)
+        return self
 
     def __itruediv__(self, c):
         if isinstance(c, Number):
             divideInto(<float> c, self.colors)
         else:
             divideInto(_to{class_name}(c).colors, self.colors)
+        return self
 
     def __add__(self, c):
         cdef {class_name} cl

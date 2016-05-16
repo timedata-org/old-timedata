@@ -16,11 +16,13 @@ if __name__ == '__main__':
 
     script = sys.argv[0]
     timestamp = datetime.datetime.utcnow().isoformat()
+    base =
 
-    class_name, color_class = '_ColorList', '_Color'
+    class_name, color_class, base = '_ColorList', '_Color', 'normal'
+
     open(root + '.pyx', 'w').write(TEMPLATE.format(**locals()))
 
-    class_name, color_class = '_ColorList256', '_Color256'
+    class_name, color_class, base = '_ColorList256', '_Color256', 'integer'
     open(root + '256.pyx', 'w').write(TEMPLATE.format(**locals()))
 
     if False:

@@ -3,6 +3,7 @@
 #include <tdsp/color/colorList.h>
 #include <tdsp/base/make.h>
 #include <tdsp/base/math_inl.h>
+#include <tdsp/color/hsv_inl.h>
 #include <tdsp/color/names_inl.h>
 #include <tdsp/signal/slice.h>
 
@@ -253,6 +254,16 @@ void powOver(X const& x, Y const& y, ColorList& out) {
 template <typename X, typename Y>
 void subOver(X const& x, Y const& y, ColorList& out) {
     doOver(x, y, out, [](float x, float y) { return x - y; });
+}
+
+inline void hsvToRgbInto(ColorList& out) {
+    for (auto& c: out)
+        c = hsvToRgb(c);
+}
+
+inline void rgbToHsvInto(ColorList& out) {
+    for (auto& c: out)
+        c = rgbToHsv(c);
 }
 
 } // tdsp
