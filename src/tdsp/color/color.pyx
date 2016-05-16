@@ -20,6 +20,7 @@ cdef extern from "<tdsp/color/names_inl.h>" namespace "tdsp":
     string colorToString(float r, float g, float b, Base)
     bool cmpToRichcmp(float cmp, int richcmp)
     Color makeColor(float r, float g, float b)
+    vector[string] colorNames()
 
 
 cdef class _Color:
@@ -280,6 +281,15 @@ cdef class _Color:
         return self.__class__(math.trunc(self.red),
                               math.trunc(self.green),
                               math.trunc(self.blue))
+
+    @staticmethod
+    def names():
+        cdef vector[string] names
+        result = []
+        names = colorNames()
+        for i in names:
+            result.append(i.decode('ascii'))
+        return result
 
 
 cdef class _Color256(_Color):

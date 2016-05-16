@@ -22,6 +22,14 @@ std::set<From> keySet(std::map<From, To> const& map) {
 }
 
 template <class From, class To>
+std::vector<From> keyVector(std::map<From, To> const& map) {
+    std::vector<From> result;
+    for (auto& i: map)
+        result.push_back(i.first);
+    return result;
+}
+
+template <class From, class To>
 std::set<To> valueSet(std::map<From, To> const& map) {
     std::set<To> result;
     for (auto& i: map)
