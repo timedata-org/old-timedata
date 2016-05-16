@@ -2,7 +2,7 @@
 
 import tdsp, timeit
 
-SIZE = 1024
+SIZE = 10240
 
 CLASSIC = [0] * (3 * SIZE)
 TRIPLES = [(0, 0, 0)] * SIZE
@@ -35,7 +35,7 @@ def scale_tdsp(colors):
 def scale_new(colors):
     colors = colors * 2
 
-def run(command, value, number=1000):
+def run(command, value, number=200):
     return timeit.Timer(lambda: command(value)).timeit(number=number)
 
 print('scale\n')

@@ -222,6 +222,7 @@ cdef class _OldColorList:
             addInto(<float> c, self.colors)
         else:
             addInto(self._toColorList(c).colors, self.colors)
+        return self
 
     def __imul__(self, c):
         if isinstance(c, Number):

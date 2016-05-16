@@ -10,15 +10,22 @@ namespace tdsp {
 
 using ColorListBase = std::vector<Color>;
 
-#if 0
+#if 1
 
 using ColorList = ColorListBase;
 
 #else
 
 struct ColorList : public ColorListBase {
-    using ColorListBase::ColorListBase;
+    ColorList() {
+        log("creating");
+    }
 
+    ColorListBase& operator=(ColorListBase const&x) {
+        log("copying");
+        ColorListBase::operator=(x);
+        return *this;
+    }
 };
 
 #endif
