@@ -1,6 +1,7 @@
 #pragma once
 
 #include <map>
+#include <set>
 
 namespace tdsp {
 
@@ -9,6 +10,22 @@ std::map<To, From> invert(std::map<From, To> const& map) {
     std::map<To, From> result;
     for (auto& i: map)
         result[i.second] = i.first;
+    return result;
+}
+
+template <class From, class To>
+std::set<From> keySet(std::map<From, To> const& map) {
+    std::set<From> result;
+    for (auto& i: map)
+        result.insert(i.first);
+    return result;
+}
+
+template <class From, class To>
+std::set<To> valueSet(std::map<From, To> const& map) {
+    std::set<To> result;
+    for (auto& i: map)
+        result.insert(i.second);
     return result;
 }
 

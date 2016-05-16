@@ -14,6 +14,7 @@
 #include <tdsp/color/names_table_inl.h>
 
 namespace tdsp {
+namespace detail {
 
 template <Base base>
 struct ColorTraits {
@@ -83,8 +84,8 @@ struct ColorTraits {
             if (std::all_of(c.begin(), c.end(), isNearHex)) {
                 auto hex = fromHex(c);
 
-                auto i = colorNamesInverse().find(hex);
-                if (i != colorNamesInverse().end())
+                auto i = colorMapInverse().find(hex);
+                if (i != colorMapInverse().end())
                     return addNegatives(i->second);
             }
 
@@ -126,8 +127,8 @@ struct ColorTraits {
         if (not *name)
             return false;
 
-        auto i = colorNames().find(name);
-        if (i != colorNames().end()) {
+        auto i = colorMap().find(name);
+        if (i != colorMap().end()) {
             result = toColor(i->second);
             return true;
         }
@@ -190,19 +191,24 @@ struct ColorTraits {
     }
 };
 
+} // detail
+
 inline bool stringToColor(char const* s, Color& c, Base base) {
+    using namespace tdsp::detail;
     return base == Base::normal ?
             ColorTraits<Base::normal>::toColor(s, c) :
             ColorTraits<Base::integer>::toColor(s, c);
 }
 
 inline Color stringToColor(char const* name, Base base) {
+    using namespace tdsp::detail;
     return base == Base::normal ?
             ColorTraits<Base::normal>::toColor(name) :
             ColorTraits<Base::integer>::toColor(name);
 }
 
 inline std::string colorToString(Color c, Base base) {
+    using namespace tdsp::detail;
     return base == Base::normal ?
             ColorTraits<Base::normal>::toString(c) :
             ColorTraits<Base::integer>::toString(c);
