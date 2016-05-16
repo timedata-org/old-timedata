@@ -179,4 +179,37 @@ inline void maxInto(ColorList const& in, ColorList& out) {
                           [](float i, float& o) { o = std::max(i, o); });
 }
 
+inline size_t getSize(float x) {
+    return std::numeric_limits<size_t>::max();
+}
+
+template <typename X>
+size_t getSize(X const& x) {
+    return x.size();
+}
+
+inline float getValue(float x, size_t, size_t) {
+    return x;
+}
+
+template <typename X>
+float_t getValue(X const& x, size_t i, size_t j) {
+    return x[i][j];
+}
+
+template <typename X, typename Y, typename Function>
+void doOver(X const& x, Y const& y, ColorList& out, Function f) {
+    auto size = std::min(getSize(x), getSize(y));
+    out.resize(size);
+    for (size_t i = 0; i < size; ++i) {
+        for (size_t j = 0; j < 3; ++j)
+            out[i][j] = f(getValue(x, i, j), getValue(y, i, j));
+    }
+}
+
+template <typename X, typename Y>
+void addOver(X const& x, Y const& y, ColorList& out) {
+    doOver(x, y, out, [](float x, float y) { return x + y; });
+}
+
 } // tdsp

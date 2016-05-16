@@ -9,9 +9,8 @@ TRIPLES = [(0, 0, 0)] * SIZE
 TDSP = tdsp.ColorList()
 TDSP.resize(SIZE)
 
-TDSP_OLD = tdsp.OldColorList()
-TDSP_OLD.resize(SIZE)
-
+TDSP_OPERATOR = tdsp.OperatorColorList()
+TDSP_OPERATOR.resize(SIZE)
 
 
 def scale_functional(colors):
@@ -36,16 +35,16 @@ def scale_new(colors):
     colors = colors * 2
 
 def run(command, value, number=200):
-    return timeit.Timer(lambda: command(value)).timeit(number=number)
+    return 100 * timeit.Timer(lambda: command(value)).timeit(number=number)
 
 print('scale\n')
 print('func:     ', run(scale_functional, CLASSIC))
 print('classic:  ', run(scale_classic, CLASSIC))
 print('triples:  ', run(scale_triples, TRIPLES))
 print('tdsp:     ', run(scale_tdsp, TDSP))
-print('tdsp old: ', run(scale_tdsp, TDSP_OLD))
+print('tdsp operator: ', run(scale_tdsp, TDSP_OPERATOR))
 print('tdsp2:    ', run(scale_new, TDSP))
-print('tdsp2 old:', run(scale_new, TDSP_OLD))
+print('tdsp2 operator:', run(scale_new, TDSP_OPERATOR))
 
 
 def gamma_classic(colors):
@@ -85,8 +84,8 @@ print('classic table:', run(gamma_classic_table, CLASSIC))
 print('triples:      ', run(gamma_triples, TRIPLES))
 print('tdsp:         ', run(gamma_tdsp, TDSP))
 print('tdsp new:     ', run(gamma_new, TDSP))
-print('tdsp old:     ', run(gamma_tdsp, TDSP_OLD))
-print('tdsp old new: ', run(gamma_new, TDSP_OLD))
+print('tdsp operator:     ', run(gamma_tdsp, TDSP_OPERATOR))
+print('tdsp operator new: ', run(gamma_new, TDSP_OPERATOR))
 
 
 # From https://stackoverflow.com/questions/449560
