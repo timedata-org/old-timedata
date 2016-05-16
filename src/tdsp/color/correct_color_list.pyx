@@ -1,6 +1,6 @@
 from numbers import Number
 
-cdef class CColorList:
+cdef class _ColorList:
     """A list of RGB floating point Colors, with many mutating functions.
 
        A ColorList looks quite like a Python list of Colors (which look like
@@ -26,8 +26,8 @@ cdef class CColorList:
         """Construct a ColorList with an iterator of items, each of which looks
            like a Color."""
         if items is not None:
-            if isinstance(items, CColorList):
-                self.colors = (<CColorList> items).colors
+            if isinstance(items, _ColorList):
+                self.colors = (<_ColorList> items).colors
             else:
                 # A list of tuples, Colors or strings.
                 self.colors.resize(len(items))
@@ -38,7 +38,7 @@ cdef class CColorList:
         cdef size_t length, slice_length
         cdef int begin, end, step, index
         cdef float r, g, b
-        cdef CColorList cl
+        cdef _ColorList cl
         if isinstance(key, slice):
             begin, end, step = key.indices(self.colors.size())
             if sliceIntoVector(_toCL(x).colors, self.colors,
@@ -59,7 +59,7 @@ cdef class CColorList:
         cdef int index
         if isinstance(key, slice):
             begin, end, step = key.indices(self.colors.size())
-            cl = CColorList()
+            cl = _ColorList()
             cl.colors = sliceVector(self.colors, begin, end, step)
             return cl
 
@@ -76,7 +76,7 @@ cdef class CColorList:
         absColor(self.colors)
 
     def __abs__(self):
-        cdef CColorList cl;
+        cdef _ColorList cl;
         cl = self[:]
         cl.abs()
         return cl
@@ -86,7 +86,7 @@ cdef class CColorList:
         ceilColor(self.colors)
 
     def __ceil__(self):
-        cdef CColorList cl;
+        cdef _ColorList cl;
         cl = self[:]
         cl.ceil()
         return cl
@@ -96,7 +96,7 @@ cdef class CColorList:
         floorColor(self.colors)
 
     def __floor__(self):
-        cdef CColorList cl;
+        cdef _ColorList cl;
         cl = self[:]
         cl.floor()
         return cl
@@ -106,7 +106,7 @@ cdef class CColorList:
         invertColor(self.colors)
 
     def __invert__(self):
-        cdef CColorList cl;
+        cdef _ColorList cl;
         cl = self[:]
         cl.invert()
         return cl
@@ -116,7 +116,7 @@ cdef class CColorList:
         negateColor(self.colors)
 
     def __negative__(self):
-        cdef CColorList cl;
+        cdef _ColorList cl;
         cl = self[:]
         cl.negative()
         return cl
@@ -126,7 +126,7 @@ cdef class CColorList:
         roundColor(self.colors)
 
     def __round__(self):
-        cdef CColorList cl;
+        cdef _ColorList cl;
         cl = self[:]
         cl.round()
         return cl
@@ -136,7 +136,7 @@ cdef class CColorList:
         truncColor(self.colors)
 
     def __trunc__(self):
-        cdef CColorList cl;
+        cdef _ColorList cl;
         cl = self[:]
         cl.trunc()
         return cl
@@ -167,7 +167,7 @@ cdef class CColorList:
 
     def duplicate(self, uint count):
         """Return a new `ColorList` with `count` copies of this one."""
-        cl = CColorList()
+        cl = _ColorList()
         cl.colors = duplicate(self.colors, count)
         return cl
 
@@ -247,80 +247,80 @@ cdef class CColorList:
             divideInto(_toCL(c).colors, self.colors)
 
     def __add__(self, c):
-        cdef CColorList cl
-        cl = CColorList()
+        cdef _ColorList cl
+        cl = _ColorList()
         if isinstance(c, Number):
-            addOver((<CColorList> self).colors, <float> c, cl.colors)
-        elif isinstance(self, CColorList):
-            addOver((<CColorList> self).colors, _toCL(c).colors, cl.colors)
+            addOver((<_ColorList> self).colors, <float> c, cl.colors)
+        elif isinstance(self, _ColorList):
+            addOver((<_ColorList> self).colors, _toCL(c).colors, cl.colors)
         elif isinstance(self, Number):
             addOver(<float> self, _toCL(c).colors, cl.colors)
         else:
-            addOver(CColorList(self).colors, (<CColorList> c).colors, cl.colors)
+            addOver(_ColorList(self).colors, (<_ColorList> c).colors, cl.colors)
         return cl
 
     def __mul__(self, c):
-        cdef CColorList cl
-        cl = CColorList()
+        cdef _ColorList cl
+        cl = _ColorList()
         if isinstance(c, Number):
-            mulOver((<CColorList> self).colors, <float> c, cl.colors)
-        elif isinstance(self, CColorList):
-            mulOver((<CColorList> self).colors, _toCL(c).colors, cl.colors)
+            mulOver((<_ColorList> self).colors, <float> c, cl.colors)
+        elif isinstance(self, _ColorList):
+            mulOver((<_ColorList> self).colors, _toCL(c).colors, cl.colors)
         elif isinstance(self, Number):
             mulOver(<float> self, _toCL(c).colors, cl.colors)
         else:
-            mulOver(CColorList(self).colors, (<CColorList> c).colors, cl.colors)
+            mulOver(_ColorList(self).colors, (<_ColorList> c).colors, cl.colors)
         return cl
 
     def __pow__(self, c, mod):
-        cdef CColorList cl
+        cdef _ColorList cl
         if mod:
             raise ValueError('Can\'t handle three operator pow')
 
-        cl = CColorList()
+        cl = _ColorList()
         if isinstance(c, Number):
-            powOver((<CColorList> self).colors, <float> c, cl.colors)
-        elif isinstance(self, CColorList):
-            powOver((<CColorList> self).colors, _toCL(c).colors, cl.colors)
+            powOver((<_ColorList> self).colors, <float> c, cl.colors)
+        elif isinstance(self, _ColorList):
+            powOver((<_ColorList> self).colors, _toCL(c).colors, cl.colors)
         elif isinstance(self, Number):
             powOver(<float> self, _toCL(c).colors, cl.colors)
         else:
-            powOver(CColorList(self).colors, (<CColorList> c).colors, cl.colors)
+            powOver(_ColorList(self).colors, (<_ColorList> c).colors, cl.colors)
         return cl
 
     def __sub__(self, c):
-        cdef CColorList cl
-        cl = CColorList()
+        cdef _ColorList cl
+        cl = _ColorList()
         if isinstance(c, Number):
-            subOver((<CColorList> self).colors, <float> c, cl.colors)
-        elif isinstance(self, CColorList):
-            subOver((<CColorList> self).colors, _toCL(c).colors, cl.colors)
+            subOver((<_ColorList> self).colors, <float> c, cl.colors)
+        elif isinstance(self, _ColorList):
+            subOver((<_ColorList> self).colors, _toCL(c).colors, cl.colors)
         elif isinstance(self, Number):
             subOver(<float> self, _toCL(c).colors, cl.colors)
         else:
-            subOver(CColorList(self).colors, (<CColorList> c).colors, cl.colors)
+            subOver(_ColorList(self).colors, (<_ColorList> c).colors, cl.colors)
         return cl
 
     def __truediv__(self, c):
-        cdef CColorList cl
-        cl = CColorList()
+        cdef _ColorList cl
+        cl = _ColorList()
         if isinstance(c, Number):
-            divOver((<CColorList> self).colors, <float> c, cl.colors)
-        elif isinstance(self, CColorList):
-            divOver((<CColorList> self).colors, _toCL(c).colors, cl.colors)
+            divOver((<_ColorList> self).colors, <float> c, cl.colors)
+        elif isinstance(self, _ColorList):
+            divOver((<_ColorList> self).colors, _toCL(c).colors, cl.colors)
         elif isinstance(self, Number):
             divOver(<float> self, _toCL(c).colors, cl.colors)
         else:
-            divOver(CColorList(self).colors, (<CColorList> c).colors, cl.colors)
+            divOver(_ColorList(self).colors, (<_ColorList> c).colors, cl.colors)
         return cl
 
     def __len__(self):
         return self.colors.size()
 
     def __repr__(self):
-        return 'CColorList(%s)' % str(self)
+        return '_ColorList(%s)' % str(self)
 
-    def __richcmp__(CColorList self, CColorList other, int rcmp):
+    def __richcmp__(_ColorList self, _ColorList other, int rcmp):
         return cmpToRichcmp(compareContainers(self.colors, other.colors), rcmp)
 
     def __sizeof__(self):
@@ -330,8 +330,8 @@ cdef class CColorList:
         return toString(self.colors).decode('ascii')
 
 
-cdef CColorList _toCL(object value):
-    if isinstance(value, CColorList):
-        return <CColorList> value
+cdef _ColorList _toCL(object value):
+    if isinstance(value, _ColorList):
+        return <_ColorList> value
     else:
-        return CColorList(value)
+        return _ColorList(value)
