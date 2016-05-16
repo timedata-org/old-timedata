@@ -56,13 +56,18 @@ cdef class CColorList:
 
     def __getitem__(self, object key):
         cdef Color c
+        cdef int index
         if isinstance(key, slice):
             begin, end, step = key.indices(self.colors.size())
             cl = CColorList()
             cl.colors = sliceVector(self.colors, begin, end, step)
             return cl
 
-        c = self.colors[self._fix_key(key)]
+        index = key
+        if not self.colors.fixKey(index):
+            raise IndexError('ColorList index out of range ' + str(key))
+
+        c = self.colors[index]
         return _Color(c.at(0), c.at(1), c.at(2))
 
     def abs(self):
@@ -256,8 +261,6 @@ cdef class CColorList:
         return 'CColorList(%s)' % str(self)
 
     def __richcmp__(CColorList self, CColorList other, int rcmp):
-        if self._color_maker is not other._color_maker:
-            raise ValueError('Can\'t compare two different color models.')
         return cmpToRichcmp(compareContainers(self.colors, other.colors), rcmp)
 
     def __sizeof__(self):

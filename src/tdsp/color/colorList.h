@@ -17,19 +17,9 @@ struct ColorList : public ColorListBase {
 
     // Returns negative for a bad key.
     bool fixKey(int& key) const {
-        if (key >= size())
-            return false;
         if (key < 0)
             key += size();
-        return key >= 0;
-    }
-
-    bool getColor(int key, Color& color) {
-        key = fixKey(key);
-        if (key < 0)
-            return false;
-        color = at(key);
-        return true;
+        return key >= 0 and key < size();
     }
 
     size_t getSizeOf() const {
