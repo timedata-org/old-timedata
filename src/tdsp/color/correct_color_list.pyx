@@ -41,7 +41,7 @@ cdef class CColorList:
         cdef CColorList cl
         if isinstance(key, slice):
             begin, end, step = key.indices(self.colors.size())
-            if sliceIntoVector(toCL(x).colors, self.colors,
+            if sliceIntoVector(_toCL(x).colors, self.colors,
                                begin, end, step):
                 return
             raise ValueError('attempt to assign sequence of one size '
@@ -251,7 +251,8 @@ cdef class CColorList:
     def __str__(self):
         return toString(self.colors).decode('ascii')
 
-cdef CColorList toCL(object value):
+
+cdef CColorList _toCL(object value):
     if isinstance(value, CColorList):
         return <CColorList> value
     else:
