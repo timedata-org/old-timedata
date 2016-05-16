@@ -93,9 +93,15 @@ template <typename X, typename Y>
 void addOver(X const& x, Y const& y, ColorList& out);
 
 template <typename X, typename Y>
+void divOver(X const& x, Y const& y, ColorList& out);
+
+template <typename X, typename Y>
 void mulOver(X const& x, Y const& y, ColorList& out);
 
 template <typename X, typename Y>
 void powOver(X const& x, Y const& y, ColorList& out);
+
+template <typename X, typename Y>
+void subOver(X const& x, Y const& y, ColorList& out);
 
 } // tdsp
