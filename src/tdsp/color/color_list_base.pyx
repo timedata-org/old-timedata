@@ -57,3 +57,11 @@ cdef extern from "<tdsp/color/colorList_inl.h>" namespace "tdsp":
     void addOver(ColorList& x, ColorList& y, ColorList&)
     void addOver(float x, ColorList& y, ColorList&)
     void addOver(ColorList& x, float y, ColorList&)
+
+    void mulOver(ColorList& x, ColorList& y, ColorList&)
+    void mulOver(float x, ColorList& y, ColorList&)
+    void mulOver(ColorList& x, float y, ColorList&)
+
+    void powOver(ColorList& x, ColorList& y, ColorList&)
+    void powOver(float x, ColorList& y, ColorList&)
+    void powOver(ColorList& x, float y, ColorList&)

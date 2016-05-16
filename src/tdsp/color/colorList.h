@@ -21,7 +21,7 @@ struct ColorList : public ColorListBase {
             return false;
         if (key < 0)
             key += size();
-        return key < 0;
+        return key >= 0;
     }
 
     bool getColor(int key, Color& color) {
@@ -89,10 +89,13 @@ void minInto(ColorList const& in, ColorList& out);
 void maxInto(float f, ColorList& out);
 void maxInto(ColorList const& in, ColorList& out);
 
-#if 0
-void addOver(ColorList const& x, ColorList const& y, ColorList&);
-void addOver(float x, ColorList const& y, ColorList&);
-void addOver(ColorList const& x, float y, ColorList&);
-#else
-#endif
+template <typename X, typename Y>
+void addOver(X const& x, Y const& y, ColorList& out);
+
+template <typename X, typename Y>
+void mulOver(X const& x, Y const& y, ColorList& out);
+
+template <typename X, typename Y>
+void powOver(X const& x, Y const& y, ColorList& out);
+
 } // tdsp

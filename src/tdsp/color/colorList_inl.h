@@ -212,4 +212,14 @@ void addOver(X const& x, Y const& y, ColorList& out) {
     doOver(x, y, out, [](float x, float y) { return x + y; });
 }
 
+template <typename X, typename Y>
+void mulOver(X const& x, Y const& y, ColorList& out) {
+    doOver(x, y, out, [](float x, float y) { return x * y; });
+}
+
+template <typename X, typename Y>
+void powOver(X const& x, Y const& y, ColorList& out) {
+    doOver(x, y, out, [](float x, float y) { return pow(x, y); });
+}
+
 } // tdsp
