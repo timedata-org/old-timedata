@@ -179,4 +179,24 @@ int compareContainers(C1 const& c1, C2 const& c2) {
     return 0;
 }
 
+inline float divFixed(float x, float y) {
+    auto static const inf = std::numeric_limits<float>::infinity();
+    if (y)
+        return x / y;
+    if (x > 0)
+        return inf;
+    if (x < 0)
+        return -inf;
+    return NAN;
+}
+
+inline float powFixed(float x, float y) {
+    if (x > 0)
+        return pow(x, y);
+    if (x < 0)
+        return -pow(-x, y);
+    return y ? 0 : 1;
+}
+
+
 }  // namespace tdsp
