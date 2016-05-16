@@ -1,12 +1,5 @@
 # include "_operation.pyx"
 
-cdef extern from "<tdsp/color/operation.h>" namespace "tdsp":
-    cppclass ColorList:
-        Color& operator[](size_t)
-        size_t size()
-        void resize(size_t)
-        void clear();
-
 cdef extern from "<tdsp/color/operation.h>" namespace "tdsp::operation":
     cdef cppclass Unary:
         pass

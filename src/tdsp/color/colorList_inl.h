@@ -76,6 +76,7 @@ bool sliceIntoVector(ColorList const& in, ColorList& out,
 
 template <typename Function>
 void forEachColorComponent(ColorList& colors, Function f) {
+    // TODO: WRONG!
     for (auto& color : colors)
         for (auto& c : color)
             f(c);
@@ -137,6 +138,7 @@ inline void rdivideInto(float f, ColorList& out) {
     forEachColorComponent(out, [=](float& x) { x = f / x; });
 }
 inline void rdivideInto(ColorList const& in, ColorList& out) {
+    // TODO: PROBLEM HERE!
     forEachColorComponent(in, out, [](float i, float& o) { o = i = o; });
 }
 
