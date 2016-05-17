@@ -118,21 +118,14 @@ cdef class _Color:
             return self.color.blue
         raise IndexError('Color index out of range')
 
-    def __abs__(_Color self):
-        return self.__class__(abs(self.color.red),
-                              abs(self.color.green),
-                              abs(self.color.blue))
-
+    # Operations where self is *not* necessarily a color!
+    # This can happen if "self" appear on the right in an operation.
+    # So all of these are wrong in fact.  :-D
     def __add__(self, c):
         c = self.__class__(c)
         return self.__class__(self.red + c.red,
                               self.green + c.green,
                               self.blue + c.blue)
-
-    def __ceil__(self):
-        return self.__class__(math.ceil(self.red),
-                              math.ceil(self.green),
-                              math.ceil(self.blue))
 
     def __truediv__(self, c):
         c = self.__class__(c)
@@ -147,22 +140,6 @@ cdef class _Color:
         db, mb = divmod(self.blue, c.blue)
         return self.__class__(dr, dg, db), self.__class__(mr, mg, mb)
 
-    def __floor__(self):
-        return self.__class__(math.floor(self.red),
-                              math.floor(self.green),
-                              math.floor(self.blue))
-
-    def __invert__(self):
-        """Return the complementary color."""
-        cdef float i
-        i = 255 if (<int> self._base() == 1) else 1
-        return self.__class__(invert(self.red, i),
-                              invert(self.green, i),
-                              invert(self.blue, i))
-
-    def __len__(self):
-        return 3
-
     def __mod__(self, c):
         c = self.__class__(c)
         return self.__class__(self.red % c.red,
@@ -174,9 +151,6 @@ cdef class _Color:
         return self.__class__(self.red * c.red,
                               self.green * c.green,
                               self.blue * c.blue)
-
-    def __neg__(self):
-        return self.__class__(-self.red, -self.green, -self.blue)
 
     def __pow__(self, c, mod):
         c = self.__class__(c)
@@ -190,10 +164,45 @@ cdef class _Color:
                               pow(self.green, c.green, m.green),
                               pow(self.blue, c.blue, m.blue))
 
-    def __repr__(self):
+    def __sub__(self, c):
+        c = self.__class__(c)
+        return self.__class__(self.red - c.red,
+                              self.green - c.green,
+                              self.blue - c.blue)
+
+    def __abs__(_Color self):
+        return self.__class__(abs(self.color.red),
+                              abs(self.color.green),
+                              abs(self.color.blue))
+
+    def __ceil__(_Color self):
+        return self.__class__(math.ceil(self.color.red),
+                              math.ceil(self.color.green),
+                              math.ceil(self.color.blue))
+
+    def __floor__(_Color self):
+        return self.__class__(math.floor(self.color.red),
+                              math.floor(self.color.green),
+                              math.floor(self.color.blue))
+
+    def __invert__(_Color self):
+        """Return the complementary color."""
+        cdef float i
+        i = 255 if (<int> self._base() == 1) else 1
+        return self.__class__(invert(self.red, i),
+                              invert(self.green, i),
+                              invert(self.blue, i))
+
+    def __len__(_Color self):
+        return 3
+
+    def __neg__(_Color self):
+        return self.__class__(-self.red, -self.green, -self.blue)
+
+    def __repr__(_Color self):
         return '%s(%s)' % (self.class_name, str(self))
 
-    def __richcmp__(self, object c, int cmp):
+    def __richcmp__(_Color self, _Color c, int cmp):
         return cmpToRichcmp((self.red - c.red) or
                             (self.green - c.green) or
                             (self.blue - c.blue), cmp)
@@ -206,14 +215,8 @@ cdef class _Color:
     def __str__(_Color self):
         return colorToString(self.color, self._base()).decode('ascii')
 
-    def __sizeof__(self):
+    def __sizeof__(_Color self):
         return 12  # 3 4-byte floats.
-
-    def __sub__(self, c):
-        c = self.__class__(c)
-        return self.__class__(self.red - c.red,
-                              self.green - c.green,
-                              self.blue - c.blue)
 
     def __trunc__(_Color self):
         return self.__class__(math.trunc(self.color.red),
