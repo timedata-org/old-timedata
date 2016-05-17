@@ -13,6 +13,13 @@ cdef extern from "<tdsp/color/names_inl.h>" namespace "tdsp":
     cdef cppclass Color:
         float& at(int)
 
+    cdef cppclass ColorS:
+        float red, green, blue
+
+        ColorS()
+        ColorS(float, float, float)
+        ColorS(Color)
+
     float invert(float, float)
     float normalize(float, float)
     void rotate(Color&, int)
