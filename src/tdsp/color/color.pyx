@@ -60,9 +60,7 @@ cdef class _Color:
 
        The derived class Color256 has a standard output range of [0, 255] to
     """
-    cdef float red
-    cdef float green
-    cdef float blue
+    cdef ColorS color
 
     class_name = 'Color'
 
@@ -78,39 +76,39 @@ cdef class _Color:
     def __init__(self, *args):
         cdef Color frame
         if not args:
-            self.red = self.green = self.blue = 0
+            self.color.red = self.color.green = self.color.blue = 0
             return
 
         if len(args) == 1:
             args = args[0]
             if isinstance(args, numbers.Number):
-                self.red = self.green = self.blue = args
+                self.color.red = self.color.green = self.color.blue = args
                 return
 
             if isinstance(args, str):
                 if not stringToColor(args, frame, self._base()):
                     raise ValueError("Can't understand color %s" % args)
-                self.red = frame.at(0)
-                self.green = frame.at(1)
-                self.blue = frame.at(2)
+                self.color.red = frame.at(0)
+                self.color.green = frame.at(1)
+                self.color.blue = frame.at(2)
                 return
 
         if len(args) == 3:
-            self.red, self.green, self.blue = args
+            self.color.red, self.color.green, self.color.blue = args
         else:
             raise ValueError("Can't understand color %s" % args)
 
     @property
     def red(self):
-        return self.red
+        return self.color.red
 
     @property
     def green(self):
-        return self.green
+        return self.color.green
 
     @property
     def blue(self):
-        return self.blue
+        return self.color.blue
 
     @property
     def ratio(self):
