@@ -10,7 +10,11 @@ cdef extern from "<tdsp/color/names_inl.h>" namespace "tdsp::Base":
 
 
 cdef extern from "<tdsp/color/names_inl.h>" namespace "tdsp":
+    cdef cppclass ColorS
+
     cdef cppclass Color:
+        Color()
+        Color(ColorS&)
         float& at(int)
 
     cdef cppclass ColorS:
@@ -18,7 +22,7 @@ cdef extern from "<tdsp/color/names_inl.h>" namespace "tdsp":
 
         ColorS()
         ColorS(float, float, float)
-        ColorS(Color)
+        ColorS(Color&)
 
     float invert(float, float)
     float normalize(float, float)
@@ -34,6 +38,10 @@ cdef extern from "<tdsp/color/hsv.h>" namespace "tdsp":
     Color rgbToHsv(Color, Base)
     Color hsvToRgb(Color)
     Color rgbToHsv(Color)
+    ColorS hsvToRgb(ColorS, Base)
+    ColorS rgbToHsv(ColorS, Base)
+    ColorS hsvToRgb(ColorS)
+    ColorS rgbToHsv(ColorS)
 
 
 cdef class _Color:
@@ -111,37 +119,37 @@ cdef class _Color:
         return self.color.blue
 
     @property
-    def ratio(self):
+    def ratio(_Color self):
         """Return the maximum ratio for this color range:  1.0 for Color
            and 255.0 for Color256."""
         return self._ratio()
 
-    def rgb_to_hsv(self):
-        """Convert this RGB color to an HSV."""
-        c = makeColor(self.red, self.green, self.blue)
-        c = rgbToHsv(c, self._base());
-        return self.__class__(c.at(0), c.at(1), c.at(2))
+    def rgb_to_hsv(_Color self):
+        """Return a new color converting RGB to HSV."""
+        cdef ColorS c
+        c = rgbToHsv(self.color, self._base());
+        return self.__class__(c.red, c.green, c.blue)
 
-    def hsv_to_rgb(self):
-        """Convert this HSV color to an RGB."""
-        c = makeColor(self.red, self.green, self.blue)
-        c = hsvToRgb(c, self._base());
-        return self.__class__(c.at(0), c.at(1), c.at(2))
+    def hsv_to_rgb(_Color self):
+        """Return a new color converting RGB to HSV."""
+        cdef ColorS c
+        c = hsvToRgb(self.color, self._base());
+        return self.__class__(c.red, c.green, c.blue)
 
-    def normalized(self):
+    def normalized(_Color self):
         """Return a color normalized into this color range."""
-        return self.__class__(self._norm(self.red),
-                              self._norm(self.green),
-                              self._norm(self.blue))
+        return self.__class__(self._norm(self.color.red),
+                              self._norm(self.color.green),
+                              self._norm(self.color.blue))
 
-    def rotated(self, int positions):
+    def rotated(_Color self, int positions):
         """Return a color with the components rotated."""
         cdef Color c
-        c = makeColor(self.red, self.green, self.blue)
+        c = Color(self.color)
         rotate(c, positions)
         return self.__class__(c.at(0), c.at(1), c.at(2))
 
-    def __getitem__(self, object key):
+    def __getitem__(_Color self, object key):
         if isinstance(key, slice):
             r = tuple(self[i] for i in range(*key.indices(len(self))))
             return self.__class__(*r) if len(r) == 3 else r
@@ -154,8 +162,10 @@ cdef class _Color:
             return self.blue
         raise IndexError('Color index out of range')
 
-    def __abs__(self):
-        return self.__class__(abs(self.red), abs(self.green), abs(self.blue))
+    def __abs__(_Color self):
+        return self.__class__(abs(self.color.red),
+                              abs(self.color.green),
+                              abs(self.color.blue))
 
     def __add__(self, c):
         c = self.__class__(c)
