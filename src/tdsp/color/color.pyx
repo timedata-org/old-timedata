@@ -234,68 +234,18 @@ cdef class _Color:
                               pow(self.green, c.green, m.green),
                               pow(self.blue, c.blue, m.blue))
 
-    def __radd__(self, c):
-        c = self.__class__(c)
-        return self.__class__(self.red + c.red,
-                              self.green + c.green,
-                              self.blue + c.blue)
-
     def __repr__(self):
         return '%s(%s)' % (self.class_name, str(self))
-
-    def __rdiv__(self, c):
-        c = self.__class__(c)
-        return self.__class__(divFixed(c.red, self.red),
-                              divFixed(c.green, self.green),
-                              divFixed(c.blue, self.blue))
-
-    def __rdivmod__(self, c):
-        c = self.__class__(c)
-        dr, mr = divmod(c.red, self.red)
-        dg, mg = divmod(c.green, self.green)
-        db, mb = divmod(c.blue, self.blue)
-        return (self.__class__(dr, dg, db),
-                self.__class__(mr, mg, mb))
 
     def __richcmp__(self, object c, int cmp):
         return cmpToRichcmp((self.red - c.red) or
                             (self.green - c.green) or
                             (self.blue - c.blue), cmp)
 
-    def __rmod__(self, c):
-        c = self.__class__(c)
-        return self.__class__(c.red % self.red,
-                              c.green % self.green,
-                              c.blue % self.blue)
-
-    def __rmul__(self, c):
-        c = self.__class__(c)
-        return self.__class__(c.red * self.red,
-                              c.green * self.green,
-                              c.blue * self.blue)
-
     def __round__(self, n):
         return self.__class__(round(self.red, n),
                               round(self.green, n),
                               round(self.blue, n))
-
-    def __rpow__(self, c, mod):
-        c = self.__class__(c)
-        if mod is None:
-            return self.__class__(powFixed(c.red, self.red),
-                                  powFixed(c.green, self.green),
-                                  powFixed(c.blue, self.blue))
-
-        m = self.__class__(mod)
-        return self.__class__(pow(c.red, self.red, m.red),
-                              pow(c.green, self.green, m.green),
-                              pow(c.blue, self.blue, m.blue))
-
-    def __rsub__(self, c):
-        c = self.__class__(c)
-        return self.__class__(c.red - self.red,
-                              c.green - self.green,
-                              c.blue - self.blue)
 
     def __str__(self):
         return colorToString(self.red, self.green, self.blue, self._base()
