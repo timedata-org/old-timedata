@@ -27,7 +27,6 @@ cdef class _Color256:
     cdef ColorS color
 
     def __init__(self, *args):
-        cdef Color frame
         if not args:
             self.color.red = self.color.green = self.color.blue = 0
             return
@@ -39,12 +38,9 @@ cdef class _Color256:
                 return
 
             if isinstance(args, str):
-                if not stringToColor(args, frame, integer):
-                    raise ValueError("Can't understand color %s" % args)
-                self.color.red = frame.at(0)
-                self.color.green = frame.at(1)
-                self.color.blue = frame.at(2)
-                return
+                if stringToColor(args, self.color, integer):
+                    return
+                raise ValueError("Can't understand color %s" % args)
 
         if len(args) == 3:
             self.color.red, self.color.green, self.color.blue = args
@@ -92,10 +88,10 @@ cdef class _Color256:
 
     def rotated(_Color256 self, int positions):
         """Return a color with the components rotated."""
-        cdef Color c
-        c = Color(self.color)
-        rotate(c, positions)
-        return _Color256(c.at(0), c.at(1), c.at(2))
+        cdef _Color256 c
+        c = _Color256()
+        c.color = rotate(self.color, positions)
+        return c
 
     def __getitem__(_Color256 self, object key):
         if isinstance(key, slice):

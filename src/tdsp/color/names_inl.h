@@ -218,4 +218,12 @@ inline std::string colorToString(float r, float g, float b, Base base) {
     return colorToString({{r, g, b}}, base);
 }
 
+bool stringToColor(char const* name, ColorS& cs, Base base) {
+    Color c;
+    if (not stringToColor(name, c, base))
+        return false;
+    cs = c;
+    return true;
+}
+
 }  // tdsp

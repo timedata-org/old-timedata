@@ -84,4 +84,4 @@ cdef extern from "<tdsp/color/hsv_inl.h>" namespace "tdsp":
     void rgbToHsvInto(ColorList&, Base)
 
 cdef extern from "<tdsp/color/spread.h>" namespace "tdsp":
-    ColorList fillSpread(Color& c1, Color& c2, size_t size);
+    ColorList fillSpread(ColorS& c1, ColorS& c2, size_t size);

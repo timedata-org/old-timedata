@@ -1,6 +1,7 @@
 #pragma once
 
 #include <tdsp/base/enum.h>
+#include <tdsp/base/rotate.h>
 #include <tdsp/signal/signal.h>
 
 namespace tdsp {
@@ -22,6 +23,12 @@ struct ColorS {
 
     operator Color() const { return {{red, green, blue}}; }
 };
+
+inline ColorS rotate(ColorS c, int positions) {
+    Color co = c;
+    rotate(co, positions);
+    return co;
+}
 
 inline Color makeColor(float r, float g, float b) {
     return {{r, g, b}};
