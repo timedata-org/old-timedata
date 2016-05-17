@@ -1,6 +1,6 @@
 import math, numbers
 
-cdef class _Color{suffix}:
+cdef class _Color256:
     """A Color is an immutable RGB floating point color.
 
        A Color looks very much like a Python tuple with three floating point
@@ -27,7 +27,7 @@ cdef class _Color{suffix}:
     cdef ColorS color
 
     cdef float _norm(self, float x):
-        return normalize(x, {ratio})
+        return normalize(x, 255.0)
 
     def __init__(self, *args):
         cdef Color frame
@@ -42,7 +42,7 @@ cdef class _Color{suffix}:
                 return
 
             if isinstance(args, str):
-                if not stringToColor(args, frame, {base}):
+                if not stringToColor(args, frame, integer):
                     raise ValueError("Can't understand color %s" % args)
                 self.color.red = frame.at(0)
                 self.color.green = frame.at(1)
@@ -67,40 +67,40 @@ cdef class _Color{suffix}:
         return self.color.blue
 
     @property
-    def ratio(_Color{suffix} self):
+    def ratio(_Color256 self):
         """Return the maximum ratio for this color range:  1.0 for Color
            and 255.0 for Color256."""
-        return {ratio}
+        return 255.0
 
-    def rgb_to_hsv(_Color{suffix} self):
+    def rgb_to_hsv(_Color256 self):
         """Return a new color converting RGB to HSV."""
         cdef ColorS c
-        c = rgbToHsv(self.color, {base});
-        return _Color{suffix}(c.red, c.green, c.blue)
+        c = rgbToHsv(self.color, integer);
+        return _Color256(c.red, c.green, c.blue)
 
-    def hsv_to_rgb(_Color{suffix} self):
+    def hsv_to_rgb(_Color256 self):
         """Return a new color converting RGB to HSV."""
         cdef ColorS c
-        c = hsvToRgb(self.color, {base});
-        return _Color{suffix}(c.red, c.green, c.blue)
+        c = hsvToRgb(self.color, integer);
+        return _Color256(c.red, c.green, c.blue)
 
-    def normalized(_Color{suffix} self):
+    def normalized(_Color256 self):
         """Return a color normalized into this color range."""
-        return _Color{suffix}(self._norm(self.color.red),
+        return _Color256(self._norm(self.color.red),
                               self._norm(self.color.green),
                               self._norm(self.color.blue))
 
-    def rotated(_Color{suffix} self, int positions):
+    def rotated(_Color256 self, int positions):
         """Return a color with the components rotated."""
         cdef Color c
         c = Color(self.color)
         rotate(c, positions)
-        return _Color{suffix}(c.at(0), c.at(1), c.at(2))
+        return _Color256(c.at(0), c.at(1), c.at(2))
 
-    def __getitem__(_Color{suffix} self, object key):
+    def __getitem__(_Color256 self, object key):
         if isinstance(key, slice):
             r = tuple(self[i] for i in range(*key.indices(len(self))))
-            return _Color{suffix}(*r) if len(r) == 3 else r
+            return _Color256(*r) if len(r) == 3 else r
 
         if key == 0 or key == -3:
             return self.color.red
@@ -114,104 +114,104 @@ cdef class _Color{suffix}:
     # This can happen if "self" appear on the right in an operation.
     # So all of these are wrong in fact.  :-D
     def __add__(self, c):
-        c = _Color{suffix}(c)
-        return _Color{suffix}(self.red + c.red,
+        c = _Color256(c)
+        return _Color256(self.red + c.red,
                               self.green + c.green,
                               self.blue + c.blue)
 
     def __truediv__(self, c):
-        c = _Color{suffix}(c)
-        return _Color{suffix}(divFixed(self.red, c.red),
+        c = _Color256(c)
+        return _Color256(divFixed(self.red, c.red),
                               divFixed(self.green, c.green),
                               divFixed(self.blue, c.blue))
 
     def __divmod__(self, c):
-        c = _Color{suffix}(c)
+        c = _Color256(c)
         dr, mr = divmod(self.red, c.red)
         dg, mg = divmod(self.green, c.green)
         db, mb = divmod(self.blue, c.blue)
-        return _Color{suffix}(dr, dg, db), _Color{suffix}(mr, mg, mb)
+        return _Color256(dr, dg, db), _Color256(mr, mg, mb)
 
     def __mod__(self, c):
-        c = _Color{suffix}(c)
-        return _Color{suffix}(self.red % c.red,
+        c = _Color256(c)
+        return _Color256(self.red % c.red,
                               self.green % c.green,
                               self.blue % c.blue)
 
     def __mul__(self, c):
-        c = _Color{suffix}(c)
-        return _Color{suffix}(self.red * c.red,
+        c = _Color256(c)
+        return _Color256(self.red * c.red,
                               self.green * c.green,
                               self.blue * c.blue)
 
     def __pow__(self, c, mod):
-        c = _Color{suffix}(c)
+        c = _Color256(c)
         if mod is None:
-            return _Color{suffix}(powFixed(self.red, c.red),
+            return _Color256(powFixed(self.red, c.red),
                                   powFixed(self.green, c.green),
                                   powFixed(self.blue, c.blue))
 
-        m = _Color{suffix}(mod)
-        return _Color{suffix}(pow(self.red, c.red, m.red),
+        m = _Color256(mod)
+        return _Color256(pow(self.red, c.red, m.red),
                               pow(self.green, c.green, m.green),
                               pow(self.blue, c.blue, m.blue))
 
     def __sub__(self, c):
-        c = _Color{suffix}(c)
-        return _Color{suffix}(self.red - c.red,
+        c = _Color256(c)
+        return _Color256(self.red - c.red,
                               self.green - c.green,
                               self.blue - c.blue)
 
-    def __abs__(_Color{suffix} self):
-        return _Color{suffix}(abs(self.color.red),
+    def __abs__(_Color256 self):
+        return _Color256(abs(self.color.red),
                               abs(self.color.green),
                               abs(self.color.blue))
 
-    def __ceil__(_Color{suffix} self):
-        return _Color{suffix}(math.ceil(self.color.red),
+    def __ceil__(_Color256 self):
+        return _Color256(math.ceil(self.color.red),
                               math.ceil(self.color.green),
                               math.ceil(self.color.blue))
 
-    def __floor__(_Color{suffix} self):
-        return _Color{suffix}(math.floor(self.color.red),
+    def __floor__(_Color256 self):
+        return _Color256(math.floor(self.color.red),
                               math.floor(self.color.green),
                               math.floor(self.color.blue))
 
-    def __invert__(_Color{suffix} self):
+    def __invert__(_Color256 self):
         """Return the complementary color."""
         cdef float i
-        i = 255 if (<int> {base} == 1) else 1
-        return _Color{suffix}(invert(self.red, i),
+        i = 255 if (<int> integer == 1) else 1
+        return _Color256(invert(self.red, i),
                             invert(self.green, i),
                             invert(self.blue, i))
 
-    def __len__(_Color{suffix} self):
+    def __len__(_Color256 self):
         return 3
 
-    def __neg__(_Color{suffix} self):
-        return _Color{suffix}(-self.red, -self.green, -self.blue)
+    def __neg__(_Color256 self):
+        return _Color256(-self.red, -self.green, -self.blue)
 
-    def __repr__(_Color{suffix} self):
-        return '_Color{suffix}(%s)' % str(self)
+    def __repr__(_Color256 self):
+        return '_Color256(%s)' % str(self)
 
-    def __richcmp__(_Color{suffix} self, _Color{suffix} c, int cmp):
+    def __richcmp__(_Color256 self, _Color256 c, int cmp):
         return cmpToRichcmp((self.red - c.red) or
                             (self.green - c.green) or
                             (self.blue - c.blue), cmp)
 
-    def __round__(_Color{suffix} self, n):
-        return _Color{suffix}(round(self.color.red, n),
+    def __round__(_Color256 self, n):
+        return _Color256(round(self.color.red, n),
                               round(self.color.green, n),
                               round(self.color.blue, n))
 
-    def __str__(_Color{suffix} self):
-        return colorToString(self.color, {base}).decode('ascii')
+    def __str__(_Color256 self):
+        return colorToString(self.color, integer).decode('ascii')
 
-    def __sizeof__(_Color{suffix} self):
+    def __sizeof__(_Color256 self):
         return 12  # 3 4-byte floats.
 
-    def __trunc__(_Color{suffix} self):
-        return _Color{suffix}(math.trunc(self.color.red),
+    def __trunc__(_Color256 self):
+        return _Color256(math.trunc(self.color.red),
                               math.trunc(self.color.green),
                               math.trunc(self.color.blue))
 

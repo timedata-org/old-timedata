@@ -4,7 +4,7 @@
 
 from numbers import Number
 
-cdef class {class_name}:
+cdef class _ColorList{suffix}:
     """A list of RGB floating point Colors, with many mutating functions.
 
        A ColorList looks quite like a Python list of Colors (which look like
@@ -30,8 +30,8 @@ cdef class {class_name}:
         """Construct a ColorList with an iterator of items, each of which looks
            like a Color."""
         if items is not None:
-            if isinstance(items, {class_name}):
-                self.colors = (<{class_name}> items).colors
+            if isinstance(items, _ColorList{suffix}):
+                self.colors = (<_ColorList{suffix}> items).colors
             else:
                 # A list of tuples, Colors or strings.
                 self.colors.resize(len(items))
@@ -42,10 +42,10 @@ cdef class {class_name}:
         cdef size_t length, slice_length
         cdef int begin, end, step, index
         cdef float r, g, b
-        cdef {class_name} cl
+        cdef _ColorList{suffix} cl
         if isinstance(key, slice):
             begin, end, step = key.indices(self.colors.size())
-            if sliceIntoVector(_to{class_name}(x).colors, self.colors,
+            if sliceIntoVector(_to_ColorList{suffix}(x).colors, self.colors,
                                begin, end, step):
                 return
             raise ValueError('attempt to assign sequence of one size '
@@ -54,7 +54,7 @@ cdef class {class_name}:
         if not self.colors.fixKey(index):
             raise IndexError('ColorList index out of range ' + str(index))
         if isinstance(x, str):
-            x = {color_class}(x)
+            x = _Color{suffix}(x)
         r, g, b = x
         self.colors.setColor(index, r, g, b)
 
@@ -63,7 +63,7 @@ cdef class {class_name}:
         cdef int index
         if isinstance(key, slice):
             begin, end, step = key.indices(self.colors.size())
-            cl = {class_name}()
+            cl = _ColorList{suffix}()
             cl.colors = sliceVector(self.colors, begin, end, step)
             return cl
 
@@ -72,7 +72,7 @@ cdef class {class_name}:
             raise IndexError('ColorList index out of range ' + str(key))
 
         c = self.colors[index]
-        return {color_class}(c.at(0), c.at(1), c.at(2))
+        return _Color{suffix}(c.at(0), c.at(1), c.at(2))
 
     # Unary operators and corresponding mutators.
     def abs(self):
@@ -81,7 +81,7 @@ cdef class {class_name}:
         return self
 
     def __abs__(self):
-        cdef {class_name} cl
+        cdef _ColorList{suffix} cl
         cl = self[:]
         cl.abs()
         return cl
@@ -92,7 +92,7 @@ cdef class {class_name}:
         return self
 
     def __ceil__(self):
-        cdef {class_name} cl
+        cdef _ColorList{suffix} cl
         cl = self[:]
         cl.ceil()
         return cl
@@ -103,7 +103,7 @@ cdef class {class_name}:
         return self
 
     def __floor__(self):
-        cdef {class_name} cl
+        cdef _ColorList{suffix} cl
         cl = self[:]
         cl.floor()
         return cl
@@ -114,7 +114,7 @@ cdef class {class_name}:
         return self
 
     def __invert__(self):
-        cdef {class_name} cl
+        cdef _ColorList{suffix} cl
         cl = self[:]
         cl.invert()
         return cl
@@ -125,7 +125,7 @@ cdef class {class_name}:
         return self
 
     def __negative__(self):
-        cdef {class_name} cl
+        cdef _ColorList{suffix} cl
         cl = self[:]
         cl.negative()
         return cl
@@ -136,7 +136,7 @@ cdef class {class_name}:
         return self
 
     def __round__(self):
-        cdef {class_name} cl
+        cdef _ColorList{suffix} cl
         cl = self[:]
         cl.round()
         return cl
@@ -147,7 +147,7 @@ cdef class {class_name}:
         return self
 
     def __trunc__(self):
-        cdef {class_name} cl
+        cdef _ColorList{suffix} cl
         cl = self[:]
         cl.trunc()
         return cl
@@ -189,7 +189,7 @@ cdef class {class_name}:
 
     def duplicate(self, uint count):
         """Return a new `ColorList` with `count` copies of this one."""
-        cl = {class_name}()
+        cl = _ColorList{suffix}()
         cl.colors = duplicate(self.colors, count)
         return cl
 
@@ -210,7 +210,7 @@ cdef class {class_name}:
         if isinstance(c, Number):
             maxInto(<float> c, self.colors)
         else:
-            maxInto(_to{class_name}(c).colors, self.colors)
+            maxInto(_to_ColorList{suffix}(c).colors, self.colors)
         return self
 
     def min(self, c):
@@ -218,7 +218,7 @@ cdef class {class_name}:
         if isinstance(c, Number):
             minInto(<float> c, self.colors)
         else:
-            minInto(_to{class_name}(c).colors, self.colors)
+            minInto(_to_ColorList{suffix}(c).colors, self.colors)
         return self
 
     def pow(self, float c):
@@ -226,7 +226,7 @@ cdef class {class_name}:
         if isinstance(c, Number):
             powInto(<float> c, self.colors)
         else:
-            powInto(_to{class_name}(c).colors, self.colors)
+            powInto(_to_ColorList{suffix}(c).colors, self.colors)
         return self
 
     def resize(self, size_t size):
@@ -239,7 +239,7 @@ cdef class {class_name}:
         if isinstance(c, Number):
             rpowInto(<float> c, self.colors)
         else:
-            rpowInto(_to{class_name}(c).colors, self.colors)
+            rpowInto(_to_ColorList{suffix}(c).colors, self.colors)
         return self
 
     # Mutating operations.
@@ -247,112 +247,112 @@ cdef class {class_name}:
         if isinstance(c, Number):
             addInto(<float> c, self.colors)
         else:
-            addInto(_to{class_name}(c).colors, self.colors)
+            addInto(_to_ColorList{suffix}(c).colors, self.colors)
         return self
 
     def __imul__(self, c):
         if isinstance(c, Number):
             multiplyInto(<float> c, self.colors)
         else:
-            multiplyInto(_to{class_name}(c).colors, self.colors)
+            multiplyInto(_to_ColorList{suffix}(c).colors, self.colors)
         return self
 
     def __ipow__(self, c):
         if isinstance(c, Number):
              powInto(<float> c, self.colors)
         else:
-             powInto(_to{class_name}(c).colors, self.colors)
+             powInto(_to_ColorList{suffix}(c).colors, self.colors)
         return self
 
     def __isub__(self, c):
         if isinstance(c, Number):
              subtractInto(<float> c, self.colors)
         else:
-             subtractInto(_to{class_name}(c).colors, self.colors)
+             subtractInto(_to_ColorList{suffix}(c).colors, self.colors)
         return self
 
     def __itruediv__(self, c):
         if isinstance(c, Number):
             divideInto(<float> c, self.colors)
         else:
-            divideInto(_to{class_name}(c).colors, self.colors)
+            divideInto(_to_ColorList{suffix}(c).colors, self.colors)
         return self
 
     def __add__(self, c):
-        cdef {class_name} cl
-        cl = {class_name}()
+        cdef _ColorList{suffix} cl
+        cl = _ColorList{suffix}()
         if isinstance(c, Number):
-            addOver((<{class_name}> self).colors, <float> c, cl.colors)
-        elif isinstance(self, {class_name}):
-            addOver((<{class_name}> self).colors, _to{class_name}(c).colors, cl.colors)
+            addOver((<_ColorList{suffix}> self).colors, <float> c, cl.colors)
+        elif isinstance(self, _ColorList{suffix}):
+            addOver((<_ColorList{suffix}> self).colors, _to_ColorList{suffix}(c).colors, cl.colors)
         elif isinstance(self, Number):
-            addOver(<float> self, _to{class_name}(c).colors, cl.colors)
+            addOver(<float> self, _to_ColorList{suffix}(c).colors, cl.colors)
         else:
-            addOver({class_name}(self).colors, (<{class_name}> c).colors, cl.colors)
+            addOver(_ColorList{suffix}(self).colors, (<_ColorList{suffix}> c).colors, cl.colors)
         return cl
 
     def __mul__(self, c):
-        cdef {class_name} cl
-        cl = {class_name}()
+        cdef _ColorList{suffix} cl
+        cl = _ColorList{suffix}()
         if isinstance(c, Number):
-            mulOver((<{class_name}> self).colors, <float> c, cl.colors)
-        elif isinstance(self, {class_name}):
-            mulOver((<{class_name}> self).colors, _to{class_name}(c).colors, cl.colors)
+            mulOver((<_ColorList{suffix}> self).colors, <float> c, cl.colors)
+        elif isinstance(self, _ColorList{suffix}):
+            mulOver((<_ColorList{suffix}> self).colors, _to_ColorList{suffix}(c).colors, cl.colors)
         elif isinstance(self, Number):
-            mulOver(<float> self, _to{class_name}(c).colors, cl.colors)
+            mulOver(<float> self, _to_ColorList{suffix}(c).colors, cl.colors)
         else:
-            mulOver({class_name}(self).colors, (<{class_name}> c).colors, cl.colors)
+            mulOver(_ColorList{suffix}(self).colors, (<_ColorList{suffix}> c).colors, cl.colors)
         return cl
 
     def __pow__(self, c, mod):
-        cdef {class_name} cl
+        cdef _ColorList{suffix} cl
         if mod:
             raise ValueError('Can\'t handle three operator pow')
 
-        cl = {class_name}()
+        cl = _ColorList{suffix}()
         if isinstance(c, Number):
-            powOver((<{class_name}> self).colors, <float> c, cl.colors)
-        elif isinstance(self, {class_name}):
-            powOver((<{class_name}> self).colors, _to{class_name}(c).colors, cl.colors)
+            powOver((<_ColorList{suffix}> self).colors, <float> c, cl.colors)
+        elif isinstance(self, _ColorList{suffix}):
+            powOver((<_ColorList{suffix}> self).colors, _to_ColorList{suffix}(c).colors, cl.colors)
         elif isinstance(self, Number):
-            powOver(<float> self, _to{class_name}(c).colors, cl.colors)
+            powOver(<float> self, _to_ColorList{suffix}(c).colors, cl.colors)
         else:
-            powOver({class_name}(self).colors, (<{class_name}> c).colors, cl.colors)
+            powOver(_ColorList{suffix}(self).colors, (<_ColorList{suffix}> c).colors, cl.colors)
         return cl
 
     def __sub__(self, c):
-        cdef {class_name} cl
-        cl = {class_name}()
+        cdef _ColorList{suffix} cl
+        cl = _ColorList{suffix}()
         if isinstance(c, Number):
-            subOver((<{class_name}> self).colors, <float> c, cl.colors)
-        elif isinstance(self, {class_name}):
-            subOver((<{class_name}> self).colors, _to{class_name}(c).colors, cl.colors)
+            subOver((<_ColorList{suffix}> self).colors, <float> c, cl.colors)
+        elif isinstance(self, _ColorList{suffix}):
+            subOver((<_ColorList{suffix}> self).colors, _to_ColorList{suffix}(c).colors, cl.colors)
         elif isinstance(self, Number):
-            subOver(<float> self, _to{class_name}(c).colors, cl.colors)
+            subOver(<float> self, _to_ColorList{suffix}(c).colors, cl.colors)
         else:
-            subOver({class_name}(self).colors, (<{class_name}> c).colors, cl.colors)
+            subOver(_ColorList{suffix}(self).colors, (<_ColorList{suffix}> c).colors, cl.colors)
         return cl
 
     def __truediv__(self, c):
-        cdef {class_name} cl
-        cl = {class_name}()
+        cdef _ColorList{suffix} cl
+        cl = _ColorList{suffix}()
         if isinstance(c, Number):
-            divOver((<{class_name}> self).colors, <float> c, cl.colors)
-        elif isinstance(self, {class_name}):
-            divOver((<{class_name}> self).colors, _to{class_name}(c).colors, cl.colors)
+            divOver((<_ColorList{suffix}> self).colors, <float> c, cl.colors)
+        elif isinstance(self, _ColorList{suffix}):
+            divOver((<_ColorList{suffix}> self).colors, _to_ColorList{suffix}(c).colors, cl.colors)
         elif isinstance(self, Number):
-            divOver(<float> self, _to{class_name}(c).colors, cl.colors)
+            divOver(<float> self, _to_ColorList{suffix}(c).colors, cl.colors)
         else:
-            divOver({class_name}(self).colors, (<{class_name}> c).colors, cl.colors)
+            divOver(_ColorList{suffix}(self).colors, (<_ColorList{suffix}> c).colors, cl.colors)
         return cl
 
     def __len__(self):
         return self.colors.size()
 
     def __repr__(self):
-        return '{class_name}(%s)' % str(self)
+        return '_ColorList{suffix}(%s)' % str(self)
 
-    def __richcmp__({class_name} self, {class_name} other, int rcmp):
+    def __richcmp__(_ColorList{suffix} self, _ColorList{suffix} other, int rcmp):
         return cmpToRichcmp(compareContainers(self.colors, other.colors), rcmp)
 
     def __sizeof__(self):
@@ -364,16 +364,16 @@ cdef class {class_name}:
     @staticmethod
     def spread(_Color x, _Color y, size_t size):
         cdef Color c, d
-        cdef {class_name} cl
+        cdef _ColorList{suffix} cl
         c = makeColor(x.red, x.green, x.blue)
         d = makeColor(y.red, y.green, y.blue)
 
-        cl =  {class_name}()
+        cl =  _ColorList{suffix}()
         cl.colors = fillSpread(c, d, size)
 
 
-cdef {class_name} _to{class_name}(object value):
-    if isinstance(value, {class_name}):
-        return <{class_name}> value
+cdef _ColorList{suffix} _to_ColorList{suffix}(object value):
+    if isinstance(value, _ColorList{suffix}):
+        return <_ColorList{suffix}> value
     else:
-        return {class_name}(value)
+        return _ColorList{suffix}(value)
