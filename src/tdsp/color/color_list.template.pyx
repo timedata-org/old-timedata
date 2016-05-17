@@ -165,12 +165,10 @@ cdef class {class_name}:
         return self
 
     def hsv_to_rgb(self):
-        """Convert HSV colors to RGB."""
         hsvToRgbInto(self.colors, {base})
         return self
 
     def rgb_to_hsv(self):
-        """Convert HSV colors to RGB."""
         rgbToHsvInto(self.colors, {base})
         return self
 
@@ -362,6 +360,16 @@ cdef class {class_name}:
 
     def __str__(self):
         return toString(self.colors).decode('ascii')
+
+    @staticmethod
+    def spread(_Color x, _Color y, size_t size):
+        cdef Color c, d
+        cdef {class_name} cl
+        c = makeColor(x.red, x.green, x.blue)
+        d = makeColor(y.red, y.green, y.blue)
+
+        cl =  {class_name}()
+        cl.colors = fillSpread(c, d, size)
 
 
 cdef {class_name} _to{class_name}(object value):

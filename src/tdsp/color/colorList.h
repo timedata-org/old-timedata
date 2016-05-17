@@ -25,6 +25,8 @@ struct ColorList : public ColorListBase {
     size_t getSizeOf() const {
         return sizeof(ColorList) + size() * sizeof(Color);
     }
+
+    using ColorListBase::ColorListBase;
 };
 
 ColorList duplicate(ColorList const&, size_t count);
@@ -95,7 +97,7 @@ void powOver(X const& x, Y const& y, ColorList& out);
 template <typename X, typename Y>
 void subOver(X const& x, Y const& y, ColorList& out);
 
-void hsvToRgbInto(ColorList&);
-void rgbToHsvInto(ColorList&);
+void hsvToRgbInto(ColorList&, Base);
+void rgbToHsvInto(ColorList&, Base);
 
 } // tdsp

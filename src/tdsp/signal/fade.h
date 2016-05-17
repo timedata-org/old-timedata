@@ -6,12 +6,12 @@
 namespace tdsp {
 
 struct Fade {
-    enum class Type {linear, sqr, sqrt, size};
+    enum class Type {linear, sqr, sqrt, last = sqrt};
 
-    float begin = 0, end = 1, fader = 0;
+    float begin = 0, end = 1;
     Type type = Type::linear;
 
-    float operator()(float x, float y) const {
+    float operator()(float fader, float x, float y) const {
         auto xratio = begin + fader * (end - begin);
         auto yratio = begin + invert(fader) * (end - begin);
 
@@ -33,24 +33,20 @@ struct Fade {
     }
 };
 
-template <typename Coll>
-void applySame(Fade const& fade, Coll const& in1, Coll const& in2, Coll& out) {
+inline
+Color fadeTo(float fader, Fade const& fade, Color const& in1, Color const& in2) {
+    Color out;
     for (size_t i = 0; i < out.size(); ++i)
-        out[i] = fade(in1[i], in2[i]);
+        out[i] = fade(fader, in1[i], in2[i]);
+    return out;
 }
 
-template <typename Coll>
-void applyExtend(Fade const& fade, Coll const& in1, Coll const& in2, Coll& out) {
-    // This is wrong - I shouldn't be changing the size.
-    auto size = std::max(in1.size(), in2.size());
+void fadeOver(float fader, Fade const& fade,
+              ColorList const& in1, ColorList const& in2, ColorList& out) {
+    auto size = std::min(in1.size(), in2.size());
     out.resize(size);
-    decltype(in1[0]) zero = {{0}};
-    auto get = [&] (Coll const& c, size_t i) {
-        return i < c.size() ? c[i] : zero;
-    };
-
     for (size_t i = 0; i < size; ++i)
-        applySame(fade, get(in1, i), get(in2, i), out[i]);
+        out[i] = fadeTo(fader, fade, in1[i], in2[i]);
 }
 
 } // tdsp

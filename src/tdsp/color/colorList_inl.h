@@ -256,14 +256,14 @@ void subOver(X const& x, Y const& y, ColorList& out) {
     doOver(x, y, out, [](float x, float y) { return x - y; });
 }
 
-inline void hsvToRgbInto(ColorList& out) {
+inline void hsvToRgbInto(ColorList& out, Base b) {
     for (auto& c: out)
-        c = hsvToRgb(c);
+        c = hsvToRgb(c, b);
 }
 
-inline void rgbToHsvInto(ColorList& out) {
+inline void rgbToHsvInto(ColorList& out, Base b) {
     for (auto& c: out)
-        c = rgbToHsv(c);
+        c = rgbToHsv(c, b);
 }
 
 } // tdsp

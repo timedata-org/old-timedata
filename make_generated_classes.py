@@ -16,7 +16,6 @@ if __name__ == '__main__':
 
     script = sys.argv[0]
     timestamp = datetime.datetime.utcnow().isoformat()
-    base =
 
     class_name, color_class, base = '_ColorList', '_Color', 'normal'
 
