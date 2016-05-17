@@ -9,6 +9,7 @@ ctypedef unsigned char uint8_t
 
 include "tdsp/base/math.pyx"
 include "tdsp/base/wrapper.pyx"
+include "tdsp/color/color_base.pyx"
 include "tdsp/color/color.pyx"
 include "tdsp/color/color_list_base.pyx"
 include "tdsp/color/color_list.pyx"
