@@ -111,11 +111,11 @@ cdef class _Color:
             return self.__class__(*r) if len(r) == 3 else r
 
         if key == 0 or key == -3:
-            return self.red
+            return self.color.red
         if key == 1 or key == -2:
-            return self.green
+            return self.color.green
         if key == 2 or key == -1:
-            return self.blue
+            return self.color.blue
         raise IndexError('Color index out of range')
 
     def __abs__(_Color self):
