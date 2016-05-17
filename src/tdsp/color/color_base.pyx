@@ -26,19 +26,12 @@ cdef extern from "<tdsp/color/names_inl.h>" namespace "tdsp":
 
     float invert(float, float)
     float normalize(float, float)
-    void rotate(Color&, int)
-    bool stringToColor(const char*, Color, Base)
+    ColorS rotate(ColorS, int)
+    bool stringToColor(const char*, ColorS&, Base)
     string colorToString(ColorS&, Base)
     bool cmpToRichcmp(float cmp, int richcmp)
-    Color makeColor(float r, float g, float b)
     vector[string] colorNames()
 
 cdef extern from "<tdsp/color/hsv.h>" namespace "tdsp":
-    Color hsvToRgb(Color, Base)
-    Color rgbToHsv(Color, Base)
-    Color hsvToRgb(Color)
-    Color rgbToHsv(Color)
     ColorS hsvToRgb(ColorS, Base)
     ColorS rgbToHsv(ColorS, Base)
-    ColorS hsvToRgb(ColorS)
-    ColorS rgbToHsv(ColorS)

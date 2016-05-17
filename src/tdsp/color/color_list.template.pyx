@@ -363,13 +363,9 @@ cdef class _ColorList{suffix}:
 
     @staticmethod
     def spread(_Color x, _Color y, size_t size):
-        cdef Color c, d
         cdef _ColorList{suffix} cl
-        c = makeColor(x.red, x.green, x.blue)
-        d = makeColor(y.red, y.green, y.blue)
-
         cl =  _ColorList{suffix}()
-        cl.colors = fillSpread(c, d, size)
+        cl.colors = fillSpread(x.color, y.color, size)
         return cl
 
 
