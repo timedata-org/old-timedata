@@ -9,20 +9,18 @@ MAKE_PYX = """\
     tdsp/signal/stripe.h\
 """
 
-if __name__ == '__main__':
-    root = 'src/tdsp/color/color_list'
-    template_file = root + '.template.pyx'
-    TEMPLATE = open(template_file).read()
+FILES = 'src/tdsp/color/color', 'src/tdsp/color/color_list'
 
+if __name__ == '__main__':
     script = sys.argv[0]
     timestamp = datetime.datetime.utcnow().isoformat()
+    for suffix, base, ratio in (('', 'normal', '1.0'),
+                                ('256', 'integer', '255.0')):
+        for f in FILES:
+            template_file = f + '.template.pyx'
+            template = open(template_file).read()
+            open(f + suffix + '.pyx', 'w').write(template.format(**locals()))
 
-    class_name, color_class, base = '_ColorList', '_Color', 'normal'
-
-    open(root + '.pyx', 'w').write(TEMPLATE.format(**locals()))
-
-    class_name, color_class, base = '_ColorList256', '_Color256', 'integer'
-    open(root + '256.pyx', 'w').write(TEMPLATE.format(**locals()))
 
     if False:
        os.cwd('src')
