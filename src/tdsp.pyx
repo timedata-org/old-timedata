@@ -6,9 +6,9 @@ from libcpp.vector cimport vector
 ctypedef unsigned int uint
 ctypedef unsigned char uint8_t
 
-
 include "tdsp/base/math.pyx"
 include "tdsp/base/wrapper.pyx"
+include "tdsp/base/timestamp.pyx"
 include "tdsp/color/color_base.pyx"
 include "tdsp/color/color.pyx"
 include "tdsp/color/color256.pyx"
@@ -30,3 +30,5 @@ locals().update(
     Render3=_Render3Impl,
     Stripe=_Stripe,
     )
+
+print('tdsp compiled on', compile_timestamp())
