@@ -211,7 +211,7 @@ cdef class _Color{suffix}:
                               -self.color.blue)
 
     def __repr__(_Color{suffix} self):
-        return '_Color{suffix}(%s)' % str(self)
+        return 'Color{suffix}(%s)' % str(self)
 
     def __richcmp__(_Color{suffix} self, _Color{suffix} c, int cmp):
         return cmpToRichcmp((self.color.red - c.color.red) or
