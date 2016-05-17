@@ -26,9 +26,6 @@ cdef class _Color256:
     """
     cdef ColorS color
 
-    cdef float _norm(self, float x):
-        return normalize(x, 255.0)
-
     def __init__(self, *args):
         cdef Color frame
         if not args:
@@ -84,11 +81,14 @@ cdef class _Color256:
         c = hsvToRgb(self.color, integer);
         return _Color256(c.red, c.green, c.blue)
 
+    cdef float _norm(self, float x):
+        return normalize(x, 255.0)
+
     def normalized(_Color256 self):
         """Return a color normalized into this color range."""
-        return _Color256(self._norm(self.color.red),
-                              self._norm(self.color.green),
-                              self._norm(self.color.blue))
+        return _Color256(normalize(self.color.red, 255.0),
+                           normalize(self.color.green, 255.0),
+                           normalize(self.color.blue, 255.0))
 
     def rotated(_Color256 self, int positions):
         """Return a color with the components rotated."""
@@ -114,55 +114,69 @@ cdef class _Color256:
     # This can happen if "self" appear on the right in an operation.
     # So all of these are wrong in fact.  :-D
     def __add__(self, c):
-        cdef _Color256 x, y
-        x = _make_Color256(self)
-        y = _make_Color256(c)
-        return _Color256(x.color.red + y.color.red,
-                              x.color.green + y.color.green,
-                              x.color.blue + y.color.blue)
+        cdef ColorS x, y
+        x = _make_Color256(self).color
+        y = _make_Color256(c).color
+        return _Color256(x.red + y.red, x.green + y.green, x.blue + y.blue)
 
     def __truediv__(self, c):
-        c = _Color256(c)
-        return _Color256(divFixed(self.red, c.red),
-                              divFixed(self.green, c.green),
-                              divFixed(self.blue, c.blue))
+        cdef ColorS x, y
+        x = _make_Color256(self).color
+        y = _make_Color256(c).color
+        return _Color256(divFixed(x.red, y.red),
+                              divFixed(x.green, y.green),
+                              divFixed(x.blue, y.blue))
 
     def __divmod__(self, c):
-        c = _Color256(c)
-        dr, mr = divmod(self.red, c.red)
-        dg, mg = divmod(self.green, c.green)
-        db, mb = divmod(self.blue, c.blue)
+        cdef ColorS x, y
+        cdef float dr, mr, dg, mg, db, mb
+
+        x = _make_Color256(self).color
+        y = _make_Color256(c).color
+
+        dr, mr = divmod(x.red, y.red)
+        dg, mg = divmod(x.green, y.green)
+        db, mb = divmod(x.blue, y.blue)
         return _Color256(dr, dg, db), _Color256(mr, mg, mb)
 
     def __mod__(self, c):
-        c = _Color256(c)
-        return _Color256(self.red % c.red,
-                              self.green % c.green,
-                              self.blue % c.blue)
+        cdef ColorS x, y
+        x = _make_Color256(self).color
+        y = _make_Color256(c).color
+
+        return _Color256(x.red % y.red, x.green % y.green, x.blue % y.blue)
 
     def __mul__(self, c):
+        cdef ColorS x, y
+        x = _make_Color256(self).color
+        y = _make_Color256(c).color
+
         c = _Color256(c)
-        return _Color256(self.red * c.red,
-                              self.green * c.green,
-                              self.blue * c.blue)
+        return _Color256(x.red * y.red, x.green * y.green, x.blue * y.blue)
 
     def __pow__(self, c, mod):
-        c = _Color256(c)
+        cdef ColorS x, y
+        x = _make_Color256(self).color
+        y = _make_Color256(c).color
+
         if mod is None:
-            return _Color256(powFixed(self.red, c.red),
-                                  powFixed(self.green, c.green),
-                                  powFixed(self.blue, c.blue))
+            return _Color256(powFixed(x.red, y.red),
+                                  powFixed(x.green, y.green),
+                                  powFixed(x.blue, y.blue))
 
         m = _Color256(mod)
-        return _Color256(pow(self.red, c.red, m.red),
-                              pow(self.green, c.green, m.green),
-                              pow(self.blue, c.blue, m.blue))
+        return _Color256(pow(x.red, y.red, m.red),
+                              pow(x.green, y.green, m.green),
+                              pow(x.blue, y.blue, m.blue))
 
     def __sub__(self, c):
-        c = _Color256(c)
-        return _Color256(self.red - c.red,
-                              self.green - c.green,
-                              self.blue - c.blue)
+        cdef ColorS x, y
+        x = _make_Color256(self).color
+        y = _make_Color256(c).color
+
+        return _Color256(x.red - y.red,
+                              x.green - y.green,
+                              x.blue - y.blue)
 
     # Everything else knows what self is!
     def __abs__(_Color256 self):
@@ -184,23 +198,25 @@ cdef class _Color256:
         """Return the complementary color."""
         cdef float i
         i = 255 if (<int> integer == 1) else 1
-        return _Color256(invert(self.red, i),
-                            invert(self.green, i),
-                            invert(self.blue, i))
+        return _Color256(invert(self.color.red, i),
+                            invert(self.color.green, i),
+                            invert(self.color.blue, i))
 
     def __len__(_Color256 self):
         return 3
 
     def __neg__(_Color256 self):
-        return _Color256(-self.red, -self.green, -self.blue)
+        return _Color256(-self.color.red,
+                              -self.color.green,
+                              -self.color.blue)
 
     def __repr__(_Color256 self):
         return '_Color256(%s)' % str(self)
 
     def __richcmp__(_Color256 self, _Color256 c, int cmp):
-        return cmpToRichcmp((self.red - c.red) or
-                            (self.green - c.green) or
-                            (self.blue - c.blue), cmp)
+        return cmpToRichcmp((self.color.red - c.color.red) or
+                            (self.color.green - c.color.green) or
+                            (self.color.blue - c.color.blue), cmp)
 
     def __round__(_Color256 self, n):
         return _Color256(round(self.color.red, n),

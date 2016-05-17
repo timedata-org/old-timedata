@@ -26,9 +26,6 @@ cdef class _Color{suffix}:
     """
     cdef ColorS color
 
-    cdef float _norm(self, float x):
-        return normalize(x, {ratio})
-
     def __init__(self, *args):
         cdef Color frame
         if not args:
@@ -84,11 +81,14 @@ cdef class _Color{suffix}:
         c = hsvToRgb(self.color, {base});
         return _Color{suffix}(c.red, c.green, c.blue)
 
+    cdef float _norm(self, float x):
+        return normalize(x, {ratio})
+
     def normalized(_Color{suffix} self):
         """Return a color normalized into this color range."""
-        return _Color{suffix}(self._norm(self.color.red),
-                              self._norm(self.color.green),
-                              self._norm(self.color.blue))
+        return _Color{suffix}(normalize(self.color.red, {ratio}),
+                           normalize(self.color.green, {ratio}),
+                           normalize(self.color.blue, {ratio}))
 
     def rotated(_Color{suffix} self, int positions):
         """Return a color with the components rotated."""
@@ -114,55 +114,69 @@ cdef class _Color{suffix}:
     # This can happen if "self" appear on the right in an operation.
     # So all of these are wrong in fact.  :-D
     def __add__(self, c):
-        cdef _Color{suffix} x, y
-        x = _make_Color{suffix}(self)
-        y = _make_Color{suffix}(c)
-        return _Color{suffix}(x.color.red + y.color.red,
-                              x.color.green + y.color.green,
-                              x.color.blue + y.color.blue)
+        cdef ColorS x, y
+        x = _make_Color{suffix}(self).color
+        y = _make_Color{suffix}(c).color
+        return _Color{suffix}(x.red + y.red, x.green + y.green, x.blue + y.blue)
 
     def __truediv__(self, c):
-        c = _Color{suffix}(c)
-        return _Color{suffix}(divFixed(self.red, c.red),
-                              divFixed(self.green, c.green),
-                              divFixed(self.blue, c.blue))
+        cdef ColorS x, y
+        x = _make_Color{suffix}(self).color
+        y = _make_Color{suffix}(c).color
+        return _Color{suffix}(divFixed(x.red, y.red),
+                              divFixed(x.green, y.green),
+                              divFixed(x.blue, y.blue))
 
     def __divmod__(self, c):
-        c = _Color{suffix}(c)
-        dr, mr = divmod(self.red, c.red)
-        dg, mg = divmod(self.green, c.green)
-        db, mb = divmod(self.blue, c.blue)
+        cdef ColorS x, y
+        cdef float dr, mr, dg, mg, db, mb
+
+        x = _make_Color{suffix}(self).color
+        y = _make_Color{suffix}(c).color
+
+        dr, mr = divmod(x.red, y.red)
+        dg, mg = divmod(x.green, y.green)
+        db, mb = divmod(x.blue, y.blue)
         return _Color{suffix}(dr, dg, db), _Color{suffix}(mr, mg, mb)
 
     def __mod__(self, c):
-        c = _Color{suffix}(c)
-        return _Color{suffix}(self.red % c.red,
-                              self.green % c.green,
-                              self.blue % c.blue)
+        cdef ColorS x, y
+        x = _make_Color{suffix}(self).color
+        y = _make_Color{suffix}(c).color
+
+        return _Color{suffix}(x.red % y.red, x.green % y.green, x.blue % y.blue)
 
     def __mul__(self, c):
+        cdef ColorS x, y
+        x = _make_Color{suffix}(self).color
+        y = _make_Color{suffix}(c).color
+
         c = _Color{suffix}(c)
-        return _Color{suffix}(self.red * c.red,
-                              self.green * c.green,
-                              self.blue * c.blue)
+        return _Color{suffix}(x.red * y.red, x.green * y.green, x.blue * y.blue)
 
     def __pow__(self, c, mod):
-        c = _Color{suffix}(c)
+        cdef ColorS x, y
+        x = _make_Color{suffix}(self).color
+        y = _make_Color{suffix}(c).color
+
         if mod is None:
-            return _Color{suffix}(powFixed(self.red, c.red),
-                                  powFixed(self.green, c.green),
-                                  powFixed(self.blue, c.blue))
+            return _Color{suffix}(powFixed(x.red, y.red),
+                                  powFixed(x.green, y.green),
+                                  powFixed(x.blue, y.blue))
 
         m = _Color{suffix}(mod)
-        return _Color{suffix}(pow(self.red, c.red, m.red),
-                              pow(self.green, c.green, m.green),
-                              pow(self.blue, c.blue, m.blue))
+        return _Color{suffix}(pow(x.red, y.red, m.red),
+                              pow(x.green, y.green, m.green),
+                              pow(x.blue, y.blue, m.blue))
 
     def __sub__(self, c):
-        c = _Color{suffix}(c)
-        return _Color{suffix}(self.red - c.red,
-                              self.green - c.green,
-                              self.blue - c.blue)
+        cdef ColorS x, y
+        x = _make_Color{suffix}(self).color
+        y = _make_Color{suffix}(c).color
+
+        return _Color{suffix}(x.red - y.red,
+                              x.green - y.green,
+                              x.blue - y.blue)
 
     # Everything else knows what self is!
     def __abs__(_Color{suffix} self):
@@ -184,23 +198,25 @@ cdef class _Color{suffix}:
         """Return the complementary color."""
         cdef float i
         i = 255 if (<int> {base} == 1) else 1
-        return _Color{suffix}(invert(self.red, i),
-                            invert(self.green, i),
-                            invert(self.blue, i))
+        return _Color{suffix}(invert(self.color.red, i),
+                            invert(self.color.green, i),
+                            invert(self.color.blue, i))
 
     def __len__(_Color{suffix} self):
         return 3
 
     def __neg__(_Color{suffix} self):
-        return _Color{suffix}(-self.red, -self.green, -self.blue)
+        return _Color{suffix}(-self.color.red,
+                              -self.color.green,
+                              -self.color.blue)
 
     def __repr__(_Color{suffix} self):
         return '_Color{suffix}(%s)' % str(self)
 
     def __richcmp__(_Color{suffix} self, _Color{suffix} c, int cmp):
-        return cmpToRichcmp((self.red - c.red) or
-                            (self.green - c.green) or
-                            (self.blue - c.blue), cmp)
+        return cmpToRichcmp((self.color.red - c.color.red) or
+                            (self.color.green - c.color.green) or
+                            (self.color.blue - c.color.blue), cmp)
 
     def __round__(_Color{suffix} self, n):
         return _Color{suffix}(round(self.color.red, n),

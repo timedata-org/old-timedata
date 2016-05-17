@@ -26,9 +26,6 @@ cdef class _Color:
     """
     cdef ColorS color
 
-    cdef float _norm(self, float x):
-        return normalize(x, 1.0)
-
     def __init__(self, *args):
         cdef Color frame
         if not args:
@@ -84,11 +81,14 @@ cdef class _Color:
         c = hsvToRgb(self.color, normal);
         return _Color(c.red, c.green, c.blue)
 
+    cdef float _norm(self, float x):
+        return normalize(x, 1.0)
+
     def normalized(_Color self):
         """Return a color normalized into this color range."""
-        return _Color(self._norm(self.color.red),
-                              self._norm(self.color.green),
-                              self._norm(self.color.blue))
+        return _Color(normalize(self.color.red, 1.0),
+                           normalize(self.color.green, 1.0),
+                           normalize(self.color.blue, 1.0))
 
     def rotated(_Color self, int positions):
         """Return a color with the components rotated."""
@@ -114,55 +114,69 @@ cdef class _Color:
     # This can happen if "self" appear on the right in an operation.
     # So all of these are wrong in fact.  :-D
     def __add__(self, c):
-        cdef _Color x, y
-        x = _make_Color(self)
-        y = _make_Color(c)
-        return _Color(x.color.red + y.color.red,
-                              x.color.green + y.color.green,
-                              x.color.blue + y.color.blue)
+        cdef ColorS x, y
+        x = _make_Color(self).color
+        y = _make_Color(c).color
+        return _Color(x.red + y.red, x.green + y.green, x.blue + y.blue)
 
     def __truediv__(self, c):
-        c = _Color(c)
-        return _Color(divFixed(self.red, c.red),
-                              divFixed(self.green, c.green),
-                              divFixed(self.blue, c.blue))
+        cdef ColorS x, y
+        x = _make_Color(self).color
+        y = _make_Color(c).color
+        return _Color(divFixed(x.red, y.red),
+                              divFixed(x.green, y.green),
+                              divFixed(x.blue, y.blue))
 
     def __divmod__(self, c):
-        c = _Color(c)
-        dr, mr = divmod(self.red, c.red)
-        dg, mg = divmod(self.green, c.green)
-        db, mb = divmod(self.blue, c.blue)
+        cdef ColorS x, y
+        cdef float dr, mr, dg, mg, db, mb
+
+        x = _make_Color(self).color
+        y = _make_Color(c).color
+
+        dr, mr = divmod(x.red, y.red)
+        dg, mg = divmod(x.green, y.green)
+        db, mb = divmod(x.blue, y.blue)
         return _Color(dr, dg, db), _Color(mr, mg, mb)
 
     def __mod__(self, c):
-        c = _Color(c)
-        return _Color(self.red % c.red,
-                              self.green % c.green,
-                              self.blue % c.blue)
+        cdef ColorS x, y
+        x = _make_Color(self).color
+        y = _make_Color(c).color
+
+        return _Color(x.red % y.red, x.green % y.green, x.blue % y.blue)
 
     def __mul__(self, c):
+        cdef ColorS x, y
+        x = _make_Color(self).color
+        y = _make_Color(c).color
+
         c = _Color(c)
-        return _Color(self.red * c.red,
-                              self.green * c.green,
-                              self.blue * c.blue)
+        return _Color(x.red * y.red, x.green * y.green, x.blue * y.blue)
 
     def __pow__(self, c, mod):
-        c = _Color(c)
+        cdef ColorS x, y
+        x = _make_Color(self).color
+        y = _make_Color(c).color
+
         if mod is None:
-            return _Color(powFixed(self.red, c.red),
-                                  powFixed(self.green, c.green),
-                                  powFixed(self.blue, c.blue))
+            return _Color(powFixed(x.red, y.red),
+                                  powFixed(x.green, y.green),
+                                  powFixed(x.blue, y.blue))
 
         m = _Color(mod)
-        return _Color(pow(self.red, c.red, m.red),
-                              pow(self.green, c.green, m.green),
-                              pow(self.blue, c.blue, m.blue))
+        return _Color(pow(x.red, y.red, m.red),
+                              pow(x.green, y.green, m.green),
+                              pow(x.blue, y.blue, m.blue))
 
     def __sub__(self, c):
-        c = _Color(c)
-        return _Color(self.red - c.red,
-                              self.green - c.green,
-                              self.blue - c.blue)
+        cdef ColorS x, y
+        x = _make_Color(self).color
+        y = _make_Color(c).color
+
+        return _Color(x.red - y.red,
+                              x.green - y.green,
+                              x.blue - y.blue)
 
     # Everything else knows what self is!
     def __abs__(_Color self):
@@ -184,23 +198,25 @@ cdef class _Color:
         """Return the complementary color."""
         cdef float i
         i = 255 if (<int> normal == 1) else 1
-        return _Color(invert(self.red, i),
-                            invert(self.green, i),
-                            invert(self.blue, i))
+        return _Color(invert(self.color.red, i),
+                            invert(self.color.green, i),
+                            invert(self.color.blue, i))
 
     def __len__(_Color self):
         return 3
 
     def __neg__(_Color self):
-        return _Color(-self.red, -self.green, -self.blue)
+        return _Color(-self.color.red,
+                              -self.color.green,
+                              -self.color.blue)
 
     def __repr__(_Color self):
         return '_Color(%s)' % str(self)
 
     def __richcmp__(_Color self, _Color c, int cmp):
-        return cmpToRichcmp((self.red - c.red) or
-                            (self.green - c.green) or
-                            (self.blue - c.blue), cmp)
+        return cmpToRichcmp((self.color.red - c.color.red) or
+                            (self.color.green - c.color.green) or
+                            (self.color.blue - c.color.blue), cmp)
 
     def __round__(_Color self, n):
         return _Color(round(self.color.red, n),
