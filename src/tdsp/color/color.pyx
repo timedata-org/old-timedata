@@ -25,6 +25,8 @@ cdef extern from "<tdsp/color/names_inl.h>" namespace "tdsp":
 cdef extern from "<tdsp/color/hsv.h>" namespace "tdsp":
     Color hsvToRgb(Color, Base)
     Color rgbToHsv(Color, Base)
+    Color hsvToRgb(Color)
+    Color rgbToHsv(Color)
 
 
 cdef class _Color:

@@ -11,7 +11,7 @@ cdef extern from "<tdsp/signal/fade.h>" namespace "tdsp::Fade::Type":
 
 cdef extern from "<tdsp/signal/fade.h>" namespace "tdsp":
     struct Fade:
-        float begin, end, fader
+        float begin, end
         Type type
 
 cdef class _Fade(_Wrapper):
@@ -40,12 +40,6 @@ cdef class _Fade(_Wrapper):
             return self._instance.end
         def __set__(self, float x):
             self._instance.end = x
-
-    property fader:
-        def __get__(self):
-            return self._instance.fader
-        def __set__(self, float x):
-            self._instance.fader = x
 
     property type:
         def __get__(self):
