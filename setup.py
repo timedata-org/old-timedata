@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-import os, platform, shutil
+import datetime, os, platform, shutil
 import distutils.core, distutils.extension, Cython.Build
 
 def execute(command):
@@ -54,6 +54,7 @@ LIBRARIES = [] if platform.system() in ('Darwin', 'Linux') else ['m']
 COMPILE_ARGS = [
     '-O3',
     '-DNDEBUG',
+    '-DCOMPILE_TIMESTAMP="%s"' % datetime.datetime.utcnow().isoformat(),
     '-Wno-unused-function',
     '-std=c++11',
     '-Wno-tautological-constant-out-of-range-compare',
