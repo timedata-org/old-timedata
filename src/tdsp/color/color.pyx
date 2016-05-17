@@ -28,7 +28,7 @@ cdef extern from "<tdsp/color/names_inl.h>" namespace "tdsp":
     float normalize(float, float)
     void rotate(Color&, int)
     bool stringToColor(const char*, Color, Base)
-    string colorToString(float r, float g, float b, Base)
+    string colorToString(ColorS&, Base)
     bool cmpToRichcmp(float cmp, int richcmp)
     Color makeColor(float r, float g, float b)
     vector[string] colorNames()
@@ -242,14 +242,13 @@ cdef class _Color:
                             (self.green - c.green) or
                             (self.blue - c.blue), cmp)
 
-    def __round__(self, n):
-        return self.__class__(round(self.red, n),
-                              round(self.green, n),
-                              round(self.blue, n))
+    def __round__(_Color self, n):
+        return self.__class__(round(self.color.red, n),
+                              round(self.color.green, n),
+                              round(self.color.blue, n))
 
-    def __str__(self):
-        return colorToString(self.red, self.green, self.blue, self._base()
-                             ).decode('ascii')
+    def __str__(_Color self):
+        return colorToString(self.color, self._base()).decode('ascii')
 
     def __sizeof__(self):
         return 12  # 3 4-byte floats.
@@ -260,10 +259,10 @@ cdef class _Color:
                               self.green - c.green,
                               self.blue - c.blue)
 
-    def __trunc__(self):
-        return self.__class__(math.trunc(self.red),
-                              math.trunc(self.green),
-                              math.trunc(self.blue))
+    def __trunc__(_Color self):
+        return self.__class__(math.trunc(self.color.red),
+                              math.trunc(self.color.green),
+                              math.trunc(self.color.blue))
 
     @staticmethod
     def names():
