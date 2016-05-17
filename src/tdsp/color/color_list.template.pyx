@@ -370,6 +370,7 @@ cdef class _ColorList{suffix}:
 
         cl =  _ColorList{suffix}()
         cl.colors = fillSpread(c, d, size)
+        return cl
 
 
 cdef _ColorList{suffix} _to_ColorList{suffix}(object value):

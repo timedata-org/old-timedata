@@ -211,7 +211,7 @@ cdef class _Color256:
                               -self.color.blue)
 
     def __repr__(_Color256 self):
-        return '_Color256(%s)' % str(self)
+        return 'Color256(%s)' % str(self)
 
     def __richcmp__(_Color256 self, _Color256 c, int cmp):
         return cmpToRichcmp((self.color.red - c.color.red) or

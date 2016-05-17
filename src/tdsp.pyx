@@ -31,4 +31,13 @@ locals().update(
     Stripe=_Stripe,
     )
 
+class _Colors(object):
+    def __init__(self, color_class):
+        for name in color_class.names():
+            setattr(self, name.replace(' ', '_'), color_class(name))
+
+
+Colors = _Colors(_Color)
+Colors256 = _Colors(_Color256)
+
 print('tdsp compiled on', compile_timestamp())
