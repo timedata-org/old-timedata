@@ -28,9 +28,10 @@ inline std::string toString(ColorList const& colors, Base base) {
         if (result.size() > 1)
             result += ", ";
         auto s = colorToString(c, base);
-        result += "'("[isdigit(s[0])];
+        auto digit = isdigit(s[0]) ? 1 : 0;
+        result += "'("[digit];
         result += s;
-        result += "')"[isdigit(s[0])];
+        result += "')"[digit];
     }
     result += ")";
     return result;
@@ -77,7 +78,7 @@ bool sliceIntoVector(ColorList const& in, ColorList& out,
 
 template <typename Function>
 void forEachColorComponent(ColorList& colors, Function f) {
-    // WRONG!
+    // TODO: phase this out in favor of the functional version.
     for (auto& color : colors)
         for (auto& c : color)
             f(c);

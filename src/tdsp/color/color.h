@@ -13,6 +13,16 @@ enum class HSB { hue, saturation, brightness, last = brightness };
 using Color = Sample<RGB>;
 using Color256 = Sample<RGB, uint8_t>;
 
+struct ColorS {
+    float red = 0, green = 0, blue = 0;
+
+    ColorS() = default;
+    ColorS(float r, float g, float b) : red(r), green(g), blue(b) {}
+    ColorS(Color const& c) : red(c[0]), green(c[1]), blue(c[2]) {}
+
+    operator Color() const { return {{red, green, blue}}; }
+};
+
 inline Color makeColor(float r, float g, float b) {
     return {{r, g, b}};
 }
