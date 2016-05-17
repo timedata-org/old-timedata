@@ -114,10 +114,12 @@ cdef class _Color:
     # This can happen if "self" appear on the right in an operation.
     # So all of these are wrong in fact.  :-D
     def __add__(self, c):
-        c = _Color(c)
-        return _Color(self.red + c.red,
-                              self.green + c.green,
-                              self.blue + c.blue)
+        cdef _Color x, y
+        x = _make_Color(self)
+        y = _make_Color(c)
+        return _Color(x.color.red + y.color.red,
+                              x.color.green + y.color.green,
+                              x.color.blue + y.color.blue)
 
     def __truediv__(self, c):
         c = _Color(c)
@@ -162,6 +164,7 @@ cdef class _Color:
                               self.green - c.green,
                               self.blue - c.blue)
 
+    # Everything else knows what self is!
     def __abs__(_Color self):
         return _Color(abs(self.color.red),
                               abs(self.color.green),
@@ -223,3 +226,8 @@ cdef class _Color:
         for i in names:
             result.append(i.decode('ascii'))
         return result
+
+cdef _Color _make_Color(object x):
+    if isinstance(x, _Color):
+       return <_Color> x
+    return _Color(x)

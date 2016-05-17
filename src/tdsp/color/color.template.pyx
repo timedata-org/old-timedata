@@ -114,10 +114,12 @@ cdef class _Color{suffix}:
     # This can happen if "self" appear on the right in an operation.
     # So all of these are wrong in fact.  :-D
     def __add__(self, c):
-        c = _Color{suffix}(c)
-        return _Color{suffix}(self.red + c.red,
-                              self.green + c.green,
-                              self.blue + c.blue)
+        cdef _Color{suffix} x, y
+        x = _make_Color{suffix}(self)
+        y = _make_Color{suffix}(c)
+        return _Color{suffix}(x.color.red + y.color.red,
+                              x.color.green + y.color.green,
+                              x.color.blue + y.color.blue)
 
     def __truediv__(self, c):
         c = _Color{suffix}(c)
@@ -162,6 +164,7 @@ cdef class _Color{suffix}:
                               self.green - c.green,
                               self.blue - c.blue)
 
+    # Everything else knows what self is!
     def __abs__(_Color{suffix} self):
         return _Color{suffix}(abs(self.color.red),
                               abs(self.color.green),
@@ -223,3 +226,8 @@ cdef class _Color{suffix}:
         for i in names:
             result.append(i.decode('ascii'))
         return result
+
+cdef _Color{suffix} _make_Color{suffix}(object x):
+    if isinstance(x, _Color{suffix}):
+       return <_Color{suffix}> x
+    return _Color{suffix}(x)
