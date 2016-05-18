@@ -14,7 +14,7 @@ void fillSpread(Color const& c1, Color const& c2, Iter begin, Iter end,
         *begin++ = fadeTo(0, fade, c1, c2);
         if (size > 1) {
             float d = 1.0f / (size - 1);
-            for (auto i = 0; begin < end; ++begin, ++i)
+            for (float i = 1; begin < end; ++begin, ++i)
                 *begin = fadeTo(d * i, fade, c1, c2);
         }
     }
@@ -24,6 +24,7 @@ inline
 ColorList fillSpread(Color const& c1, Color const& c2, size_t size,
                      Fade const& fade = {}) {
     ColorList cl;
+    cl.resize(size);
     fillSpread(c1, c2, cl.begin(), cl.end(), fade);
     return cl;
 }

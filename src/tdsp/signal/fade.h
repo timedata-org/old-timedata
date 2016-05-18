@@ -12,8 +12,8 @@ struct Fade {
     Type type = Type::linear;
 
     float operator()(float fader, float x, float y) const {
-        auto xratio = begin + fader * (end - begin);
-        auto yratio = begin + invert(fader) * (end - begin);
+        auto xratio = begin + invert(fader) * (end - begin);
+        auto yratio = begin + fader * (end - begin);
 
         switch (type) {
             default:
@@ -29,7 +29,7 @@ struct Fade {
         }
 
         // TODO: perhaps we should be applying end and begin after this step?
-        return xratio * x + yratio + y;
+        return xratio * x + yratio * y;
     }
 };
 
