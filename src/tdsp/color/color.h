@@ -30,8 +30,16 @@ inline ColorS rotate(ColorS c, int positions) {
     return co;
 }
 
-inline Color makeColor(float r, float g, float b) {
-    return {{r, g, b}};
+inline void minInto(ColorS const& in, ColorS& out) {
+    out.red = std::max(in.red, out.red);
+    out.green = std::max(in.green, out.green);
+    out.blue = std::max(in.blue, out.blue);
+}
+
+inline void maxInto(ColorS const& in, ColorS& out) {
+    out.red = std::max(in.red, out.red);
+    out.green = std::max(in.green, out.green);
+    out.blue = std::max(in.blue, out.blue);
 }
 
 /** Computational base - 0..1 float or 0..255 integer? */

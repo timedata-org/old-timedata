@@ -205,20 +205,19 @@ cdef class _ColorList{suffix}:
             raise
         return self
 
-    def max(self, c):
-        """Mutate each color by max-ing it with a number or a ColorList."""
-        if isinstance(c, Number):
-            maxInto(<float> c, self.colors)
-        else:
-            maxInto(_to_ColorList{suffix}(c).colors, self.colors)
-        return self
-
-    def min(self, c):
-        """Mutate each color by min-ing it with a number or a ColorList."""
-        if isinstance(c, Number):
-            minInto(<float> c, self.colors)
-        else:
-            minInto(_to_ColorList{suffix}(c).colors, self.colors)
+    def limit(self, *, min=None, max=None):
+        """Limit each color to be not less than min (if given) and not greater
+           than max (if given)."""
+        if max is not None:
+            if isinstance(max, Number):
+                maxInto(<float> max, self.colors)
+            else:
+                maxInto(_to_ColorList{suffix}(max).colors, self.colors)
+        if min is not None:
+            if isinstance(min, Number):
+                minInto(<float> min, self.colors)
+            else:
+                minInto(_to_ColorList{suffix}(min).colors, self.colors)
         return self
 
     def pow(self, float c):

@@ -24,6 +24,9 @@ cdef extern from "<tdsp/color/names_inl.h>" namespace "tdsp":
         ColorS(float, float, float)
         ColorS(Color&)
 
+    void minInto(ColorS&, ColorS&);
+    void maxInto(ColorS&, ColorS&);
+
     float invert(float, float)
     float normalize(float, float)
     ColorS rotate(ColorS, int)

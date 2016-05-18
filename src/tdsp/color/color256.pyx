@@ -77,14 +77,22 @@ cdef class _Color256:
         c = hsvToRgb(self.color, integer);
         return _Color256(c.red, c.green, c.blue)
 
-    cdef float _norm(self, float x):
-        return normalize(x, 255.0)
+    def limited(_Color256 self, *, min=None, max=None):
+        """Return a new color limited to be not less than min (if given)
+           and not greater than max (if given)."""
+        cdef _Color256 c
+        c = self[:]
+        if min is not None:
+            minInto(_make_Color256(min).color, c.color)
+        if max is not None:
+            maxInto(_make_Color256(max).color, c.color)
+        return c
 
     def normalized(_Color256 self):
         """Return a color normalized into this color range."""
         return _Color256(normalize(self.color.red, 255.0),
-                           normalize(self.color.green, 255.0),
-                           normalize(self.color.blue, 255.0))
+                              normalize(self.color.green, 255.0),
+                              normalize(self.color.blue, 255.0))
 
     def rotated(_Color256 self, int positions):
         """Return a color with the components rotated."""
@@ -238,6 +246,7 @@ cdef class _Color256:
         for i in names:
             result.append(i.decode('ascii'))
         return result
+
 
 cdef _Color256 _make_Color256(object x):
     if isinstance(x, _Color256):
