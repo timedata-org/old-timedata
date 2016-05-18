@@ -54,7 +54,7 @@ struct ColorTraits {
         return r;
     }
 
-    static uint32_t fromHex(Color c) {
+    static uint32_t toHex(Color c) {
         uint32_t total = 0;
         static uint32_t const max = 256;
         for (auto i : c) {
@@ -82,7 +82,7 @@ struct ColorTraits {
         auto isMax = [=](float x) { return x <= max; };
         if (std::all_of(c.begin(), c.end(), isMax)) {
             if (std::all_of(c.begin(), c.end(), isNearHex)) {
-                auto hex = fromHex(c);
+                auto hex = toHex(c);
 
                 auto i = colorMapInverse().find(hex);
                 if (i != colorMapInverse().end())
@@ -224,6 +224,18 @@ bool stringToColor(char const* name, ColorS& cs, Base base) {
         return false;
     cs = c;
     return true;
+}
+
+Color colorFromHex(uint32_t hex, Base base) {
+    if (base == Base::normal)
+        return detail::ColorTraits<Base::normal>::toColor(hex);
+    return detail::ColorTraits<Base::integer>::toColor(hex);
+}
+
+uint32_t hexFromColor(Color const& c, Base base) {
+    if (base == Base::normal)
+        return detail::ColorTraits<Base::normal>::toHex(c);
+    return detail::ColorTraits<Base::integer>::toHex(c);
 }
 
 }  // tdsp

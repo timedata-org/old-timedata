@@ -204,6 +204,21 @@ cdef class _Color{suffix}:
                 hash(self.color.blue) // 2 +
                 hash(self.color.blue) // 4)
 
+    @staticmethod
+    def from_hex(uint32_t hex):
+        """Create a color from a 32-bit unsigned integer."""
+        cdef ColorS c
+        c = colorFromHex(hex, {base})
+        return _Color{suffix}(c.red, c.green, c.blue)
+
+    def to_hex(_Color{suffix} self):
+        """Convert a normalized color to a 32-bit integer."""
+        if ((0 <= self.color.red <= {ratio}) and
+            (0 <= self.color.green <= {ratio}) and
+            (0 <= self.color.blue <= {ratio})):
+            return hexFromColor(self.color, {base})
+        raise ValueError(str(self) + " cannot be expressed in hex")
+
     def __invert__(_Color{suffix} self):
         """Return the complementary color."""
         cdef float i

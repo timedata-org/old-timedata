@@ -34,6 +34,9 @@ cdef extern from "<tdsp/color/names_inl.h>" namespace "tdsp":
     string colorToString(ColorS&, Base)
     bool cmpToRichcmp(float cmp, int richcmp)
     vector[string] colorNames()
+    ColorS colorFromHex(uint32_t hex, Base base);
+    uint32_t hexFromColor(ColorS&, Base base);
+
 
 cdef extern from "<tdsp/color/hsv.h>" namespace "tdsp":
     ColorS hsvToRgb(ColorS, Base)

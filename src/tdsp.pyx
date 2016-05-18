@@ -3,8 +3,8 @@ from libcpp.map cimport map
 from libcpp.string cimport string
 from libcpp.vector cimport vector
 
+from libc.stdint cimport uint32_t, int64_t, uint8_t
 ctypedef unsigned int uint
-ctypedef unsigned char uint8_t
 
 include "tdsp/base/math.pyx"
 include "tdsp/base/wrapper.pyx"
