@@ -1,6 +1,6 @@
 import unittest
 
-from tdsp import Color, Color256
+from tdsp import Color, Color256, Colors, Colors256
 
 class TestColor(unittest.TestCase):
     def test_white(self):
@@ -104,6 +104,10 @@ class TestColor(unittest.TestCase):
             Color('red'), Color('green'), Color('gray'))
         self.assertEqual(abs(-red), red)
         self.assertEqual(abs(-(red + gray + gray)), red + gray + gray)
+
+    def test_hex(self):
+        for c in Colors.__dict__.values():
+            self.assertEqual(Color.from_hex(c.to_hex()), c)
 
 
 class TestColor256(unittest.TestCase):

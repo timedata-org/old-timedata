@@ -19,4 +19,7 @@ Color stringToColor(char const* name, Base base);
 std::string colorToString(Color c, Base base);
 std::string colorToString(float r, float g, float b);
 
+Color colorFromHex(uint32_t hex, Base base);
+uint32_t hexFromColor(Color const& c, Base base);
+
 } // tdsp
