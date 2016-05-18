@@ -77,14 +77,22 @@ cdef class _Color:
         c = hsvToRgb(self.color, normal);
         return _Color(c.red, c.green, c.blue)
 
-    cdef float _norm(self, float x):
-        return normalize(x, 1.0)
+    def limited(_Color self, *, min=None, max=None):
+        """Return a new color limited to be not less than min (if given)
+           and not greater than max (if given)."""
+        cdef _Color c
+        c = self[:]
+        if min is not None:
+            minInto(_make_Color(min).color, c.color)
+        if max is not None:
+            maxInto(_make_Color(max).color, c.color)
+        return c
 
     def normalized(_Color self):
         """Return a color normalized into this color range."""
         return _Color(normalize(self.color.red, 1.0),
-                           normalize(self.color.green, 1.0),
-                           normalize(self.color.blue, 1.0))
+                              normalize(self.color.green, 1.0),
+                              normalize(self.color.blue, 1.0))
 
     def rotated(_Color self, int positions):
         """Return a color with the components rotated."""
@@ -238,6 +246,7 @@ cdef class _Color:
         for i in names:
             result.append(i.decode('ascii'))
         return result
+
 
 cdef _Color _make_Color(object x):
     if isinstance(x, _Color):
