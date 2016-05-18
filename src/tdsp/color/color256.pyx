@@ -198,6 +198,12 @@ cdef class _Color256:
                               math.floor(self.color.green),
                               math.floor(self.color.blue))
 
+    def __hash__(_Color256 self):
+        # Sort of a hack.
+        return (hash(self.color.red) +
+                hash(self.color.blue) // 2 +
+                hash(self.color.blue) // 4)
+
     def __invert__(_Color256 self):
         """Return the complementary color."""
         cdef float i
