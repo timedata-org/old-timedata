@@ -65,13 +65,13 @@ cdef class _Color:
            and 255.0 for Color256."""
         return 1.0
 
-    def rgb_to_hsv(_Color self):
+    cpdef rgb_to_hsv(_Color self):
         """Return a new color converting RGB to HSV."""
         cdef ColorS c
         c = rgbToHsv(self.color, normal);
         return _Color(c.red, c.green, c.blue)
 
-    def hsv_to_rgb(_Color self):
+    cpdef hsv_to_rgb(_Color self):
         """Return a new color converting RGB to HSV."""
         cdef ColorS c
         c = hsvToRgb(self.color, normal);
@@ -88,13 +88,13 @@ cdef class _Color:
             maxInto(_make_Color(max).color, c.color)
         return c
 
-    def normalized(_Color self):
+    cpdef normalized(_Color self):
         """Return a color normalized into this color range."""
         return _Color(normalize(self.color.red, 1.0),
                               normalize(self.color.green, 1.0),
                               normalize(self.color.blue, 1.0))
 
-    def rotated(_Color self, int positions):
+    cpdef rotated(_Color self, int positions):
         """Return a color with the components rotated."""
         cdef _Color c
         c = _Color()
@@ -211,7 +211,7 @@ cdef class _Color:
         c = colorFromHex(hex, normal)
         return _Color(c.red, c.green, c.blue)
 
-    def to_hex(_Color self):
+    cpdef to_hex(_Color self):
         """Convert a normalized color to a 32-bit integer."""
         if ((0 <= self.color.red <= 1.0) and
             (0 <= self.color.green <= 1.0) and

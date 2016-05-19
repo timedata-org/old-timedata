@@ -65,13 +65,13 @@ cdef class _Color256:
            and 255.0 for Color256."""
         return 255.0
 
-    def rgb_to_hsv(_Color256 self):
+    cpdef rgb_to_hsv(_Color256 self):
         """Return a new color converting RGB to HSV."""
         cdef ColorS c
         c = rgbToHsv(self.color, integer);
         return _Color256(c.red, c.green, c.blue)
 
-    def hsv_to_rgb(_Color256 self):
+    cpdef hsv_to_rgb(_Color256 self):
         """Return a new color converting RGB to HSV."""
         cdef ColorS c
         c = hsvToRgb(self.color, integer);
@@ -88,13 +88,13 @@ cdef class _Color256:
             maxInto(_make_Color256(max).color, c.color)
         return c
 
-    def normalized(_Color256 self):
+    cpdef normalized(_Color256 self):
         """Return a color normalized into this color range."""
         return _Color256(normalize(self.color.red, 255.0),
                               normalize(self.color.green, 255.0),
                               normalize(self.color.blue, 255.0))
 
-    def rotated(_Color256 self, int positions):
+    cpdef rotated(_Color256 self, int positions):
         """Return a color with the components rotated."""
         cdef _Color256 c
         c = _Color256()
@@ -211,7 +211,7 @@ cdef class _Color256:
         c = colorFromHex(hex, integer)
         return _Color256(c.red, c.green, c.blue)
 
-    def to_hex(_Color256 self):
+    cpdef to_hex(_Color256 self):
         """Convert a normalized color to a 32-bit integer."""
         if ((0 <= self.color.red <= 255.0) and
             (0 <= self.color.green <= 255.0) and
