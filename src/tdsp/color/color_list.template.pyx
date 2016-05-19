@@ -76,7 +76,7 @@ cdef class _ColorList{suffix}:
         return _Color{suffix}(c.at(0), c.at(1), c.at(2))
 
     # Unary operators and corresponding mutators.
-    def abs(self):
+    cpdef abs(self):
         """Replace each color by its absolute value."""
         absColor(self.colors)
         return self
@@ -87,7 +87,7 @@ cdef class _ColorList{suffix}:
         cl.abs()
         return cl
 
-    def ceil(self):
+    cpdef ceil(self):
         """Replace each color by its absolute value."""
         ceilColor(self.colors)
         return self
@@ -98,7 +98,7 @@ cdef class _ColorList{suffix}:
         cl.ceil()
         return cl
 
-    def floor(self):
+    cpdef floor(self):
         """Replace each color by its floorolute value."""
         floorColor(self.colors)
         return self
@@ -109,7 +109,7 @@ cdef class _ColorList{suffix}:
         cl.floor()
         return cl
 
-    def invert(self):
+    cpdef invert(self):
         """Invert each color to its complement."""
         invertColor(self.colors)
         return self
@@ -120,7 +120,7 @@ cdef class _ColorList{suffix}:
         cl.invert()
         return cl
 
-    def neg(self):
+    cpdef neg(self):
         """Negate each color."""
         negateColor(self.colors)
         return self
@@ -131,7 +131,7 @@ cdef class _ColorList{suffix}:
         cl.negative()
         return cl
 
-    def round(self):
+    cpdef round(self):
         """Round each color value to the nearest integer."""
         roundColor(self.colors)
         return self
@@ -142,7 +142,7 @@ cdef class _ColorList{suffix}:
         cl.round()
         return cl
 
-    def trunc(self):
+    cpdef trunc(self):
         """Truncate each value to an integer."""
         truncColor(self.colors)
         return self
@@ -153,7 +153,7 @@ cdef class _ColorList{suffix}:
         cl.trunc()
         return cl
 
-    def append(self, object value):
+    cpdef append(self, object value):
         """Append to the list of colors."""
         cdef uint s
         s = self.colors.size()
@@ -165,36 +165,36 @@ cdef class _ColorList{suffix}:
             raise
         return self
 
-    def hsv_to_rgb(self):
+    cpdef hsv_to_rgb(self):
         hsvToRgbInto(self.colors, {base})
         return self
 
-    def rgb_to_hsv(self):
+    cpdef rgb_to_hsv(self):
         rgbToHsvInto(self.colors, {base})
         return self
 
-    def clear(self):
+    cpdef clear(self):
         """Set all colors to black."""
         self.colors.clear()
         return self
 
-    def rotate(self, int pos):
+    cpdef rotate(self, int pos):
         """Rotate the colors forward by `pos` positions."""
         rotate(self.colors, pos)
         return self
 
-    def reverse(self):
+    cpdef reverse(self):
         """Reverse the colors in place."""
         reverse(self.colors)
         return self
 
-    def duplicate(self, uint count):
+    cpdef duplicate(self, uint count):
         """Return a new `ColorList` with `count` copies of this one."""
         cl = _ColorList{suffix}()
         cl.colors = duplicate(self.colors, count)
         return cl
 
-    def extend(self, object values):
+    cpdef extend(self, object values):
         """Extend the colors from an iterator."""
         cdef size_t s
         s = self.colors.size()
@@ -221,7 +221,7 @@ cdef class _ColorList{suffix}:
                 minInto(_to_ColorList{suffix}(min).colors, self.colors)
         return self
 
-    def pow(self, float c):
+    cpdef pow(self, float c):
         """Raise each color to the given power (gamma correction)."""
         if isinstance(c, Number):
             powInto(<float> c, self.colors)
@@ -229,12 +229,12 @@ cdef class _ColorList{suffix}:
             powInto(_to_ColorList{suffix}(c).colors, self.colors)
         return self
 
-    def resize(self, size_t size):
+    cpdef resize(self, size_t size):
         """Set the size of the ColorList, filling with black if needed."""
         self.colors.resize(size)
         return self
 
-    def rpow(self, c):
+    cpdef rpow(self, c):
         """Right-hand (reversed) reverse of pow()."""
         if isinstance(c, Number):
             rpowInto(<float> c, self.colors)
