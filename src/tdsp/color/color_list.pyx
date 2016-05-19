@@ -82,8 +82,8 @@ cdef class _ColorList:
         return self
 
     def __abs__(self):
-        cdef _ColorList cl
-        cl = self[:]
+        cdef _ColorList cl = _ColorList()
+        cl.colors = self.colors
         cl.abs()
         return cl
 
@@ -93,8 +93,8 @@ cdef class _ColorList:
         return self
 
     def __ceil__(self):
-        cdef _ColorList cl
-        cl = self[:]
+        cdef _ColorList cl = _ColorList()
+        cl.colors = self.colors
         cl.ceil()
         return cl
 
@@ -104,8 +104,8 @@ cdef class _ColorList:
         return self
 
     def __floor__(self):
-        cdef _ColorList cl
-        cl = self[:]
+        cdef _ColorList cl = _ColorList()
+        cl.colors = self.colors
         cl.floor()
         return cl
 
@@ -115,8 +115,8 @@ cdef class _ColorList:
         return self
 
     def __invert__(self):
-        cdef _ColorList cl
-        cl = self[:]
+        cdef _ColorList cl = _ColorList()
+        cl.colors = self.colors
         cl.invert()
         return cl
 
@@ -126,8 +126,8 @@ cdef class _ColorList:
         return self
 
     def __negative__(self):
-        cdef _ColorList cl
-        cl = self[:]
+        cdef _ColorList cl = _ColorList()
+        cl.colors = self.colors
         cl.negative()
         return cl
 
@@ -137,8 +137,8 @@ cdef class _ColorList:
         return self
 
     def __round__(self):
-        cdef _ColorList cl
-        cl = self[:]
+        cdef _ColorList cl = _ColorList()
+        cl.colors = self.colors
         cl.round()
         return cl
 
@@ -148,8 +148,8 @@ cdef class _ColorList:
         return self
 
     def __trunc__(self):
-        cdef _ColorList cl
-        cl = self[:]
+        cdef _ColorList cl = _ColorList()
+        cl.colors = self.colors
         cl.trunc()
         return cl
 
@@ -279,8 +279,8 @@ cdef class _ColorList:
         return self
 
     def __add__(self, c):
-        cdef _ColorList cl
-        cl = _ColorList()
+        cdef _ColorList cl = _ColorList()
+
         if isinstance(c, Number):
             addOver((<_ColorList> self).colors, <float> c, cl.colors)
         elif isinstance(self, _ColorList):
@@ -294,8 +294,8 @@ cdef class _ColorList:
         return cl
 
     def __mul__(self, c):
-        cdef _ColorList cl
-        cl = _ColorList()
+        cdef _ColorList cl = _ColorList()
+
         if isinstance(c, Number):
             mulOver((<_ColorList> self).colors, <float> c, cl.colors)
         elif isinstance(self, _ColorList):
@@ -309,11 +309,10 @@ cdef class _ColorList:
         return cl
 
     def __pow__(self, c, mod):
-        cdef _ColorList cl
+        cdef _ColorList cl = _ColorList()
         if mod:
             raise ValueError('Can\'t handle three operator pow')
 
-        cl = _ColorList()
         if isinstance(c, Number):
             powOver((<_ColorList> self).colors, <float> c, cl.colors)
         elif isinstance(self, _ColorList):
@@ -327,8 +326,8 @@ cdef class _ColorList:
         return cl
 
     def __sub__(self, c):
-        cdef _ColorList cl
-        cl = _ColorList()
+        cdef _ColorList cl = _ColorList()
+
         if isinstance(c, Number):
             subOver((<_ColorList> self).colors, <float> c, cl.colors)
         elif isinstance(self, _ColorList):
@@ -342,8 +341,7 @@ cdef class _ColorList:
         return cl
 
     def __truediv__(self, c):
-        cdef _ColorList cl
-        cl = _ColorList()
+        cdef _ColorList cl = _ColorList()
         if isinstance(c, Number):
             divOver((<_ColorList> self).colors, <float> c, cl.colors)
         elif isinstance(self, _ColorList):
@@ -373,8 +371,7 @@ cdef class _ColorList:
 
     @staticmethod
     def spread(_Color x, _Color y, size_t size):
-        cdef _ColorList cl
-        cl =  _ColorList()
+        cdef _ColorList cl = _ColorList()
         cl.colors = fillSpread(x.color, y.color, size)
         return cl
 
