@@ -1,6 +1,6 @@
 import math, numbers
 
-cdef class _Color256:
+cdef class Color256:
     """A Color is an immutable RGB floating point color.
 
        A Color looks very much like a Python tuple with three floating point
@@ -69,60 +69,60 @@ cdef class _Color256:
         return self.color.blue
 
     @property
-    def ratio(_Color256 self):
+    def ratio(Color256 self):
         """Return the maximum ratio for this color range:  1.0 for Color
            and 255.0 for Color256."""
         return 255.0
 
-    cpdef rgb_to_hsv(_Color256 self):
+    cpdef rgb_to_hsv(Color256 self):
         """Return a new color converting RGB to HSV."""
         cdef ColorS c
         c = rgbToHsv(self.color, integer);
-        return _Color256(c.red, c.green, c.blue)
+        return Color256(c.red, c.green, c.blue)
 
-    cpdef hsv_to_rgb(_Color256 self):
+    cpdef hsv_to_rgb(Color256 self):
         """Return a new color converting RGB to HSV."""
         cdef ColorS c
         c = hsvToRgb(self.color, integer);
-        return _Color256(c.red, c.green, c.blue)
+        return Color256(c.red, c.green, c.blue)
 
-    def limited(_Color256 self, *, min=None, max=None):
+    def limited(Color256 self, *, min=None, max=None):
         """Return a new color limited to be not less than min (if given)
            and not greater than max (if given)."""
-        cdef _Color256 c
+        cdef Color256 c
         c = self[:]
         if min is not None:
-            minInto(_make_Color256(min).color, c.color)
+            minInto(_makeColor256(min).color, c.color)
         if max is not None:
-            maxInto(_make_Color256(max).color, c.color)
+            maxInto(_makeColor256(max).color, c.color)
         return c
 
-    cpdef distance(_Color256 self, _Color256 other):
+    cpdef distance(Color256 self, Color256 other):
         """Return the cartesian distance between this color and another."""
         return distance(self.color, other.color)
 
-    cpdef distance2(_Color256 self, _Color256 other):
+    cpdef distance2(Color256 self, Color256 other):
         """Return the square of the cartesian distance between this color and
            another - this is somewhat more efficient and often good enough."""
         return distance2(self.color, other.color)
 
-    cpdef normalized(_Color256 self):
+    cpdef normalized(Color256 self):
         """Return a color normalized into this color range."""
-        return _Color256(normalize(self.color.red, 255.0),
+        return Color256(normalize(self.color.red, 255.0),
                               normalize(self.color.green, 255.0),
                               normalize(self.color.blue, 255.0))
 
-    cpdef rotated(_Color256 self, int positions):
+    cpdef rotated(Color256 self, int positions):
         """Return a color with the components rotated."""
-        cdef _Color256 c
-        c = _Color256()
+        cdef Color256 c
+        c = Color256()
         c.color = rotate(self.color, positions)
         return c
 
-    def __getitem__(_Color256 self, object key):
+    def __getitem__(Color256 self, object key):
         if isinstance(key, slice):
             r = tuple(self[i] for i in range(*key.indices(len(self))))
-            return _Color256(*r) if len(r) == 3 else r
+            return Color256(*r) if len(r) == 3 else r
 
         if key == 0 or key == -3:
             return self.color.red
@@ -137,15 +137,15 @@ cdef class _Color256:
     # So all of these are wrong in fact.  :-D
     def __add__(self, c):
         cdef ColorS x, y
-        x = _make_Color256(self).color
-        y = _make_Color256(c).color
-        return _Color256(x.red + y.red, x.green + y.green, x.blue + y.blue)
+        x = _makeColor256(self).color
+        y = _makeColor256(c).color
+        return Color256(x.red + y.red, x.green + y.green, x.blue + y.blue)
 
     def __truediv__(self, c):
         cdef ColorS x, y
-        x = _make_Color256(self).color
-        y = _make_Color256(c).color
-        return _Color256(divFixed(x.red, y.red),
+        x = _makeColor256(self).color
+        y = _makeColor256(c).color
+        return Color256(divFixed(x.red, y.red),
                               divFixed(x.green, y.green),
                               divFixed(x.blue, y.blue))
 
@@ -153,70 +153,70 @@ cdef class _Color256:
         cdef ColorS x, y
         cdef float dr, mr, dg, mg, db, mb
 
-        x = _make_Color256(self).color
-        y = _make_Color256(c).color
+        x = _makeColor256(self).color
+        y = _makeColor256(c).color
 
         dr, mr = divmod(x.red, y.red)
         dg, mg = divmod(x.green, y.green)
         db, mb = divmod(x.blue, y.blue)
-        return _Color256(dr, dg, db), _Color256(mr, mg, mb)
+        return Color256(dr, dg, db), Color256(mr, mg, mb)
 
     def __mod__(self, c):
         cdef ColorS x, y
-        x = _make_Color256(self).color
-        y = _make_Color256(c).color
+        x = _makeColor256(self).color
+        y = _makeColor256(c).color
 
-        return _Color256(x.red % y.red, x.green % y.green, x.blue % y.blue)
+        return Color256(x.red % y.red, x.green % y.green, x.blue % y.blue)
 
     def __mul__(self, c):
         cdef ColorS x, y
-        x = _make_Color256(self).color
-        y = _make_Color256(c).color
+        x = _makeColor256(self).color
+        y = _makeColor256(c).color
 
-        c = _Color256(c)
-        return _Color256(x.red * y.red, x.green * y.green, x.blue * y.blue)
+        c = Color256(c)
+        return Color256(x.red * y.red, x.green * y.green, x.blue * y.blue)
 
     def __pow__(self, c, mod):
         cdef ColorS x, y
-        x = _make_Color256(self).color
-        y = _make_Color256(c).color
+        x = _makeColor256(self).color
+        y = _makeColor256(c).color
 
         if mod is None:
-            return _Color256(powFixed(x.red, y.red),
+            return Color256(powFixed(x.red, y.red),
                                   powFixed(x.green, y.green),
                                   powFixed(x.blue, y.blue))
 
-        m = _Color256(mod)
-        return _Color256(pow(x.red, y.red, m.red),
+        m = Color256(mod)
+        return Color256(pow(x.red, y.red, m.red),
                               pow(x.green, y.green, m.green),
                               pow(x.blue, y.blue, m.blue))
 
     def __sub__(self, c):
         cdef ColorS x, y
-        x = _make_Color256(self).color
-        y = _make_Color256(c).color
+        x = _makeColor256(self).color
+        y = _makeColor256(c).color
 
-        return _Color256(x.red - y.red,
+        return Color256(x.red - y.red,
                               x.green - y.green,
                               x.blue - y.blue)
 
     # Everything else knows what self is!
-    def __abs__(_Color256 self):
-        return _Color256(abs(self.color.red),
+    def __abs__(Color256 self):
+        return Color256(abs(self.color.red),
                               abs(self.color.green),
                               abs(self.color.blue))
 
-    def __ceil__(_Color256 self):
-        return _Color256(math.ceil(self.color.red),
+    def __ceil__(Color256 self):
+        return Color256(math.ceil(self.color.red),
                               math.ceil(self.color.green),
                               math.ceil(self.color.blue))
 
-    def __floor__(_Color256 self):
-        return _Color256(math.floor(self.color.red),
+    def __floor__(Color256 self):
+        return Color256(math.floor(self.color.red),
                               math.floor(self.color.green),
                               math.floor(self.color.blue))
 
-    def __hash__(_Color256 self):
+    def __hash__(Color256 self):
         # Sort of a hack.
         return (hash(self.color.red) +
                 hash(self.color.blue) // 2 +
@@ -227,9 +227,9 @@ cdef class _Color256:
         """Create a color from a 32-bit unsigned integer."""
         cdef ColorS c
         c = colorFromHex(hex, integer)
-        return _Color256(c.red, c.green, c.blue)
+        return Color256(c.red, c.green, c.blue)
 
-    cpdef to_hex(_Color256 self):
+    cpdef to_hex(Color256 self):
         """Convert a normalized color to a 32-bit integer."""
         if ((0 <= self.color.red <= 255.0) and
             (0 <= self.color.green <= 255.0) and
@@ -237,40 +237,40 @@ cdef class _Color256:
             return hexFromColor(self.color, integer)
         raise ValueError(str(self) + " cannot be expressed in hex")
 
-    def __invert__(_Color256 self):
+    def __invert__(Color256 self):
         """Return the complementary color."""
         cdef float i
         i = 255 if (<int> integer == 1) else 1
-        return _Color256(invert(self.color.red, i),
+        return Color256(invert(self.color.red, i),
                             invert(self.color.green, i),
                             invert(self.color.blue, i))
 
-    def __len__(_Color256 self):
+    def __len__(Color256 self):
         return 3
 
-    def __neg__(_Color256 self):
-        return _Color256(-self.color.red,
+    def __neg__(Color256 self):
+        return Color256(-self.color.red,
                               -self.color.green,
                               -self.color.blue)
 
-    def __repr__(_Color256 self):
+    def __repr__(Color256 self):
         return 'Color256(%s)' % str(self)
 
-    def __richcmp__(_Color256 self, _Color256 c, int cmp):
+    def __richcmp__(Color256 self, Color256 c, int cmp):
         return cmpToRichcmp((self.color.red - c.color.red) or
                             (self.color.green - c.color.green) or
                             (self.color.blue - c.color.blue), cmp)
 
-    def __round__(_Color256 self, n):
-        return _Color256(round(self.color.red, n),
+    def __round__(Color256 self, n):
+        return Color256(round(self.color.red, n),
                               round(self.color.green, n),
                               round(self.color.blue, n))
 
-    def __str__(_Color256 self):
+    def __str__(Color256 self):
         return colorToString(self.color, integer).decode('ascii')
 
-    def __trunc__(_Color256 self):
-        return _Color256(math.trunc(self.color.red),
+    def __trunc__(Color256 self):
+        return Color256(math.trunc(self.color.red),
                               math.trunc(self.color.green),
                               math.trunc(self.color.blue))
 
@@ -284,7 +284,7 @@ cdef class _Color256:
         return result
 
 
-cdef _Color256 _make_Color256(object x):
-    if isinstance(x, _Color256):
-       return <_Color256> x
-    return _Color256(x)
+cdef Color256 _makeColor256(object x):
+    if isinstance(x, Color256):
+       return <Color256> x
+    return Color256(x)

@@ -2,7 +2,7 @@
 
 from numbers import Number
 
-cdef class _ColorList256:
+cdef class ColorList256:
     """A list of RGB floating point Colors, with many mutating functions.
 
        A ColorList looks quite like a Python list of Colors (which look like
@@ -28,8 +28,8 @@ cdef class _ColorList256:
         """Construct a ColorList with an iterator of items, each of which looks
            like a Color."""
         if items is not None:
-            if isinstance(items, _ColorList256):
-                self.colors = (<_ColorList256> items).colors
+            if isinstance(items, ColorList256):
+                self.colors = (<ColorList256> items).colors
             else:
                 # A list of tuples, Colors or strings.
                 self.colors.resize(len(items))
@@ -40,10 +40,10 @@ cdef class _ColorList256:
         cdef size_t length, slice_length
         cdef int begin, end, step, index
         cdef float r, g, b
-        cdef _ColorList256 cl
+        cdef ColorList256 cl
         if isinstance(key, slice):
             begin, end, step = key.indices(self.colors.size())
-            if sliceIntoVector(_to_ColorList256(x).colors, self.colors,
+            if sliceIntoVector(_toColorList256(x).colors, self.colors,
                                begin, end, step):
                 return
             raise ValueError('attempt to assign sequence of one size '
@@ -53,7 +53,7 @@ cdef class _ColorList256:
             raise IndexError('ColorList index out of range ' + str(index))
         try:
             if isinstance(x, str):
-                x = _Color256(x)
+                x = Color256(x)
             r, g, b = x
             self.colors.setColor(index, r, g, b)
         except:
@@ -64,7 +64,7 @@ cdef class _ColorList256:
         cdef int index
         if isinstance(key, slice):
             begin, end, step = key.indices(self.colors.size())
-            cl = _ColorList256()
+            cl = ColorList256()
             cl.colors = sliceVector(self.colors, begin, end, step)
             return cl
 
@@ -73,7 +73,7 @@ cdef class _ColorList256:
             raise IndexError('ColorList index out of range ' + str(key))
 
         c = self.colors[index]
-        return _Color256(c.red, c.green, c.blue)
+        return Color256(c.red, c.green, c.blue)
 
     # Unary operators and corresponding mutators.
     cpdef abs(self):
@@ -82,7 +82,7 @@ cdef class _ColorList256:
         return self
 
     def __abs__(self):
-        cdef _ColorList256 cl = _ColorList256()
+        cdef ColorList256 cl = ColorList256()
         cl.colors = self.colors
         cl.abs()
         return cl
@@ -93,7 +93,7 @@ cdef class _ColorList256:
         return self
 
     def __ceil__(self):
-        cdef _ColorList256 cl = _ColorList256()
+        cdef ColorList256 cl = ColorList256()
         cl.colors = self.colors
         cl.ceil()
         return cl
@@ -104,7 +104,7 @@ cdef class _ColorList256:
         return self
 
     def __floor__(self):
-        cdef _ColorList256 cl = _ColorList256()
+        cdef ColorList256 cl = ColorList256()
         cl.colors = self.colors
         cl.floor()
         return cl
@@ -115,7 +115,7 @@ cdef class _ColorList256:
         return self
 
     def __invert__(self):
-        cdef _ColorList256 cl = _ColorList256()
+        cdef ColorList256 cl = ColorList256()
         cl.colors = self.colors
         cl.invert()
         return cl
@@ -126,7 +126,7 @@ cdef class _ColorList256:
         return self
 
     def __neg__(self):
-        cdef _ColorList256 cl = _ColorList256()
+        cdef ColorList256 cl = ColorList256()
         cl.colors = self.colors
         cl.negative()
         return cl
@@ -137,7 +137,7 @@ cdef class _ColorList256:
         return self
 
     def __round__(self):
-        cdef _ColorList256 cl = _ColorList256()
+        cdef ColorList256 cl = ColorList256()
         cl.colors = self.colors
         cl.round()
         return cl
@@ -148,7 +148,7 @@ cdef class _ColorList256:
         return self
 
     def __trunc__(self):
-        cdef _ColorList256 cl = _ColorList256()
+        cdef ColorList256 cl = ColorList256()
         cl.colors = self.colors
         cl.trunc()
         return cl
@@ -192,7 +192,7 @@ cdef class _ColorList256:
 
     cpdef duplicate(self, uint count):
         """Return a new `ColorList` with `count` copies of this one."""
-        cl = _ColorList256()
+        cl = ColorList256()
         cl.colors = duplicate(self.colors, count)
         return cl
 
@@ -213,7 +213,7 @@ cdef class _ColorList256:
         if isinstance(max, Number):
             maxInto(<float> max, self.colors)
         else:
-            maxInto(_to_ColorList256(max).colors, self.colors)
+            maxInto(_toColorList256(max).colors, self.colors)
         return self
 
     cpdef min_limit(self, float min):
@@ -221,7 +221,7 @@ cdef class _ColorList256:
         if isinstance(min, Number):
             minInto(<float> min, self.colors)
         else:
-            minInto(_to_ColorList256(min).colors, self.colors)
+            minInto(_toColorList256(min).colors, self.colors)
         return self
 
     cpdef pow(self, float c):
@@ -229,7 +229,7 @@ cdef class _ColorList256:
         if isinstance(c, Number):
             powInto(<float> c, self.colors)
         else:
-            powInto(_to_ColorList256(c).colors, self.colors)
+            powInto(_toColorList256(c).colors, self.colors)
         return self
 
     cpdef resize(self, size_t size):
@@ -242,7 +242,7 @@ cdef class _ColorList256:
         if isinstance(c, Number):
             rpowInto(<float> c, self.colors)
         else:
-            rpowInto(_to_ColorList256(c).colors, self.colors)
+            rpowInto(_toColorList256(c).colors, self.colors)
         return self
 
     # Mutating operations.
@@ -250,120 +250,120 @@ cdef class _ColorList256:
         if isinstance(c, Number):
             addInto(<float> c, self.colors)
         else:
-            addInto(_to_ColorList256(c).colors, self.colors)
+            addInto(_toColorList256(c).colors, self.colors)
         return self
 
     def __imul__(self, c):
         if isinstance(c, Number):
             multiplyInto(<float> c, self.colors)
         else:
-            multiplyInto(_to_ColorList256(c).colors, self.colors)
+            multiplyInto(_toColorList256(c).colors, self.colors)
         return self
 
     def __ipow__(self, c):
         if isinstance(c, Number):
              powInto(<float> c, self.colors)
         else:
-             powInto(_to_ColorList256(c).colors, self.colors)
+             powInto(_toColorList256(c).colors, self.colors)
         return self
 
     def __isub__(self, c):
         if isinstance(c, Number):
              subtractInto(<float> c, self.colors)
         else:
-             subtractInto(_to_ColorList256(c).colors, self.colors)
+             subtractInto(_toColorList256(c).colors, self.colors)
         return self
 
     def __itruediv__(self, c):
         if isinstance(c, Number):
             divideInto(<float> c, self.colors)
         else:
-            divideInto(_to_ColorList256(c).colors, self.colors)
+            divideInto(_toColorList256(c).colors, self.colors)
         return self
 
     def __add__(self, c):
-        cdef _ColorList256 cl = _ColorList256()
+        cdef ColorList256 cl = ColorList256()
 
         if isinstance(c, Number):
-            addOver((<_ColorList256> self).colors, <float> c, cl.colors)
-        elif isinstance(self, _ColorList256):
-            addOver((<_ColorList256> self).colors,
-                    _to_ColorList256(c).colors, cl.colors)
+            addOver((<ColorList256> self).colors, <float> c, cl.colors)
+        elif isinstance(self, ColorList256):
+            addOver((<ColorList256> self).colors,
+                    _toColorList256(c).colors, cl.colors)
         elif isinstance(self, Number):
-            addOver(<float> self, _to_ColorList256(c).colors, cl.colors)
+            addOver(<float> self, _toColorList256(c).colors, cl.colors)
         else:
-            addOver(_ColorList256(self).colors,
-                    (<_ColorList256> c).colors, cl.colors)
+            addOver(ColorList256(self).colors,
+                    (<ColorList256> c).colors, cl.colors)
         return cl
 
     def __mul__(self, c):
-        cdef _ColorList256 cl = _ColorList256()
+        cdef ColorList256 cl = ColorList256()
 
         if isinstance(c, Number):
-            mulOver((<_ColorList256> self).colors, <float> c, cl.colors)
-        elif isinstance(self, _ColorList256):
-            mulOver((<_ColorList256> self).colors,
-                    _to_ColorList256(c).colors, cl.colors)
+            mulOver((<ColorList256> self).colors, <float> c, cl.colors)
+        elif isinstance(self, ColorList256):
+            mulOver((<ColorList256> self).colors,
+                    _toColorList256(c).colors, cl.colors)
         elif isinstance(self, Number):
-            mulOver(<float> self, _to_ColorList256(c).colors, cl.colors)
+            mulOver(<float> self, _toColorList256(c).colors, cl.colors)
         else:
-            mulOver(_ColorList256(self).colors,
-                    (<_ColorList256> c).colors, cl.colors)
+            mulOver(ColorList256(self).colors,
+                    (<ColorList256> c).colors, cl.colors)
         return cl
 
     def __pow__(self, c, mod):
-        cdef _ColorList256 cl = _ColorList256()
+        cdef ColorList256 cl = ColorList256()
         if mod:
             raise ValueError('Can\'t handle three operator pow')
 
         if isinstance(c, Number):
-            powOver((<_ColorList256> self).colors, <float> c, cl.colors)
-        elif isinstance(self, _ColorList256):
-            powOver((<_ColorList256> self).colors,
-                    _to_ColorList256(c).colors, cl.colors)
+            powOver((<ColorList256> self).colors, <float> c, cl.colors)
+        elif isinstance(self, ColorList256):
+            powOver((<ColorList256> self).colors,
+                    _toColorList256(c).colors, cl.colors)
         elif isinstance(self, Number):
-            powOver(<float> self, _to_ColorList256(c).colors, cl.colors)
+            powOver(<float> self, _toColorList256(c).colors, cl.colors)
         else:
-            powOver(_ColorList256(self).colors,
-                    (<_ColorList256> c).colors, cl.colors)
+            powOver(ColorList256(self).colors,
+                    (<ColorList256> c).colors, cl.colors)
         return cl
 
     def __sub__(self, c):
-        cdef _ColorList256 cl = _ColorList256()
+        cdef ColorList256 cl = ColorList256()
 
         if isinstance(c, Number):
-            subOver((<_ColorList256> self).colors, <float> c, cl.colors)
-        elif isinstance(self, _ColorList256):
-            subOver((<_ColorList256> self).colors,
-                    _to_ColorList256(c).colors, cl.colors)
+            subOver((<ColorList256> self).colors, <float> c, cl.colors)
+        elif isinstance(self, ColorList256):
+            subOver((<ColorList256> self).colors,
+                    _toColorList256(c).colors, cl.colors)
         elif isinstance(self, Number):
-            subOver(<float> self, _to_ColorList256(c).colors, cl.colors)
+            subOver(<float> self, _toColorList256(c).colors, cl.colors)
         else:
-            subOver(_ColorList256(self).colors,
-                    (<_ColorList256> c).colors, cl.colors)
+            subOver(ColorList256(self).colors,
+                    (<ColorList256> c).colors, cl.colors)
         return cl
 
     def __truediv__(self, c):
-        cdef _ColorList256 cl = _ColorList256()
+        cdef ColorList256 cl = ColorList256()
         if isinstance(c, Number):
-            divOver((<_ColorList256> self).colors, <float> c, cl.colors)
-        elif isinstance(self, _ColorList256):
-            divOver((<_ColorList256> self).colors,
-                    _to_ColorList256(c).colors, cl.colors)
+            divOver((<ColorList256> self).colors, <float> c, cl.colors)
+        elif isinstance(self, ColorList256):
+            divOver((<ColorList256> self).colors,
+                    _toColorList256(c).colors, cl.colors)
         elif isinstance(self, Number):
-            divOver(<float> self, _to_ColorList256(c).colors, cl.colors)
+            divOver(<float> self, _toColorList256(c).colors, cl.colors)
         else:
-            divOver(_ColorList256(self).colors,
-                    (<_ColorList256> c).colors, cl.colors)
+            divOver(ColorList256(self).colors,
+                    (<ColorList256> c).colors, cl.colors)
         return cl
 
     def __len__(self):
         return self.colors.size()
 
     def __repr__(self):
-        return '_ColorList256(%s)' % str(self)
+        return 'ColorList256(%s)' % str(self)
 
-    def __richcmp__(_ColorList256 self, _ColorList256 other, int rcmp):
+    def __richcmp__(ColorList256 self, ColorList256 other, int rcmp):
         return cmpToRichcmp(compareContainers(self.colors, other.colors), rcmp)
 
     def __sizeof__(self):
@@ -373,15 +373,15 @@ cdef class _ColorList256:
         return toString(self.colors).decode('ascii')
 
     @staticmethod
-    def spread(_Color x, _Color y, size_t size):
+    def spread(Color x, Color y, size_t size):
         """Return a spread of `size` colors between Color x and Color y."""
-        cdef _ColorList256 cl = _ColorList256()
+        cdef ColorList256 cl = ColorList256()
         cl.colors = fillSpread(x.color, y.color, size)
         return cl
 
 
-cdef _ColorList256 _to_ColorList256(object value):
-    if isinstance(value, _ColorList256):
-        return <_ColorList256> value
+cdef ColorList256 _toColorList256(object value):
+    if isinstance(value, ColorList256):
+        return <ColorList256> value
     else:
-        return _ColorList256(value)
+        return ColorList256(value)

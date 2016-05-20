@@ -25,7 +25,7 @@ cdef class OperatorTest:
         return self
 
     def __str__(self):
-        return toString(self.colors, (<_Color> self._color_maker())._base()
+        return toString(self.colors, (<Color> self._color_maker())._base()
                         ).decode('ascii')
 
     def resize(self, size_t size):
