@@ -36,7 +36,8 @@ cdef extern from "<tdsp/color/names_inl.h>" namespace "tdsp":
     vector[string] colorNames()
     ColorS colorFromHex(uint32_t hex, Base base);
     uint32_t hexFromColor(ColorS&, Base base);
-
+    float distance2(ColorS&, ColorS&)
+    float distance(ColorS&, ColorS&)
 
 cdef extern from "<tdsp/color/hsv.h>" namespace "tdsp":
     ColorS hsvToRgb(ColorS, Base)

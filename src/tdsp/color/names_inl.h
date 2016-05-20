@@ -44,7 +44,7 @@ struct ColorTraits {
     }
 
     static bool isGray(Color color) {
-        return denormalize(colorfulness(color)) < 0.0001;
+        return normalize(colorfulness(color)) < 0.0001;
     }
 
     static float strtof(const char *nptr, char const **endptr) {
@@ -91,7 +91,7 @@ struct ColorTraits {
 
             if (isGray(c)) {
                 auto gray = 100.0f * normalize(std::abs(c[0]));
-                return addNegatives("gray " + tdsp::toString(gray, 5));
+                return addNegatives("gray " + tdsp::toString(gray, 4));
             }
         }
 
@@ -144,7 +144,7 @@ struct ColorTraits {
         char* endptr;
 
         // Special case for grey and gray.
-        if (not (strstr(name, "gray ") and strstr(name, "grey "))) {
+        if (strstr(name, "gray ") or strstr(name, "grey ")) {
             auto gray = static_cast<float>(strtod(name + 5, &endptr)) / 100;
             if (not *endptr) {
                 gray = normalize(gray);

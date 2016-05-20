@@ -88,6 +88,15 @@ cdef class _Color256:
             maxInto(_make_Color256(max).color, c.color)
         return c
 
+    cpdef distance(_Color256 self, _Color256 other):
+        """Return the cartesian distance between this color and another."""
+        return distance(self.color, other.color)
+
+    cpdef distance2(_Color256 self, _Color256 other):
+        """Return the square of the cartesian distance between this color and
+           another - this is somewhat more efficient and often good enough."""
+        return distance2(self.color, other.color)
+
     cpdef normalized(_Color256 self):
         """Return a color normalized into this color range."""
         return _Color256(normalize(self.color.red, 255.0),

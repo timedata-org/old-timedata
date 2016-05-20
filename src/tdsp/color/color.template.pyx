@@ -88,6 +88,15 @@ cdef class _Color{suffix}:
             maxInto(_make_Color{suffix}(max).color, c.color)
         return c
 
+    cpdef distance(_Color{suffix} self, _Color{suffix} other):
+        """Return the cartesian distance between this color and another."""
+        return distance(self.color, other.color)
+
+    cpdef distance2(_Color{suffix} self, _Color{suffix} other):
+        """Return the square of the cartesian distance between this color and
+           another - this is somewhat more efficient and often good enough."""
+        return distance2(self.color, other.color)
+
     cpdef normalized(_Color{suffix} self):
         """Return a color normalized into this color range."""
         return _Color{suffix}(normalize(self.color.red, {ratio}),
