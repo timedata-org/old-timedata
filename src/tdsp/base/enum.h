@@ -5,6 +5,9 @@
 
 namespace tdsp {
 
+template< bool B, class T = void >
+using enable_if_t = typename std::enable_if<B,T>::type;
+
 /** We often want to generically operate on an enum class and do things like
     "get the number of elements" or "iterate over all elements".
 
@@ -23,20 +26,26 @@ namespace tdsp {
 */
 
 /** Generically get the size of a sized enum class. */
-template <typename Enum>
+template <
+    typename Enum,
+    typename = enable_if_t<std::is_enum<Enum>::value>>
 constexpr uint8_t enumSize() {
     return 1 + static_cast<uint8_t>(Enum::last);
 }
 
 /** Iterate over elements of a sized enum class. */
-template <typename Enum, typename Functor>
+template <typename Enum,
+          typename Functor,
+          typename = enable_if_t<std::is_enum<Enum>::value>>
 void forEach(Functor f) {
     for (uint8_t i = 0; i < enumSize<Enum>(); ++i)
         f(static_cast<Enum>(i));
 }
 
 /** An array indexed by a sized enum class. */
-template <typename T, typename Enum>
+template <typename T,
+          typename Enum,
+          typename = enable_if_t<std::is_enum<Enum>::value>>
 struct EnumArray : std::array<T, enumSize<Enum>> {
     using Parent = std::array<T, enumSize<Enum>>;
 
