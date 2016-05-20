@@ -15,29 +15,19 @@ include "tdsp/color/color256.pyx"
 include "tdsp/color/color_list_base.pyx"
 include "tdsp/color/color_list.pyx"
 include "tdsp/color/color_list256.pyx"
+include "tdsp/color/colors.pyx"
 include "tdsp/signal/_combiner.pyx"
 include "tdsp/signal/_stripe.pyx"
 include "tdsp/signal/fade.pyx"
 include "tdsp/signal/render3.pyx"
 
 locals().update(
-    Color=_Color,
-    Color256=_Color256,
-    ColorList=_ColorList,
-    ColorList256=_ColorList256,
     Combiner=_Combiner,
     Fade=_FadeImpl,
     Render3=_Render3Impl,
     Stripe=_Stripe,
     )
 
-class _Colors(object):
-    def __init__(self, color_class):
-        for name in color_class.names():
-            setattr(self, name.replace(' ', '_'), color_class(name))
-
-
-Colors = _Colors(_Color)
-Colors256 = _Colors(_Color256)
+_load_colors()
 
 print('tdsp compiled on', compile_timestamp())

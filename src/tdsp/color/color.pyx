@@ -1,6 +1,6 @@
 import math, numbers
 
-cdef class _Color:
+cdef class Color:
     """A Color is an immutable RGB floating point color.
 
        A Color looks very much like a Python tuple with three floating point
@@ -69,60 +69,60 @@ cdef class _Color:
         return self.color.blue
 
     @property
-    def ratio(_Color self):
+    def ratio(Color self):
         """Return the maximum ratio for this color range:  1.0 for Color
            and 255.0 for Color256."""
         return 1.0
 
-    cpdef rgb_to_hsv(_Color self):
+    cpdef rgb_to_hsv(Color self):
         """Return a new color converting RGB to HSV."""
         cdef ColorS c
         c = rgbToHsv(self.color, normal);
-        return _Color(c.red, c.green, c.blue)
+        return Color(c.red, c.green, c.blue)
 
-    cpdef hsv_to_rgb(_Color self):
+    cpdef hsv_to_rgb(Color self):
         """Return a new color converting RGB to HSV."""
         cdef ColorS c
         c = hsvToRgb(self.color, normal);
-        return _Color(c.red, c.green, c.blue)
+        return Color(c.red, c.green, c.blue)
 
-    def limited(_Color self, *, min=None, max=None):
+    def limited(Color self, *, min=None, max=None):
         """Return a new color limited to be not less than min (if given)
            and not greater than max (if given)."""
-        cdef _Color c
+        cdef Color c
         c = self[:]
         if min is not None:
-            minInto(_make_Color(min).color, c.color)
+            minInto(_makeColor(min).color, c.color)
         if max is not None:
-            maxInto(_make_Color(max).color, c.color)
+            maxInto(_makeColor(max).color, c.color)
         return c
 
-    cpdef distance(_Color self, _Color other):
+    cpdef distance(Color self, Color other):
         """Return the cartesian distance between this color and another."""
         return distance(self.color, other.color)
 
-    cpdef distance2(_Color self, _Color other):
+    cpdef distance2(Color self, Color other):
         """Return the square of the cartesian distance between this color and
            another - this is somewhat more efficient and often good enough."""
         return distance2(self.color, other.color)
 
-    cpdef normalized(_Color self):
+    cpdef normalized(Color self):
         """Return a color normalized into this color range."""
-        return _Color(normalize(self.color.red, 1.0),
+        return Color(normalize(self.color.red, 1.0),
                               normalize(self.color.green, 1.0),
                               normalize(self.color.blue, 1.0))
 
-    cpdef rotated(_Color self, int positions):
+    cpdef rotated(Color self, int positions):
         """Return a color with the components rotated."""
-        cdef _Color c
-        c = _Color()
+        cdef Color c
+        c = Color()
         c.color = rotate(self.color, positions)
         return c
 
-    def __getitem__(_Color self, object key):
+    def __getitem__(Color self, object key):
         if isinstance(key, slice):
             r = tuple(self[i] for i in range(*key.indices(len(self))))
-            return _Color(*r) if len(r) == 3 else r
+            return Color(*r) if len(r) == 3 else r
 
         if key == 0 or key == -3:
             return self.color.red
@@ -137,15 +137,15 @@ cdef class _Color:
     # So all of these are wrong in fact.  :-D
     def __add__(self, c):
         cdef ColorS x, y
-        x = _make_Color(self).color
-        y = _make_Color(c).color
-        return _Color(x.red + y.red, x.green + y.green, x.blue + y.blue)
+        x = _makeColor(self).color
+        y = _makeColor(c).color
+        return Color(x.red + y.red, x.green + y.green, x.blue + y.blue)
 
     def __truediv__(self, c):
         cdef ColorS x, y
-        x = _make_Color(self).color
-        y = _make_Color(c).color
-        return _Color(divFixed(x.red, y.red),
+        x = _makeColor(self).color
+        y = _makeColor(c).color
+        return Color(divFixed(x.red, y.red),
                               divFixed(x.green, y.green),
                               divFixed(x.blue, y.blue))
 
@@ -153,70 +153,70 @@ cdef class _Color:
         cdef ColorS x, y
         cdef float dr, mr, dg, mg, db, mb
 
-        x = _make_Color(self).color
-        y = _make_Color(c).color
+        x = _makeColor(self).color
+        y = _makeColor(c).color
 
         dr, mr = divmod(x.red, y.red)
         dg, mg = divmod(x.green, y.green)
         db, mb = divmod(x.blue, y.blue)
-        return _Color(dr, dg, db), _Color(mr, mg, mb)
+        return Color(dr, dg, db), Color(mr, mg, mb)
 
     def __mod__(self, c):
         cdef ColorS x, y
-        x = _make_Color(self).color
-        y = _make_Color(c).color
+        x = _makeColor(self).color
+        y = _makeColor(c).color
 
-        return _Color(x.red % y.red, x.green % y.green, x.blue % y.blue)
+        return Color(x.red % y.red, x.green % y.green, x.blue % y.blue)
 
     def __mul__(self, c):
         cdef ColorS x, y
-        x = _make_Color(self).color
-        y = _make_Color(c).color
+        x = _makeColor(self).color
+        y = _makeColor(c).color
 
-        c = _Color(c)
-        return _Color(x.red * y.red, x.green * y.green, x.blue * y.blue)
+        c = Color(c)
+        return Color(x.red * y.red, x.green * y.green, x.blue * y.blue)
 
     def __pow__(self, c, mod):
         cdef ColorS x, y
-        x = _make_Color(self).color
-        y = _make_Color(c).color
+        x = _makeColor(self).color
+        y = _makeColor(c).color
 
         if mod is None:
-            return _Color(powFixed(x.red, y.red),
+            return Color(powFixed(x.red, y.red),
                                   powFixed(x.green, y.green),
                                   powFixed(x.blue, y.blue))
 
-        m = _Color(mod)
-        return _Color(pow(x.red, y.red, m.red),
+        m = Color(mod)
+        return Color(pow(x.red, y.red, m.red),
                               pow(x.green, y.green, m.green),
                               pow(x.blue, y.blue, m.blue))
 
     def __sub__(self, c):
         cdef ColorS x, y
-        x = _make_Color(self).color
-        y = _make_Color(c).color
+        x = _makeColor(self).color
+        y = _makeColor(c).color
 
-        return _Color(x.red - y.red,
+        return Color(x.red - y.red,
                               x.green - y.green,
                               x.blue - y.blue)
 
     # Everything else knows what self is!
-    def __abs__(_Color self):
-        return _Color(abs(self.color.red),
+    def __abs__(Color self):
+        return Color(abs(self.color.red),
                               abs(self.color.green),
                               abs(self.color.blue))
 
-    def __ceil__(_Color self):
-        return _Color(math.ceil(self.color.red),
+    def __ceil__(Color self):
+        return Color(math.ceil(self.color.red),
                               math.ceil(self.color.green),
                               math.ceil(self.color.blue))
 
-    def __floor__(_Color self):
-        return _Color(math.floor(self.color.red),
+    def __floor__(Color self):
+        return Color(math.floor(self.color.red),
                               math.floor(self.color.green),
                               math.floor(self.color.blue))
 
-    def __hash__(_Color self):
+    def __hash__(Color self):
         # Sort of a hack.
         return (hash(self.color.red) +
                 hash(self.color.blue) // 2 +
@@ -227,9 +227,9 @@ cdef class _Color:
         """Create a color from a 32-bit unsigned integer."""
         cdef ColorS c
         c = colorFromHex(hex, normal)
-        return _Color(c.red, c.green, c.blue)
+        return Color(c.red, c.green, c.blue)
 
-    cpdef to_hex(_Color self):
+    cpdef to_hex(Color self):
         """Convert a normalized color to a 32-bit integer."""
         if ((0 <= self.color.red <= 1.0) and
             (0 <= self.color.green <= 1.0) and
@@ -237,40 +237,40 @@ cdef class _Color:
             return hexFromColor(self.color, normal)
         raise ValueError(str(self) + " cannot be expressed in hex")
 
-    def __invert__(_Color self):
+    def __invert__(Color self):
         """Return the complementary color."""
         cdef float i
         i = 255 if (<int> normal == 1) else 1
-        return _Color(invert(self.color.red, i),
+        return Color(invert(self.color.red, i),
                             invert(self.color.green, i),
                             invert(self.color.blue, i))
 
-    def __len__(_Color self):
+    def __len__(Color self):
         return 3
 
-    def __neg__(_Color self):
-        return _Color(-self.color.red,
+    def __neg__(Color self):
+        return Color(-self.color.red,
                               -self.color.green,
                               -self.color.blue)
 
-    def __repr__(_Color self):
+    def __repr__(Color self):
         return 'Color(%s)' % str(self)
 
-    def __richcmp__(_Color self, _Color c, int cmp):
+    def __richcmp__(Color self, Color c, int cmp):
         return cmpToRichcmp((self.color.red - c.color.red) or
                             (self.color.green - c.color.green) or
                             (self.color.blue - c.color.blue), cmp)
 
-    def __round__(_Color self, n):
-        return _Color(round(self.color.red, n),
+    def __round__(Color self, n):
+        return Color(round(self.color.red, n),
                               round(self.color.green, n),
                               round(self.color.blue, n))
 
-    def __str__(_Color self):
+    def __str__(Color self):
         return colorToString(self.color, normal).decode('ascii')
 
-    def __trunc__(_Color self):
-        return _Color(math.trunc(self.color.red),
+    def __trunc__(Color self):
+        return Color(math.trunc(self.color.red),
                               math.trunc(self.color.green),
                               math.trunc(self.color.blue))
 
@@ -284,7 +284,7 @@ cdef class _Color:
         return result
 
 
-cdef _Color _make_Color(object x):
-    if isinstance(x, _Color):
-       return <_Color> x
-    return _Color(x)
+cdef Color _makeColor(object x):
+    if isinstance(x, Color):
+       return <Color> x
+    return Color(x)

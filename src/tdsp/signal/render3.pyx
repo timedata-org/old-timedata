@@ -16,5 +16,5 @@ cdef class _Render3Impl(_Render3):
         def __set__(self, bytearray x):
             self.buffer = x
 
-    def __call__(self, _ColorList cl):
+    def __call__(self, ColorList cl):
         renderColorVector(self._instance, cl.colors, self.buffer + self.offset)

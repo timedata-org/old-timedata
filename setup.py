@@ -5,7 +5,7 @@ import distutils.core, distutils.extension, Cython.Build
 
 import Cython.Compiler.Options
 
-Cython.Compiler.Options.annotate = True
+# Cython.Compiler.Options.annotate = True
 
 def execute(command):
     result = os.system(command)
@@ -82,10 +82,8 @@ EXT_MODULES=Cython.Build.cythonize(
     [EXTENSION],
     language='c++',
     language_level=3,
-    annotate=True,
 
     compiler_directives=dict(
-        annotate=True,
         c_string_encoding='ascii',
         # c_string_type='unicode', # Why doesn't this work?
         )
