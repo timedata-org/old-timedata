@@ -109,6 +109,12 @@ class TestColor(unittest.TestCase):
         for c in Colors.__dict__.values():
             self.assertEqual(Color.from_hex(c.to_hex()), c)
 
+    def test_everything(self):
+        for i in range(256 * 256 * 256):
+            c = Color.from_hex(i)
+            self.assertEqual(i, c.to_hex(), i)
+            self.assertEqual(Color(str(c)), c, i)
+
 
 class TestColor256(unittest.TestCase):
     def test_first(self):
