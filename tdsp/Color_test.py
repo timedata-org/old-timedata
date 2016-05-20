@@ -109,11 +109,22 @@ class TestColor(unittest.TestCase):
         for c in Colors.__dict__.values():
             self.assertEqual(Color.from_hex(c.to_hex()), c)
 
-    def test_everything(self):
+    def test_distance(self):
+        self.assertEqual(Colors.red.distance2(Colors.green), 2)
+        self.assertEqual(Colors.red.distance(Colors.black), 1)
+
+    def DONT_test_everything(self):
+        # This test takes about five minutes to run when it's enabled.
         for i in range(256 * 256 * 256):
+            if not i % (256 * 256 * 4):
+                print('!', end='', flush=True)
             c = Color.from_hex(i)
             self.assertEqual(i, c.to_hex(), i)
-            self.assertEqual(Color(str(c)), c, i)
+            s = str(c)
+            c2 = Color(s)
+            distance = c.distance(c2)
+            self.assertTrue(distance < 0.000001, i)
+            self.assertEqual(str(c2), s, i)
 
 
 class TestColor256(unittest.TestCase):
