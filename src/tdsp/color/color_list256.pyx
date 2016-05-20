@@ -60,7 +60,7 @@ cdef class _ColorList256:
             raise ValueError('Can\'t convert ' + str(x) + ' to a color')
 
     def __getitem__(self, object key):
-        cdef Color c
+        cdef ColorS c
         cdef int index
         if isinstance(key, slice):
             begin, end, step = key.indices(self.colors.size())
@@ -73,7 +73,7 @@ cdef class _ColorList256:
             raise IndexError('ColorList index out of range ' + str(key))
 
         c = self.colors[index]
-        return _Color256(c.at(0), c.at(1), c.at(2))
+        return _Color256(c.red, c.green, c.blue)
 
     # Unary operators and corresponding mutators.
     cpdef abs(self):
@@ -125,7 +125,7 @@ cdef class _ColorList256:
         negateColor(self.colors)
         return self
 
-    def __negative__(self):
+    def __neg__(self):
         cdef _ColorList256 cl = _ColorList256()
         cl.colors = self.colors
         cl.negative()
@@ -166,10 +166,12 @@ cdef class _ColorList256:
         return self
 
     cpdef hsv_to_rgb(self):
+        """Convert each color in the list from HSV to RBG."""
         hsvToRgbInto(self.colors, integer)
         return self
 
     cpdef rgb_to_hsv(self):
+        """Convert each color in the list from RBG to HSV."""
         rgbToHsvInto(self.colors, integer)
         return self
 
@@ -179,7 +181,7 @@ cdef class _ColorList256:
         return self
 
     cpdef rotate(self, int pos):
-        """Rotate the colors forward by `pos` positions."""
+        """In-place rotation of the colors forward by `pos` positions."""
         rotate(self.colors, pos)
         return self
 
@@ -206,19 +208,20 @@ cdef class _ColorList256:
             raise
         return self
 
-    def limit(self, *, min=None, max=None):
-        """Limit each color to be not less than min (if given) and not greater
-           than max (if given)."""
-        if max is not None:
-            if isinstance(max, Number):
-                maxInto(<float> max, self.colors)
-            else:
-                maxInto(_to_ColorList256(max).colors, self.colors)
-        if min is not None:
-            if isinstance(min, Number):
-                minInto(<float> min, self.colors)
-            else:
-                minInto(_to_ColorList256(min).colors, self.colors)
+    cpdef max_limit(self, float max):
+        """Limit each color to be not greater than max."""
+        if isinstance(max, Number):
+            maxInto(<float> max, self.colors)
+        else:
+            maxInto(_to_ColorList256(max).colors, self.colors)
+        return self
+
+    cpdef min_limit(self, float min):
+        """Limit each color to be not less than min."""
+        if isinstance(min, Number):
+            minInto(<float> min, self.colors)
+        else:
+            minInto(_to_ColorList256(min).colors, self.colors)
         return self
 
     cpdef pow(self, float c):
@@ -235,7 +238,7 @@ cdef class _ColorList256:
         return self
 
     cpdef rpow(self, c):
-        """Right-hand (reversed) reverse of pow()."""
+        """Right-hand (reversed) call of pow()."""
         if isinstance(c, Number):
             rpowInto(<float> c, self.colors)
         else:
@@ -371,6 +374,7 @@ cdef class _ColorList256:
 
     @staticmethod
     def spread(_Color x, _Color y, size_t size):
+        """Return a spread of `size` colors between Color x and Color y."""
         cdef _ColorList256 cl = _ColorList256()
         cl.colors = fillSpread(x.color, y.color, size)
         return cl

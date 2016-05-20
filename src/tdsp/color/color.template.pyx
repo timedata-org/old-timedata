@@ -17,16 +17,25 @@ cdef class _Color{suffix}:
        Python tuple and more than twice as fast to create and copy.  Colors are
        also immutable - all operations on Colors have to create a new Color.
 
-       There are two models of color.  The base class Color is normalized so
-       that the standard range for output signals - that is, outout color
-       components - is [0.0, 1.0].  As always, intermediate signals can be
-       greater than 1 or even negative.
+       There are two ranges for color components.  The base class Color is
+       normalized so that the standard range for output signals - that is,
+       outout color components - is [0.0, 1.0].  As always, intermediate signals
+       can be greater than 1 or even negative.
 
-       The derived class Color256 has a standard output range of [0, 255] to
+       The derived class Color256 has a standard output range of [0, 255] for
+       better compatibility with existing RGB and DMX systems.
     """
     cdef ColorS color
 
     def __init__(self, *args):
+        """There are various different ways to construct a Color.
+          * The empty constructor Color() gives Colors.black where all
+            components are zero.
+          * Colors can be constructed from string names.
+          * Constructing from a single number results in a color with all three
+            components of that value.
+          * Constructing from any sort of triplet assigns these values to red,
+            green and blue."""
         if not args:
             self.color.red = self.color.green = self.color.blue = 0
             return
@@ -259,9 +268,6 @@ cdef class _Color{suffix}:
 
     def __str__(_Color{suffix} self):
         return colorToString(self.color, {base}).decode('ascii')
-
-    def __sizeof__(_Color{suffix} self):
-        return 12  # 3 4-byte floats.
 
     def __trunc__(_Color{suffix} self):
         return _Color{suffix}(math.trunc(self.color.red),

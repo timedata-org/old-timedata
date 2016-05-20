@@ -1,6 +1,6 @@
 cdef extern from "<tdsp/color/colorList_inl.h>" namespace "tdsp":
     cppclass ColorList:
-        Color& operator[](size_t)
+        ColorS& operator[](size_t)
         size_t size()
         void resize(size_t)
         void clear();

@@ -8,21 +8,12 @@ cdef extern from "<tdsp/color/names_inl.h>" namespace "tdsp::Base":
     cdef Base normal
     cdef Base integer
 
-
 cdef extern from "<tdsp/color/names_inl.h>" namespace "tdsp":
-    cdef cppclass ColorS
-
-    cdef cppclass Color:
-        Color()
-        Color(ColorS&)
-        float& at(int)
-
     cdef cppclass ColorS:
         float red, green, blue
 
         ColorS()
         ColorS(float, float, float)
-        ColorS(Color&)
 
     void minInto(ColorS&, ColorS&);
     void maxInto(ColorS&, ColorS&);
