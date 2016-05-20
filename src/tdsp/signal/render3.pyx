@@ -1,7 +1,7 @@
 include "_render3.pyx"
 
 cdef extern from "<tdsp/signal/render3.h>" namespace "tdsp":
-    void renderColorList(Render3&, ColorList&, char*);
+    void renderColorVector(Render3&, ColorVector&, char*);
 
 
 cdef class _Render3Impl(_Render3):
@@ -17,4 +17,4 @@ cdef class _Render3Impl(_Render3):
             self.buffer = x
 
     def __call__(self, _ColorList cl):
-        renderColorList(self._instance, cl.colors, self.buffer + self.offset)
+        renderColorVector(self._instance, cl.colors, self.buffer + self.offset)

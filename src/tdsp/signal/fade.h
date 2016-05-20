@@ -42,7 +42,7 @@ Color fadeTo(float fader, Fade const& fade, Color const& in1, Color const& in2) 
 }
 
 void fadeOver(float fader, Fade const& fade,
-              ColorList const& in1, ColorList const& in2, ColorList& out) {
+              ColorVector const& in1, ColorVector const& in2, ColorVector& out) {
     auto size = std::min(in1.size(), in2.size());
     out.resize(size);
     for (size_t i = 0; i < size; ++i)

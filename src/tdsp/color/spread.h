@@ -21,9 +21,9 @@ void fillSpread(Color const& c1, Color const& c2, Iter begin, Iter end,
 }
 
 inline
-ColorList fillSpread(Color const& c1, Color const& c2, size_t size,
-                     Fade const& fade = {}) {
-    ColorList cl;
+ColorVector fillSpread(Color const& c1, Color const& c2, size_t size,
+                       Fade const& fade = {}) {
+    ColorVector cl;
     cl.resize(size);
     fillSpread(c1, c2, cl.begin(), cl.end(), fade);
     return cl;

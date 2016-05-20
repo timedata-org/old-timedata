@@ -10,19 +10,19 @@
 namespace tdsp {
 
 inline
-ColorList duplicate(ColorList const& v, size_t count) {
-    ColorList result;
+ColorVector duplicate(ColorVector const& v, size_t count) {
+    ColorVector result;
     for (size_t i = 0; i < count; ++i)
         result.insert(result.end(), v.begin(), v.end());
     return result;
 }
 
 inline
-void reverse(ColorList& v) {
+void reverse(ColorVector& v) {
     std::reverse(v.begin(), v.end());
 }
 
-inline std::string toString(ColorList const& colors, Base base) {
+inline std::string toString(ColorVector const& colors, Base base) {
     std::string result = "(";
     for (auto& c : colors) {
         if (result.size() > 1)
@@ -38,17 +38,17 @@ inline std::string toString(ColorList const& colors, Base base) {
 }
 
 inline
-ColorList sliceVector(
-        ColorList const& in, int begin, int end, int step) {
+ColorVector sliceVector(
+        ColorVector const& in, int begin, int end, int step) {
     // TODO: is this used?
     auto slice = make<Slice>(begin, end, step);
-    ColorList out;
+    ColorVector out;
     forEach(slice, [&](int j) { out.push_back(in[j]); });
     return out;
 }
 
 inline
-bool sliceIntoVector(ColorList const& in, ColorList& out,
+bool sliceIntoVector(ColorVector const& in, ColorVector& out,
                      int begin, int end, int step) {
     auto slice = make<Slice>(begin, end, step);
     auto size = slice.size();
@@ -77,7 +77,7 @@ bool sliceIntoVector(ColorList const& in, ColorList& out,
 }
 
 template <typename Function>
-void forEachColorComponent(ColorList& colors, Function f) {
+void forEachColorComponent(ColorVector& colors, Function f) {
     // TODO: phase this out in favor of the functional version.
     for (auto& color : colors)
         for (auto& c : color)
@@ -85,14 +85,14 @@ void forEachColorComponent(ColorList& colors, Function f) {
 }
 
 template <typename Function>
-void forEachComponent(ColorList& colors, Function f) {
+void forEachComponent(ColorVector& colors, Function f) {
     for (auto& color : colors)
         for (auto& c : color)
             c = f(c);
 }
 
 template <typename Function>
-void forEachColorComponent(ColorList const& in, ColorList& out, Function f) {
+void forEachColorComponent(ColorVector const& in, ColorVector& out, Function f) {
     if (out.size() < in.size())
         out.resize(in.size());
 
@@ -101,105 +101,105 @@ void forEachColorComponent(ColorList const& in, ColorList& out, Function f) {
             f(in[i][j], out[i][j]);
 }
 
-inline void absColor(ColorList& out) {
+inline void absColor(ColorVector& out) {
     forEachComponent(out, [](float x) { return std::abs(x); });
 }
 
-inline void ceilColor(ColorList& out) {
+inline void ceilColor(ColorVector& out) {
     forEachComponent(out, [](float x) { return std::ceil(x); });
 }
 
-inline void floorColor(ColorList& out) {
+inline void floorColor(ColorVector& out) {
     forEachComponent(out, [](float x) { return std::floor(x); });
 }
 
-inline void invertColor(ColorList& out) {
+inline void invertColor(ColorVector& out) {
     forEachComponent(out, [](float x) { return (x > 0 ? 1.0 : -1.0) - x; });
 }
 
-inline void negateColor(ColorList& out) {
+inline void negateColor(ColorVector& out) {
     forEachComponent(out, [](float x) { return -x; });
 }
 
-inline void roundColor(ColorList& out) {
+inline void roundColor(ColorVector& out) {
     forEachComponent(out, [](float x) { return round(x); });
 }
 
-inline void truncColor(ColorList& out) {
+inline void truncColor(ColorVector& out) {
     forEachComponent(out, [](float x) { return std::trunc(x); });
 }
 
 
 ////////////////////////////////////////////////////////////////////////////////
 
-inline void addInto(float f, ColorList& out) {
+inline void addInto(float f, ColorVector& out) {
     forEachColorComponent(out, [=](float& x) { x += f; });
 }
-inline void addInto(ColorList const& in, ColorList& out) {
+inline void addInto(ColorVector const& in, ColorVector& out) {
     forEachColorComponent(in, out, [](float i, float& o) { o += i; });
 }
 
-inline void divideInto(float f, ColorList& out) {
+inline void divideInto(float f, ColorVector& out) {
     forEachColorComponent(out, [=](float& x) { x /= (f ? f : 1); });
 }
-inline void divideInto(ColorList const& in, ColorList& out) {
+inline void divideInto(ColorVector const& in, ColorVector& out) {
     forEachColorComponent(in, out, [](float i, float& o) { o /= i; });
 }
 
-inline void multiplyInto(float f, ColorList& out) {
+inline void multiplyInto(float f, ColorVector& out) {
     forEachColorComponent(out, [=](float& x) { x *= f; });
 }
-inline void multiplyInto(ColorList const& in, ColorList& out) {
+inline void multiplyInto(ColorVector const& in, ColorVector& out) {
     forEachColorComponent(in, out, [](float i, float& o) { o *= i; });
 }
 
-inline void powInto(float f, ColorList& out) {
+inline void powInto(float f, ColorVector& out) {
     forEachColorComponent(out, [=](float& x) { x = powFixed(x, f); });
 }
-inline void powInto(ColorList const& in, ColorList& out) {
+inline void powInto(ColorVector const& in, ColorVector& out) {
     forEachColorComponent(in, out, [](float i, float& o) { o = powFixed(o, i); });
 }
 
-inline void rdivideInto(float f, ColorList& out) {
+inline void rdivideInto(float f, ColorVector& out) {
     forEachColorComponent(out, [=](float& x) { x = f / x; });
 }
-inline void rdivideInto(ColorList const& in, ColorList& out) {
+inline void rdivideInto(ColorVector const& in, ColorVector& out) {
     forEachColorComponent(in, out, [](float i, float& o) { o = i / o; });
 }
 
-inline void rpowInto(float f, ColorList& out) {
+inline void rpowInto(float f, ColorVector& out) {
     forEachColorComponent(out, [=](float& x) { x = powFixed(f, x); });
 }
-inline void rpowInto(ColorList const& in, ColorList& out) {
+inline void rpowInto(ColorVector const& in, ColorVector& out) {
     forEachColorComponent(in, out, [](float i, float& o) { o = powFixed(o, i); });
 }
 
-inline void rsubtractInto(float f, ColorList& out) {
+inline void rsubtractInto(float f, ColorVector& out) {
     forEachColorComponent(out, [=](float& x) { x = f - x; });
 }
-inline void rsubtractInto(ColorList const& in, ColorList& out) {
+inline void rsubtractInto(ColorVector const& in, ColorVector& out) {
     forEachColorComponent(in, out, [](float i, float& o) { o = i - o; });
 }
 
-inline void subtractInto(float f, ColorList& out) {
+inline void subtractInto(float f, ColorVector& out) {
     forEachColorComponent(out, [=](float& x) { x -= f; });
 }
-inline void subtractInto(ColorList const& in, ColorList& out) {
+inline void subtractInto(ColorVector const& in, ColorVector& out) {
     forEachColorComponent(in, out, [](float i, float& o) { o -= i; });
 }
 
-inline void minInto(float f, ColorList& out) {
+inline void minInto(float f, ColorVector& out) {
     forEachColorComponent(out, [=](float& x) { x = std::min(f, x); });
 }
-inline void minInto(ColorList const& in, ColorList& out) {
+inline void minInto(ColorVector const& in, ColorVector& out) {
     forEachColorComponent(in, out,
                           [](float i, float& o) { o = std::min(i, o); });
 }
 
-inline void maxInto(float f, ColorList& out) {
+inline void maxInto(float f, ColorVector& out) {
     forEachColorComponent(out, [=](float& x) { x = std::max(f, x); });
 }
-inline void maxInto(ColorList const& in, ColorList& out) {
+inline void maxInto(ColorVector const& in, ColorVector& out) {
     forEachColorComponent(in, out,
                           [](float i, float& o) { o = std::max(i, o); });
 }
@@ -223,7 +223,7 @@ float_t getValue(X const& x, size_t i, size_t j) {
 }
 
 template <typename X, typename Y, typename Function>
-void doOver(X const& x, Y const& y, ColorList& out, Function f) {
+void doOver(X const& x, Y const& y, ColorVector& out, Function f) {
     auto size = std::min(getSize(x), getSize(y));
     out.resize(size);
     for (size_t i = 0; i < size; ++i) {
@@ -233,36 +233,36 @@ void doOver(X const& x, Y const& y, ColorList& out, Function f) {
 }
 
 template <typename X, typename Y>
-void addOver(X const& x, Y const& y, ColorList& out) {
+void addOver(X const& x, Y const& y, ColorVector& out) {
     doOver(x, y, out, [](float x, float y) { return x + y; });
 }
 
 template <typename X, typename Y>
-void divOver(X const& x, Y const& y, ColorList& out) {
+void divOver(X const& x, Y const& y, ColorVector& out) {
     doOver(x, y, out, [](float x, float y) { return x / y; });
 }
 
 template <typename X, typename Y>
-void mulOver(X const& x, Y const& y, ColorList& out) {
+void mulOver(X const& x, Y const& y, ColorVector& out) {
     doOver(x, y, out, [](float x, float y) { return x * y; });
 }
 
 template <typename X, typename Y>
-void powOver(X const& x, Y const& y, ColorList& out) {
+void powOver(X const& x, Y const& y, ColorVector& out) {
     doOver(x, y, out, [](float x, float y) { return powFixed(x, y); });
 }
 
 template <typename X, typename Y>
-void subOver(X const& x, Y const& y, ColorList& out) {
+void subOver(X const& x, Y const& y, ColorVector& out) {
     doOver(x, y, out, [](float x, float y) { return x - y; });
 }
 
-inline void hsvToRgbInto(ColorList& out, Base b) {
+inline void hsvToRgbInto(ColorVector& out, Base b) {
     for (auto& c: out)
         c = hsvToRgb(c, b);
 }
 
-inline void rgbToHsvInto(ColorList& out, Base b) {
+inline void rgbToHsvInto(ColorVector& out, Base b) {
     for (auto& c: out)
         c = rgbToHsv(c, b);
 }

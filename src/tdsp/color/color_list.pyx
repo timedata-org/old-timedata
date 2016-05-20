@@ -22,7 +22,7 @@ cdef class _ColorList:
        [0, 1]; the derived class ColorList256 is a list of Color256, which
        are normalized to [0, 255].
 """
-    cdef ColorList colors
+    cdef ColorVector colors
 
     def __cinit__(self, items=None):
         """Construct a ColorList with an iterator of items, each of which looks
