@@ -8,9 +8,9 @@
 
 namespace tdsp {
 
-using ColorListBase = std::vector<Color>;
+using ColorVectorBase = std::vector<Color>;
 
-struct ColorList : public ColorListBase {
+struct ColorVector : public ColorVectorBase {
     void setColor(size_t i, float r, float g, float b) {
         (*this)[i] = {{r, g, b}};
     }
@@ -23,81 +23,81 @@ struct ColorList : public ColorListBase {
     }
 
     size_t getSizeOf() const {
-        return sizeof(ColorList) + size() * sizeof(Color);
+        return sizeof(ColorVector) + size() * sizeof(Color);
     }
 
-    using ColorListBase::ColorListBase;
+    using ColorVectorBase::ColorVectorBase;
 };
 
-ColorList duplicate(ColorList const&, size_t count);
+ColorVector duplicate(ColorVector const&, size_t count);
 
-void reverse(ColorList&);
+void reverse(ColorVector&);
 
-std::string toString(ColorList const&, Base base = Base::normal);
+std::string toString(ColorVector const&, Base base = Base::normal);
 
-ColorList sliceVector(
-    ColorList const& in, int begin, int end, int step);
+ColorVector sliceVector(
+    ColorVector const& in, int begin, int end, int step);
 
-bool sliceIntoVector(ColorList const& in, ColorList& out,
+bool sliceIntoVector(ColorVector const& in, ColorVector& out,
                      int begin, int end, int step);
 
 template <typename Function>
-void forEachColorComponent(ColorList const& in, ColorList& out, Function f);
+void forEachColorComponent(ColorVector const& in, ColorVector& out, Function f);
 
-void absColor(ColorList& out);
-void ceilColor(ColorList& out);
-void floorColor(ColorList& out);
-void invertColor(ColorList& out);
-void negateColor(ColorList& out);  // rename to neg
-void roundColor(ColorList& out);
-void truncColor(ColorList& out);
+void absColor(ColorVector& out);
+void ceilColor(ColorVector& out);
+void floorColor(ColorVector& out);
+void invertColor(ColorVector& out);
+void negateColor(ColorVector& out);  // rename to neg
+void roundColor(ColorVector& out);
+void truncColor(ColorVector& out);
 
-void addInto(float f, ColorList& out);
-void addInto(ColorList const& in, ColorList& out);
+void addInto(float f, ColorVector& out);
+void addInto(ColorVector const& in, ColorVector& out);
 
-void divideInto(float f, ColorList& out);
-void divideInto(ColorList const& in, ColorList& out);
+void divideInto(float f, ColorVector& out);
+void divideInto(ColorVector const& in, ColorVector& out);
 
-void multiplyInto(float f, ColorList& out);
-void multiplyInto(ColorList const& in, ColorList& out);
+void multiplyInto(float f, ColorVector& out);
+void multiplyInto(ColorVector const& in, ColorVector& out);
 
-void powInto(float f, ColorList& out);
-void powInto(ColorList const& in, ColorList& out);
+void powInto(float f, ColorVector& out);
+void powInto(ColorVector const& in, ColorVector& out);
 
-void rdivideInto(float f, ColorList& out);
-void rdivideInto(ColorList const& in, ColorList& out);
+void rdivideInto(float f, ColorVector& out);
+void rdivideInto(ColorVector const& in, ColorVector& out);
 
-void rpowInto(float f, ColorList& out);
-void rpowInto(ColorList const& in, ColorList& out);
+void rpowInto(float f, ColorVector& out);
+void rpowInto(ColorVector const& in, ColorVector& out);
 
-void rsubtractInto(float f, ColorList& out);
-void rsubtractInto(ColorList const& in, ColorList& out);
+void rsubtractInto(float f, ColorVector& out);
+void rsubtractInto(ColorVector const& in, ColorVector& out);
 
-void subtractInto(float f, ColorList& out);
-void subtractInto(ColorList const& in, ColorList& out);
+void subtractInto(float f, ColorVector& out);
+void subtractInto(ColorVector const& in, ColorVector& out);
 
-void minInto(float f, ColorList& out);
-void minInto(ColorList const& in, ColorList& out);
+void minInto(float f, ColorVector& out);
+void minInto(ColorVector const& in, ColorVector& out);
 
-void maxInto(float f, ColorList& out);
-void maxInto(ColorList const& in, ColorList& out);
-
-template <typename X, typename Y>
-void addOver(X const& x, Y const& y, ColorList& out);
+void maxInto(float f, ColorVector& out);
+void maxInto(ColorVector const& in, ColorVector& out);
 
 template <typename X, typename Y>
-void divOver(X const& x, Y const& y, ColorList& out);
+void addOver(X const& x, Y const& y, ColorVector& out);
 
 template <typename X, typename Y>
-void mulOver(X const& x, Y const& y, ColorList& out);
+void divOver(X const& x, Y const& y, ColorVector& out);
 
 template <typename X, typename Y>
-void powOver(X const& x, Y const& y, ColorList& out);
+void mulOver(X const& x, Y const& y, ColorVector& out);
 
 template <typename X, typename Y>
-void subOver(X const& x, Y const& y, ColorList& out);
+void powOver(X const& x, Y const& y, ColorVector& out);
 
-void hsvToRgbInto(ColorList&, Base);
-void rgbToHsvInto(ColorList&, Base);
+template <typename X, typename Y>
+void subOver(X const& x, Y const& y, ColorVector& out);
+
+void hsvToRgbInto(ColorVector&, Base);
+void rgbToHsvInto(ColorVector&, Base);
 
 } // tdsp

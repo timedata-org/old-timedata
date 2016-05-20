@@ -1,5 +1,5 @@
 cdef extern from "<tdsp/color/colorList_inl.h>" namespace "tdsp":
-    cppclass ColorList:
+    cppclass ColorVector:
         ColorS& operator[](size_t)
         size_t size()
         void resize(size_t)
@@ -9,79 +9,79 @@ cdef extern from "<tdsp/color/colorList_inl.h>" namespace "tdsp":
         bool getColor(size_t , float r, float g, float b)
         size_t getSizeOf()
 
-    ColorList duplicate(ColorList&, int)
-    void reverse(ColorList&)
-    string toString(ColorList&)
-    string toString(ColorList&, Base)
-    ColorList sliceVector(ColorList&, int begin, int end, int step)
-    int compareContainers(ColorList&, ColorList&)
-    bool sliceIntoVector(ColorList& _in, ColorList& out,
+    ColorVector duplicate(ColorVector&, int)
+    void reverse(ColorVector&)
+    string toString(ColorVector&)
+    string toString(ColorVector&, Base)
+    ColorVector sliceVector(ColorVector&, int begin, int end, int step)
+    int compareContainers(ColorVector&, ColorVector&)
+    bool sliceIntoVector(ColorVector& _in, ColorVector& out,
                          int begin, int end, int step)
 
-    void rotate(ColorList&, int positions)
+    void rotate(ColorVector&, int positions)
 
-    void absColor(ColorList&)
-    void ceilColor(ColorList&)
-    void floorColor(ColorList&)
-    void invertColor(ColorList&)
-    void negateColor(ColorList&)
-    void roundColor(ColorList&)
-    void truncColor(ColorList&)
+    void absColor(ColorVector&)
+    void ceilColor(ColorVector&)
+    void floorColor(ColorVector&)
+    void invertColor(ColorVector&)
+    void negateColor(ColorVector&)
+    void roundColor(ColorVector&)
+    void truncColor(ColorVector&)
 
-    void addInto(float f, ColorList& out)
-    void addInto(ColorList&, ColorList& out)
+    void addInto(float f, ColorVector& out)
+    void addInto(ColorVector&, ColorVector& out)
 
-    void divideInto(float f, ColorList& out)
-    void divideInto(ColorList&, ColorList& out)
+    void divideInto(float f, ColorVector& out)
+    void divideInto(ColorVector&, ColorVector& out)
 
-    void minInto(float f, ColorList& out)
-    void minInto(ColorList&, ColorList& out)
+    void minInto(float f, ColorVector& out)
+    void minInto(ColorVector&, ColorVector& out)
 
-    void maxInto(float f, ColorList& out)
-    void maxInto(ColorList&, ColorList& out)
+    void maxInto(float f, ColorVector& out)
+    void maxInto(ColorVector&, ColorVector& out)
 
-    void multiplyInto(float f, ColorList& out)
-    void multiplyInto(ColorList&, ColorList& out)
+    void multiplyInto(float f, ColorVector& out)
+    void multiplyInto(ColorVector&, ColorVector& out)
 
-    void powInto(float f, ColorList& out)
-    void powInto(ColorList&, ColorList& out)
+    void powInto(float f, ColorVector& out)
+    void powInto(ColorVector&, ColorVector& out)
 
-    void rdivideInto(float f, ColorList& out)
-    void rdivideInto(ColorList&, ColorList& out)
+    void rdivideInto(float f, ColorVector& out)
+    void rdivideInto(ColorVector&, ColorVector& out)
 
-    void rpowInto(float f, ColorList& out)
-    void rpowInto(ColorList&, ColorList& out)
+    void rpowInto(float f, ColorVector& out)
+    void rpowInto(ColorVector&, ColorVector& out)
 
-    void rsubtractInto(float f, ColorList& out)
-    void rsubtractInto(ColorList&, ColorList& out)
+    void rsubtractInto(float f, ColorVector& out)
+    void rsubtractInto(ColorVector&, ColorVector& out)
 
-    void subtractInto(float f, ColorList& out)
-    void subtractInto(ColorList&, ColorList& out)
+    void subtractInto(float f, ColorVector& out)
+    void subtractInto(ColorVector&, ColorVector& out)
 
-    void addOver(ColorList& x, ColorList& y, ColorList&)
-    void addOver(float x, ColorList& y, ColorList&)
-    void addOver(ColorList& x, float y, ColorList&)
+    void addOver(ColorVector& x, ColorVector& y, ColorVector&)
+    void addOver(float x, ColorVector& y, ColorVector&)
+    void addOver(ColorVector& x, float y, ColorVector&)
 
-    void divOver(ColorList& x, ColorList& y, ColorList&)
-    void divOver(float x, ColorList& y, ColorList&)
-    void divOver(ColorList& x, float y, ColorList&)
+    void divOver(ColorVector& x, ColorVector& y, ColorVector&)
+    void divOver(float x, ColorVector& y, ColorVector&)
+    void divOver(ColorVector& x, float y, ColorVector&)
 
-    void mulOver(ColorList& x, ColorList& y, ColorList&)
-    void mulOver(float x, ColorList& y, ColorList&)
-    void mulOver(ColorList& x, float y, ColorList&)
+    void mulOver(ColorVector& x, ColorVector& y, ColorVector&)
+    void mulOver(float x, ColorVector& y, ColorVector&)
+    void mulOver(ColorVector& x, float y, ColorVector&)
 
-    void powOver(ColorList& x, ColorList& y, ColorList&)
-    void powOver(float x, ColorList& y, ColorList&)
-    void powOver(ColorList& x, float y, ColorList&)
+    void powOver(ColorVector& x, ColorVector& y, ColorVector&)
+    void powOver(float x, ColorVector& y, ColorVector&)
+    void powOver(ColorVector& x, float y, ColorVector&)
 
-    void subOver(ColorList& x, ColorList& y, ColorList&)
-    void subOver(float x, ColorList& y, ColorList&)
-    void subOver(ColorList& x, float y, ColorList&)
+    void subOver(ColorVector& x, ColorVector& y, ColorVector&)
+    void subOver(float x, ColorVector& y, ColorVector&)
+    void subOver(ColorVector& x, float y, ColorVector&)
 
 
 cdef extern from "<tdsp/color/hsv_inl.h>" namespace "tdsp":
-    void hsvToRgbInto(ColorList&, Base)
-    void rgbToHsvInto(ColorList&, Base)
+    void hsvToRgbInto(ColorVector&, Base)
+    void rgbToHsvInto(ColorVector&, Base)
 
 cdef extern from "<tdsp/color/spread.h>" namespace "tdsp":
-    ColorList fillSpread(ColorS& c1, ColorS& c2, size_t size);
+    ColorVector fillSpread(ColorS& c1, ColorS& c2, size_t size);

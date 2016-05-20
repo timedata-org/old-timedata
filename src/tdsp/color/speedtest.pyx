@@ -1,19 +1,19 @@
 from numbers import Number
 
 cdef class OperatorTest:
-    cdef ColorList colors
+    cdef ColorVector colors
 
     cdef _run_into(self, float x, Binary op, Side side=LEFT):
-        """An operation that mutates this ColorList."""
+        """An operation that mutates this ColorVector."""
         runInto(op, side, <float> x, self.colors)
         return self
 
     def operator_add(self, float x):
-        """An operation that mutates this ColorList."""
+        """An operation that mutates this ColorVector."""
         self._run_into(x, ADD)
 
     def operator_pow(self, float x):
-        """An operation that mutates this ColorList."""
+        """An operation that mutates this ColorVector."""
         self._run_into(x, POW)
 
     def class_add(self, float x):
@@ -29,5 +29,5 @@ cdef class OperatorTest:
                         ).decode('ascii')
 
     def resize(self, size_t size):
-        """Set the size of the ColorList, filling with black if needed."""
+        """Set the size of the ColorVector, filling with black if needed."""
         self.colors.resize(size)

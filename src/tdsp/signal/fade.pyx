@@ -1,8 +1,8 @@
 include "_fade.pyx"
 
 cdef extern from "<tdsp/signal/fade.h>" namespace "tdsp":
-    void fadeOver(float fader, Fade& fade, ColorList& in1, ColorList& in2,
-                  ColorList& out)
+    void fadeOver(float fader, Fade& fade, ColorVector& in1, ColorVector& in2,
+                  ColorVector& out)
 
 
 cdef class _FadeImpl(_Fade):
