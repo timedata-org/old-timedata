@@ -14,6 +14,7 @@ cdef extern from "<tdsp/color/colorList_inl.h>" namespace "tdsp":
     void appendInto(ColorVector&, ColorVector& out)
 
     void reverse(ColorVector&)
+    void clearInto(ColorVector&)
     string toString(ColorVector&)
     string toString(ColorVector&, Base)
     ColorVector sliceVector(ColorVector&, int begin, int end, int step)
@@ -21,12 +22,11 @@ cdef extern from "<tdsp/color/colorList_inl.h>" namespace "tdsp":
     bool sliceIntoVector(ColorVector& _in, ColorVector& out,
                          int begin, int end, int step)
 
-
     void rotate(ColorVector&, int positions)
 
-    void absColor(ColorVector&)
-    void ceilColor(ColorVector&)
-    void floorColor(ColorVector&)
+    void absInto(ColorVector&)
+    void ceilInto(ColorVector&)
+    void floorInto(ColorVector&)
     void invertColor(ColorVector&)
     void negateColor(ColorVector&)
     void roundColor(ColorVector&)

@@ -29,9 +29,10 @@ struct ColorVector : public ColorVectorBase {
     using ColorVectorBase::ColorVectorBase;
 };
 
-ColorVector duplicate(ColorVector const&, size_t count);
-
+void clearInto(ColorVector&);
 void reverse(ColorVector&);
+void appendInto(ColorVector const&, ColorVector&);
+void duplicateInto(size_t count, ColorVector&);
 
 std::string toString(ColorVector const&, Base base = Base::normal);
 
@@ -44,9 +45,9 @@ bool sliceIntoVector(ColorVector const& in, ColorVector& out,
 template <typename Function>
 void forEachColorComponent(ColorVector const& in, ColorVector& out, Function f);
 
-void absColor(ColorVector& out);
-void ceilColor(ColorVector& out);
-void floorColor(ColorVector& out);
+void absInto(ColorVector& out);
+void ceilInto(ColorVector& out);
+void floorInto(ColorVector& out);
 void invertColor(ColorVector& out);
 void negateColor(ColorVector& out);  // rename to neg
 void roundColor(ColorVector& out);

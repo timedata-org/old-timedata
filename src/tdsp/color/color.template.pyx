@@ -200,7 +200,6 @@ cdef class Color{suffix}:
                               x.green - y.green,
                               x.blue - y.blue)
 
-    # Everything else knows what self is!
     def __abs__(Color{suffix} self):
         return Color{suffix}(abs(self.color.red),
                               abs(self.color.green),
@@ -263,8 +262,8 @@ cdef class Color{suffix}:
 
     def __round__(Color{suffix} self, n):
         return Color{suffix}(round(self.color.red, n),
-                              round(self.color.green, n),
-                              round(self.color.blue, n))
+                             round(self.color.green, n),
+                             round(self.color.blue, n))
 
     def __str__(Color{suffix} self):
         return colorToString(self.color, {base}).decode('ascii')

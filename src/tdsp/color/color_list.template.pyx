@@ -78,7 +78,7 @@ cdef class ColorList{suffix}:
     # Unary operators and corresponding mutators.
     cpdef abs(self):
         """Replace each color by its absolute value."""
-        absColor(self.colors)
+        absInto(self.colors)
         return self
 
     def __abs__(self):
@@ -89,7 +89,7 @@ cdef class ColorList{suffix}:
 
     cpdef ceil(self):
         """Replace each color by its integer ceiling."""
-        ceilColor(self.colors)
+        ceilInto(self.colors)
         return self
 
     def __ceil__(self):
@@ -100,7 +100,7 @@ cdef class ColorList{suffix}:
 
     cpdef floor(self):
         """Replace each color by its integer floor."""
-        floorColor(self.colors)
+        floorInto(self.colors)
         return self
 
     def __floor__(self):
@@ -187,7 +187,7 @@ cdef class ColorList{suffix}:
     # Arithemetic and color operations.
     cpdef clear(self):
         """Set all colors to black."""
-        self.colors.clear()
+        clearInto(self.colors)
         return self
 
     cpdef hsv_to_rgb(self):

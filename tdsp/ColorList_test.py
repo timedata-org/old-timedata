@@ -42,6 +42,10 @@ class TestColorList(unittest.TestCase):
             cl.append('wombat')
         self.assertEqual(cl, ColorList(('red', 'green')))
 
+    def test_clear(self):
+        self.assertEqual(ColorList(('red', 'green')).clear(),
+                         ColorList(('black', 'black')))
+
     def test_duplicate(self):
         cl = ColorList(('red', 'green', 'blue'))
         cl2 = ColorList(('red', 'green', 'blue', 'red', 'green', 'blue',
