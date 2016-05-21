@@ -30,6 +30,19 @@ class TestColorList(unittest.TestCase):
         cl.rotate(1)
         self.assertEqual(cl, ColorList(['green', 'blue', 'red']))
 
+    def test_extend(self):
+        cl = ColorList()
+        cl.extend(('red', 'green', 'blue'))
+        self.assertEqual(cl, ColorList(['red', 'green', 'blue']))
+        try:
+            cl.extend(1)
+        except:
+            pass
+        else:
+            self.assertTrue(False)
+        self.assertEqual(cl, ColorList(['red', 'green', 'blue']))
+
+
     def test_indexing(self):
         red, green, blue = (
             Color('red'), Color('green'), Color('blue'))
