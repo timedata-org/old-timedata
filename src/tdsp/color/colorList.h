@@ -99,5 +99,7 @@ void subOver(X const& x, Y const& y, ColorVector& out);
 
 void hsvToRgbInto(ColorVector&, Base);
 void rgbToHsvInto(ColorVector&, Base);
+void appendInto(ColorVector const&, ColorVector&);
+void duplicateInto(size_t count, ColorVector&);
 
 } // tdsp

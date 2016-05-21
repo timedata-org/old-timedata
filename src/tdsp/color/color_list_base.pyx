@@ -8,8 +8,11 @@ cdef extern from "<tdsp/color/colorList_inl.h>" namespace "tdsp":
         void setColor(size_t, float r, float g, float b)
         bool getColor(size_t , float r, float g, float b)
         size_t getSizeOf()
+        void push_back(ColorS&)
 
-    ColorVector duplicate(ColorVector&, int)
+    void duplicateInto(int, ColorVector&)
+    void appendInto(ColorVector&, ColorVector& out)
+
     void reverse(ColorVector&)
     string toString(ColorVector&)
     string toString(ColorVector&, Base)
@@ -17,6 +20,7 @@ cdef extern from "<tdsp/color/colorList_inl.h>" namespace "tdsp":
     int compareContainers(ColorVector&, ColorVector&)
     bool sliceIntoVector(ColorVector& _in, ColorVector& out,
                          int begin, int end, int step)
+
 
     void rotate(ColorVector&, int positions)
 

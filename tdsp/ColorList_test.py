@@ -30,6 +30,32 @@ class TestColorList(unittest.TestCase):
         cl.rotate(1)
         self.assertEqual(cl, ColorList(['green', 'blue', 'red']))
 
+    def test_append(self):
+        cl = ColorList()
+        cl.append('red')
+        self.assertEqual(cl, ColorList(('red')))
+
+        cl.append('green')
+        self.assertEqual(cl, ColorList(('red', 'green')))
+
+        with self.assertRaises(ValueError):
+            cl.append('wombat')
+        self.assertEqual(cl, ColorList(('red', 'green')))
+
+    def test_duplicate(self):
+        cl = ColorList(('red', 'green', 'blue'))
+        cl2 = ColorList(('red', 'green', 'blue', 'red', 'green', 'blue',
+                        'red', 'green', 'blue'))
+        self.assertEqual(cl.duplicate(3), cl2)
+        if True: return
+        self.assertEqual(cl.duplicate(1), cl2)
+        self.assertEqual(cl.duplicate(0), ColorList())
+
+        cl = ColorList(('red', 'green', 'blue'))
+        with self.assertRaises(OverflowError):
+            cl.duplicate(-1)
+        self.assertEqual(cl, ColorList(('red', 'green', 'blue')))
+
     def test_extend(self):
         cl = ColorList()
         cl.extend(('red', 'green', 'blue'))
@@ -41,7 +67,6 @@ class TestColorList(unittest.TestCase):
         else:
             self.assertTrue(False)
         self.assertEqual(cl, ColorList(['red', 'green', 'blue']))
-
 
     def test_indexing(self):
         red, green, blue = (

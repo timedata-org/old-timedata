@@ -267,4 +267,16 @@ inline void rgbToHsvInto(ColorVector& out, Base b) {
         c = rgbToHsv(c, b);
 }
 
+inline void appendInto(ColorVector const& in, ColorVector& out) {
+    out.insert(out.end(), in.begin(), in.end());
+}
+
+inline void duplicateInto(size_t count, ColorVector& colors) {
+    auto size = colors.size();
+    colors.resize(size * count);
+
+    for (auto i = colors.begin(); i < colors.end() - size; i += size)
+        std::copy(i, i + size, i + size);
+}
+
 } // tdsp

@@ -22,7 +22,7 @@ bool near(Number, Number, Number diff);
 template <typename Number>
 bool near(Number, Number);
 
-/** Shift off a single from the right and return it. */
+/** Shift off a single bit from the right of an integer and return it. */
 template <typename Number>
 bool shift(Number&);
 
