@@ -192,20 +192,13 @@ cdef class ColorList:
 
     cpdef duplicate(self, uint count):
         """Return a new `ColorList` with `count` copies of this one."""
-        cl = ColorList()
-        cl.colors = duplicate(self.colors, count)
-        return cl
+        # TODO: I made this an int, even though I want it to be negative, because
+        duplicateInto(count, self.colors)
+        return self
 
-    cpdef extend(self, object values):
+    cpdef extend(ColorList self, object values):
         """Extend the colors from an iterator."""
-        cdef size_t s
-        s = self.colors.size()
-        try:
-            for v in values:
-                self.append(v)
-        except:
-            self.colors.resize(s)
-            raise
+        appendInto(ColorList(values).colors, self.colors)
         return self
 
     cpdef max_limit(self, float max):
