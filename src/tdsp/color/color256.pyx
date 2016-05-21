@@ -200,7 +200,6 @@ cdef class Color256:
                               x.green - y.green,
                               x.blue - y.blue)
 
-    # Everything else knows what self is!
     def __abs__(Color256 self):
         return Color256(abs(self.color.red),
                               abs(self.color.green),
@@ -263,8 +262,8 @@ cdef class Color256:
 
     def __round__(Color256 self, n):
         return Color256(round(self.color.red, n),
-                              round(self.color.green, n),
-                              round(self.color.blue, n))
+                             round(self.color.green, n),
+                             round(self.color.blue, n))
 
     def __str__(Color256 self):
         return colorToString(self.color, integer).decode('ascii')

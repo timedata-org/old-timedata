@@ -78,7 +78,7 @@ cdef class ColorList256:
     # Unary operators and corresponding mutators.
     cpdef abs(self):
         """Replace each color by its absolute value."""
-        absColor(self.colors)
+        absInto(self.colors)
         return self
 
     def __abs__(self):
@@ -88,8 +88,8 @@ cdef class ColorList256:
         return cl
 
     cpdef ceil(self):
-        """Replace each color by its absolute value."""
-        ceilColor(self.colors)
+        """Replace each color by its integer ceiling."""
+        ceilInto(self.colors)
         return self
 
     def __ceil__(self):
@@ -99,8 +99,8 @@ cdef class ColorList256:
         return cl
 
     cpdef floor(self):
-        """Replace each color by its floorolute value."""
-        floorColor(self.colors)
+        """Replace each color by its integer floor."""
+        floorInto(self.colors)
         return self
 
     def __floor__(self):
@@ -110,7 +110,7 @@ cdef class ColorList256:
         return cl
 
     cpdef invert(self):
-        """Invert each color to its complement."""
+        """Replace each color by its complementary color."""
         invertColor(self.colors)
         return self
 
@@ -121,7 +121,7 @@ cdef class ColorList256:
         return cl
 
     cpdef neg(self):
-        """Negate each color."""
+        """Negate each color in the list."""
         negateColor(self.colors)
         return self
 
@@ -132,7 +132,7 @@ cdef class ColorList256:
         return cl
 
     cpdef round(self):
-        """Round each color value to the nearest integer."""
+        """Round each element in each color to the nearest integer."""
         roundColor(self.colors)
         return self
 
@@ -153,36 +153,25 @@ cdef class ColorList256:
         cl.trunc()
         return cl
 
-    cpdef append(self, object value):
+    # List operations.
+    cpdef append(self, object x):
         """Append to the list of colors."""
-        cdef uint s
-        s = self.colors.size()
-        self.colors.resize(s + 1)
-        try:
-            self[s] = value
-        except:
-            self.colors.resize(s)
-            raise
+        cdef Color256 c = _makeColor256(x)
+        self.colors.push_back(c.color)
+
+    cpdef duplicate(self, uint count):
+        """Return a new `ColorList` with `count` copies of this one."""
+        duplicateInto(count, self.colors)
         return self
 
-    cpdef hsv_to_rgb(self):
-        """Convert each color in the list from HSV to RBG."""
-        hsvToRgbInto(self.colors, integer)
+    cpdef extend(ColorList256 self, object values):
+        """Extend the colors from an iterator."""
+        appendInto(ColorList256(values).colors, self.colors)
         return self
 
-    cpdef rgb_to_hsv(self):
-        """Convert each color in the list from RBG to HSV."""
-        rgbToHsvInto(self.colors, integer)
-        return self
-
-    cpdef clear(self):
-        """Set all colors to black."""
-        self.colors.clear()
-        return self
-
-    cpdef rotate(self, int pos):
-        """In-place rotation of the colors forward by `pos` positions."""
-        rotate(self.colors, pos)
+    cpdef resize(self, size_t size):
+        """Set the size of the ColorList, filling with black if needed."""
+        self.colors.resize(size)
         return self
 
     cpdef reverse(self):
@@ -190,15 +179,20 @@ cdef class ColorList256:
         reverse(self.colors)
         return self
 
-    cpdef duplicate(self, uint count):
-        """Return a new `ColorList` with `count` copies of this one."""
-        # TODO: I made this an int, even though I want it to be negative, because
-        duplicateInto(count, self.colors)
+    cpdef rotate(self, int pos):
+        """In-place rotation of the colors forward by `pos` positions."""
+        rotate(self.colors, pos)
         return self
 
-    cpdef extend(ColorList256 self, object values):
-        """Extend the colors from an iterator."""
-        appendInto(ColorList256(values).colors, self.colors)
+    # Arithemetic and color operations.
+    cpdef clear(self):
+        """Set all colors to black."""
+        clearInto(self.colors)
+        return self
+
+    cpdef hsv_to_rgb(self):
+        """Convert each color in the list from HSV to RBG."""
+        hsvToRgbInto(self.colors, integer)
         return self
 
     cpdef max_limit(self, float max):
@@ -225,9 +219,9 @@ cdef class ColorList256:
             powInto(_toColorList256(c).colors, self.colors)
         return self
 
-    cpdef resize(self, size_t size):
-        """Set the size of the ColorList, filling with black if needed."""
-        self.colors.resize(size)
+    cpdef rgb_to_hsv(self):
+        """Convert each color in the list from RBG to HSV."""
+        rgbToHsvInto(self.colors, integer)
         return self
 
     cpdef rpow(self, c):
@@ -274,6 +268,7 @@ cdef class ColorList256:
             divideInto(_toColorList256(c).colors, self.colors)
         return self
 
+    # Magic methods that create new ColorLists.
     def __add__(self, c):
         cdef ColorList256 cl = ColorList256()
 
@@ -350,6 +345,7 @@ cdef class ColorList256:
                     (<ColorList256> c).colors, cl.colors)
         return cl
 
+    # Other key magic methods.
     def __len__(self):
         return self.colors.size()
 
@@ -367,6 +363,7 @@ cdef class ColorList256:
 
     @staticmethod
     def spread(Color x, Color y, size_t size):
+        # TODO: lame - this should be a separate free function.
         """Return a spread of `size` colors between Color x and Color y."""
         cdef ColorList256 cl = ColorList256()
         cl.colors = fillSpread(x.color, y.color, size)

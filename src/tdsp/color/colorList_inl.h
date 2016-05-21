@@ -101,15 +101,15 @@ void forEachColorComponent(ColorVector const& in, ColorVector& out, Function f) 
             f(in[i][j], out[i][j]);
 }
 
-inline void absColor(ColorVector& out) {
+inline void absInto(ColorVector& out) {
     forEachComponent(out, [](float x) { return std::abs(x); });
 }
 
-inline void ceilColor(ColorVector& out) {
+inline void ceilInto(ColorVector& out) {
     forEachComponent(out, [](float x) { return std::ceil(x); });
 }
 
-inline void floorColor(ColorVector& out) {
+inline void floorInto(ColorVector& out) {
     forEachComponent(out, [](float x) { return std::floor(x); });
 }
 
@@ -277,6 +277,11 @@ inline void duplicateInto(size_t count, ColorVector& colors) {
 
     for (auto i = colors.begin(); i < colors.end() - size; i += size)
         std::copy(i, i + size, i + size);
+}
+
+void clearInto(ColorVector& out) {
+    for (auto& c: out)
+        c = Color();
 }
 
 } // tdsp
