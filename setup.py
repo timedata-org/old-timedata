@@ -1,10 +1,17 @@
 #!/usr/bin/env python3
 
+"""This is the main builder and installer for the Templated Digital Signal
+Processing Python extension."""
+
 import datetime, os, platform, shutil
 import distutils.core, distutils.extension, Cython.Build
 
 import Cython.Compiler.Options
 
+# Uncomment this next line if you want Cython to output HTML showing how C++-ey
+# it can make your code.
+# Same as --annotate here: http://docs.cython.org/src/quickstart/cythonize.html
+#
 # Cython.Compiler.Options.annotate = True
 
 def execute(command):
@@ -62,7 +69,6 @@ COMPILE_ARGS = [
     '-Wno-unused-function',
     '-std=c++11',
     '-Wno-tautological-constant-out-of-range-compare',
-#    '--version',
     ]
 
 if platform.system() == 'Darwin':
