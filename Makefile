@@ -1,6 +1,6 @@
-# Optional command line arguments:
-# see http://stackoverflow.com/a/24264930/43839
-#
+# This makefile is only used to build unit tests for the pure C++
+# code in this library - the main build uses setup.py.
+
 # For an optimized, stripped build, use:
 #
 #   $ make OPTIMIZE=-O3 SYMBOLS=""
@@ -8,6 +8,9 @@
 # For a C++14 build, use:
 #
 #   $ make COMPILER=g++-5 STDLIB=c++14
+#
+# Optional command line arguments:
+# see http://stackoverflow.com/a/24264930/43839
 #
 
 OPTIMIZE ?= -O0
