@@ -3,7 +3,7 @@
 #include <ctype.h>
 #include <cmath>
 #include <iomanip>
-#include <strstream>
+#include <sstream>
 #include <type_traits>
 
 #include <tdsp/base/throw.h>
@@ -11,13 +11,13 @@
 namespace tdsp {
 
 template <typename Number,
-          typename std::enable_if<std::is_unsigned<Number>::value, int> = 0>
+     typename std::enable_if<std::is_unsigned<Number>::value, int>::type>
 Number abs(Number x) {
     return x;
 }
 
 template <typename Number,
-          typename std::enable_if<std::is_signed<Number>::value, int> = 0>
+     typename std::enable_if<std::is_signed<Number>::value, int>::type>
 Number abs(Number x) {
     return x >= 0 ? x : -x;
 }
@@ -48,13 +48,13 @@ template <typename Number>
 Number trunc(Number);
 
 template <typename T,
-          typename std::enable_if<std::is_integral<T>::value, int> = 0>
+    typename std::enable_if<std::is_integral<T>::value, int>::type>
 T trunc(T x) {
     return x;
 }
 
 template <typename T,
-          typename std::enable_if<std::is_floating_point<T>::value, int> = 0>
+    typename std::enable_if<std::is_floating_point<T>::value, int>::type>
 T trunc(T x) {
     return std::trunc(x);
 }

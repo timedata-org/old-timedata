@@ -1,5 +1,7 @@
 #pragma once
 
+#include <memory>
+
 namespace tdsp {
 
 template <template <typename X> class Class, typename X>

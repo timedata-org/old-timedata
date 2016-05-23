@@ -19,7 +19,7 @@ struct ColorVector : public ColorVectorBase {
     bool fixKey(int& key) const {
         if (key < 0)
             key += size();
-        return key >= 0 and key < size();
+        return key >= 0 and key < int(size());
     }
 
     size_t getSizeOf() const {

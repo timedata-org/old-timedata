@@ -44,7 +44,7 @@ inline void renderColorVector(
     Render3 const& r3, ColorVector const& in, char* s) {
     // DANGER: C-style cast here.  Should work.  :-D
     auto out = (Color256*) s;
-    for (auto i = 0; i < r3.size; ++i)
+    for (size_t i = 0; i < r3.size; ++i)
         out[i] = r3.apply<Color256>(in[i]);
 }
 
