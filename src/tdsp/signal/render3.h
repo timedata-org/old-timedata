@@ -41,11 +41,11 @@ struct Render3 {
 };
 
 inline void renderColorVector(
-    Render3 const& r3, ColorVector const& in, char* s) {
+    Render3 const& r3, ColorVector const& in, size_t pos, char* s) {
     // DANGER: C-style cast here.  Should work.  :-D
     auto out = (Color256*) s;
     for (size_t i = 0; i < r3.size; ++i)
-        out[i] = r3.apply<Color256>(in[i]);
+        out[i] = r3.apply<Color256>(in.at(i + pos));
 }
 
 } // tdsp

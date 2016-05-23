@@ -22,6 +22,6 @@ if __name__ == '__main__':
             open(f + suffix + '.pyx', 'w').write(template.format(**locals()))
 
 
-    if False:
-       os.cwd('src')
+    if True:
+       os.chdir('src')
        os.system(MAKE_PYX)
