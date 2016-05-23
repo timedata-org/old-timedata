@@ -13,6 +13,8 @@ cdef extern from "<tdsp/signal/render3.h>" namespace "tdsp::Render3::Permutation
     cdef Permutation brg
     cdef Permutation bgr
 
+Permutation_NAMES = 'rgb', 'rgb', 'etc'
+
 cdef extern from "<tdsp/signal/render3.h>" namespace "tdsp":
     struct Render3:
         float min, max, scale, gamma
