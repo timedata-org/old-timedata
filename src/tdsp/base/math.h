@@ -3,7 +3,7 @@
 #include <ctype.h>
 #include <cmath>
 #include <iomanip>
-#include <strstream>
+#include <sstream>
 #include <type_traits>
 
 #include <tdsp/base/throw.h>

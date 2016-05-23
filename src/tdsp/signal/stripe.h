@@ -17,7 +17,7 @@ class Stripe::Iterator {
   public:
     Iterator(Stripe const&, size_t);
 
-    bool hasValue() const { return index_ >= 0 and index_ < size_; }
+    bool hasValue() const { return index_ >= 0 and index_ < int(size_); }
     size_t value() const { return static_cast<size_t>(index_); }
     bool done() const { return done_; }
     void next();
