@@ -1,6 +1,6 @@
 import unittest
 
-from tdsp import Color, ColorList
+from tdsp import Color, Colors, ColorList
 
 class TestColorList(unittest.TestCase):
     def test_trivial(self):
@@ -107,3 +107,18 @@ class TestColorList(unittest.TestCase):
         self.assertEqual(cl[1][1], float('-inf'))
 
         self.assertEqual(0 ** c, ColorList(('cyan', 'magenta', 'yellow')))
+
+    def test_max_min(self):
+        self.assertEqual(ColorList().max(), Colors.black)
+        self.assertEqual(ColorList().min(), Colors.black)
+
+        c = ColorList(('red', 'green', 'blue'))
+        self.assertEqual(c.max(), Colors.white)
+        self.assertEqual(c.min(), Colors.black)
+
+        c.min_limit(0.25).max_limit(0.75)
+
+        gray = Colors.white * 0.25
+        self.assertEqual(c, ColorList((gray + Colors.red / 2,
+                                       gray + Colors.green / 2,
+                                       gray + Colors.blue / 2)))
