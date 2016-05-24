@@ -44,7 +44,12 @@ cdef class _Fade(_Wrapper):
     property type:
         def __get__(self):
             return self.TYPE_NAMES[<int> self._instance.type]
-        def __set__(self, string x):
+        def __set__(self, object x):
             cdef uint8_t i
-            i = self.TYPE_NAMES.index(x)
+            if isinstance(x, str):
+                i = self.TYPE_NAMES.index(x)
+            else:
+                i = <uint8_t> x
+                if i >= len(self.TYPE_NAMES):
+                    raise ValueError("Can't understand value " + str(i))
             self._instance.type = <Type>(i)
