@@ -195,20 +195,31 @@ cdef class ColorList:
         hsvToRgbInto(self.colors, normal)
         return self
 
+    cpdef max(self):
+        """Return the maximum values for each component"""
+        cdef ColorS c = maxColor(self.colors)
+        return Color(c.red, c.green, c.blue)
+
+    cpdef min(self):
+        """Return the minimum values of each component"""
+        cdef ColorS c = minColor(self.colors)
+        return Color(c.red, c.green, c.blue)
+
+
     cpdef max_limit(self, float max):
         """Limit each color to be not greater than max."""
         if isinstance(max, Number):
-            maxInto(<float> max, self.colors)
+            minInto(<float> max, self.colors)
         else:
-            maxInto(_toColorList(max).colors, self.colors)
+            minInto(_toColorList(max).colors, self.colors)
         return self
 
     cpdef min_limit(self, float min):
         """Limit each color to be not less than min."""
         if isinstance(min, Number):
-            minInto(<float> min, self.colors)
+            maxInto(<float> min, self.colors)
         else:
-            minInto(_toColorList(min).colors, self.colors)
+            maxInto(_toColorList(min).colors, self.colors)
         return self
 
     cpdef pow(self, float c):

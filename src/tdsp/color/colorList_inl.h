@@ -279,9 +279,33 @@ inline void duplicateInto(size_t count, ColorVector& colors) {
         std::copy(i, i + size, i + size);
 }
 
-void clearInto(ColorVector& out) {
-    for (auto& c: out)
+inline void clearInto(ColorVector& colors) {
+    for (auto& c: colors)
         c = Color();
+}
+
+template <typename Function>
+Color accumulate(ColorVector const& colors, Function f) {
+    Color result{};
+    auto first = true;
+    for (auto& c: colors) {
+        if (first) {
+            first = false;
+            result = c;
+        } else {
+            for (size_t i = 0; i < result.size(); ++i)
+                result[i] = f(result[i], c[i]);
+        }
+    }
+    return result;
+}
+
+inline Color maxColor(ColorVector const& colors) {
+    return accumulate(colors, [](float x, float y) { return std::max(x, y); });
+}
+
+inline Color minColor(ColorVector const& colors) {
+    return accumulate(colors, [](float x, float y) { return std::min(x, y); });
 }
 
 } // tdsp

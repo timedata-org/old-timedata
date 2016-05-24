@@ -22,6 +22,9 @@ cdef extern from "<tdsp/color/colorList_inl.h>" namespace "tdsp":
     bool sliceIntoVector(ColorVector& _in, ColorVector& out,
                          int begin, int end, int step)
 
+    ColorS maxColor(ColorVector&)
+    ColorS minColor(ColorVector&)
+
     void rotate(ColorVector&, int positions)
 
     void absInto(ColorVector&)

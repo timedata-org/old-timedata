@@ -102,5 +102,7 @@ void hsvToRgbInto(ColorVector&, Base);
 void rgbToHsvInto(ColorVector&, Base);
 void appendInto(ColorVector const&, ColorVector&);
 void duplicateInto(size_t count, ColorVector&);
+Color maxColor(ColorVector const&);
+Color minColor(ColorVector const&);
 
 } // tdsp
