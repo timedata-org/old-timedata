@@ -4,13 +4,13 @@ import datetime, os, sys
 
 MAKE_PYX = """\
 /development/make_pyx/make_pyx.py \
-    tdsp/signal/fade.h \
-    tdsp/signal/combiner.h \
-    tdsp/signal/render3.h\
-    tdsp/signal/stripe.h\
+    tada/signal/fade.h \
+    tada/signal/combiner.h \
+    tada/signal/render3.h\
+    tada/signal/stripe.h\
 """
 
-FILES = 'src/tdsp/color/color', 'src/tdsp/color/color_list'
+FILES = 'src/tada/color/color', 'src/tada/color/color_list'
 
 if __name__ == '__main__':
     script = sys.argv[0]

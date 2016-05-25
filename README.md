@@ -1,7 +1,7 @@
-# tdsp - template digital signal processing.
+# tada - time arts data. #
 
-Generic, template-based digital signal processing arithmetic for C++11 and
-Python, with an initial emphasis on a complete high performance RGB color
-library.
+Generic, template-based digital signal processing arithmetic for all time arts
+data.
 
-"Forked" from the echomesh project.
+For C++11 and Python, with an initial emphasis on a complete high performance
+RGB color library.
