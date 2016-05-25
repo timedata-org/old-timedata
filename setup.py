@@ -32,17 +32,17 @@ class Clean(distutils.core.Command):
 
     def run(self):
         assert os.getcwd() == self.cwd, 'Must be in package root: %s' % self.cwd
-        execute('rm -Rf ./build src/tdsp.cpp')
+        execute('rm -Rf ./build src/tada.cpp')
 
 
 class Local(distutils.core.Command):
     description = 'Install the .so locally'
     user_options = []
 
-    FILE_LOCATION = 'build/lib.macosx-10.6-intel-3.4/tdsp.so'
+    FILE_LOCATION = 'build/lib.macosx-10.6-intel-3.4/tada.so'
     # TODO: need to get this from distutils somehow.
 
-    TARGET_LOCATIONS = 'tdsp', '/development/BiblioPixel'
+    TARGET_LOCATIONS = 'tada', '/development/BiblioPixel'
     # TODO: awful hack.
 
     def initialize_options(self):
@@ -76,8 +76,8 @@ if platform.system() == 'Darwin':
 
 
 EXTENSION = distutils.extension.Extension(
-    name='tdsp',
-    sources=['src/tdsp.pyx'],
+    name='tada',
+    sources=['src/tada.pyx'],
     libraries=LIBRARIES,
     include_dirs=['src'],
     extra_compile_args=COMPILE_ARGS,
@@ -96,7 +96,7 @@ EXT_MODULES=Cython.Build.cythonize(
     )
 
 distutils.core.setup(
-    name='tdsp',
+    name='tada',
     cmdclass={'clean': Clean, 'local': Local},
     ext_modules=EXT_MODULES,
     )
