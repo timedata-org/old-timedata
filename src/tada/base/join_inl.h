@@ -1,7 +1,7 @@
 #pragma once
 
 #include <iostream>
-#include <strstream>
+#include <sstream>
 #include <typeinfo>
 
 namespace tada {
@@ -31,14 +31,14 @@ inline std::string joinSpace() {
 
 template <typename Arg>
 std::string joinSpace(Arg&& arg) {
-    std::strstream ss;
+    std::stringstream ss;
     ss << arg;
     return ss.str();
 }
 
 template <typename Arg, typename ... Args>
 std::string joinSpace(Arg&& arg, Args&&... args) {
-    std::strstream ss;
+    std::stringstream ss;
     ss << arg;
     (void) detail::Expander{
         (spaceAppendTo(ss, std::forward<Args>(args)), void(), 0) ... };
@@ -72,7 +72,7 @@ std::string join() {
 
 template <typename ... Args>
 std::string join(Args&& ... args) {
-    std::strstream ss;
+    std::stringstream ss;
     (void) detail::Expander{(detail::appendTo(
         ss, std::forward<Args>(args)), void(), 0) ... };
     return ss.str();
