@@ -1,7 +1,10 @@
+# Cleans everything and reruns all the build and the tests.
+
 source /development/env/cython/bin/activate && \
-    rm -Rf build *.so && \
-    python setup.py clean && \
-    python setup.py build_ext && \
-    make && \
-    build/tests && \
-    ./run_python_tests.sh
+  scripts/make_generated_classes.py && \
+  rm -Rf build *.so && \
+  python setup.py clean && \
+  python setup.py build_ext && \
+  python setup.py local && \
+  make && build/tests && \
+  python -m unittest discover -p \*_test.py

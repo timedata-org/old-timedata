@@ -64,7 +64,7 @@ inline bool isHex(char const* s) {
 }
 
 inline uint64_t fromHex(char const* s) {
-    uint64_t decimalValue;
+    long long unsigned decimalValue;
     sscanf(s, "%llu", &decimalValue);
     return decimalValue;
 }
@@ -109,7 +109,7 @@ PowArray const& powArray() {
         10000000000000000000ULL
     }};
     return array;
-};
+}
 
 inline uint64_t pow10(uint log) {
     return powArray()[log];
@@ -142,7 +142,7 @@ inline std::string toString(float x, unsigned int decimals) {
 template <typename T>
 void skipSpaces(T* p) {
     for (; isspace(*p); ++p);
-};
+}
 
 inline bool isNearFraction(float decimal, unsigned int denominator) {
     auto numerator = denominator * decimal;

@@ -45,16 +45,12 @@ void forEachWhile(Slice<Number> slice, Function f, Condition cond) {
 
 template <typename Number, typename Function>
 void forEach(Slice<Number> slice, Function f) {
-    if (slice.step > 0) {
-        forEachWhile(slice, f, [&](Number i) {
-            return i < slice.end and (slice.end - i) < slice.step < slice.end;
-        });
-
-    } else if (slice.step < 0) {
-        forEachWhile(slice, f, [&](Number i) {
-            return i > slice.end and (i - slice.end) < -slice.step;
-        });
-    }
+    // TODO: there was more logic here that was wrong.  Why did I feel I
+    // needed that?  https://github.com/rec/tada/issues/43
+    if (slice.step > 0)
+        forEachWhile(slice, f, [&](Number i) { return i < slice.end; });
+    else if (slice.step < 0)
+        forEachWhile(slice, f, [&](Number i) { return i > slice.end; });
 }
 
 }  // tada

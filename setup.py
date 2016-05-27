@@ -14,6 +14,23 @@ import Cython.Compiler.Options
 #
 # Cython.Compiler.Options.annotate = True
 
+IS_MAC = (platform.system() == 'Darwin')
+IS_LINUX = (platform.system() == 'Linux')
+
+LIBRARIES = [] if (IS_MAC or IS_LINUX) else ['m']
+
+COMPILE_ARGS = [
+    '-O3',
+    '-DNDEBUG',
+    '-DCOMPILE_TIMESTAMP="%s"' % datetime.datetime.utcnow().isoformat(),
+    '-Wno-unused-function',
+    '-std=c++11',
+    ]
+
+if IS_MAC:
+    COMPILE_ARGS.extend(['-mmacosx-version-min=10.9',
+                         '-Wno-tautological-constant-out-of-range-compare'])
+
 def execute(command):
     result = os.system(command)
     if result:
@@ -39,7 +56,9 @@ class Local(distutils.core.Command):
     description = 'Install the .so locally'
     user_options = []
 
-    FILE_LOCATION = 'build/lib.macosx-10.6-intel-3.4/tada.so'
+    FILE_LOCATION = ('build/lib.macosx-10.6-intel-3.4/tada.so' if IS_MAC
+                     else 'build/lib.linux-x86_64-3.4/tada.cpython-34m.so')
+
     # TODO: need to get this from distutils somehow.
 
     TARGET_LOCATIONS = 'tada', '/development/BiblioPixel'
@@ -57,22 +76,7 @@ class Local(distutils.core.Command):
                 os.remove(target)
             except:
                 pass
-            shutil.copy2(self.FILE_LOCATION, target)
-
-
-LIBRARIES = [] if platform.system() in ('Darwin', 'Linux') else ['m']
-
-COMPILE_ARGS = [
-    '-O3',
-    '-DNDEBUG',
-    '-DCOMPILE_TIMESTAMP="%s"' % datetime.datetime.utcnow().isoformat(),
-    '-Wno-unused-function',
-    '-std=c++11',
-    '-Wno-tautological-constant-out-of-range-compare',
-    ]
-
-if platform.system() == 'Darwin':
-    COMPILE_ARGS.append('-mmacosx-version-min=10.9')
+            shutil.copy2(self.FILE_LOCATION, os.path.join(target, 'tada.so'))
 
 
 EXTENSION = distutils.extension.Extension(
