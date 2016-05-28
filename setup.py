@@ -3,7 +3,7 @@
 """This is the main builder and installer for the Templated Digital Signal
 Processing Python extension."""
 
-import datetime, os, platform, shutil
+import datetime, glob, os, platform, shutil
 import distutils.core, distutils.extension, Cython.Build
 
 import Cython.Compiler.Options
@@ -16,6 +16,7 @@ import Cython.Compiler.Options
 
 IS_MAC = (platform.system() == 'Darwin')
 IS_LINUX = (platform.system() == 'Linux')
+IS_DEBIAN = IS_LINUX and (platform.linux_distribution()[0] == 'debian')
 
 LIBRARIES = [] if (IS_MAC or IS_LINUX) else ['m']
 
@@ -56,9 +57,6 @@ class Local(distutils.core.Command):
     description = 'Install the .so locally'
     user_options = []
 
-    FILE_LOCATION = ('build/lib.macosx-10.6-intel-3.4/tada.so' if IS_MAC
-                     else 'build/lib.linux-x86_64-3.4/tada.cpython-34m.so')
-
     # TODO: need to get this from distutils somehow.
 
     TARGET_LOCATIONS = 'tada', '/development/BiblioPixel'
@@ -71,12 +69,15 @@ class Local(distutils.core.Command):
         pass
 
     def run(self):
+        files = glob.glob('build/lib*/*.so')
+        assert len(files) == 1, files
+        
         for target in self.TARGET_LOCATIONS:
             try:
                 os.remove(target)
             except:
                 pass
-            shutil.copy2(self.FILE_LOCATION, os.path.join(target, 'tada.so'))
+            shutil.copy2(files[0], os.path.join(target, 'tada.so'))
 
 
 EXTENSION = distutils.extension.Extension(
