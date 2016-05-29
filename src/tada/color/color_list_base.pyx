@@ -1,12 +1,13 @@
 cdef extern from "<tada/color/colorList_inl.h>" namespace "tada":
     cppclass ColorVector:
         ColorS& operator[](size_t)
+        ColorS& back()
         size_t size()
         void resize(size_t)
         void clear();
         bool fixKey(int& key)
         void setColor(size_t, float r, float g, float b)
-        bool getColor(size_t , float r, float g, float b)
+        bool getColor(size_t, float r, float g, float b)
         size_t getSizeOf()
         void push_back(ColorS&)
 
@@ -91,4 +92,5 @@ cdef extern from "<tada/color/hsv_inl.h>" namespace "tada":
     void rgbToHsvInto(ColorVector&, Base)
 
 cdef extern from "<tada/color/spread.h>" namespace "tada":
-    ColorVector fillSpread(ColorS& c1, ColorS& c2, size_t size);
+    ColorVector fillSpread(ColorS& c1, ColorS& c2, size_t size)
+    void spreadAppend(ColorVector&, size_t size, ColorS&)

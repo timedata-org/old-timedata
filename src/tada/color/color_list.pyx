@@ -156,7 +156,7 @@ cdef class ColorList:
     # List operations.
     cpdef append(self, object x):
         """Append to the list of colors."""
-        cdef Color c = _makeColor(x)
+        cdef Color c = _toColor(x)
         self.colors.push_back(c.color)
 
     cpdef duplicate(self, uint count):
@@ -372,11 +372,27 @@ cdef class ColorList:
         return toString(self.colors).decode('ascii')
 
     @staticmethod
-    def spread(Color x, Color y, size_t size):
-        # TODO: lame - this should be a separate free function.
-        """Return a spread of `size` colors between Color x and Color y."""
+    def spread(*args):
+        """Spreads!"""
         cdef ColorList cl = ColorList()
-        cl.colors = fillSpread(x.color, y.color, size)
+        cdef Color color
+        cdef size_t last_number = 0
+
+        def spread_append(item):
+            nonlocal last_number
+            if last_number:
+                color = _toColor(item)
+                spreadAppend(cl.colors, last_number - 1, color.color)
+                last_number = 0
+
+        for a in args:
+            if isinstance(a, Number):
+                last_number += a
+            else:
+                last_number += 1
+                spread_append(a)
+
+        spread_append(None)
         return cl
 
 

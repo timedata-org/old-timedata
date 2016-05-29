@@ -90,14 +90,14 @@ cdef class Color256:
         """Return a new color limited to be not greater than max."""
         cdef Color256 c
         c = self[:]
-        minInto(_makeColor256(max).color, c.color)
+        minInto(_toColor256(max).color, c.color)
         return c
 
     cpdef min_limit(Color256 self, min):
         """Return a new color limited to be not less than min."""
         cdef Color256 c
         c = self[:]
-        maxInto(_makeColor256(min).color, c.color)
+        maxInto(_toColor256(min).color, c.color)
         return c
 
     cpdef distance(Color256 self, Color256 other):
@@ -140,14 +140,14 @@ cdef class Color256:
     # So all of these are wrong in fact.  :-D
     def __add__(self, c):
         cdef ColorS x, y
-        x = _makeColor256(self).color
-        y = _makeColor256(c).color
+        x = _toColor256(self).color
+        y = _toColor256(c).color
         return Color256(x.red + y.red, x.green + y.green, x.blue + y.blue)
 
     def __truediv__(self, c):
         cdef ColorS x, y
-        x = _makeColor256(self).color
-        y = _makeColor256(c).color
+        x = _toColor256(self).color
+        y = _toColor256(c).color
         return Color256(divFixed(x.red, y.red),
                               divFixed(x.green, y.green),
                               divFixed(x.blue, y.blue))
@@ -156,8 +156,8 @@ cdef class Color256:
         cdef ColorS x, y
         cdef float dr, mr, dg, mg, db, mb
 
-        x = _makeColor256(self).color
-        y = _makeColor256(c).color
+        x = _toColor256(self).color
+        y = _toColor256(c).color
 
         dr, mr = divmod(x.red, y.red)
         dg, mg = divmod(x.green, y.green)
@@ -166,23 +166,23 @@ cdef class Color256:
 
     def __mod__(self, c):
         cdef ColorS x, y
-        x = _makeColor256(self).color
-        y = _makeColor256(c).color
+        x = _toColor256(self).color
+        y = _toColor256(c).color
 
         return Color256(x.red % y.red, x.green % y.green, x.blue % y.blue)
 
     def __mul__(self, c):
         cdef ColorS x, y
-        x = _makeColor256(self).color
-        y = _makeColor256(c).color
+        x = _toColor256(self).color
+        y = _toColor256(c).color
 
         c = Color256(c)
         return Color256(x.red * y.red, x.green * y.green, x.blue * y.blue)
 
     def __pow__(self, c, mod):
         cdef ColorS x, y
-        x = _makeColor256(self).color
-        y = _makeColor256(c).color
+        x = _toColor256(self).color
+        y = _toColor256(c).color
 
         if mod is None:
             return Color256(powFixed(x.red, y.red),
@@ -196,8 +196,8 @@ cdef class Color256:
 
     def __sub__(self, c):
         cdef ColorS x, y
-        x = _makeColor256(self).color
-        y = _makeColor256(c).color
+        x = _toColor256(self).color
+        y = _toColor256(c).color
 
         return Color256(x.red - y.red,
                               x.green - y.green,
@@ -286,7 +286,7 @@ cdef class Color256:
         return result
 
 
-cdef Color256 _makeColor256(object x):
+cdef Color256 _toColor256(object x):
     if isinstance(x, Color256):
        return <Color256> x
     return Color256(x)
