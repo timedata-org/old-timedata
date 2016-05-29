@@ -131,15 +131,15 @@ cdef class ColorList256:
         cl.negative()
         return cl
 
-    cpdef round(self):
+    cpdef round(self, uint digits=0):
         """Round each element in each color to the nearest integer."""
-        roundColor(self.colors)
+        roundColor(self.colors, digits)
         return self
 
-    def __round__(self):
+    def __round__(self, uint digits=0):
         cdef ColorList256 cl = ColorList256()
         cl.colors = self.colors
-        cl.round()
+        cl.round(digits)
         return cl
 
     cpdef trunc(self):

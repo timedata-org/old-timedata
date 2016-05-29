@@ -121,8 +121,13 @@ inline void negateColor(ColorVector& out) {
     forEachComponent(out, [](float x) { return -x; });
 }
 
-inline void roundColor(ColorVector& out) {
-    forEachComponent(out, [](float x) { return round(x); });
+inline float roundN(float x, uint digits) {
+    auto p = static_cast<float>(pow10(digits));
+    return round(x * p) / p;
+}
+
+inline void roundColor(ColorVector& out, uint digits) {
+    forEachComponent(out, [=](float x) { return roundN(x, digits); });
 }
 
 inline void truncColor(ColorVector& out) {

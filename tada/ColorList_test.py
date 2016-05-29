@@ -122,3 +122,8 @@ class TestColorList(unittest.TestCase):
         self.assertEqual(c, ColorList((gray + Colors.red / 2,
                                        gray + Colors.green / 2,
                                        gray + Colors.blue / 2)))
+
+    def test_round(self):
+        cl = ColorList(((0.15, 0.24, 0.36), (-0.15, -0.24, -0.36)))
+        self.assertEqual(round(cl, 1),
+                             ColorList(((0.2, 0.2, 0.4), (-0.2, -0.2, -0.4))))
