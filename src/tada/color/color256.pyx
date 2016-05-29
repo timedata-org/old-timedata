@@ -86,15 +86,18 @@ cdef class Color256:
         c = hsvToRgb(self.color, integer);
         return Color256(c.red, c.green, c.blue)
 
-    def limited(Color256 self, *, min=None, max=None):
-        """Return a new color limited to be not less than min (if given)
-           and not greater than max (if given)."""
+    cpdef max_limit(Color256 self, max):
+        """Return a new color limited to be not greater than max."""
         cdef Color256 c
         c = self[:]
-        if min is not None:
-            minInto(_makeColor256(min).color, c.color)
-        if max is not None:
-            maxInto(_makeColor256(max).color, c.color)
+        minInto(_makeColor256(max).color, c.color)
+        return c
+
+    cpdef min_limit(Color256 self, min):
+        """Return a new color limited to be not less than min."""
+        cdef Color256 c
+        c = self[:]
+        maxInto(_makeColor256(min).color, c.color)
         return c
 
     cpdef distance(Color256 self, Color256 other):

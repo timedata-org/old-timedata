@@ -205,7 +205,6 @@ cdef class ColorList:
         cdef ColorS c = minColor(self.colors)
         return Color(c.red, c.green, c.blue)
 
-
     cpdef max_limit(self, float max):
         """Limit each color to be not greater than max."""
         if isinstance(max, Number):
