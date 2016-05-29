@@ -30,4 +30,4 @@ locals().update(
 
 _load_colors()
 
-print('tada compiled on', compile_timestamp())
+print('tada compiled on', compile_timestamp(), 'with tags', git_tags())
