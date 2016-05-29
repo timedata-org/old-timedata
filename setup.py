@@ -3,7 +3,7 @@
 """This is the main builder and installer for the Templated Digital Signal
 Processing Python extension."""
 
-import datetime, glob, os, platform, shutil
+import datetime, glob, os, platform, shutil, subprocess
 import distutils.core, distutils.extension, Cython.Build
 
 import Cython.Compiler.Options
@@ -20,10 +20,28 @@ IS_DEBIAN = IS_LINUX and (platform.linux_distribution()[0] == 'debian')
 
 LIBRARIES = [] if (IS_MAC or IS_LINUX) else ['m']
 
+def execute(command):
+    result = os.system(command)
+    if result:
+        raise Exception('%s\n failed with code %s' % (command, result))
+
+def run(*cmds):
+    return subprocess.check_output(cmds).strip().decode('ascii')
+
+def git_tags():
+    tags = run('git', 'describe', '--tags')
+    branch = run('git', 'rev-parse', '--abbrev-ref', 'HEAD')
+    remote = run('git', 'config', 'remote.origin.url')
+    user = remote.split(':')[1].split('/')[0]
+    return '%s+%s.%s' % (tags, branch, user)
+
+GIT_TAGS = git_tags()
+
 COMPILE_ARGS = [
     '-O3',
     '-DNDEBUG',
     '-DCOMPILE_TIMESTAMP="%s"' % datetime.datetime.utcnow().isoformat(),
+    '-DGIT_TAGS="%s"' % git_tags(),
     '-Wno-unused-function',
     '-std=c++11',
     ]
@@ -32,10 +50,6 @@ if IS_MAC:
     COMPILE_ARGS.extend(['-mmacosx-version-min=10.9',
                          '-Wno-tautological-constant-out-of-range-compare'])
 
-def execute(command):
-    result = os.system(command)
-    if result:
-        raise Exception('%s\n failed with code %s' % (command, result))
 
 
 class Clean(distutils.core.Command):
@@ -71,7 +85,7 @@ class Local(distutils.core.Command):
     def run(self):
         files = glob.glob('build/lib*/*.so')
         assert len(files) == 1, files
-        
+
         for target in self.TARGET_LOCATIONS:
             try:
                 os.remove(target)
@@ -102,6 +116,14 @@ EXT_MODULES=Cython.Build.cythonize(
 
 distutils.core.setup(
     name='tada',
+    packages=['tada'],
+    version='0.8',
+    description='High-performance color arithmetic.',
+    author='Tom Swirly',
+    author_email='tom@swirly.com',
+    url='https://github.com/rec/tada',
+    # download_url='https://github.com/rec/tada/archive/binary-release-2016-05-28.tar.gz',
+    download_url='https://github.com/rec/tada/tarball/binary-release-2016-05-28',
     cmdclass={'clean': Clean, 'local': Local},
     ext_modules=EXT_MODULES,
     )
