@@ -313,4 +313,24 @@ inline Color minColor(ColorVector const& colors) {
     return accumulate(colors, [](float x, float y) { return std::min(x, y); });
 }
 
+float distance2(ColorVector const& x, ColorVector const& y) {
+    auto d = 0.0f;
+    auto xShorter = x.size() < y.size();
+    auto& shorter = xShorter ? x : y;
+    auto& longer = xShorter ? y : x;
+
+    size_t i = 0;
+    for (; i < shorter.size(); ++i)
+        d += distance2(longer[i], shorter[i]);
+
+    for (; i < longer.size(); ++i)
+        d += distance2(longer[i], Color{{0}});
+
+    return d;
+}
+
+float distance(ColorVector const& x, ColorVector const& y) {
+    return sqrt(distance2(x, y));
+}
+
 } // tada

@@ -105,4 +105,7 @@ void duplicateInto(size_t count, ColorVector&);
 Color maxColor(ColorVector const&);
 Color minColor(ColorVector const&);
 
+float distance2(ColorVector const&, ColorVector const&);
+float distance(ColorVector const&, ColorVector const&);
+
 } // tada

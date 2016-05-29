@@ -86,6 +86,8 @@ cdef extern from "<tada/color/colorList_inl.h>" namespace "tada":
     void subOver(float x, ColorVector& y, ColorVector&)
     void subOver(ColorVector& x, float y, ColorVector&)
 
+    float distance(ColorVector&, ColorVector&)
+    float distance2(ColorVector&, ColorVector&)
 
 cdef extern from "<tada/color/hsv_inl.h>" namespace "tada":
     void hsvToRgbInto(ColorVector&, Base)

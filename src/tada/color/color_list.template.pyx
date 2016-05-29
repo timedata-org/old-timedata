@@ -184,11 +184,23 @@ cdef class ColorList{suffix}:
         rotate(self.colors, pos)
         return self
 
-    # Arithemetic and color operations.
+    # Arithmetic and color operations.
     cpdef clear(self):
         """Set all colors to black."""
         clearInto(self.colors)
         return self
+
+    cpdef distance2(ColorList{suffix} self, object x):
+        """Set all colors to black."""
+        cdef ColorList{suffix} cl
+        cl = _toColorList{suffix}(x)
+        return distance2(self.colors, cl.colors)
+
+    cpdef distance(ColorList{suffix} self, object x):
+        """Set all colors to black."""
+        cdef ColorList{suffix} cl
+        cl = _toColorList{suffix}(x)
+        return distance(self.colors, cl.colors)
 
     cpdef hsv_to_rgb(self):
         """Convert each color in the list from HSV to RBG."""
