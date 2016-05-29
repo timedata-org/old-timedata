@@ -90,14 +90,14 @@ cdef class Color{suffix}:
         """Return a new color limited to be not greater than max."""
         cdef Color{suffix} c
         c = self[:]
-        minInto(_makeColor{suffix}(max).color, c.color)
+        minInto(_toColor{suffix}(max).color, c.color)
         return c
 
     cpdef min_limit(Color{suffix} self, min):
         """Return a new color limited to be not less than min."""
         cdef Color{suffix} c
         c = self[:]
-        maxInto(_makeColor{suffix}(min).color, c.color)
+        maxInto(_toColor{suffix}(min).color, c.color)
         return c
 
     cpdef distance(Color{suffix} self, Color{suffix} other):
@@ -140,14 +140,14 @@ cdef class Color{suffix}:
     # So all of these are wrong in fact.  :-D
     def __add__(self, c):
         cdef ColorS x, y
-        x = _makeColor{suffix}(self).color
-        y = _makeColor{suffix}(c).color
+        x = _toColor{suffix}(self).color
+        y = _toColor{suffix}(c).color
         return Color{suffix}(x.red + y.red, x.green + y.green, x.blue + y.blue)
 
     def __truediv__(self, c):
         cdef ColorS x, y
-        x = _makeColor{suffix}(self).color
-        y = _makeColor{suffix}(c).color
+        x = _toColor{suffix}(self).color
+        y = _toColor{suffix}(c).color
         return Color{suffix}(divFixed(x.red, y.red),
                               divFixed(x.green, y.green),
                               divFixed(x.blue, y.blue))
@@ -156,8 +156,8 @@ cdef class Color{suffix}:
         cdef ColorS x, y
         cdef float dr, mr, dg, mg, db, mb
 
-        x = _makeColor{suffix}(self).color
-        y = _makeColor{suffix}(c).color
+        x = _toColor{suffix}(self).color
+        y = _toColor{suffix}(c).color
 
         dr, mr = divmod(x.red, y.red)
         dg, mg = divmod(x.green, y.green)
@@ -166,23 +166,23 @@ cdef class Color{suffix}:
 
     def __mod__(self, c):
         cdef ColorS x, y
-        x = _makeColor{suffix}(self).color
-        y = _makeColor{suffix}(c).color
+        x = _toColor{suffix}(self).color
+        y = _toColor{suffix}(c).color
 
         return Color{suffix}(x.red % y.red, x.green % y.green, x.blue % y.blue)
 
     def __mul__(self, c):
         cdef ColorS x, y
-        x = _makeColor{suffix}(self).color
-        y = _makeColor{suffix}(c).color
+        x = _toColor{suffix}(self).color
+        y = _toColor{suffix}(c).color
 
         c = Color{suffix}(c)
         return Color{suffix}(x.red * y.red, x.green * y.green, x.blue * y.blue)
 
     def __pow__(self, c, mod):
         cdef ColorS x, y
-        x = _makeColor{suffix}(self).color
-        y = _makeColor{suffix}(c).color
+        x = _toColor{suffix}(self).color
+        y = _toColor{suffix}(c).color
 
         if mod is None:
             return Color{suffix}(powFixed(x.red, y.red),
@@ -196,8 +196,8 @@ cdef class Color{suffix}:
 
     def __sub__(self, c):
         cdef ColorS x, y
-        x = _makeColor{suffix}(self).color
-        y = _makeColor{suffix}(c).color
+        x = _toColor{suffix}(self).color
+        y = _toColor{suffix}(c).color
 
         return Color{suffix}(x.red - y.red,
                               x.green - y.green,
@@ -286,7 +286,7 @@ cdef class Color{suffix}:
         return result
 
 
-cdef Color{suffix} _makeColor{suffix}(object x):
+cdef Color{suffix} _toColor{suffix}(object x):
     if isinstance(x, Color{suffix}):
        return <Color{suffix}> x
     return Color{suffix}(x)

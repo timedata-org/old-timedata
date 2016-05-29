@@ -90,14 +90,14 @@ cdef class Color:
         """Return a new color limited to be not greater than max."""
         cdef Color c
         c = self[:]
-        minInto(_makeColor(max).color, c.color)
+        minInto(_toColor(max).color, c.color)
         return c
 
     cpdef min_limit(Color self, min):
         """Return a new color limited to be not less than min."""
         cdef Color c
         c = self[:]
-        maxInto(_makeColor(min).color, c.color)
+        maxInto(_toColor(min).color, c.color)
         return c
 
     cpdef distance(Color self, Color other):
@@ -140,14 +140,14 @@ cdef class Color:
     # So all of these are wrong in fact.  :-D
     def __add__(self, c):
         cdef ColorS x, y
-        x = _makeColor(self).color
-        y = _makeColor(c).color
+        x = _toColor(self).color
+        y = _toColor(c).color
         return Color(x.red + y.red, x.green + y.green, x.blue + y.blue)
 
     def __truediv__(self, c):
         cdef ColorS x, y
-        x = _makeColor(self).color
-        y = _makeColor(c).color
+        x = _toColor(self).color
+        y = _toColor(c).color
         return Color(divFixed(x.red, y.red),
                               divFixed(x.green, y.green),
                               divFixed(x.blue, y.blue))
@@ -156,8 +156,8 @@ cdef class Color:
         cdef ColorS x, y
         cdef float dr, mr, dg, mg, db, mb
 
-        x = _makeColor(self).color
-        y = _makeColor(c).color
+        x = _toColor(self).color
+        y = _toColor(c).color
 
         dr, mr = divmod(x.red, y.red)
         dg, mg = divmod(x.green, y.green)
@@ -166,23 +166,23 @@ cdef class Color:
 
     def __mod__(self, c):
         cdef ColorS x, y
-        x = _makeColor(self).color
-        y = _makeColor(c).color
+        x = _toColor(self).color
+        y = _toColor(c).color
 
         return Color(x.red % y.red, x.green % y.green, x.blue % y.blue)
 
     def __mul__(self, c):
         cdef ColorS x, y
-        x = _makeColor(self).color
-        y = _makeColor(c).color
+        x = _toColor(self).color
+        y = _toColor(c).color
 
         c = Color(c)
         return Color(x.red * y.red, x.green * y.green, x.blue * y.blue)
 
     def __pow__(self, c, mod):
         cdef ColorS x, y
-        x = _makeColor(self).color
-        y = _makeColor(c).color
+        x = _toColor(self).color
+        y = _toColor(c).color
 
         if mod is None:
             return Color(powFixed(x.red, y.red),
@@ -196,8 +196,8 @@ cdef class Color:
 
     def __sub__(self, c):
         cdef ColorS x, y
-        x = _makeColor(self).color
-        y = _makeColor(c).color
+        x = _toColor(self).color
+        y = _toColor(c).color
 
         return Color(x.red - y.red,
                               x.green - y.green,
@@ -286,7 +286,7 @@ cdef class Color:
         return result
 
 
-cdef Color _makeColor(object x):
+cdef Color _toColor(object x):
     if isinstance(x, Color):
        return <Color> x
     return Color(x)
