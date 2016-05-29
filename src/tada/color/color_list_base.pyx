@@ -32,8 +32,8 @@ cdef extern from "<tada/color/colorList_inl.h>" namespace "tada":
     void floorInto(ColorVector&)
     void invertColor(ColorVector&)
     void negateColor(ColorVector&)
-    void roundColor(ColorVector&)
     void truncColor(ColorVector&)
+    void roundColor(ColorVector&, uint digits)
 
     void addInto(float f, ColorVector& out)
     void addInto(ColorVector&, ColorVector& out)

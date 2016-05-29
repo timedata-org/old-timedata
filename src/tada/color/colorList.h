@@ -50,7 +50,7 @@ void ceilInto(ColorVector& out);
 void floorInto(ColorVector& out);
 void invertColor(ColorVector& out);
 void negateColor(ColorVector& out);  // rename to neg
-void roundColor(ColorVector& out);
+void roundColor(ColorVector& out, uint digits);
 void truncColor(ColorVector& out);
 
 void addInto(float f, ColorVector& out);
