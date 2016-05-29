@@ -129,7 +129,8 @@ inline void removeTrailing(std::string& s, char ch) {
 
 /** Convert a float to a string. */
 inline std::string toString(float x, unsigned int decimals) {
-    size_t size = log10(x) + 3 + decimals;
+    // Add 1 for the - sign and one for the .
+    size_t size = log10(x) + 3 + decimals + 2;
     std::string number(size, ' ');
     number.resize(snprintf(&number[0], size, "%1.*f", decimals, x));
     if (number.find('.') != std::string::npos) {
