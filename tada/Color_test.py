@@ -191,3 +191,15 @@ class TestColor256(unittest.TestCase):
             'aquamarine',
             'aquamarine 1',
             'aquamarine 2'])
+
+
+    def test_limit(self):
+        self.assertEqual((Colors.red * 2).max_limit(0), Colors.black)
+        self.assertEqual((Colors.red * 2).min_limit(0), Colors.red * 2)
+        self.assertEqual((Colors.red * 2).max_limit(1), Colors.red)
+        self.assertEqual((Colors.red * 2).min_limit(1), Color(2, 1, 1))
+
+        self.assertEqual(Color(1, 2, 3).max_limit(Color(3, 2, 1)),
+                         Color(1, 2, 1))
+        self.assertEqual(Color(1, 2, 3).min_limit(Color(3, 2, 1)),
+                         Color(3, 2, 3))

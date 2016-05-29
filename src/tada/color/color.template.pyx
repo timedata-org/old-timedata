@@ -86,15 +86,18 @@ cdef class Color{suffix}:
         c = hsvToRgb(self.color, {base});
         return Color{suffix}(c.red, c.green, c.blue)
 
-    def limited(Color{suffix} self, *, min=None, max=None):
-        """Return a new color limited to be not less than min (if given)
-           and not greater than max (if given)."""
+    cpdef max_limit(Color{suffix} self, max):
+        """Return a new color limited to be not greater than max."""
         cdef Color{suffix} c
         c = self[:]
-        if min is not None:
-            minInto(_makeColor{suffix}(min).color, c.color)
-        if max is not None:
-            maxInto(_makeColor{suffix}(max).color, c.color)
+        minInto(_makeColor{suffix}(max).color, c.color)
+        return c
+
+    cpdef min_limit(Color{suffix} self, min):
+        """Return a new color limited to be not less than min."""
+        cdef Color{suffix} c
+        c = self[:]
+        maxInto(_makeColor{suffix}(min).color, c.color)
         return c
 
     cpdef distance(Color{suffix} self, Color{suffix} other):

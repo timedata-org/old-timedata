@@ -31,9 +31,9 @@ inline ColorS rotate(ColorS c, int positions) {
 }
 
 inline void minInto(ColorS const& in, ColorS& out) {
-    out.red = std::max(in.red, out.red);
-    out.green = std::max(in.green, out.green);
-    out.blue = std::max(in.blue, out.blue);
+    out.red = std::min(in.red, out.red);
+    out.green = std::min(in.green, out.green);
+    out.blue = std::min(in.blue, out.blue);
 }
 
 inline void maxInto(ColorS const& in, ColorS& out) {
