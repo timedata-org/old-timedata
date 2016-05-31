@@ -5,6 +5,7 @@
 namespace tada {
 namespace color {
 
+//
 TEST_CASE("color", "names") {
     REQUIRE(colorToString(Color{{0.5, 0.5, 0.5}}, Base::normal) == "gray 50");
     REQUIRE(colorToString(Color{{0, 0, 0}}, Base::normal) == "black");
