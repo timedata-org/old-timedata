@@ -48,19 +48,38 @@ class TestColorList(unittest.TestCase):
         self.assertEqual(ColorList(('red', 'green')).zero(),
                          ColorList(('black', 'black')))
 
-    def test_duplicate(self):
+    def test_mult(self):
         cl = ColorList(('red', 'green', 'blue'))
         cl2 = ColorList(('red', 'green', 'blue', 'red', 'green', 'blue',
                         'red', 'green', 'blue'))
-        self.assertEqual(cl.duplicate(3), cl2)
-        if True: return
-        self.assertEqual(cl.duplicate(1), cl2)
-        self.assertEqual(cl.duplicate(0), ColorList())
+        self.assertEqual(cl * 3, cl2)
+        self.assertEqual(3 * cl, cl2)
+        self.assertEqual(cl * 1, cl)
+        self.assertEqual(1 * cl, cl)
+        self.assertEqual(cl * 0, ColorList())
+        self.assertEqual(0 * cl, ColorList())
+
+        cl *= 3
+        self.assertEqual(cl, cl2)
+        cl *= 1
+        self.assertEqual(cl, cl2)
+        cl *= 0
+        self.assertEqual(cl, ColorList())
 
         cl = ColorList(('red', 'green', 'blue'))
         with self.assertRaises(OverflowError):
-            cl.duplicate(-1)
+            cl *= -1
+        with self.assertRaises(OverflowError):
+            cl * -1
         self.assertEqual(cl, ColorList(('red', 'green', 'blue')))
+
+    def test_add(self):
+        cl = ColorList(['red', 'green', 'blue'])
+        cl += ColorList(['yellow', 'black'])
+        self.assertEqual(cl, ColorList(
+            ['red', 'green', 'blue', 'yellow', 'black']))
+        self.assertEqual(cl, cl + ColorList())
+        self.assertEqual(cl, ColorList() + cl)
 
     def test_extend(self):
         cl = ColorList()
