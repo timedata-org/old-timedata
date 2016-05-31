@@ -24,6 +24,7 @@ cdef class ColorList{suffix}:
 """
     cdef ColorVector colors
 
+    # Magic methods.
     def __cinit__(self, items=None):
         """Construct a ColorList with an iterator of items, each of which looks
            like a Color."""
@@ -75,41 +76,20 @@ cdef class ColorList{suffix}:
         c = self.colors[index]
         return Color{suffix}(c.red, c.green, c.blue)
 
-    # Unary operators and corresponding mutators.
-    cpdef ColorList{suffix} abs(self):
-        """Replace each color by its absolute value."""
-        absInto(self.colors)
-        return self
+    def __len__(self):
+        return self.colors.size()
 
-    cpdef ColorList{suffix} ceil(self):
-        """Replace each color by its integer ceiling."""
-        ceilInto(self.colors)
-        return self
+    def __repr__(self):
+        return 'ColorList{suffix}(%s)' % str(self)
 
-    cpdef ColorList{suffix} floor(self):
-        """Replace each color by its integer floor."""
-        floorInto(self.colors)
-        return self
+    def __richcmp__(ColorList{suffix} self, ColorList{suffix} other, int rcmp):
+        return cmpToRichcmp(compareContainers(self.colors, other.colors), rcmp)
 
-    cpdef ColorList{suffix} invert(self):
-        """Replace each color by its complementary color."""
-        invertColor(self.colors)
-        return self
+    def __sizeof__(self):
+        return self.colors.getSizeOf()
 
-    cpdef ColorList{suffix} neg(self):
-        """Negate each color in the list."""
-        negateColor(self.colors)
-        return self
-
-    cpdef ColorList{suffix} round(self, uint digits=0):
-        """Round each element in each color to the nearest integer."""
-        roundColor(self.colors, digits)
-        return self
-
-    cpdef ColorList{suffix} trunc(self):
-        """Truncate each value to an integer."""
-        truncColor(self.colors)
-        return self
+    def __str__(self):
+        return toString(self.colors).decode('ascii')
 
     # List operations.
     cpdef ColorList{suffix} append(self, Color{suffix} c):
@@ -163,14 +143,14 @@ cdef class ColorList{suffix}:
             return result
         raise IndexError('pop index out of range')
 
-    cpdef ColorList{suffix} resize(ColorList{suffix} self, size_t size):
-        """Set the size of the ColorList, filling with black if needed."""
-        self.colors.resize(size)
-        return self
-
     cpdef ColorList{suffix} remove(self, Color{suffix} color):
         """Find and remove a specific color."""
         self.pop(self.index(color))
+        return self
+
+    cpdef ColorList{suffix} resize(ColorList{suffix} self, size_t size):
+        """Set the size of the ColorList, filling with black if needed."""
+        self.colors.resize(size)
         return self
 
     cpdef ColorList{suffix} reverse(self):
@@ -193,87 +173,29 @@ cdef class ColorList{suffix}:
             self[:] = sorted(self, key=key, reverse=reverse)
         return self
 
-    # Arithmetic and color operations.
-    cpdef ColorList{suffix} zero(self):
-        """Set all colors to black."""
-        clearInto(self.colors)
-        return self
-
-    cpdef float distance2(ColorList{suffix} self, object x):
-        """Return the square of the cartestian distance to another ColorList."""
-        cdef ColorList{suffix} cl
-        cl = _toColorList{suffix}(x)
-        return distance2(self.colors, cl.colors)
-
-    cpdef float distance(ColorList{suffix} self, object x):
-        """Return the cartestian distance to another ColorList."""
-        cdef ColorList{suffix} cl
-        cl = _toColorList{suffix}(x)
-        return distance(self.colors, cl.colors)
-
-    cpdef ColorList{suffix} hsv_to_rgb(self):
-        """Convert each color in the list from HSV to RBG."""
-        hsvToRgbInto(self.colors, {base})
-        return self
-
-    cpdef Color{suffix} max(self):
-        """Return the maximum values for each component"""
-        cdef ColorS c = maxColor(self.colors)
-        return Color{suffix}(c.red, c.green, c.blue)
-
-    cpdef Color{suffix} min(self):
-        """Return the minimum values of each component"""
-        cdef ColorS c = minColor(self.colors)
-        return Color{suffix}(c.red, c.green, c.blue)
-
-    cpdef ColorList{suffix} max_limit(self, float max):
-        """Limit each color to be not greater than max."""
-        if isinstance(max, Number):
-            minInto(<float> max, self.colors)
-        else:
-            minInto(_toColorList{suffix}(max).colors, self.colors)
-        return self
-
-    cpdef ColorList{suffix} min_limit(self, float min):
-        """Limit each color to be not less than min."""
-        if isinstance(min, Number):
-            maxInto(<float> min, self.colors)
-        else:
-            maxInto(_toColorList{suffix}(min).colors, self.colors)
-        return self
-
-    cpdef ColorList{suffix} rgb_to_hsv(self):
-        """Convert each color in the list from RBG to HSV."""
-        rgbToHsvInto(self.colors, {base})
-        return self
-
-    # Mutating operations.
+    # Basic arithmetic operations.
     cpdef ColorList{suffix} add(ColorList{suffix} self, c):
+        """Add into colors from either a number or a ColorList."""
         if isinstance(c, Number):
             addInto(<float> c, self.colors)
         else:
-            addInto(_toColorList{suffix}(c).colors, self.colors)
+            addInto((<ColorList{suffix}> c).colors, self.colors)
         return self
 
     cpdef ColorList{suffix} div(ColorList{suffix} self, c):
+        """Divide colors by either a number or a ColorList."""
         if isinstance(c, Number):
             divideInto(<float> c, self.colors)
         else:
-            divideInto(_toColorList{suffix}(c).colors, self.colors)
-        return self
-
-    cpdef ColorList{suffix} rdiv(ColorList{suffix} self, c):
-        if isinstance(c, Number):
-            rdivideInto(<float> c, self.colors)
-        else:
-            rdivideInto(_toColorList{suffix}(c).colors, self.colors)
+            divideInto((<ColorList{suffix}> c).colors, self.colors)
         return self
 
     cpdef ColorList{suffix} mul(ColorList{suffix} self, c):
+        """Multiply colors by either a number or a ColorList."""
         if isinstance(c, Number):
             multiplyInto(<float> c, self.colors)
         else:
-            multiplyInto(_toColorList{suffix}(c).colors, self.colors)
+            multiplyInto((<ColorList{suffix}> c).colors, self.colors)
         return self
 
     cpdef ColorList{suffix} pow(ColorList{suffix} self, float c):
@@ -281,7 +203,24 @@ cdef class ColorList{suffix}:
         if isinstance(c, Number):
             powInto(<float> c, self.colors)
         else:
-            powInto(_toColorList{suffix}(c).colors, self.colors)
+            powInto((<ColorList{suffix}> c).colors, self.colors)
+        return self
+
+    cpdef ColorList{suffix} sub(ColorList{suffix} self, c):
+        """Subtract either a number or a ColorList from the colors."""
+        if isinstance(c, Number):
+             subtractInto(<float> c, self.colors)
+        else:
+             subtractInto((<ColorList{suffix}> c).colors, self.colors)
+        return self
+
+    # Arithmetic where "self" is on the right side.
+    cpdef ColorList{suffix} rdiv(ColorList{suffix} self, c):
+        """Right-side divide colors by either a number or a ColorList."""
+        if isinstance(c, Number):
+            rdivideInto(<float> c, self.colors)
+        else:
+            rdivideInto((<ColorList{suffix}> c).colors, self.colors)
         return self
 
     cpdef ColorList{suffix} rpow(ColorList{suffix} self, c):
@@ -289,38 +228,103 @@ cdef class ColorList{suffix}:
         if isinstance(c, Number):
             rpowInto(<float> c, self.colors)
         else:
-            rpowInto(_toColorList{suffix}(c).colors, self.colors)
-        return self
-
-    cpdef ColorList{suffix} sub(ColorList{suffix} self, c):
-        if isinstance(c, Number):
-             subtractInto(<float> c, self.colors)
-        else:
-             subtractInto(_toColorList{suffix}(c).colors, self.colors)
+            rpowInto((<ColorList{suffix}> c).colors, self.colors)
         return self
 
     cpdef ColorList{suffix} rsub(ColorList{suffix} self, c):
+        """Right-side subtract either a number or a ColorList."""
         if isinstance(c, Number):
              rsubtractInto(<float> c, self.colors)
         else:
-             rsubtractInto(_toColorList{suffix}(c).colors, self.colors)
+             rsubtractInto((<ColorList{suffix}> c).colors, self.colors)
         return self
 
-    # Other key magic methods.
-    def __len__(self):
-        return self.colors.size()
+    # Mutators corresponding to built-in operations.
+    cpdef ColorList{suffix} abs(self):
+        """Replace each color by its absolute value."""
+        absInto(self.colors)
+        return self
 
-    def __repr__(self):
-        return 'ColorList{suffix}(%s)' % str(self)
+    cpdef ColorList{suffix} ceil(self):
+        """Replace each color by its integer ceiling."""
+        ceilInto(self.colors)
+        return self
 
-    def __richcmp__(ColorList{suffix} self, ColorList{suffix} other, int rcmp):
-        return cmpToRichcmp(compareContainers(self.colors, other.colors), rcmp)
+    cpdef ColorList{suffix} floor(self):
+        """Replace each color by its integer floor."""
+        floorInto(self.colors)
+        return self
 
-    def __sizeof__(self):
-        return self.colors.getSizeOf()
+    cpdef ColorList{suffix} invert(self):
+        """Replace each color by its complementary color."""
+        invertColor(self.colors)
+        return self
 
-    def __str__(self):
-        return toString(self.colors).decode('ascii')
+    cpdef ColorList{suffix} neg(self):
+        """Negate each color in the list."""
+        negateColor(self.colors)
+        return self
+
+    cpdef ColorList{suffix} round(self, uint digits=0):
+        """Round each element in each color to the nearest integer."""
+        roundColor(self.colors, digits)
+        return self
+
+    # Other mutators.
+    cpdef ColorList{suffix} trunc(self):
+        """Truncate each value to an integer."""
+        truncColor(self.colors)
+        return self
+
+    cpdef ColorList{suffix} hsv_to_rgb(self):
+        """Convert each color in the list from HSV to RBG."""
+        hsvToRgbInto(self.colors, {base})
+        return self
+
+    cpdef ColorList{suffix} max_limit(self, float max):
+        """Limit each color to be not greater than max."""
+        if isinstance(max, Number):
+            minInto(<float> max, self.colors)
+        else:
+            minInto((<ColorList{suffix}> max).colors, self.colors)
+        return self
+
+    cpdef ColorList{suffix} min_limit(self, float min):
+        """Limit each color to be not less than min."""
+        if isinstance(min, Number):
+            maxInto(<float> min, self.colors)
+        else:
+            maxInto((<ColorList{suffix}> min).colors, self.colors)
+        return self
+
+    cpdef ColorList{suffix} rgb_to_hsv(self):
+        """Convert each color in the list from RBG to HSV."""
+        rgbToHsvInto(self.colors, {base})
+        return self
+
+    cpdef ColorList{suffix} zero(self):
+        """Set all colors to black."""
+        clearInto(self.colors)
+        return self
+
+    # Methods that do not change this ColorList.
+    cpdef float distance2(ColorList{suffix} self, ColorList{suffix} x):
+        """Return the square of the cartestian distance to another ColorList."""
+        return distance2(self.colors, x.colors)
+
+    cpdef float distance(ColorList{suffix} self, ColorList{suffix} x):
+        """Return the cartestian distance to another ColorList."""
+        return distance(self.colors, x.colors)
+
+    cpdef Color{suffix} max(self):
+        """Return the maximum values of each component."""
+        cdef ColorS c = maxColor(self.colors)
+        return Color{suffix}(c.red, c.green, c.blue)
+
+    cpdef Color{suffix} min(self):
+        """Return the minimum values of each component/"""
+        cdef ColorS c = minColor(self.colors)
+        return Color{suffix}(c.red, c.green, c.blue)
 
     @staticmethod
     def spread(*args):

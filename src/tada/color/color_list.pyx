@@ -24,6 +24,7 @@ cdef class ColorList:
 """
     cdef ColorVector colors
 
+    # Magic methods.
     def __cinit__(self, items=None):
         """Construct a ColorList with an iterator of items, each of which looks
            like a Color."""
@@ -75,41 +76,20 @@ cdef class ColorList:
         c = self.colors[index]
         return Color(c.red, c.green, c.blue)
 
-    # Unary operators and corresponding mutators.
-    cpdef ColorList abs(self):
-        """Replace each color by its absolute value."""
-        absInto(self.colors)
-        return self
+    def __len__(self):
+        return self.colors.size()
 
-    cpdef ColorList ceil(self):
-        """Replace each color by its integer ceiling."""
-        ceilInto(self.colors)
-        return self
+    def __repr__(self):
+        return 'ColorList(%s)' % str(self)
 
-    cpdef ColorList floor(self):
-        """Replace each color by its integer floor."""
-        floorInto(self.colors)
-        return self
+    def __richcmp__(ColorList self, ColorList other, int rcmp):
+        return cmpToRichcmp(compareContainers(self.colors, other.colors), rcmp)
 
-    cpdef ColorList invert(self):
-        """Replace each color by its complementary color."""
-        invertColor(self.colors)
-        return self
+    def __sizeof__(self):
+        return self.colors.getSizeOf()
 
-    cpdef ColorList neg(self):
-        """Negate each color in the list."""
-        negateColor(self.colors)
-        return self
-
-    cpdef ColorList round(self, uint digits=0):
-        """Round each element in each color to the nearest integer."""
-        roundColor(self.colors, digits)
-        return self
-
-    cpdef ColorList trunc(self):
-        """Truncate each value to an integer."""
-        truncColor(self.colors)
-        return self
+    def __str__(self):
+        return toString(self.colors).decode('ascii')
 
     # List operations.
     cpdef ColorList append(self, Color c):
@@ -163,14 +143,14 @@ cdef class ColorList:
             return result
         raise IndexError('pop index out of range')
 
-    cpdef ColorList resize(ColorList self, size_t size):
-        """Set the size of the ColorList, filling with black if needed."""
-        self.colors.resize(size)
-        return self
-
     cpdef ColorList remove(self, Color color):
         """Find and remove a specific color."""
         self.pop(self.index(color))
+        return self
+
+    cpdef ColorList resize(ColorList self, size_t size):
+        """Set the size of the ColorList, filling with black if needed."""
+        self.colors.resize(size)
         return self
 
     cpdef ColorList reverse(self):
@@ -193,28 +173,148 @@ cdef class ColorList:
             self[:] = sorted(self, key=key, reverse=reverse)
         return self
 
-    # Arithmetic and color operations.
-    cpdef ColorList zero(self):
-        """Set all colors to black."""
-        clearInto(self.colors)
+    # Basic arithmetic operations.
+    cpdef ColorList add(ColorList self, c):
+        """Add into colors from either a number or a ColorList."""
+        if isinstance(c, Number):
+            addInto(<float> c, self.colors)
+        else:
+            addInto((<ColorList> c).colors, self.colors)
         return self
 
-    cpdef float distance2(ColorList self, object x):
-        """Return the square of the cartestian distance to another ColorList."""
-        cdef ColorList cl
-        cl = _toColorList(x)
-        return distance2(self.colors, cl.colors)
+    cpdef ColorList div(ColorList self, c):
+        """Divide colors by either a number or a ColorList."""
+        if isinstance(c, Number):
+            divideInto(<float> c, self.colors)
+        else:
+            divideInto((<ColorList> c).colors, self.colors)
+        return self
 
-    cpdef float distance(ColorList self, object x):
-        """Return the cartestian distance to another ColorList."""
-        cdef ColorList cl
-        cl = _toColorList(x)
-        return distance(self.colors, cl.colors)
+    cpdef ColorList mul(ColorList self, c):
+        """Multiply colors by either a number or a ColorList."""
+        if isinstance(c, Number):
+            multiplyInto(<float> c, self.colors)
+        else:
+            multiplyInto((<ColorList> c).colors, self.colors)
+        return self
+
+    cpdef ColorList pow(ColorList self, float c):
+        """Raise each color to the given power (gamma correction)."""
+        if isinstance(c, Number):
+            powInto(<float> c, self.colors)
+        else:
+            powInto((<ColorList> c).colors, self.colors)
+        return self
+
+    cpdef ColorList sub(ColorList self, c):
+        """Subtract either a number or a ColorList from the colors."""
+        if isinstance(c, Number):
+             subtractInto(<float> c, self.colors)
+        else:
+             subtractInto((<ColorList> c).colors, self.colors)
+        return self
+
+    # Arithmetic where "self" is on the right side.
+    cpdef ColorList rdiv(ColorList self, c):
+        """Right-side divide colors by either a number or a ColorList."""
+        if isinstance(c, Number):
+            rdivideInto(<float> c, self.colors)
+        else:
+            rdivideInto((<ColorList> c).colors, self.colors)
+        return self
+
+    cpdef ColorList rpow(ColorList self, c):
+        """Right-hand (reversed) call of pow()."""
+        if isinstance(c, Number):
+            rpowInto(<float> c, self.colors)
+        else:
+            rpowInto((<ColorList> c).colors, self.colors)
+        return self
+
+    cpdef ColorList rsub(ColorList self, c):
+        """Right-side subtract either a number or a ColorList."""
+        if isinstance(c, Number):
+             rsubtractInto(<float> c, self.colors)
+        else:
+             rsubtractInto((<ColorList> c).colors, self.colors)
+        return self
+
+    # Mutators corresponding to built-in operations.
+    cpdef ColorList abs(self):
+        """Replace each color by its absolute value."""
+        absInto(self.colors)
+        return self
+
+    cpdef ColorList ceil(self):
+        """Replace each color by its integer ceiling."""
+        ceilInto(self.colors)
+        return self
+
+    cpdef ColorList floor(self):
+        """Replace each color by its integer floor."""
+        floorInto(self.colors)
+        return self
+
+    cpdef ColorList invert(self):
+        """Replace each color by its complementary color."""
+        invertColor(self.colors)
+        return self
+
+    cpdef ColorList neg(self):
+        """Negate each color in the list."""
+        negateColor(self.colors)
+        return self
+
+    cpdef ColorList round(self, uint digits=0):
+        """Round each element in each color to the nearest integer."""
+        roundColor(self.colors, digits)
+        return self
+
+    # Other mutators.
+    cpdef ColorList trunc(self):
+        """Truncate each value to an integer."""
+        truncColor(self.colors)
+        return self
 
     cpdef ColorList hsv_to_rgb(self):
         """Convert each color in the list from HSV to RBG."""
         hsvToRgbInto(self.colors, normal)
         return self
+
+    cpdef ColorList max_limit(self, float max):
+        """Limit each color to be not greater than max."""
+        if isinstance(max, Number):
+            minInto(<float> max, self.colors)
+        else:
+            minInto((<ColorList> max).colors, self.colors)
+        return self
+
+    cpdef ColorList min_limit(self, float min):
+        """Limit each color to be not less than min."""
+        if isinstance(min, Number):
+            maxInto(<float> min, self.colors)
+        else:
+            maxInto((<ColorList> min).colors, self.colors)
+        return self
+
+    cpdef ColorList rgb_to_hsv(self):
+        """Convert each color in the list from RBG to HSV."""
+        rgbToHsvInto(self.colors, normal)
+        return self
+
+    cpdef ColorList zero(self):
+        """Set all colors to black."""
+        clearInto(self.colors)
+        return self
+
+    # Methods that do not change this ColorList.
+    cpdef float distance2(ColorList self, ColorList x):
+        """Return the square of the cartestian distance to another ColorList."""
+        return distance2(self.colors, x.colors)
+
+    cpdef float distance(ColorList self, ColorList x):
+        """Return the cartestian distance to another ColorList."""
+        return distance(self.colors, x.colors)
 
     cpdef Color max(self):
         """Return the maximum values for each component"""
@@ -225,102 +325,6 @@ cdef class ColorList:
         """Return the minimum values of each component"""
         cdef ColorS c = minColor(self.colors)
         return Color(c.red, c.green, c.blue)
-
-    cpdef ColorList max_limit(self, float max):
-        """Limit each color to be not greater than max."""
-        if isinstance(max, Number):
-            minInto(<float> max, self.colors)
-        else:
-            minInto(_toColorList(max).colors, self.colors)
-        return self
-
-    cpdef ColorList min_limit(self, float min):
-        """Limit each color to be not less than min."""
-        if isinstance(min, Number):
-            maxInto(<float> min, self.colors)
-        else:
-            maxInto(_toColorList(min).colors, self.colors)
-        return self
-
-    cpdef ColorList rgb_to_hsv(self):
-        """Convert each color in the list from RBG to HSV."""
-        rgbToHsvInto(self.colors, normal)
-        return self
-
-    # Mutating operations.
-    cpdef ColorList add(ColorList self, c):
-        if isinstance(c, Number):
-            addInto(<float> c, self.colors)
-        else:
-            addInto(_toColorList(c).colors, self.colors)
-        return self
-
-    cpdef ColorList div(ColorList self, c):
-        if isinstance(c, Number):
-            divideInto(<float> c, self.colors)
-        else:
-            divideInto(_toColorList(c).colors, self.colors)
-        return self
-
-    cpdef ColorList rdiv(ColorList self, c):
-        if isinstance(c, Number):
-            rdivideInto(<float> c, self.colors)
-        else:
-            rdivideInto(_toColorList(c).colors, self.colors)
-        return self
-
-    cpdef ColorList mul(ColorList self, c):
-        if isinstance(c, Number):
-            multiplyInto(<float> c, self.colors)
-        else:
-            multiplyInto(_toColorList(c).colors, self.colors)
-        return self
-
-    cpdef ColorList pow(ColorList self, float c):
-        """Raise each color to the given power (gamma correction)."""
-        if isinstance(c, Number):
-            powInto(<float> c, self.colors)
-        else:
-            powInto(_toColorList(c).colors, self.colors)
-        return self
-
-    cpdef ColorList rpow(ColorList self, c):
-        """Right-hand (reversed) call of pow()."""
-        if isinstance(c, Number):
-            rpowInto(<float> c, self.colors)
-        else:
-            rpowInto(_toColorList(c).colors, self.colors)
-        return self
-
-    cpdef ColorList sub(ColorList self, c):
-        if isinstance(c, Number):
-             subtractInto(<float> c, self.colors)
-        else:
-             subtractInto(_toColorList(c).colors, self.colors)
-        return self
-
-    cpdef ColorList rsub(ColorList self, c):
-        if isinstance(c, Number):
-             rsubtractInto(<float> c, self.colors)
-        else:
-             rsubtractInto(_toColorList(c).colors, self.colors)
-        return self
-
-    # Other key magic methods.
-    def __len__(self):
-        return self.colors.size()
-
-    def __repr__(self):
-        return 'ColorList(%s)' % str(self)
-
-    def __richcmp__(ColorList self, ColorList other, int rcmp):
-        return cmpToRichcmp(compareContainers(self.colors, other.colors), rcmp)
-
-    def __sizeof__(self):
-        return self.colors.getSizeOf()
-
-    def __str__(self):
-        return toString(self.colors).decode('ascii')
 
     @staticmethod
     def spread(*args):
