@@ -112,9 +112,8 @@ cdef class ColorList{suffix}:
         return self
 
     # List operations.
-    cpdef ColorList{suffix} append(self, object x):
+    cpdef ColorList{suffix} append(self, Color{suffix} c):
         """Append to the list of colors."""
-        cdef Color{suffix} c = _toColor{suffix}(x)
         self.colors.push_back(c.color)
         return self
 
