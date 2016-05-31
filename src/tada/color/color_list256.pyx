@@ -112,9 +112,8 @@ cdef class ColorList256:
         return self
 
     # List operations.
-    cpdef ColorList256 append(self, object x):
+    cpdef ColorList256 append(self, Color256 c):
         """Append to the list of colors."""
-        cdef Color256 c = _toColor256(x)
         self.colors.push_back(c.color)
         return self
 

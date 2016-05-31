@@ -96,8 +96,8 @@ class TestColorList(unittest.TestCase):
 
     def test_append(self):
         cl = ColorList()
-        cl.append('red')
-        cl.append((1, 1, 1))
+        cl.append(Colors.red)
+        cl.append(Color(1, 1, 1))
         self.assertEqual(cl, ColorList(('red', 'white')))
 
     def test_div_pow(self):
