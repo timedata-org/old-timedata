@@ -313,7 +313,7 @@ inline Color minColor(ColorVector const& colors) {
     return accumulate(colors, [](float x, float y) { return std::min(x, y); });
 }
 
-float distance2(ColorVector const& x, ColorVector const& y) {
+inline float distance2(ColorVector const& x, ColorVector const& y) {
     auto d = 0.0f;
     auto xShorter = x.size() < y.size();
     auto& shorter = xShorter ? x : y;
@@ -329,8 +329,40 @@ float distance2(ColorVector const& x, ColorVector const& y) {
     return d;
 }
 
-float distance(ColorVector const& x, ColorVector const& y) {
+inline float distance(ColorVector const& x, ColorVector const& y) {
     return sqrt(distance2(x, y));
+}
+
+inline size_t count(ColorVector const& vector, Color const& color) {
+    return std::count(vector.begin(), vector.end(), color);
+}
+
+inline int indexOf(ColorVector const& vector, Color const& color) {
+    auto i = find(vector.begin(), vector.end(), color);
+    return i != vector.end() ? i - vector.begin() : -1;
+}
+
+inline int fixInsertIndex(ColorVector const& colors, int index) {
+    if (index < 0)
+        index += colors.size();
+    return std::max(0, std::min(static_cast<int>(colors.size()), index));
+}
+
+inline void insertBefore(ColorVector& colors, int index, Color const& color) {
+    colors.insert(colors.begin() + fixInsertIndex(colors, index), color);
+}
+
+inline bool popAt(ColorVector& colors, int index, ColorS& color) {
+    if (not colors.fixKey(index))
+        return false;
+    color = colors[index];
+    colors.erase(colors.begin() + index);
+    return true;
+}
+
+inline void sortColors(ColorVector& colors) {
+    auto comp = [](Color const& x, Color const& y) { return cmp(x, y) < 0.0f; };
+    std::sort(colors.begin(), colors.end(), comp);
 }
 
 } // tada

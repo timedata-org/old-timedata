@@ -33,6 +33,7 @@ void clearInto(ColorVector&);
 void reverse(ColorVector&);
 void appendInto(ColorVector const&, ColorVector&);
 void duplicateInto(size_t count, ColorVector&);
+void insertBefore(ColorVector&, int index, Color const&);
 
 std::string toString(ColorVector const&, Base base = Base::normal);
 
@@ -102,10 +103,15 @@ void hsvToRgbInto(ColorVector&, Base);
 void rgbToHsvInto(ColorVector&, Base);
 void appendInto(ColorVector const&, ColorVector&);
 void duplicateInto(size_t count, ColorVector&);
+size_t count(ColorVector const&, Color const&);
+int indexOf(ColorVector const&, Color const&);
 Color maxColor(ColorVector const&);
 Color minColor(ColorVector const&);
 
 float distance2(ColorVector const&, ColorVector const&);
 float distance(ColorVector const&, ColorVector const&);
+
+bool popAt(ColorVector&, int key, ColorS&);
+void sortColors(ColorVector&);
 
 } // tada

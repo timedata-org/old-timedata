@@ -44,6 +44,8 @@ class TestColorList(unittest.TestCase):
 
     def test_clear(self):
         self.assertEqual(ColorList(('red', 'green')).clear(),
+                         ColorList())
+        self.assertEqual(ColorList(('red', 'green')).zero(),
                          ColorList(('black', 'black')))
 
     def test_duplicate(self):
@@ -137,3 +139,90 @@ class TestColorList(unittest.TestCase):
         self.assertEqual(cl.distance2(['black']), 0)
 
         self.assertEqual(cl.distance2(['white']), 3)
+
+    def test_list_ops(self):
+        cl = ColorList(('red', 'green', 'blue'))
+        cl2 = cl.copy()
+        self.assertEqual(cl, cl2)
+        self.assertIsNot(cl, cl2)
+        self.assertEqual(cl.count(Colors.red), 1)
+        self.assertEqual(cl.count(Colors.yellow), 0)
+        self.assertEqual(cl.index(Colors.blue), 2)
+        with self.assertRaises(ValueError):
+            cl.index(Colors.white)
+
+    def test_insert(self):
+        cl = ColorList(('red', 'green', 'blue'))
+        self.assertEqual(cl.copy().insert(0, Colors.white),
+                         ColorList(('white', 'red', 'green', 'blue')))
+        self.assertEqual(cl.copy().insert(1, Colors.white),
+                         ColorList(('red', 'white', 'green', 'blue')))
+        self.assertEqual(cl.copy().insert(2, Colors.white),
+                         ColorList(('red', 'green', 'white', 'blue')))
+        self.assertEqual(cl.copy().insert(3, Colors.white),
+                         ColorList(('red', 'green', 'blue', 'white')))
+
+        self.assertEqual(cl.copy().insert(-1, Colors.white),
+                         ColorList(('red', 'green', 'white', 'blue')))
+        self.assertEqual(cl.copy().insert(-2, Colors.white),
+                         ColorList(('red', 'white', 'green', 'blue')))
+        self.assertEqual(cl.copy().insert(-3, Colors.white),
+                         ColorList(('white', 'red', 'green', 'blue')))
+
+        self.assertEqual(cl.copy().insert(-4, Colors.white),
+                         ColorList(('white', 'red', 'green', 'blue')))
+        self.assertEqual(cl.copy().insert(-5, Colors.white),
+                         ColorList(('white', 'red', 'green', 'blue')))
+
+    def test_pop(self):
+        cl = ColorList(('red', 'green', 'blue'))
+        cl2 = cl.copy()
+        self.assertEqual(cl2.pop(), Colors.blue)
+        self.assertEqual(cl2, cl[:2])
+
+        cl2 = cl.copy()
+        self.assertEqual(cl2.pop(-1), Colors.blue)
+        self.assertEqual(cl2, cl[:2])
+
+        cl2 = cl.copy()
+        self.assertEqual(cl2.pop(0), Colors.red)
+        self.assertEqual(cl2, cl[1:])
+
+        cl2 = cl.copy()
+        self.assertEqual(cl2.pop(-3), Colors.red)
+        self.assertEqual(cl2, cl[1:])
+
+        cl2 = cl.copy()
+        self.assertEqual(cl2.pop(1), Colors.green)
+        self.assertEqual(cl2, cl[0:3:2])
+
+        cl2 = cl.copy()
+        self.assertEqual(cl2.pop(-2), Colors.green)
+        self.assertEqual(cl2, cl[0:3:2])
+
+        cl2 = cl.copy()
+        self.assertEqual(cl2.pop(2), Colors.blue)
+        self.assertEqual(cl2, cl[:2])
+
+        with self.assertRaises(IndexError):
+            cl.copy().pop(3)
+        with self.assertRaises(IndexError):
+            cl.copy().pop(4)
+        with self.assertRaises(IndexError):
+            cl.copy().pop(-4)
+        with self.assertRaises(IndexError):
+            cl.copy().pop(-5)
+
+    def test_remove(self):
+        cl = ColorList(('green', 'blue', 'red'))
+        cl2 = cl.copy()
+        self.assertEqual(cl2.remove(Colors.red), cl[:-1])
+        cl2 = cl.copy()
+        self.assertEqual(cl2.remove(Colors.green), cl[1:])
+        with self.assertRaises(ValueError):
+            cl.copy().remove(Colors.white)
+
+    def test_sort(self):
+        cl = ColorList(('red', 'green', 'blue'))
+        self.assertEqual(cl.copy().sort(reverse=True), cl)
+        self.assertEqual(cl.copy().sort(), cl[::-1])

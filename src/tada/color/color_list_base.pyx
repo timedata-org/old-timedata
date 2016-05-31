@@ -11,8 +11,13 @@ cdef extern from "<tada/color/colorList_inl.h>" namespace "tada":
         size_t getSizeOf()
         void push_back(ColorS&)
 
-    void duplicateInto(int, ColorVector&)
     void appendInto(ColorVector&, ColorVector& out)
+    void duplicateInto(int, ColorVector&)
+    size_t count(ColorVector&, ColorS&)
+    int indexOf(ColorVector&, ColorS&)
+    void insertBefore(ColorVector&, int, ColorS&)
+    bool popAt(ColorVector&, int key, ColorS&)
+    void sortColors(ColorVector&)
 
     void reverse(ColorVector&)
     void clearInto(ColorVector&)
