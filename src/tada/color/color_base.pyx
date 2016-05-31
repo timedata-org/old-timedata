@@ -29,6 +29,8 @@ cdef extern from "<tada/color/names_inl.h>" namespace "tada":
     uint32_t hexFromColor(ColorS&, Base base);
     float distance2(ColorS&, ColorS&)
     float distance(ColorS&, ColorS&)
+    float cmp(ColorS&, ColorS&)
+
 
 cdef extern from "<tada/color/hsv.h>" namespace "tada":
     ColorS hsvToRgb(ColorS, Base)

@@ -42,6 +42,14 @@ inline void maxInto(ColorS const& in, ColorS& out) {
     out.blue = std::max(in.blue, out.blue);
 }
 
+inline float cmp(ColorS const& x, ColorS const& y) {
+    if (auto d = x.red - y.red)
+        return d;
+    if (auto d = x.green - y.green)
+        return d;
+    return x.blue - y.blue;
+}
+
 inline float distance2(Color const& x, Color const& y) {
     auto dr = x[0] - y[0], dg = x[1] - y[1], db = x[2] - y[2];
     return dr * dr + dg * dg + db * db;
@@ -53,5 +61,7 @@ inline float distance(Color const& x, Color const& y) {
 
 /** Computational base - 0..1 float or 0..255 integer? */
 enum class Base {normal, integer, last = integer};
+
+
 
 } // tada

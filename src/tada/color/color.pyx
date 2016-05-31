@@ -252,16 +252,14 @@ cdef class Color:
 
     def __neg__(Color self):
         return Color(-self.color.red,
-                              -self.color.green,
-                              -self.color.blue)
+                             -self.color.green,
+                             -self.color.blue)
 
     def __repr__(Color self):
         return 'Color(%s)' % str(self)
 
-    def __richcmp__(Color self, Color c, int cmp):
-        return cmpToRichcmp((self.color.red - c.color.red) or
-                            (self.color.green - c.color.green) or
-                            (self.color.blue - c.color.blue), cmp)
+    def __richcmp__(Color self, Color c, int cmpType):
+        return cmpToRichcmp(cmp(self.color, c.color), cmpType)
 
     def __round__(Color self, n):
         return Color(round(self.color.red, n),
@@ -278,6 +276,7 @@ cdef class Color:
 
     @staticmethod
     def names():
+        """Return a list of all the known color names."""
         cdef vector[string] names
         result = []
         names = colorNames()
