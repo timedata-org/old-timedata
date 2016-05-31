@@ -41,6 +41,12 @@ struct Access {
         Sample<Enum, Number> sample;
         Names<Enum, Number> names;
     };
+
+    Access() : names{} {}
+
+    template<typename ...E>
+    Access(E&&...e) : sample{{std::forward<E>(e)...}} {}
+    // https://stackoverflow.com/questions/6893700
 };
 
 }  // tada

@@ -11,18 +11,23 @@ enum class RGBW { red, green, blue, white, last = white };
 enum class HSB { hue, saturation, brightness, last = brightness };
 // enum class Stereo { left, right };
 
+
 using Color = Sample<RGB>;
 using Color256 = Sample<RGB, uint8_t>;
 
-struct ColorS {
+template <>
+struct Model<RGB>::Names {
     float red = 0, green = 0, blue = 0;
 
-    ColorS() = default;
-    ColorS(float r, float g, float b) : red(r), green(g), blue(b) {}
-    ColorS(Color const& c) : red(c[0]), green(c[1]), blue(c[2]) {}
+    Names() = default;
+    Names(float r, float g, float b) : red(r), green(g), blue(b) {}
+    Names(Color const& c) : red(c[0]), green(c[1]), blue(c[2]) {}
 
     operator Color() const { return {{red, green, blue}}; }
 };
+
+using ColorS = Model<RGB>::Names;
+using ColorAccess = Access<RGB>;
 
 inline ColorS rotate(ColorS c, int positions) {
     Color co = c;
