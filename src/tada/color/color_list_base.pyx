@@ -71,26 +71,6 @@ cdef extern from "<tada/color/colorList_inl.h>" namespace "tada":
     void subtractInto(float f, ColorVector& out)
     void subtractInto(ColorVector&, ColorVector& out)
 
-    void addOver(ColorVector& x, ColorVector& y, ColorVector&)
-    void addOver(float x, ColorVector& y, ColorVector&)
-    void addOver(ColorVector& x, float y, ColorVector&)
-
-    void divOver(ColorVector& x, ColorVector& y, ColorVector&)
-    void divOver(float x, ColorVector& y, ColorVector&)
-    void divOver(ColorVector& x, float y, ColorVector&)
-
-    void mulOver(ColorVector& x, ColorVector& y, ColorVector&)
-    void mulOver(float x, ColorVector& y, ColorVector&)
-    void mulOver(ColorVector& x, float y, ColorVector&)
-
-    void powOver(ColorVector& x, ColorVector& y, ColorVector&)
-    void powOver(float x, ColorVector& y, ColorVector&)
-    void powOver(ColorVector& x, float y, ColorVector&)
-
-    void subOver(ColorVector& x, ColorVector& y, ColorVector&)
-    void subOver(float x, ColorVector& y, ColorVector&)
-    void subOver(ColorVector& x, float y, ColorVector&)
-
     float distance(ColorVector&, ColorVector&)
     float distance2(ColorVector&, ColorVector&)
 

@@ -84,21 +84,6 @@ void minInto(ColorVector const& in, ColorVector& out);
 void maxInto(float f, ColorVector& out);
 void maxInto(ColorVector const& in, ColorVector& out);
 
-template <typename X, typename Y>
-void addOver(X const& x, Y const& y, ColorVector& out);
-
-template <typename X, typename Y>
-void divOver(X const& x, Y const& y, ColorVector& out);
-
-template <typename X, typename Y>
-void mulOver(X const& x, Y const& y, ColorVector& out);
-
-template <typename X, typename Y>
-void powOver(X const& x, Y const& y, ColorVector& out);
-
-template <typename X, typename Y>
-void subOver(X const& x, Y const& y, ColorVector& out);
-
 void hsvToRgbInto(ColorVector&, Base);
 void rgbToHsvInto(ColorVector&, Base);
 void appendInto(ColorVector const&, ColorVector&);

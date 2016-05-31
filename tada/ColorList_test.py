@@ -16,7 +16,7 @@ class TestColorList(unittest.TestCase):
 
     def test_arithmetic(self):
         cl = ColorList(('red', 'green', 'blue'))
-        self.assertEqual(cl + cl, cl * 2)
+        self.assertEqual(cl.copy().add(cl), cl.copy().mul(2))
         # self.assertEqual(2 + (2 * cl * 3) + 2 - 2 * cl, 4 + 4 * cl)
 
     def test_slicing(self):
@@ -103,12 +103,12 @@ class TestColorList(unittest.TestCase):
     def test_div_pow(self):
         c = ColorList(('red', 'green', 'blue'))
         c[1] = -c[1]
-        cl = c / 0
+        cl = c.copy().div(0)
         self.assertEqual(cl[0][0], float('inf'))
         self.assertFalse(cl[0][1] == cl[0][1])
         self.assertEqual(cl[1][1], float('-inf'))
 
-        self.assertEqual(0 ** c, ColorList(('cyan', 'magenta', 'yellow')))
+        self.assertEqual(c.rpow(0), ColorList(('cyan', 'magenta', 'yellow')))
 
     def test_max_min(self):
         self.assertEqual(ColorList().max(), Colors.black)
@@ -127,7 +127,7 @@ class TestColorList(unittest.TestCase):
 
     def test_round(self):
         cl = ColorList(((0.15, 0.24, 0.36), (-0.15, -0.24, -0.36)))
-        self.assertEqual(round(cl, 1),
+        self.assertEqual(cl.round(1),
                              ColorList(((0.2, 0.2, 0.4), (-0.2, -0.2, -0.4))))
 
     def test_distance(self):

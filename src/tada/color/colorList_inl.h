@@ -144,11 +144,21 @@ inline void addInto(ColorVector const& in, ColorVector& out) {
     forEachColorComponent(in, out, [](float i, float& o) { o += i; });
 }
 
+inline float safeDiv(float x, float y) {
+    if (y)
+        return x / y;
+    if (x > 0)
+        return std::numeric_limits<float>::infinity();
+    if (x < 0)
+        return -std::numeric_limits<float>::infinity();
+    return std::nanf(nullptr);
+}
+
 inline void divideInto(float f, ColorVector& out) {
-    forEachColorComponent(out, [=](float& x) { x /= (f ? f : 1); });
+    forEachColorComponent(out, [=](float& x) { x = safeDiv(x, f); });
 }
 inline void divideInto(ColorVector const& in, ColorVector& out) {
-    forEachColorComponent(in, out, [](float i, float& o) { o /= i; });
+    forEachColorComponent(in, out, [](float i, float& o) { o = safeDiv(o, i); });
 }
 
 inline void multiplyInto(float f, ColorVector& out) {
@@ -162,14 +172,15 @@ inline void powInto(float f, ColorVector& out) {
     forEachColorComponent(out, [=](float& x) { x = powFixed(x, f); });
 }
 inline void powInto(ColorVector const& in, ColorVector& out) {
-    forEachColorComponent(in, out, [](float i, float& o) { o = powFixed(o, i); });
+    forEachColorComponent(in, out,
+                          [](float i, float& o) { o = powFixed(o, i); });
 }
 
 inline void rdivideInto(float f, ColorVector& out) {
-    forEachColorComponent(out, [=](float& x) { x = f / x; });
+    forEachColorComponent(out, [=](float& x) { x = safeDiv(f, x); });
 }
 inline void rdivideInto(ColorVector const& in, ColorVector& out) {
-    forEachColorComponent(in, out, [](float i, float& o) { o = i / o; });
+    forEachColorComponent(in, out, [](float i, float& o) { o = safeDiv(i, o); });
 }
 
 inline void rpowInto(float f, ColorVector& out) {
@@ -216,50 +227,6 @@ inline size_t getSize(float x) {
 template <typename X>
 size_t getSize(X const& x) {
     return x.size();
-}
-
-inline float getValue(float x, size_t, size_t) {
-    return x;
-}
-
-template <typename X>
-float_t getValue(X const& x, size_t i, size_t j) {
-    return x[i][j];
-}
-
-template <typename X, typename Y, typename Function>
-void doOver(X const& x, Y const& y, ColorVector& out, Function f) {
-    auto size = std::min(getSize(x), getSize(y));
-    out.resize(size);
-    for (size_t i = 0; i < size; ++i) {
-        for (size_t j = 0; j < 3; ++j)
-            out[i][j] = f(getValue(x, i, j), getValue(y, i, j));
-    }
-}
-
-template <typename X, typename Y>
-void addOver(X const& x, Y const& y, ColorVector& out) {
-    doOver(x, y, out, [](float x, float y) { return x + y; });
-}
-
-template <typename X, typename Y>
-void divOver(X const& x, Y const& y, ColorVector& out) {
-    doOver(x, y, out, [](float x, float y) { return x / y; });
-}
-
-template <typename X, typename Y>
-void mulOver(X const& x, Y const& y, ColorVector& out) {
-    doOver(x, y, out, [](float x, float y) { return x * y; });
-}
-
-template <typename X, typename Y>
-void powOver(X const& x, Y const& y, ColorVector& out) {
-    doOver(x, y, out, [](float x, float y) { return powFixed(x, y); });
-}
-
-template <typename X, typename Y>
-void subOver(X const& x, Y const& y, ColorVector& out) {
-    doOver(x, y, out, [](float x, float y) { return x - y; });
 }
 
 inline void hsvToRgbInto(ColorVector& out, Base b) {
