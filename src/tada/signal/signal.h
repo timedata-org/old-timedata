@@ -13,18 +13,34 @@ namespace tada {
 /** Signal models are definined by sized scoped enumerations
 */
 
-template <typename Enum, typename T = float>
+template <typename Enum, typename Number = float>
 struct Model {
-    using Name = Enum;
-    using Number = T;
+    using enum_t = Enum;
+    using number_t = Number;
 
-    static const auto SIZE = enumSize<Name>();
+    /** Names is a struct with float fields with the same name and order
+        as the values in Enum! */
+    struct Names;
 
+    static const auto SIZE = enumSize<Enum>();
     using Sample = std::array<Number, SIZE>;
-    using SampleRef = std::array<Number*, SIZE>;
 };
 
-template <typename Enum, typename T = float>
-using Sample = typename Model<Enum, T>::Sample;
+template <typename Enum, typename Number = float>
+using Sample = typename Model<Enum, Number>::Sample;
+
+template <typename Enum, typename Number = float>
+using Names = typename Model<Enum, Number>::Names;
+
+template <typename Enum, typename Number = float>
+struct Access {
+    static_assert(sizeof(Sample<Enum, Number>) == sizeof(Names<Enum, Number>),
+                  "Names and Sample must be the same size");
+
+    union {
+        Sample<Enum, Number> sample;
+        Names<Enum, Number> names;
+    };
+};
 
 }  // tada
