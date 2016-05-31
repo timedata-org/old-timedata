@@ -76,6 +76,34 @@ cdef class ColorList256:
         c = self.colors[index]
         return Color256(c.red, c.green, c.blue)
 
+    def __add__(ColorList256 self, ColorList256 cl):
+        cdef ColorList256 result = ColorList256()
+        result.colors = self.colors
+        appendInto(cl.colors, result.colors)
+        return result
+
+    def __iadd__(ColorList256 self, ColorList256 cl):
+        appendInto(cl.colors, self.colors)
+        return self
+
+    def __mul__(object self, object other):
+        # A little tricky because ColorList can appear on the left or the
+        # right side of the argument.
+        cdef size_t mult
+        cdef ColorList256 cl = ColorList256()
+        if isinstance(self, ColorList256):
+            cl.colors = (<ColorList256> self).colors
+            mult = <size_t> other
+        else:
+            cl.colors = (<ColorList256> other).colors
+            mult = <size_t> self
+        duplicateInto(mult, cl.colors)
+        return cl
+
+    def __imul__(ColorList256 self, size_t mult):
+        duplicateInto(mult, self.colors)
+        return self
+
     def __len__(self):
         return self.colors.size()
 
@@ -85,10 +113,10 @@ cdef class ColorList256:
     def __richcmp__(ColorList256 self, ColorList256 other, int rcmp):
         return cmpToRichcmp(compareContainers(self.colors, other.colors), rcmp)
 
-    def __sizeof__(self):
+    def __sizeof__(ColorList256 self):
         return self.colors.getSizeOf()
 
-    def __str__(self):
+    def __str__(ColorList256 self):
         return toString(self.colors).decode('ascii')
 
     # List operations.
@@ -111,11 +139,6 @@ cdef class ColorList256:
     cpdef size_t count(self, Color256 color):
         """Return the number of times a color appears in this list."""
         return count(self.colors, color.color)
-
-    cpdef ColorList256 duplicate(self, uint count):
-        """Return a new `ColorList` with `count` copies of this one."""
-        duplicateInto(count, self.colors)
-        return self
 
     cpdef ColorList256 extend(ColorList256 self, object values):
         """Extend the colors from an iterator."""
@@ -317,12 +340,12 @@ cdef class ColorList256:
         return distance(self.colors, x.colors)
 
     cpdef Color256 max(self):
-        """Return the maximum values for each component"""
+        """Return the maximum values of each component."""
         cdef ColorS c = maxColor(self.colors)
         return Color256(c.red, c.green, c.blue)
 
     cpdef Color256 min(self):
-        """Return the minimum values of each component"""
+        """Return the minimum values of each component/"""
         cdef ColorS c = minColor(self.colors)
         return Color256(c.red, c.green, c.blue)
 
