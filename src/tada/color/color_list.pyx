@@ -76,61 +76,40 @@ cdef class ColorList:
         return Color(c.red, c.green, c.blue)
 
     # Unary operators and corresponding mutators.
-    cpdef abs(self):
+    cpdef ColorList abs(self):
         """Replace each color by its absolute value."""
         absInto(self.colors)
         return self
-
-    def __abs__(self):
-        return self.copy().abs()
 
     cpdef ColorList ceil(self):
         """Replace each color by its integer ceiling."""
         ceilInto(self.colors)
         return self
 
-    def __ceil__(self):
-        return self.copy().ceil()
-
     cpdef ColorList floor(self):
         """Replace each color by its integer floor."""
         floorInto(self.colors)
         return self
-
-    def __floor__(self):
-        return self.copy().floor()
 
     cpdef ColorList invert(self):
         """Replace each color by its complementary color."""
         invertColor(self.colors)
         return self
 
-    def __invert__(self):
-        return self.copy().invert()
-
     cpdef ColorList neg(self):
         """Negate each color in the list."""
         negateColor(self.colors)
         return self
-
-    def __neg__(self):
-        return self.copy.neg()
 
     cpdef ColorList round(self, uint digits=0):
         """Round each element in each color to the nearest integer."""
         roundColor(self.colors, digits)
         return self
 
-    def __round__(self, uint digits=0):
-        return self.copy().round(digits)
-
     cpdef ColorList trunc(self):
         """Truncate each value to an integer."""
         truncColor(self.colors)
         return self
-
-    def __trunc__(self):
-        return self.copy().trunc()
 
     # List operations.
     cpdef ColorList append(self, object x):
@@ -264,7 +243,41 @@ cdef class ColorList:
             maxInto(_toColorList(min).colors, self.colors)
         return self
 
-    cpdef ColorList pow(self, float c):
+    cpdef ColorList rgb_to_hsv(self):
+        """Convert each color in the list from RBG to HSV."""
+        rgbToHsvInto(self.colors, normal)
+        return self
+
+    # Mutating operations.
+    cpdef ColorList add(ColorList self, c):
+        if isinstance(c, Number):
+            addInto(<float> c, self.colors)
+        else:
+            addInto(_toColorList(c).colors, self.colors)
+        return self
+
+    cpdef ColorList div(ColorList self, c):
+        if isinstance(c, Number):
+            divideInto(<float> c, self.colors)
+        else:
+            divideInto(_toColorList(c).colors, self.colors)
+        return self
+
+    cpdef ColorList rdiv(ColorList self, c):
+        if isinstance(c, Number):
+            rdivideInto(<float> c, self.colors)
+        else:
+            rdivideInto(_toColorList(c).colors, self.colors)
+        return self
+
+    cpdef ColorList mul(ColorList self, c):
+        if isinstance(c, Number):
+            multiplyInto(<float> c, self.colors)
+        else:
+            multiplyInto(_toColorList(c).colors, self.colors)
+        return self
+
+    cpdef ColorList pow(ColorList self, float c):
         """Raise each color to the given power (gamma correction)."""
         if isinstance(c, Number):
             powInto(<float> c, self.colors)
@@ -272,12 +285,7 @@ cdef class ColorList:
             powInto(_toColorList(c).colors, self.colors)
         return self
 
-    cpdef ColorList rgb_to_hsv(self):
-        """Convert each color in the list from RBG to HSV."""
-        rgbToHsvInto(self.colors, normal)
-        return self
-
-    cpdef ColorList rpow(self, c):
+    cpdef ColorList rpow(ColorList self, c):
         """Right-hand (reversed) call of pow()."""
         if isinstance(c, Number):
             rpowInto(<float> c, self.colors)
@@ -285,118 +293,19 @@ cdef class ColorList:
             rpowInto(_toColorList(c).colors, self.colors)
         return self
 
-    # Mutating operations.
-    def __iadd__(self, c):
-        if isinstance(c, Number):
-            addInto(<float> c, self.colors)
-        else:
-            addInto(_toColorList(c).colors, self.colors)
-        return self
-
-    def __imul__(self, c):
-        if isinstance(c, Number):
-            multiplyInto(<float> c, self.colors)
-        else:
-            multiplyInto(_toColorList(c).colors, self.colors)
-        return self
-
-    def __ipow__(self, c):
-        if isinstance(c, Number):
-             powInto(<float> c, self.colors)
-        else:
-             powInto(_toColorList(c).colors, self.colors)
-        return self
-
-    def __isub__(self, c):
+    cpdef ColorList sub(ColorList self, c):
         if isinstance(c, Number):
              subtractInto(<float> c, self.colors)
         else:
              subtractInto(_toColorList(c).colors, self.colors)
         return self
 
-    def __itruediv__(self, c):
+    cpdef ColorList rsub(ColorList self, c):
         if isinstance(c, Number):
-            divideInto(<float> c, self.colors)
+             rsubtractInto(<float> c, self.colors)
         else:
-            divideInto(_toColorList(c).colors, self.colors)
+             rsubtractInto(_toColorList(c).colors, self.colors)
         return self
-
-    # Magic methods that create new ColorLists.
-    def __add__(self, c):
-        cdef ColorList cl = ColorList()
-
-        if isinstance(c, Number):
-            addOver((<ColorList> self).colors, <float> c, cl.colors)
-        elif isinstance(self, ColorList):
-            addOver((<ColorList> self).colors,
-                    _toColorList(c).colors, cl.colors)
-        elif isinstance(self, Number):
-            addOver(<float> self, _toColorList(c).colors, cl.colors)
-        else:
-            addOver(ColorList(self).colors,
-                    (<ColorList> c).colors, cl.colors)
-        return cl
-
-    def __mul__(self, c):
-        cdef ColorList cl = ColorList()
-
-        if isinstance(c, Number):
-            mulOver((<ColorList> self).colors, <float> c, cl.colors)
-        elif isinstance(self, ColorList):
-            mulOver((<ColorList> self).colors,
-                    _toColorList(c).colors, cl.colors)
-        elif isinstance(self, Number):
-            mulOver(<float> self, _toColorList(c).colors, cl.colors)
-        else:
-            mulOver(ColorList(self).colors,
-                    (<ColorList> c).colors, cl.colors)
-        return cl
-
-    def __pow__(self, c, mod):
-        cdef ColorList cl = ColorList()
-        if mod:
-            raise ValueError('Can\'t handle three operator pow')
-
-        if isinstance(c, Number):
-            powOver((<ColorList> self).colors, <float> c, cl.colors)
-        elif isinstance(self, ColorList):
-            powOver((<ColorList> self).colors,
-                    _toColorList(c).colors, cl.colors)
-        elif isinstance(self, Number):
-            powOver(<float> self, _toColorList(c).colors, cl.colors)
-        else:
-            powOver(ColorList(self).colors,
-                    (<ColorList> c).colors, cl.colors)
-        return cl
-
-    def __sub__(self, c):
-        cdef ColorList cl = ColorList()
-
-        if isinstance(c, Number):
-            subOver((<ColorList> self).colors, <float> c, cl.colors)
-        elif isinstance(self, ColorList):
-            subOver((<ColorList> self).colors,
-                    _toColorList(c).colors, cl.colors)
-        elif isinstance(self, Number):
-            subOver(<float> self, _toColorList(c).colors, cl.colors)
-        else:
-            subOver(ColorList(self).colors,
-                    (<ColorList> c).colors, cl.colors)
-        return cl
-
-    def __truediv__(self, c):
-        cdef ColorList cl = ColorList()
-        if isinstance(c, Number):
-            divOver((<ColorList> self).colors, <float> c, cl.colors)
-        elif isinstance(self, ColorList):
-            divOver((<ColorList> self).colors,
-                    _toColorList(c).colors, cl.colors)
-        elif isinstance(self, Number):
-            divOver(<float> self, _toColorList(c).colors, cl.colors)
-        else:
-            divOver(ColorList(self).colors,
-                    (<ColorList> c).colors, cl.colors)
-        return cl
 
     # Other key magic methods.
     def __len__(self):
