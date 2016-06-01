@@ -44,8 +44,11 @@ cdef class ColorList256:
         cdef ColorList256 cl
         if isinstance(key, slice):
             begin, end, step = key.indices(self.colors.size())
-            if sliceIntoVector(_toColorList256(x).colors, self.colors,
-                               begin, end, step):
+            if isinstance(x, ColorList256):
+                cl = <ColorList256> x
+            else:
+                cl = ColorList256(x)
+            if sliceIntoVector(cl.colors, self.colors, begin, end, step):
                 return
             raise ValueError('attempt to assign sequence of one size '
                              'to extended slice of another size')
@@ -120,7 +123,7 @@ cdef class ColorList256:
         return toString(self.colors).decode('ascii')
 
     # List operations.
-    cpdef ColorList256 append(self, Color256 c):
+    cpdef ColorList256 append(ColorList256 self, Color256 c):
         """Append to the list of colors."""
         self.colors.push_back(c.color)
         return self
@@ -372,10 +375,3 @@ cdef class ColorList256:
 
         spread_append(None)
         return cl
-
-
-cdef ColorList256 _toColorList256(object value):
-    if isinstance(value, ColorList256):
-        return <ColorList256> value
-    else:
-        return ColorList256(value)

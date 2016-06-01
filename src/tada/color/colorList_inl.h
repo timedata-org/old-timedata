@@ -28,7 +28,8 @@ inline std::string toString(ColorVector const& colors, Base base) {
         if (result.size() > 1)
             result += ", ";
         auto s = colorToString(c, base);
-        auto digit = isdigit(s[0]) ? 1 : 0;
+        auto isTriple = isdigit(s[0]) or s[0] == '-';
+        auto digit =  isTriple ? 1 : 0;
         result += "'("[digit];
         result += s;
         result += "')"[digit];
