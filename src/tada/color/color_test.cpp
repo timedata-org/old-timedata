@@ -3,7 +3,6 @@
 #include <tada/color/color.h>
 
 namespace tada {
-namespace color {
 
 TEST_CASE("Color", "access") {
     using Color = Access<RGB>;
@@ -37,5 +36,4 @@ TEST_CASE("Color", "access") {
     }
 }
 
-} // color
 } // tada

@@ -1,0 +1,114 @@
+-*- mode: compilation; default-directory: "/development/tada/" -*-
+Compilation started at Wed Jun  1 12:38:09
+
+make && build/tests
+mkdir -p build build/obj build/.deps
+c++ -o build/tests src/tests.cpp -O0 -g -std=c++11 -pthread -DDEBUG -DCATCH_CONFIG_COLOUR_NONE -Isrc -Isrc/jsoncpp/include -lm -lstdc++ -Wall -Wextra -Wno-strict-aliasing -Wpedantic -MMD -MP -MF -MMD -MP -MF build/.deps/tests.d
+In file included from src/tests.cpp:8:
+src/tada/color/color_test.cpp:7:1: error: redefinition of 'autoRegistrar7'
+TEST_CASE("Color", "access") {
+^
+src/catch/catch.hpp:10441:30: note: expanded from macro 'TEST_CASE'
+    #define TEST_CASE( ... ) INTERNAL_CATCH_TESTCASE( __VA_ARGS__ )
+                             ^
+src/catch/catch.hpp:710:9: note: expanded from macro 'INTERNAL_CATCH_TESTCASE'
+        INTERNAL_CATCH_TESTCASE2( INTERNAL_CATCH_UNIQUE_NAME( ____C_A_T...
+        ^
+src/catch/catch.hpp:707:35: note: expanded from macro
+      'INTERNAL_CATCH_TESTCASE2'
+        namespace{ Catch::AutoReg INTERNAL_CATCH_UNIQUE_NAME( autoRegis...
+                                  ^
+note: (skipping 1 expansions in backtrace; use -fmacro-backtrace-limit=0 to see all)
+src/catch/catch.hpp:64:55: note: expanded from macro
+      'INTERNAL_CATCH_UNIQUE_NAME_LINE'
+#define INTERNAL_CATCH_UNIQUE_NAME_LINE( name, line ) INTERNAL_CATCH_UN...
+                                                      ^
+src/catch/catch.hpp:63:56: note: expanded from macro
+      'INTERNAL_CATCH_UNIQUE_NAME_LINE2'
+#define INTERNAL_CATCH_UNIQUE_NAME_LINE2( name, line ) name##line
+                                                       ^
+<scratch space>:85:1: note: expanded from here
+autoRegistrar7
+^
+src/tada/base/join_test.cpp:7:1: note: previous definition is here
+TEST_CASE("join", "All") {
+^
+src/catch/catch.hpp:10441:30: note: expanded from macro 'TEST_CASE'
+    #define TEST_CASE( ... ) INTERNAL_CATCH_TESTCASE( __VA_ARGS__ )
+                             ^
+src/catch/catch.hpp:710:9: note: expanded from macro 'INTERNAL_CATCH_TESTCASE'
+        INTERNAL_CATCH_TESTCASE2( INTERNAL_CATCH_UNIQUE_NAME( ____C_A_T...
+        ^
+src/catch/catch.hpp:707:35: note: expanded from macro
+      'INTERNAL_CATCH_TESTCASE2'
+        namespace{ Catch::AutoReg INTERNAL_CATCH_UNIQUE_NAME( autoRegis...
+                                  ^
+note: (skipping 1 expansions in backtrace; use -fmacro-backtrace-limit=0 to see all)
+src/catch/catch.hpp:64:55: note: expanded from macro
+      'INTERNAL_CATCH_UNIQUE_NAME_LINE'
+#define INTERNAL_CATCH_UNIQUE_NAME_LINE( name, line ) INTERNAL_CATCH_UN...
+                                                      ^
+src/catch/catch.hpp:63:56: note: expanded from macro
+      'INTERNAL_CATCH_UNIQUE_NAME_LINE2'
+#define INTERNAL_CATCH_UNIQUE_NAME_LINE2( name, line ) name##line
+                                                       ^
+<scratch space>:317:1: note: expanded from here
+autoRegistrar7
+^
+In file included from src/tests.cpp:8:
+src/tada/color/color_test.cpp:7:1: error: redefinition of
+      '____C_A_T_C_H____T_E_S_T____7'
+TEST_CASE("Color", "access") {
+^
+src/catch/catch.hpp:10441:30: note: expanded from macro 'TEST_CASE'
+    #define TEST_CASE( ... ) INTERNAL_CATCH_TESTCASE( __VA_ARGS__ )
+                             ^
+src/catch/catch.hpp:710:35: note: expanded from macro 'INTERNAL_CATCH_TESTCASE'
+        INTERNAL_CATCH_TESTCASE2( INTERNAL_CATCH_UNIQUE_NAME( ____C_A_T...
+                                  ^
+src/catch/catch.hpp:68:46: note: expanded from macro
+      'INTERNAL_CATCH_UNIQUE_NAME'
+#  define INTERNAL_CATCH_UNIQUE_NAME( name ) INTERNAL_CATCH_UNIQUE_NAME...
+                                             ^
+note: (skipping 1 expansions in backtrace; use -fmacro-backtrace-limit=0 to see all)
+src/catch/catch.hpp:63:56: note: expanded from macro
+      'INTERNAL_CATCH_UNIQUE_NAME_LINE2'
+#define INTERNAL_CATCH_UNIQUE_NAME_LINE2( name, line ) name##line
+                                                       ^
+<scratch space>:83:1: note: expanded from here
+____C_A_T_C_H____T_E_S_T____7
+^
+src/catch/catch.hpp:708:21: note: expanded from macro
+      'INTERNAL_CATCH_TESTCASE2'
+        static void TestName()
+                    ^
+src/tada/base/join_test.cpp:7:1: note: previous definition is here
+TEST_CASE("join", "All") {
+^
+src/catch/catch.hpp:10441:30: note: expanded from macro 'TEST_CASE'
+    #define TEST_CASE( ... ) INTERNAL_CATCH_TESTCASE( __VA_ARGS__ )
+                             ^
+src/catch/catch.hpp:710:35: note: expanded from macro 'INTERNAL_CATCH_TESTCASE'
+        INTERNAL_CATCH_TESTCASE2( INTERNAL_CATCH_UNIQUE_NAME( ____C_A_T...
+                                  ^
+src/catch/catch.hpp:68:46: note: expanded from macro
+      'INTERNAL_CATCH_UNIQUE_NAME'
+#  define INTERNAL_CATCH_UNIQUE_NAME( name ) INTERNAL_CATCH_UNIQUE_NAME...
+                                             ^
+note: (skipping 1 expansions in backtrace; use -fmacro-backtrace-limit=0 to see all)
+src/catch/catch.hpp:63:56: note: expanded from macro
+      'INTERNAL_CATCH_UNIQUE_NAME_LINE2'
+#define INTERNAL_CATCH_UNIQUE_NAME_LINE2( name, line ) name##line
+                                                       ^
+<scratch space>:315:1: note: expanded from here
+____C_A_T_C_H____T_E_S_T____7
+^
+src/catch/catch.hpp:708:21: note: expanded from macro
+      'INTERNAL_CATCH_TESTCASE2'
+        static void TestName()
+                    ^
+2 errors generated.
+make[1]: *** [build/tests] Error 1
+make: *** [binaries] Error 2
+
+Compilation exited abnormally with code 2 at Wed Jun  1 12:38:11
