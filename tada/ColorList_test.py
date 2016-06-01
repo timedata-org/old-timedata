@@ -245,3 +245,8 @@ class TestColorList(unittest.TestCase):
         cl = ColorList(('red', 'green', 'blue'))
         self.assertEqual(cl.copy().sort(reverse=True), cl)
         self.assertEqual(cl.copy().sort(), cl[::-1])
+
+    def test_str(self):
+        cl = ColorList(((-0.2, -0.2, -0.4), (0.2, 0.2, 0.4)))
+        self.assertEqual(str(cl),
+                         '((-0.2, -0.2, -0.4), (0.2, 0.2, 0.4))')

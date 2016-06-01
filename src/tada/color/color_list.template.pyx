@@ -44,8 +44,11 @@ cdef class ColorList{suffix}:
         cdef ColorList{suffix} cl
         if isinstance(key, slice):
             begin, end, step = key.indices(self.colors.size())
-            if sliceIntoVector(_toColorList{suffix}(x).colors, self.colors,
-                               begin, end, step):
+            if isinstance(x, ColorList{suffix}):
+                cl = <ColorList{suffix}> x
+            else:
+                cl = ColorList{suffix}(x)
+            if sliceIntoVector(cl.colors, self.colors, begin, end, step):
                 return
             raise ValueError('attempt to assign sequence of one size '
                              'to extended slice of another size')
@@ -120,7 +123,7 @@ cdef class ColorList{suffix}:
         return toString(self.colors).decode('ascii')
 
     # List operations.
-    cpdef ColorList{suffix} append(self, Color{suffix} c):
+    cpdef ColorList{suffix} append(ColorList{suffix} self, Color{suffix} c):
         """Append to the list of colors."""
         self.colors.push_back(c.color)
         return self
@@ -372,10 +375,3 @@ cdef class ColorList{suffix}:
 
         spread_append(None)
         return cl
-
-
-cdef ColorList{suffix} _toColorList{suffix}(object value):
-    if isinstance(value, ColorList{suffix}):
-        return <ColorList{suffix}> value
-    else:
-        return ColorList{suffix}(value)
