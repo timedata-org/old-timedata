@@ -25,6 +25,13 @@ class TestColorList(unittest.TestCase):
         self.assertEqual(cl, ColorList(['red', 'green', 'blue']))
         self.assertEqual(cl[1:2], ColorList(['green']))
 
+        self.assertEqual(cl[::-1], cl.copy().reverse())
+        self.assertEqual(cl[2:0:-1], ColorList(('blue', 'green')))
+        self.assertEqual(cl[10000000:-5000500:-1],
+                             ColorList(('blue', 'green', 'red')))
+        self.assertEqual(cl[0:2:-1], ColorList())
+        self.assertEqual(cl[-5000:2000:-1], ColorList())
+
     def test_rotate(self):
         cl = ColorList(('red', 'green', 'blue'))
         cl.rotate(1)
