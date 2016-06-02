@@ -22,7 +22,7 @@ SYMBOLS ?= -g
 #
 CODE_GENERATION = $(OPTIMIZE) $(SYMBOLS) -std=$(STDLIB) -pthread
 DEPENDENCIES = -MMD -MP -MF
-INCLUDES = -Isrc -Isrc/jsoncpp/include
+INCLUDES = -Isrc
 LIBRARIES = -lm -lstdc++
 WARNINGS = -Wall -Wextra -Wno-strict-aliasing -Wpedantic
 

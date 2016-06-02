@@ -7,7 +7,4 @@
 #include <tada/base/math_test.cpp>
 #include <tada/color/color_test.cpp>
 #include <tada/color/names_test.cpp>
-
-TEST_CASE("hello", "world") {
-    REQUIRE(0 == 0);
-}
+#include <tada/signal/signal_test.cpp>
