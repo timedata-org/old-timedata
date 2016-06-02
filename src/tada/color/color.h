@@ -33,7 +33,7 @@ using RGBModelEightBit = Model<RGB, EightBit<uint8_t>>;
 
 using Color = RGBModel::Samples;
 using Color256 = RGBModelEightBit::Samples;
-using ColorS = EnumNames<RGB>::Fields<float>;
+using ColorS = RGBModel::Fields;
 
 inline ColorS rotate(ColorS c, int positions) {
     Color co = c;

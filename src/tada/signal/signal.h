@@ -37,8 +37,6 @@ using NumberOf = typename Range::Number;
 template <typename Range>
 NumberOf<Range> unscale(NumberOf<Range> x) {
     return (x - Range::min) / Range::range;
-    /* TODO: only works for floating types! write/repurpose something for
-       integral types. */
 }
 
 /** Scale a number with a range of [0, 1] to a ranged number.
@@ -46,9 +44,17 @@ NumberOf<Range> unscale(NumberOf<Range> x) {
 template <typename Range>
 NumberOf<Range> scale(NumberOf<Range> y) {
     return Range::min + y * Range::range;
-    // as above about integers.
 }
+/* TODO: above two functions only work for floating types! write/repurpose
+   something for integral types. */
 
+/** A Ranged number looks like an underlying numeric type, but with a generally
+    attached Range.
+
+    "Generic" means that there is no cost at run-time to carrying this
+    information around - the downside is that we have to instantiate a new
+    template for each range we want, but since the total number is very small,
+    this is almost free. */
 template <typename Range>
 struct Ranged {
     using Number = NumberOf<Range>;
@@ -71,9 +77,7 @@ struct Ranged {
 /** EnumNames has just a single dependent class, Fields, a struct containing
     members named in order after the values in the enumerated type.
 
-    For an example, see struct EnumNames<RGB>::Fields in colors/colors.h.
-*/
-
+    For an example, see struct EnumNames<RGB>::Fields in colors/colors.h. */
 template <typename Enum>
 struct EnumNames;
 
@@ -87,8 +91,7 @@ struct EnumNames;
 
     These two data structures correspond to each other exactly (there are
     unit tests to prove it) so you can access data from the Model either by
-    index or by name with no penalty either way.
-*/
+    index or by name with no penalty either way. */
 template <typename Enum, typename Range>
 struct Model {
     // Imported types.
