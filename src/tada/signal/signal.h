@@ -13,70 +13,50 @@ namespace tada {
 /** Signal models are definined by sized scoped enumerations
 */
 
-template <typename Enum, typename Number = float>
-struct Model {
-    using enum_t = Enum;
-    using number_t = Number;
-
-    /** Names is a struct with float fields with the same name and order
-        as the values in Enum! */
-    struct Names;
-
-    static const auto SIZE = enumSize<Enum>();
-    using Sample = std::array<Number, SIZE>;
-};
-
-template <typename Enum, typename Number = float>
-using Sample = typename Model<Enum, Number>::Sample;
-
-template <typename Enum, typename Number = float>
-using Names = typename Model<Enum, Number>::Names;
-
-template <typename Number = float>
+template <typename T = float>
 struct Normal {
-    using number_t = Number;
+    using Number = T;
 
     static constexpr auto min = Number(0);
     static constexpr auto range = Number(1);
 };
 
-template <typename Number = float>
+template <typename T = float>
 struct EightBit {
-    using number_t = Number;
+    using Number = T;
 
     static constexpr auto min = Number(0);
     static constexpr auto range = Number(255);
 };
 
 template <typename Range>
-using Number = typename Range::number_t;
-
-/* TODO: only works for floating types! write/repurpose something for
-   integral types. */
+using NumberOf = typename Range::Number;
 
 /** Unscale a ranged number to a range of [0, 1].  Numbers out of band get
     scaled proportionately. */
 template <typename Range>
-Number<Range> unscale(Number<Range> x) {
+NumberOf<Range> unscale(NumberOf<Range> x) {
     return (x - Range::min) / Range::range;
+    /* TODO: only works for floating types! write/repurpose something for
+       integral types. */
 }
 
 /** Scale a number with a range of [0, 1] to a ranged number.
     Numbers out of band get scaled proportionately. */
 template <typename Range>
-Number<Range> scale(Number<Range> y) {
+NumberOf<Range> scale(NumberOf<Range> y) {
     return Range::min + y * Range::range;
+    // as above about integers.
 }
 
 template <typename Range>
 struct Ranged {
-    using Number = typename Range::number_t;
+    using Number = NumberOf<Range>;
 
     Number number;
 
     Ranged() = default;
     Ranged(Ranged const&) = default;
-
     Ranged(Number n) : number(n) {}
 
     template <typename Range2>
@@ -88,58 +68,51 @@ struct Ranged {
     operator Number&() { return number; }
 };
 
-namespace v2 {
+/** EnumNames has just a single dependent class, Fields, a struct containing
+    members named in order after the values in the enumerated type.
 
-/** FieldStruct is a struct with float fields with the same name and order as
-    the values in Enum. */
-template <typename Enum, typename Number>
-struct FieldStruct;
+    For an example, see struct EnumNames<RGB>::Fields in colors/colors.h.
+*/
 
+template <typename Enum>
+struct EnumNames;
+
+/** A Model encapsulates everything about a time arts data stream except the
+    encoding into memory (interleaved, parallel, other...)
+
+    A Model is a union - two data structures in the same block of memory.
+
+    One of them represents the data by name - red, green, blue.  The other
+    represents the data by index - 0, 1, 2.
+
+    These two data structures correspond to each other exactly (there are
+    unit tests to prove it) so you can access data from the Model either by
+    index or by name with no penalty either way.
+*/
 template <typename Enum, typename Range>
 struct Model {
-    using Number = typename Range::number_t;
-    using Fields = FieldStruct<Enum, Number>;
-    using Sample = std::array<Number, enumSize<Enum>()>;
+    // Imported types.
+    using Number = typename Range::Number;
+    using Fields = typename EnumNames<Enum>::template Fields<Number>;
+    using Samples = std::array<Number, enumSize<Enum>()>;
+
     using enum_t = Enum;
-    using number_t = Number;
     using range_t = Range;
 
-
-    struct Access {
-        static_assert(sizeof(Sample) == sizeof(Names<Enum>),
-                      "Names and Sample must be the same size");
-
-        union {
-            Sample sample;
-            Fields fields;
-        };
-
-        Access() : fields{} {}
-        Access(Sample const& s) : sample{s} {}
-        Access(Fields const& f) : fields{f} {}
-
-        template<typename ...E>
-        Access(E&&...e) : sample{{std::forward<E>(e)...}} {}
-        // https://stackoverflow.com/questions/6893700
-    };
-};
-
-}  // v2
-
-template <typename Enum, typename Number = float>
-struct Access {
-    static_assert(sizeof(Sample<Enum, Number>) == sizeof(Names<Enum, Number>),
-                  "Names and Sample must be the same size");
+    static_assert(sizeof(Samples) == sizeof(Fields),
+                  "Names and Samples must be the same size");
 
     union {
-        Sample<Enum, Number> sample;
-        Names<Enum, Number> names;
+        Samples sample;
+        Fields field;
     };
 
-    Access() : names{} {}
+    Model() : field{} {}
+    Model(Samples const& s) : sample{s} {}
+    Model(Fields const& f) : field{f} {}
 
     template<typename ...E>
-    Access(E&&...e) : sample{{std::forward<E>(e)...}} {}
+    Model(E&&...e) : sample{{std::forward<E>(e)...}} {}
     // https://stackoverflow.com/questions/6893700
 };
 

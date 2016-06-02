@@ -70,7 +70,8 @@ struct ColorTraits {
     static std::string toString(Color c) {
         auto addNegatives = [&](std::string const& value) {
             auto s = value;
-            auto negative = Sample<RGB, bool>{{c[0] < 0, c[1] < 0, c[2] < 0}};
+            using BoolSamples = Model<RGB, Normal<bool>>::Samples;
+            auto negative = BoolSamples{{c[0] < 0, c[1] < 0, c[2] < 0}};
             if (negative[0] or negative[1] or negative[2]) {
                 for (auto n : negative)
                     s += "+-"[n];

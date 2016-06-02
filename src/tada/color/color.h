@@ -11,23 +11,29 @@ enum class RGBW { red, green, blue, white, last = white };
 enum class HSB { hue, saturation, brightness, last = brightness };
 // enum class Stereo { left, right };
 
-
-using Color = Sample<RGB>;
-using Color256 = Sample<RGB, uint8_t>;
-
 template <>
-struct Model<RGB>::Names {
-    float red = 0, green = 0, blue = 0;
+struct EnumNames<RGB> {
+    template <typename Number>
+    struct Fields {
+        Number red = 0, green = 0, blue = 0;
 
-    Names() = default;
-    Names(float r, float g, float b) : red(r), green(g), blue(b) {}
-    Names(Color const& c) : red(c[0]), green(c[1]), blue(c[2]) {}
+        Fields() = default;
+        Fields(Number r, Number g, Number b) : red(r), green(g), blue(b) {}
 
-    operator Color() const { return {{red, green, blue}}; }
+        // HACK: to be removed soon!
+        using Color = std::array<Number, 3>;
+
+        Fields(Color const& c) : red(c[0]), green(c[1]), blue(c[2]) {}
+        operator Color() const { return {{red, green, blue}}; }
+    };
 };
 
-using ColorS = Model<RGB>::Names;
-using ColorAccess = Access<RGB>;
+using RGBModel = Model<RGB, Normal<float>>;
+using RGBModelEightBit = Model<RGB, EightBit<uint8_t>>;
+
+using Color = RGBModel::Samples;
+using Color256 = RGBModelEightBit::Samples;
+using ColorS = EnumNames<RGB>::Fields<float>;
 
 inline ColorS rotate(ColorS c, int positions) {
     Color co = c;
