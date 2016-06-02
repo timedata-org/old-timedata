@@ -88,61 +88,43 @@ struct Ranged {
     operator Number&() { return number; }
 };
 
-#if 0
-namespace three {
-// New version with three templates as per the document.
+namespace v2 {
+
+/** FieldStruct is a struct with float fields with the same name and order as
+    the values in Enum. */
+template <typename Enum, typename Number>
+struct FieldStruct;
 
 template <typename Enum, typename Range>
 struct Model {
-    static const auto SIZE = enumSize<Enum>();
-
+    using Number = typename Range::number_t;
+    using Fields = FieldStruct<Enum, Number>;
+    using Sample = std::array<Number, enumSize<Enum>()>;
     using enum_t = Enum;
+    using number_t = Number;
     using range_t = Range;
 
-    using number_t = typename Range::number_t;
 
-    /** One sample of time data. */
-    using Sample = std::array<number_t, SIZE>;
+    struct Access {
+        static_assert(sizeof(Sample) == sizeof(Names<Enum>),
+                      "Names and Sample must be the same size");
 
-    /** Names is a struct with float fields with the same name and order
-        as the values in Enum! */
-    struct Names;
+        union {
+            Sample sample;
+            Fields fields;
+        };
 
-    /** Access is a union of a Name and a Sample. */
-    struct Access;
-};
+        Access() : fields{} {}
+        Access(Sample const& s) : sample{s} {}
+        Access(Fields const& f) : fields{f} {}
 
-
-template <typename RangeFrom, typename RangeTo>
-RangeTo convert(RangeFrom x) {
-
-
-    /* TODO: only works for floating types! write/repurpose something for
-       integral types. */
-}
-
-
-template <typename Enum, typename Range>
-struct Access {
-    static_assert(sizeof(Sample<Enum, Number>) == sizeof(Names<Enum, Number>),
-                  "Names and Sample must be the same size");
-
-    union {
-        Sample<Enum, Number> sample;
-        Names<Enum, Number> names;
+        template<typename ...E>
+        Access(E&&...e) : sample{{std::forward<E>(e)...}} {}
+        // https://stackoverflow.com/questions/6893700
     };
-
-    Access() : names{} {}
-
-    template<typename ...E>
-    Access(E&&...e) : sample{{std::forward<E>(e)...}} {}
-    // https://stackoverflow.com/questions/6893700
 };
 
-
-}  // three
-
-#endif
+}  // v2
 
 template <typename Enum, typename Number = float>
 struct Access {
