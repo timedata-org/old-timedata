@@ -9,30 +9,30 @@ namespace tada {
 enum class RGB { red, green, blue, last = blue };
 enum class RGBW { red, green, blue, white, last = white };
 enum class HSB { hue, saturation, brightness, last = brightness };
+
+/** Computational base - 0..1 float or 0..255 integer?
+    TODO: needs to be replaced by a Range generic type!
+*/
+enum class Base {normal, integer, last = integer};
+
 // enum class Stereo { left, right };
 
-template <>
-struct EnumNames<RGB> {
-    template <typename Number>
-    struct Fields {
-        Number red = 0, green = 0, blue = 0;
+using Color = std::array<float, 3>;  // HACK!!
 
-        Fields() = default;
-        Fields(Number r, Number g, Number b) : red(r), green(g), blue(b) {}
+template <typename Number>
+struct EnumFields<RGB, Number> {
+    Number red = 0, green = 0, blue = 0;
 
-        // HACK: to be removed soon!
-        using Color = std::array<Number, 3>;
+    EnumFields() = default;
+    EnumFields(Number r, Number g, Number b) : red(r), green(g), blue(b) {}
 
-        Fields(Color const& c) : red(c[0]), green(c[1]), blue(c[2]) {}
-        operator Color() const { return {{red, green, blue}}; }
-    };
+    EnumFields(Color const& c) : red(c[0]), green(c[1]), blue(c[2]) {}
+    operator Color() const { return {{red, green, blue}}; }
 };
 
 using RGBModel = Model<RGB, Normal<float>>;
 using RGBModelEightBit = Model<RGB, EightBit<uint8_t>>;
 
-using Color = RGBModel::Samples;
-using Color256 = RGBModelEightBit::Samples;
 using ColorS = RGBModel::Fields;
 
 inline ColorS rotate(ColorS c, int positions) {
@@ -69,10 +69,5 @@ inline float distance2(Color const& x, Color const& y) {
 inline float distance(Color const& x, Color const& y) {
     return sqrt(distance2(x, y));
 }
-
-/** Computational base - 0..1 float or 0..255 integer? */
-enum class Base {normal, integer, last = integer};
-
-
 
 } // tada

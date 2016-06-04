@@ -42,28 +42,11 @@ void forEach(Functor f) {
         f(static_cast<Enum>(i));
 }
 
-/** An array indexed by a sized enum class. */
-template <typename T,
-          typename Enum,
-          typename = enable_if_t<std::is_enum<Enum>::value>>
-struct EnumArray : std::array<T, enumSize<Enum>> {
-    using Parent = std::array<T, enumSize<Enum>>;
+/** EnumFields is a struct containing members named in order after the values in
+    the enumerated type.
 
-    using reference = typename Parent::reference;
-    reference operator[] (Enum i) {
-        return operator[](static_cast<uint8_t>(i));
-    }
-    reference at(Enum i) {
-        return at(static_cast<uint8_t>(i));
-    }
-
-    using const_reference = typename Parent::const_reference;
-    const_reference operator[] (Enum i) const {
-        return operator[](static_cast<uint8_t>(i));
-    }
-    const_reference at(Enum i) const {
-        return at(static_cast<uint8_t>(i));
-    }
-};
+    For an example, see struct EnumFields<RGB> in colors/colors.h. */
+template <typename Names, typename Number>
+struct EnumFields;
 
 }  // namespace tada

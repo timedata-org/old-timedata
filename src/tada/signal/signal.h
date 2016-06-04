@@ -1,122 +1,72 @@
 #pragma once
 
 #include <array>
-#include <string>
-#include <type_traits>
-#include <vector>
+#include <utility>
 
-#include <tada/base/math.h>
 #include <tada/base/enum.h>
+#include <tada/signal/range.h>
 
 namespace tada {
 
-/** Signal models are definined by sized scoped enumerations
-*/
-
-template <typename T = float>
-struct Normal {
-    using Number = T;
-
-    static constexpr auto min = Number(0);
-    static constexpr auto range = Number(1);
-};
-
-template <typename T = float>
-struct EightBit {
-    using Number = T;
-
-    static constexpr auto min = Number(0);
-    static constexpr auto range = Number(255);
-};
-
-template <typename Range>
-using NumberOf = typename Range::Number;
-
-/** Unscale a ranged number to a range of [0, 1].  Numbers out of band get
-    scaled proportionately. */
-template <typename Range>
-NumberOf<Range> unscale(NumberOf<Range> x) {
-    return (x - Range::min) / Range::range;
-}
-
-/** Scale a number with a range of [0, 1] to a ranged number.
-    Numbers out of band get scaled proportionately. */
-template <typename Range>
-NumberOf<Range> scale(NumberOf<Range> y) {
-    return Range::min + y * Range::range;
-}
-/* TODO: above two functions only work for floating types! write/repurpose
-   something for integral types. */
-
-/** A Ranged number looks like an underlying numeric type, but with a generally
-    attached Range.
-
-    "Generic" means that there is no cost at run-time to carrying this
-    information around - the downside is that we have to instantiate a new
-    template for each range we want, but since the total number is very small,
-    this is almost free. */
-template <typename Range>
-struct Ranged {
-    using Number = NumberOf<Range>;
-
-    Number number;
-
-    Ranged() = default;
-    Ranged(Ranged const&) = default;
-    Ranged(Number n) : number(n) {}
-
-    template <typename Range2>
-    operator Ranged<Range2>() const {
-        return scale<Range2>(unscale<Range>(number));
-    }
-
-    operator Number() const { return number; }
-    operator Number&() { return number; }
-};
-
-/** EnumNames has just a single dependent class, Fields, a struct containing
-    members named in order after the values in the enumerated type.
-
-    For an example, see struct EnumNames<RGB>::Fields in colors/colors.h. */
-template <typename Enum>
-struct EnumNames;
-
-/** A Model encapsulates everything about a time arts data stream except the
+/** A Model encapsulates everything about a time arts signal except the
     encoding into memory (interleaved, parallel, other...)
 
-    A Model is a union - two data structures in the same block of memory.
+    A Model is a union of two data structures named Fields and Samples
+    in the same block of memory.
 
-    One of them represents the data by name - red, green, blue.  The other
-    represents the data by index - 0, 1, 2.
+    Fields accesses the data by name - e.g. red, green, blue, while Samples
+    accesses it by index - 0, 1, 2.
 
     These two data structures correspond to each other exactly (there are
     unit tests to prove it) so you can access data from the Model either by
-    index or by name with no penalty either way. */
-template <typename Enum, typename Range>
-struct Model {
-    // Imported types.
-    using Number = typename Range::Number;
-    using Fields = typename EnumNames<Enum>::template Fields<Number>;
-    using Samples = std::array<Number, enumSize<Enum>()>;
+    index or by name with no penalty either way.
 
-    using enum_t = Enum;
+    Fields comes from EnumFields, so a specialization of EnumFields for your
+    Name and Number needs to be available to use a Model.
+*/
+template <typename Names, typename Range>
+struct Model {
+    static const auto SIZE = enumSize<Names>();
+
+    using Number = typename Range::Number;
+    using Fields = EnumFields<Names, Number>;
+    using Array = std::array<Number, SIZE>;
+
+    using names_t = Names;
     using range_t = Range;
 
-    static_assert(sizeof(Samples) == sizeof(Fields),
-                  "Names and Samples must be the same size");
+    static_assert(sizeof(Array) == sizeof(Fields),
+                  "Names and Array must be the same size");
 
-    union {
-        Samples sample;
-        Fields field;
+    struct Sample {
+        union {
+            Fields fields;  // Access sample by name.
+            Array array;    // Access sample by index.
+        };
+
+        Sample() : fields{} {}
+        Sample(Fields const& f) : fields{f} {}
+        Sample(Array const& s) : array{s} {}
+
+        template<typename ...E>
+        Sample(E&&...e) : array{{std::forward<E>(e)...}} {}
+
+        operator Array() const { return array; }
+        operator Array&() { return array; }
+
+        operator Fields() const { return fields; }
+        operator Fields&() { return fields; }
+
+        Number at(size_t i) const { return array.at[i]; }
+        Number& at(size_t i) { return array.at[i]; }
+        Number operator[](size_t i) const { return array[i]; }
+        Number& operator[](size_t i) { return array[i]; }
+
+        using model_t = Model;
+        using value_type = Number;
     };
 
-    Model() : field{} {}
-    Model(Samples const& s) : sample{s} {}
-    Model(Fields const& f) : field{f} {}
-
-    template<typename ...E>
-    Model(E&&...e) : sample{{std::forward<E>(e)...}} {}
-    // https://stackoverflow.com/questions/6893700
+    using Vector = std::vector<Sample>;
 };
 
 }  // tada

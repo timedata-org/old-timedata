@@ -112,8 +112,8 @@ cdef class Color{suffix}:
     cpdef normalized(Color{suffix} self):
         """Return a color normalized into this color range."""
         return Color{suffix}(normalize(self.color.red, {ratio}),
-                              normalize(self.color.green, {ratio}),
-                              normalize(self.color.blue, {ratio}))
+                             normalize(self.color.green, {ratio}),
+                             normalize(self.color.blue, {ratio}))
 
     cpdef rotated(Color{suffix} self, int positions):
         """Return a color with the components rotated."""
@@ -271,8 +271,8 @@ cdef class Color{suffix}:
 
     def __trunc__(Color{suffix} self):
         return Color{suffix}(math.trunc(self.color.red),
-                              math.trunc(self.color.green),
-                              math.trunc(self.color.blue))
+                             math.trunc(self.color.green),
+                             math.trunc(self.color.blue))
 
     @staticmethod
     def names():

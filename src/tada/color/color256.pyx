@@ -112,8 +112,8 @@ cdef class Color256:
     cpdef normalized(Color256 self):
         """Return a color normalized into this color range."""
         return Color256(normalize(self.color.red, 255.0),
-                              normalize(self.color.green, 255.0),
-                              normalize(self.color.blue, 255.0))
+                             normalize(self.color.green, 255.0),
+                             normalize(self.color.blue, 255.0))
 
     cpdef rotated(Color256 self, int positions):
         """Return a color with the components rotated."""
@@ -271,8 +271,8 @@ cdef class Color256:
 
     def __trunc__(Color256 self):
         return Color256(math.trunc(self.color.red),
-                              math.trunc(self.color.green),
-                              math.trunc(self.color.blue))
+                             math.trunc(self.color.green),
+                             math.trunc(self.color.blue))
 
     @staticmethod
     def names():

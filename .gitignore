@@ -6,3 +6,4 @@ TAGS
 __pycache__
 *.pyc
 tada/tada.so
+src/tada/color/color.gen.pyx
