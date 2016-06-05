@@ -6,13 +6,14 @@ findall = re.compile(r'\{([^}]+)\}').findall
 
 # List the template variables in a section of code.
 
-def template_variables(lines):
+def template_variables(files):
     result = set()
-    for i in lines:
-        for j in findall(i):
-            j.startswith('{') or result.add(j)
+    for f in files:
+        for i in open(f):
+            for j in findall(i):
+                j.startswith('{') or result.add(j)
     return result
 
 if __name__ == '__main__':
-    for t in sorted(template_variables(open(sys.argv[1]))):
+    for t in sorted(template_variables(sys.argv[1:])):
         print(t)

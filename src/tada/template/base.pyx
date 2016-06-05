@@ -1,12 +1,12 @@
+### declare
+from numbers import Number
+
+cdef extern from "{include_file}" namespace "{namespace}":
+
+### define
 cdef class {class_py}:
     """{class_documentation}"""
     cdef {class_cpp} {member}
-
-    def __repr__({class_py} self):
-        return '{class_py}(%s)' % str(self)
-
-    def __str__({class_py} self):
-        return {to_string}(self.{member}).decode('ascii')
 
     @property
     def begin({class_py} self):
