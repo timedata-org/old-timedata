@@ -1,10 +1,10 @@
 ### comment
-"""A method that returns a C++ function directly."""
+"""A method that returns the value of a C++ function directly."""
 
 ### declare
-    {return_type} {function_cpp}({class_cpp}&)
+    {return_type} {name_cpp}({class_cpp}&)
 
 ### define
-    cpdef {return_type} {function_py}({class_py} self):
+    cpdef {return_type} {name_py}({class_py} self):
         """{documentation}"""
-        return {function_cpp}(self.cdata)
+       return {name_cpp}(self.cdata)

@@ -1,11 +1,16 @@
 begin = 0
-class_cpp = 'ColorA'
+class_cpp = 'ColorC'
 class_py = 'Color'
+compare = 'compareColor'
 from_string = 'stringToColor'
-include_file = ''
+to_string = 'colorToString'
+include_file = 'include_file'
 properties = 'red', 'green', 'blue'
 namespace = 'tada'
+number_type = 'float'
 range = 1.0
+size = 3
+documentation = ''  # FIX!
 
 class_documentation = """A Color is an immutable RGB floating point color.
 

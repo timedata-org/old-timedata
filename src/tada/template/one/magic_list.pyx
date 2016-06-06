@@ -17,17 +17,17 @@
 """
 
 ### declare
-    {class_cpp} {function}({number_type}&, {class_cpp}&)
-    {class_cpp} {function}({class_cpp}&, {number_type}&)
+    {class_cpp} {name}({number_type}&, {class_cpp}&)
+    {class_cpp} {name}({class_cpp}&, {number_type}&)
 
 ### define
-    def __{function}__(object self, object other):
+    def __{name}__(object self, object other):
         """{documentation}"""
         cdef {class_py} result = {class_py}()
 
         if isinstance(self, {class_py}):
-            result.cdata = {function}((<{class_py}> self).cdata, other)
+            result.cdata = {name}((<{class_py}> self).cdata, other)
         else:
-            result.cdata = {function}(self, (<{class_py}> other).cdata)
+            result.cdata = {name}(self, (<{class_py}> other).cdata)
 
         return result

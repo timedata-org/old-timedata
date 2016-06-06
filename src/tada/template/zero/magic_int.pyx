@@ -2,9 +2,9 @@
 """A magic method that returns a C++ int directly."""
 
 ### declare
-    int {function}({class_cpp}&)
+    int {name}({class_cpp}&)
 
 ### define
-    def __{function}__({class_py} self):
+    def __{name}__({class_py} self):
         """{documentation}"""
-        return {function}(self.cdata)
+        return {name}(self.cdata)

@@ -1,9 +1,9 @@
 ### declare
-    {class_cpp} {function}({class_py}&, {number_type})
+    {class_cpp} {name}({class_py}&, {number_type})
 
 ### define
-    cpdef {function}({class_py} self, {number_type} x):
+    cpdef {name}({class_py} self, {number_type} x):
         """{documentation}"""
         cdef {class_py} result = {class_py}()
-        result.cdata = {function}(self.cdata, x})
+        result.cdata = {name}(self.cdata, x})
         return result

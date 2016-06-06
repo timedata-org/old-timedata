@@ -1,8 +1,8 @@
 ### declare
-    vector[string] {function_cpp}()
+    vector[string] {name_cpp}()
 
 ### define
     @staticmethod
-    def {function_py}():
+    def {name_py}():
         """{documentation}"""
-        return [i.decode('ascii') for i in {function_cpp}()]
+        return [i.decode('ascii') for i in {name_cpp}()]

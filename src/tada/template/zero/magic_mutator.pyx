@@ -4,16 +4,16 @@
    corresponding mutator of the same name."""
 
 ### declare
-    {class_cpp} {function}({class_py}&)
+    {class_cpp} {name}({class_py}&)
 
 ### define
-    {define} __{function}__({class_py} self):
+    def __{name}__({class_py} self):
         """{documentation}"""
         cdef {class_py} s = {class_py}()
-        s.cdata = {function}(self.cdata)
+        s.cdata = {name}(self.cdata)
         return s
 
-    {define} {function}({class_py} self):
+    cpdef {class_py} {name}({class_py} self):
         """{documentation}"""
-        self.cdata = {function}(self.cdata)
+        self.cdata = {name}(self.cdata)
         return self

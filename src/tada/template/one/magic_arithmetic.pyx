@@ -3,10 +3,10 @@
    as the magic_list functions do."""
 
 ### declare
-    {class_cpp} {function}({class_cpp}&, {class_cpp}&)
+    {class_cpp} {name}({class_cpp}&, {class_cpp}&)
 
 ### define
-    def __{function}__(object self, object other):
+    def __{name}__(object self, object other):
         """{documentation}"""
         cdef {class_py} s, o
         cdef {class_py} result = {class_py}()
@@ -21,5 +21,5 @@
         else:
             o = {class_py}(other)
 
-        result.cdata = {function}(s.cdata, o.cdata)
+        result.cdata = {name}(s.cdata, o.cdata)
         return result

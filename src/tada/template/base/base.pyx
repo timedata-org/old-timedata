@@ -6,7 +6,7 @@ import cython
 from numbers import Number
 
 cdef extern from "{include_file}" namespace "{namespace}":
-    string {to_string}({class_cpp)
+    string {to_string}({class_cpp})
     bool cmpToRichcmp(float cmp, int richcmp)
 
 ### define
@@ -35,5 +35,5 @@ cdef class {class_py}:
     def __str__({class_py} self):
         return {to_string}(self.cdata).decode('ascii')
 
-    def __richcmp__(ColorList{suffix} self, ColorList{suffix} other, int rcmp):
+    def __richcmp__({class_py} self, {class_py} other, int rcmp):
         return cmpToRichcmp({compare}(self.cdata, other.cdata), rcmp)
