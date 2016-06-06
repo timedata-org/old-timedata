@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 import datetime, os, sys
+from . import split_parts, new_templates
 
 MAKE_PYX = """\
 /development/make_pyx/make_pyx.py \
@@ -12,7 +13,7 @@ MAKE_PYX = """\
 
 FILES = 'src/tada/color/color', 'src/tada/color/color_list'
 
-if __name__ == '__main__':
+def write_old_templates():
     script = sys.argv[0]
     timestamp = datetime.datetime.utcnow().isoformat()
     for suffix, base, ratio in (('', 'normal', '1.0'),
@@ -22,7 +23,16 @@ if __name__ == '__main__':
             template = open(template_file).read()
             open(f + suffix + '.pyx', 'w').write(template.format(**locals()))
 
+def write_make_pyx_templates():
+    os.chdir('src')
+    os.system(MAKE_PYX)
 
-    if True:
-       os.chdir('src')
-       os.system(MAKE_PYX)
+def write_new_templates():
+    parts = split_parts.split_globs('tada/template/*.pyx')
+    new_templates.execute(parts)
+
+
+if __name__ == '__main__':
+    write_old_templates()
+    write_make_pyx_templates()
+    write_new_templates()

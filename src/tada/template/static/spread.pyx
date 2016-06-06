@@ -13,7 +13,7 @@
             nonlocal last_number
             if last_number:
                 e = {element_py}(item)
-                {spread_append}(cl.{member}, last_number - 1, e{element_member})
+                {spread_append}(cl.cdata, last_number - 1, e{element_member})
                 last_number = 0
 
         for a in args:

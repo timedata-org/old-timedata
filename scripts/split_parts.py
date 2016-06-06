@@ -35,8 +35,8 @@ def split(lines, f):
 def split_files(files):
     return {pathlib.Path(f).stem: split(open(str(f)), f) for f in files}
 
-def pretty_split(files):
-    for name, d in sorted(split_files(files).items()):
+def pretty_split(parts):
+    for name, d in sorted(parts.items()):
         for action, value in sorted(d.items()):
             print('%s: %s:' % (action, name))
             print(value)
@@ -48,5 +48,8 @@ def combine_globs(args):
         files.extend(p.glob(a))
     return files
 
+def split_globs(args):
+    return split_files(combine_globs(args))
+
 if __name__ == '__main__':
-    pretty_split(combine_globs(sys.argv[1:]))
+    pretty_split(split_globs(sys.argv[1:]))

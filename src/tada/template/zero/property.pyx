@@ -1,4 +1,4 @@
 ### define
     @property
     def {propname)(self):
-        return self.{member}[{index}]
+        return self.cdata[{index}]

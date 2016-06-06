@@ -5,5 +5,5 @@
     {define} {function_py}({class_py} self):
         """{documentation}"""
         cdef {class_py} s = {class_py}()
-        s.{member} = {function_cpp}(self.{member})
-        return
+        s.cdata = {function_cpp}(self.cdata)
+        return s

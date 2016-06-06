@@ -9,4 +9,4 @@
             s = <{class_py}> x
         else:
             s = {class_py}(x)
-        return {function_cpp}(self.{member}, s.{member})
+        return {function_cpp}(self.cdata, s.cdata)
