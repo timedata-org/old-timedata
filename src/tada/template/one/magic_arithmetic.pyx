@@ -3,23 +3,12 @@
    as the magic_list functions do."""
 
 ### declare
-    {class_cpp} {name}({class_cpp}&, {class_cpp}&)
+    $class_cpp $name($class_cpp&, $class_cpp&)
 
 ### define
-    def __{name}__(object self, object other):
-        """{documentation}"""
-        cdef {class_py} s, o
-        cdef {class_py} result = {class_py}()
-
-        if isinstance(self, {class_py}):
-            s = self
-        else:
-            s = {class_py}(self)
-
-        if isinstance(other, {class_py}):
-            o = other
-        else:
-            o = {class_py}(other)
-
-        result.cdata = {name}(s.cdata, o.cdata)
+    def __${name}__(object x, object y):
+        cdef $class_py result = $class_py()
+        result.cdata = $name(
+            (<$class_py> x if isinstance(x, $class_py) else $class_py(x)).cdata,
+            (<$class_py> y if isinstance(x, $class_py) else $class_py(y)).cdata)
         return result

@@ -1,4 +1,4 @@
-import os, sys
+import os, string, sys
 
 from collections import ChainMap
 
@@ -11,20 +11,16 @@ SAMPLE_DEFAULTS = dict(
     base=('base', 'fixed_length'),
     zero=dict(
         magic=('abs', 'ceil', 'floor', 'invert', 'neg', 'round', 'trunc'),
-        magic_int=('hash',),
-        ),
+        magic_int=('hash',)),
 
     one=dict(
         magic_arithmetic=('add', 'truediv', 'mod', 'mul', 'sub'),
         return_class=('limit_min', 'limit_max'),
         return_number=('distance', 'distance2'),
-        return_class_from_int=('rotate',),
-        ),
+        return_class_from_int=('rotate',)),
         # no divmod!
 
-    two=dict(
-        return_class=('pow',)
-        ),
+    two=dict(return_class=('pow',)),
 )
 
 COLOR_DEFAULTS = dict(
@@ -34,18 +30,17 @@ COLOR_DEFAULTS = dict(
         **SAMPLE_DEFAULTS
     )
 
-
-def write(root, config, **kwds):
-    results = []
-    sections = 'declare', 'define'
+def write(root, config, *, output_file=None, **kwds):
+    declare, define = [], []
     def add(*names, **kwds):
         filename = os.path.join(root, *names) + '.pyx'
-        parts = split_parts.split(open(filename), filename)
         try:
-            results.append([parts[n].format(**kwds) for n in sections])
+            sub = lambda s: string.Template(s).substitute(**kwds)
+            parts = split_parts.split(open(filename), filename)
+            declare.append(sub(parts['declare']))
+            define.append(sub(parts['define']) + '\n')
         except Exception as e:
             raise e.__class__('%s in file %s' % (''.join(e.args), filename))
-
     for b in config['base']:
         add('base', b, **kwds)
 
@@ -59,11 +54,15 @@ def write(root, config, **kwds):
                     m = dict(name=m)
                 add(method_type, template, **ChainMap(m, kwds))
 
-    return '\n'.join('\n'.join(i) for i in zip(*results))
-
+    with open(output_file, 'w') as f:
+        f.writelines(d for d in declare if d.strip())
+        f.writelines('\n')
+        f.writelines(define)
+    return output_file
 
 def execute(root):
-    return write(root, COLOR_DEFAULTS, **Color.__dict__)
+    f = write(root, COLOR_DEFAULTS, **Color.__dict__)
+    print('wrote file', f)
 
 if __name__ == '__main__':
-    print(execute(sys.argv[1]))
+    execute(sys.argv[1])

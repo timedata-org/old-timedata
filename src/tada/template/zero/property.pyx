@@ -1,4 +1,4 @@
 ### define
     @property
-    def {name)(self):
-        return self.cdata[{index}]
+    def $name(self):
+        return self.cdata[$index]

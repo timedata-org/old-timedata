@@ -4,13 +4,15 @@ class_py = 'Color'
 compare = 'compareColor'
 from_string = 'stringToColor'
 to_string = 'colorToString'
-include_file = 'include_file'
+include_file = 'tada/color/color_inl.h'
+output_file = 'tada/color/color.gen.pyx'
 properties = 'red', 'green', 'blue'
 namespace = 'tada'
 number_type = 'float'
 range = 1.0
 size = 3
 documentation = ''  # FIX!
+normalize_index = 'normalizeIndex'
 
 class_documentation = """A Color is an immutable RGB floating point color.
 
