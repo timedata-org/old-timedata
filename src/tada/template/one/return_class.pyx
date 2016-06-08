@@ -1,5 +1,5 @@
 ### declare
-    $class_cpp $name($class_py&, $class_py&)
+    $class_cpp $name($class_cpp&, $class_cpp&)
 
 ### define
     cpdef $name($class_py self, object x):

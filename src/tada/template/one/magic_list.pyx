@@ -17,8 +17,8 @@
 """
 
 ### declare
-    $class_cpp $name($number_type&, $class_cpp&)
-    $class_cpp $name($class_cpp&, $number_type&)
+    $class_cpp magic_$name($number_type&, $class_cpp&)
+    $class_cpp magic_$name($class_cpp&, $number_type&)
 
 ### define
     def __${name}__(object self, object other):
@@ -26,8 +26,8 @@
         cdef $class_py result = $class_py()
 
         if isinstance(self, $class_py):
-            result.cdata = $name((<$class_py> self).cdata, other)
+            result.cdata = magic_$name((<$class_py> self).cdata, other)
         else:
-            result.cdata = $name(self, (<$class_py> other).cdata)
+            result.cdata = magic_$name(self, (<$class_py> other).cdata)
 
         return result

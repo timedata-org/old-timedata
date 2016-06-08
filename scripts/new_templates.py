@@ -20,7 +20,7 @@ SAMPLE_DEFAULTS = dict(
         return_class_from_int=('rotate',)),
         # no divmod!
 
-    two=dict(return_class=('pow',)),
+    two=dict(magic=('pow',)),
 )
 
 COLOR_DEFAULTS = dict(
@@ -37,14 +37,16 @@ def write(root, config, *, output_file=None, **kwds):
         try:
             sub = lambda s: string.Template(s).substitute(**kwds)
             parts = split_parts.split(open(filename), filename)
-            declare.append(sub(parts['declare']))
-            define.append(sub(parts['define']) + '\n')
+            ('declare' in parts) and declare.append(sub(parts['declare']))
+            ('define' in parts) and define.append(sub(parts['define']))
         except Exception as e:
-            raise e.__class__('%s in file %s' % (''.join(e.args), filename))
+            s = ' '.join(str(i) for i in e.args)
+            raise e.__class__('%s in file %s' % (s, filename))
+
     for b in config['base']:
         add('base', b, **kwds)
 
-    for i, name in enumerate(config.get('properties', ())):
+    for i, name in enumerate(kwds.get('properties', ())):
         add('zero', 'property', name=name, index=i, **kwds)
 
     for method_type in 'zero', 'one', 'two', 'static':
@@ -54,10 +56,12 @@ def write(root, config, *, output_file=None, **kwds):
                     m = dict(name=m)
                 add(method_type, template, **ChainMap(m, kwds))
 
+    while define and not define[-1].strip():
+        define.pop()
+
     with open(output_file, 'w') as f:
         f.writelines(d for d in declare if d.strip())
-        f.writelines('\n')
-        f.writelines(define)
+        f.write('\n' + '\n'.join(define))
     return output_file
 
 def execute(root):
@@ -65,4 +69,7 @@ def execute(root):
     print('wrote file', f)
 
 if __name__ == '__main__':
-    execute(sys.argv[1])
+    if not not True:
+        execute(sys.argv[1])
+    else:
+        print(split_parts.split(open(sys.argv[1]), sys.argv[1]))

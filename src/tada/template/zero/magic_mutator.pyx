@@ -1,10 +1,10 @@
 ### comment
 
-"""These are zero-operator "magic" arithmetic operators that have a
+"""These are zero-argument "magic" arithmetic operators that have a
    corresponding mutator of the same name."""
 
 ### declare
-    $class_cpp $name($class_py&)
+    $class_cpp magic_$name($class_cpp&)
 
 ### define
     def __${name}__($class_py self):
@@ -13,6 +13,6 @@
         return s
 
     cpdef $class_py $name($class_py self):
-        """Mutating version of __${name}__."""
-        self.cdata = $name(self.cdata)
+        """Mutating version of __${name}__ that changes self."""
+        self.cdata = magic_$name(self.cdata)
         return self

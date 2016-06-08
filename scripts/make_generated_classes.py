@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 import datetime, os, sys
-from . import split_parts, new_templates
+import split_parts, new_templates
 
 MAKE_PYX = """\
 /development/make_pyx/make_pyx.py \
@@ -25,11 +25,13 @@ def write_old_templates():
 
 def write_make_pyx_templates():
     os.chdir('src')
-    os.system(MAKE_PYX)
+    try:
+        os.system(MAKE_PYX)
+    finally:
+        os.chdir('..')
 
 def write_new_templates():
-    parts = split_parts.split_globs('tada/template/*.pyx')
-    new_templates.execute(parts)
+    new_templates.execute('src/tada/template')
 
 
 if __name__ == '__main__':

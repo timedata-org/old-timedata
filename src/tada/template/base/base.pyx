@@ -5,8 +5,8 @@
 import cython
 from numbers import Number
 
-cdef extern from "$include_file" namespace "$namespace":
-    string $to_string($class_cpp)
+cdef extern from "<$include_file>" namespace "$namespace":
+    string $to_string($class_cpp&)
     bool cmpToRichcmp(float cmp, int richcmp)
 
 ### define

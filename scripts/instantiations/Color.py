@@ -1,13 +1,13 @@
 begin = 0
-class_cpp = 'ColorC'
+class_cpp = 'ColorCpp'
 class_py = 'Color'
 compare = 'compareColor'
 from_string = 'stringToColor'
 to_string = 'colorToString'
-include_file = 'tada/color/color_inl.h'
-output_file = 'tada/color/color.gen.pyx'
+include_file = 'tada/color/color_test.h'
+output_file = 'src/tada/color/color.gen.pyx'
 properties = 'red', 'green', 'blue'
-namespace = 'tada'
+namespace = 'tada::test'
 number_type = 'float'
 range = 1.0
 size = 3
