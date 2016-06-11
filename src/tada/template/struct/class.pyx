@@ -1,3 +1,4 @@
+### define
 cdef extern from "<$header_file>" namespace "$namespace":
 $struct_definition
 

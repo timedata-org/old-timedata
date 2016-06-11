@@ -1,3 +1,4 @@
+### define
     property $prop:
         def __get__(self):
             return self.$member_name.$prop

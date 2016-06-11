@@ -38,71 +38,29 @@ def make(header_file, template):
     property_list = []
 
     def format(s, kwds):
-        return string.Template(s).substitute(**kwds)
+        x, y = template.format('tada', 'template', 'struct', s, **kwds)
+        return x + '\n' + y if False else x + y
 
     for s in header.structs:
         for prop in s.variables:
             if prop in variables_to_enum_type:
                 Type = variables_to_enum_type[prop]
                 TYPE = Type.upper()
-                tmpl = ENUM_PROP_TEMPLATE
+                tmpl = 'enum_prop'
             else:
-                tmpl = PROP_TEMPLATE
+                tmpl = 'prop'
             typename, variables = s.typename, s.variables
             property_list.append(format(tmpl, locals()))
 
     property_list = '\n'.join(property_list)
     timestamp = datetime.datetime.utcnow().isoformat()
-    mt = format(MAIN_TEMPLATE, locals())
+    mt = enum_class
     if property_list:
-        mt += format(CLASS_TEMPLATE, locals())
+        if mt:
+            mt += '\n'
+        mt += format('class', locals())
     return mt
 
-
-MAIN_TEMPLATE = '$enum_class'
-
-CLASS_TEMPLATE = """\
-
-cdef extern from "<$header_file>" namespace "$namespace":
-$struct_definition
-
-cdef class _$classname(_Wrapper):
-    cdef $classname $member_name;
-$enum_pyx
-    def __cinit__(self):
-        clearStruct(self.$member_name)
-
-    def clear(self):
-        clearStruct(self.$member_name)
-
-    def __str__(self):
-        return "($str_format)" % (
-            $variable_names)
-
-$property_list"""
-
-PROP_TEMPLATE = """\
-    property $prop:
-        def __get__(self):
-            return self.$member_name.$prop
-        def __set__(self, $typename x):
-            self.$member_name.$prop = x
-"""
-
-ENUM_PROP_TEMPLATE = """\
-    property $prop:
-        def __get__(self):
-            return self.${TYPE}_NAMES[<int> self.$member_name.$prop]
-        def __set__(self, object x):
-            cdef uint8_t i
-            if isinstance(x, str):
-                i = self.${TYPE}_NAMES.index(x)
-            else:
-                i = <uint8_t> x
-                if i >= len(self.${TYPE}_NAMES):
-                    raise ValueError("Can't understand value " + str(i))
-            self.$member_name.$prop = <$Type>(i)
-"""
 
 def read_structs(files, template):
     for f in files:
