@@ -2,9 +2,9 @@
 """A method that returns the value of a C++ function directly."""
 
 ### declare
-    $value_type $name_cpp($class_cpp&)
+    $return_type $name($class_cpp&)
 
 ### define
-    cpdef $value_type $name_py($class_py self):
+    cpdef $return_type $name($class_py self):
         """$documentation"""
-       return $name_cpp(self.cdata)
+        return $name(self.cdata)

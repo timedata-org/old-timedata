@@ -16,8 +16,25 @@ fix_key = 'fixKey'
 
 methods = dict(
     static=dict(
-        strings=(dict(name_cpp='colorNames', name_py='names'),),
-        )
+        strings=(
+            dict(name_cpp='colorNames',
+                 name_py='names',
+                 documentation='Return a list all names for colors'),
+            ),
+        from_cpp=(
+            dict(name='from_hex',
+                 argument_type='uint32_t',
+                 documentation='Create a color from a hex integer'),
+            ),
+        ),
+
+    zero=dict(
+        return_cpp=(
+            dict(name='to_hex',
+                 return_type='uint32_t',
+                 documentation='Return the nearest hex for this color'),
+            ),
+        ),
     )
 
 class_documentation = """A Color is an immutable RGB floating point color.

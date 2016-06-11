@@ -17,6 +17,15 @@ SAMPLE_DEFAULTS = dict(
 )
 
 
+def merge_context(x, y):
+    """Merge two dictionaries down exactly two levels."""
+    result = copy.copy(x)
+    for k, v in y.items():
+        r_value = result.setdefault(k, {})
+        for k2, v2 in v.items():
+            r_value[k2] = r_value.get(k2, ()) + v2
+    return result
+
 def write(root, config, *, output_file=None, **kwds):
     declare, define = [], []
 
@@ -48,8 +57,7 @@ def write(root, config, *, output_file=None, **kwds):
 
 def execute(root):
     for c in (instantiations.Color,):
-        context = copy.copy(SAMPLE_DEFAULTS)
-        context.update(**c.methods)
+        context = merge_context(SAMPLE_DEFAULTS, c.methods)
         f = write(root, context, **c.__dict__)
         print('wrote file', f)
 

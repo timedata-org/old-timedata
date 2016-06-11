@@ -2,7 +2,7 @@ import unittest
 
 from tada import Color, Color256, Colors, Colors256, NewColor
 
-# Color = NewColor
+Color = NewColor
 
 class TestColor(unittest.TestCase):
     def test_white(self):
@@ -117,7 +117,8 @@ class TestColor(unittest.TestCase):
         for k, v in Colors.__dict__.items():
             if not (k.startswith('_') or k.startswith('grey') or
                     k.startswith('gray')):
-                self.assertEqual(Color.from_hex(v.to_hex()), v)
+                h_value = v.to_hex()
+                self.assertEqual(Color.from_hex(h_value), Color(v))
 
     def test_distance(self):
         self.assertEqual(Colors.red.distance2(Colors.green), 2)
@@ -205,7 +206,6 @@ class TestColor256(unittest.TestCase):
         self.assertEqual((Colors.red * 2).min_limit(0), Colors.red * 2)
         self.assertEqual((Colors.red * 2).max_limit(1), Colors.red)
         self.assertEqual(tuple((Colors.red * 2).min_limit(1)), (2, 1, 1))
-        if True: return
         self.assertEqual(Color(1, 2, 3).limit_max(Color(3, 2, 1)),
                          Color(1, 2, 1))
         self.assertEqual(Color(1, 2, 3).limit_min(Color(3, 2, 1)),
