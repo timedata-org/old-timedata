@@ -2,6 +2,7 @@
 
 import datetime, os, sys
 import split_parts, new_templates
+from read_structs import read_structs
 
 MAKE_PYX = """\
 /development/make_pyx/make_pyx.py \
@@ -10,6 +11,10 @@ MAKE_PYX = """\
     tada/signal/render3.h\
     tada/signal/stripe.h\
 """
+
+STRUCTS = 'fade', 'combiner', 'render3', 'stripe'
+
+STRUCT_FILES = ['tada/signal/%s.h' % i for i in STRUCTS]
 
 FILES = 'src/tada/color/color', 'src/tada/color/color_list'
 
@@ -26,7 +31,7 @@ def write_old_templates():
 def write_make_pyx_templates():
     os.chdir('src')
     try:
-        os.system(MAKE_PYX)
+        read_structs.read_structs(STRUCT_FILES)
     finally:
         os.chdir('..')
 
