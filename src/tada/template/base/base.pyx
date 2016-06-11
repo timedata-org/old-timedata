@@ -10,9 +10,10 @@ cdef extern from "<$include_file>" namespace "$namespace":
          $class_cpp()
          $class_cpp($value_type, $value_type, $value_type)
          $value_type& operator[](size_t)
+         void fill($value_type)
 
     string $to_string($class_cpp&)
-    bool cmpToRichcmp($value_type cmp, int richcmp)
+    bool $compare($class_cpp&, $class_cpp&, int richcmp)
 
 ### define
 
@@ -43,4 +44,4 @@ cdef class $class_py:
         return $to_string(self.cdata).decode('ascii')
 
     def __richcmp__($class_py self, $class_py other, int rcmp):
-        return cmpToRichcmp($compare(self.cdata, other.cdata), rcmp)
+        return $compare(self.cdata, other.cdata, rcmp)

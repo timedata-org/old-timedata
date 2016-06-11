@@ -90,14 +90,19 @@ inline uint8_t to256(float x) {
     dividing a negative number by zero returns -inf;
     dividing zero by zero returns nan.
 */
-float divFixed(float x, float y);
+float divPython(float x, float y);
 
-/** A version of pow that always returns a value and preserve sign.
+/** A version of pow that always returns a value and preserves sign.
     If x > 0, returns pow(x, y).
     If x < 0, returns -pow(-x, y)
     If x == 0 and y == 1, returns 1
     Otherwise, returns 0.
 */
-float powFixed(float x, float y);
+float powPython(float x, float y);
+
+/** A version of mod that always returns a value and uses Python's sign
+    convention.
+*/
+float modPython(float x, float y);
 
 }  // namespace tada

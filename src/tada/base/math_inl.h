@@ -180,18 +180,19 @@ int compareContainers(C1 const& c1, C2 const& c2) {
     return 0;
 }
 
-inline float divFixed(float x, float y) {
-    auto static const inf = std::numeric_limits<float>::infinity();
-    if (y)
-        return x / y;
+inline float divideByZero(float x) {
     if (x > 0)
-        return inf;
+        return std::numeric_limits<float>::infinity();
     if (x < 0)
-        return -inf;
-    return NAN;
+        return -std::numeric_limits<float>::infinity();
+    return std::nanf(nullptr);
 }
 
-inline float powFixed(float x, float y) {
+inline float divPython(float x, float y) {
+    return y ? (x / y) : divideByZero(x);
+}
+
+inline float powPython(float x, float y) {
     if (x > 0)
         return pow(x, y);
     if (x < 0)
@@ -199,5 +200,24 @@ inline float powFixed(float x, float y) {
     return y ? 0 : 1;
 }
 
+inline float modPython(float x, float y) {
+    /*
+    In Python:
+        for n, d in itertools.product((7, -7), (3, -3)):
+            print('%s %% %s = %s' % (n, d, n % d))
+         7 %  3 =  1
+         7 % -3 = -2
+        -7 % -3 = -1
+        -7 %  3 =  2
+*/
+    if (not y)
+        return divideByZero(x);
+
+    auto d = int(x / y);
+    auto mod = x - y * d;
+
+    auto sameSigns = (x >= 0) == (y >= 0);
+    return sameSigns ? mod : mod - y;
+}
 
 }  // namespace tada

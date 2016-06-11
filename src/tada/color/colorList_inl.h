@@ -145,21 +145,11 @@ inline void addInto(ColorVector const& in, ColorVector& out) {
     forEachColorComponent(in, out, [](float i, float& o) { o += i; });
 }
 
-inline float safeDiv(float x, float y) {
-    if (y)
-        return x / y;
-    if (x > 0)
-        return std::numeric_limits<float>::infinity();
-    if (x < 0)
-        return -std::numeric_limits<float>::infinity();
-    return std::nanf(nullptr);
-}
-
 inline void divideInto(float f, ColorVector& out) {
-    forEachColorComponent(out, [=](float& x) { x = safeDiv(x, f); });
+    forEachColorComponent(out, [=](float& x) { x = divPython(x, f); });
 }
 inline void divideInto(ColorVector const& in, ColorVector& out) {
-    forEachColorComponent(in, out, [](float i, float& o) { o = safeDiv(o, i); });
+    forEachColorComponent(in, out, [](float i, float& o) { o = divPython(o, i); });
 }
 
 inline void multiplyInto(float f, ColorVector& out) {
@@ -170,25 +160,25 @@ inline void multiplyInto(ColorVector const& in, ColorVector& out) {
 }
 
 inline void powInto(float f, ColorVector& out) {
-    forEachColorComponent(out, [=](float& x) { x = powFixed(x, f); });
+    forEachColorComponent(out, [=](float& x) { x = powPython(x, f); });
 }
 inline void powInto(ColorVector const& in, ColorVector& out) {
     forEachColorComponent(in, out,
-                          [](float i, float& o) { o = powFixed(o, i); });
+                          [](float i, float& o) { o = powPython(o, i); });
 }
 
 inline void rdivideInto(float f, ColorVector& out) {
-    forEachColorComponent(out, [=](float& x) { x = safeDiv(f, x); });
+    forEachColorComponent(out, [=](float& x) { x = divPython(f, x); });
 }
 inline void rdivideInto(ColorVector const& in, ColorVector& out) {
-    forEachColorComponent(in, out, [](float i, float& o) { o = safeDiv(i, o); });
+    forEachColorComponent(in, out, [](float i, float& o) { o = divPython(i, o); });
 }
 
 inline void rpowInto(float f, ColorVector& out) {
-    forEachColorComponent(out, [=](float& x) { x = powFixed(f, x); });
+    forEachColorComponent(out, [=](float& x) { x = powPython(f, x); });
 }
 inline void rpowInto(ColorVector const& in, ColorVector& out) {
-    forEachColorComponent(in, out, [](float i, float& o) { o = powFixed(o, i); });
+    forEachColorComponent(in, out, [](float i, float& o) { o = powPython(o, i); });
 }
 
 inline void rsubtractInto(float f, ColorVector& out) {

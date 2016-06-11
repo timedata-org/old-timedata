@@ -1,10 +1,10 @@
 begin = 0
 class_cpp = 'ColorCpp'
-class_py = 'Color'
-compare = 'compareColor'
+class_py = 'NewColor'
+compare = 'compare'
 from_string = 'stringToColor'
 to_string = 'colorToString'
-include_file = 'tada/color/color_test.h'
+include_file = 'tada/color/cython_inl.h'
 output_file = 'src/tada/color/color.gen.pyx'
 properties = 'red', 'green', 'blue'
 namespace = 'tada::color'
@@ -12,7 +12,7 @@ value_type = 'float'
 range = 1.0
 size = 3
 documentation = ''  # FIX!
-normalize_index = 'normalizeIndex'
+fix_key = 'fixKey'
 
 class_documentation = """A Color is an immutable RGB floating point color.
 

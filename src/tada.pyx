@@ -21,6 +21,9 @@ include "tada/signal/_stripe.pyx"
 include "tada/signal/fade.pyx"
 include "tada/signal/render3.pyx"
 
+include "tada/color/color.gen.pyx"
+
+
 locals().update(
     Combiner=_Combiner,
     Fade=_FadeImpl,

@@ -3,6 +3,7 @@
 
 ### declare
     bool $from_string(string&, $class_cpp&)
+    bool $fix_key(int& index, size_t size)
 
 ### define
     def __init__(self, *args):
@@ -17,10 +18,12 @@
         * Constructing from things that aren't iterable or have the wrong size
           throws the correct Python exception.
         """
+        cdef ${value_type} number
         if len(args) == 1:
             a = args[0]
             if isinstance(a, Number):
-                self.cdata.fill(a)
+                number = a
+                self.cdata.fill(number)
                 return
             if isinstance(a, str):
                 if $from_string(a, self.cdata):
@@ -46,7 +49,7 @@
             return $class_py(*r) if len(r) == $size else r
 
         index = <int> key
-        if $normalize_index(index, {size})
+        if $fix_key(index, $size):
             return self.cdata[index]
         raise IndexError('$class_py index out of range')
 

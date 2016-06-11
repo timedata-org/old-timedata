@@ -148,9 +148,9 @@ cdef class Color256:
         cdef ColorS x, y
         x = _toColor256(self).color
         y = _toColor256(c).color
-        return Color256(divFixed(x.red, y.red),
-                              divFixed(x.green, y.green),
-                              divFixed(x.blue, y.blue))
+        return Color256(divPython(x.red, y.red),
+                              divPython(x.green, y.green),
+                              divPython(x.blue, y.blue))
 
     def __divmod__(self, c):
         cdef ColorS x, y
@@ -185,9 +185,9 @@ cdef class Color256:
         y = _toColor256(c).color
 
         if mod is None:
-            return Color256(powFixed(x.red, y.red),
-                                  powFixed(x.green, y.green),
-                                  powFixed(x.blue, y.blue))
+            return Color256(powPython(x.red, y.red),
+                                  powPython(x.green, y.green),
+                                  powPython(x.blue, y.blue))
 
         m = Color256(mod)
         return Color256(pow(x.red, y.red, m.red),

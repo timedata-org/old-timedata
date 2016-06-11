@@ -148,9 +148,9 @@ cdef class Color:
         cdef ColorS x, y
         x = _toColor(self).color
         y = _toColor(c).color
-        return Color(divFixed(x.red, y.red),
-                              divFixed(x.green, y.green),
-                              divFixed(x.blue, y.blue))
+        return Color(divPython(x.red, y.red),
+                              divPython(x.green, y.green),
+                              divPython(x.blue, y.blue))
 
     def __divmod__(self, c):
         cdef ColorS x, y
@@ -185,9 +185,9 @@ cdef class Color:
         y = _toColor(c).color
 
         if mod is None:
-            return Color(powFixed(x.red, y.red),
-                                  powFixed(x.green, y.green),
-                                  powFixed(x.blue, y.blue))
+            return Color(powPython(x.red, y.red),
+                                  powPython(x.green, y.green),
+                                  powPython(x.blue, y.blue))
 
         m = Color(mod)
         return Color(pow(x.red, y.red, m.red),
