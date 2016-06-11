@@ -10,7 +10,7 @@ SAMPLE_DEFAULTS = dict(
         magic_arithmetic=('add', 'truediv', 'mod', 'mul', 'sub'),
         return_class=('limit_min', 'limit_max'),
         return_number=('distance', 'distance2'),
-        return_class_from_int=('rotate',)),
+        return_class_from_int=('rotated',)),
         # no divmod!
 
     two=dict(magic=('pow',)),
