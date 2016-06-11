@@ -1,4 +1,4 @@
-import collections, instantiations, string, sys, template
+import collections, copy, instantiations, string, sys, template
 
 SAMPLE_DEFAULTS = dict(
     base=('base', 'fixed_length'),
@@ -16,12 +16,6 @@ SAMPLE_DEFAULTS = dict(
     two=dict(magic=('pow',)),
 )
 
-COLOR_DEFAULTS = dict(
-    static=dict(
-        strings=(dict(name_cpp='colorNames', name_py='names'),),
-        ),
-        **SAMPLE_DEFAULTS
-    )
 
 def write(root, config, *, output_file=None, **kwds):
     declare, define = [], []
@@ -53,8 +47,11 @@ def write(root, config, *, output_file=None, **kwds):
     return output_file
 
 def execute(root):
-    f = write(root, COLOR_DEFAULTS, **instantiations.Color.__dict__)
-    print('wrote file', f)
+    for c in (instantiations.Color,):
+        context = copy.copy(SAMPLE_DEFAULTS)
+        context.update(**c.methods)
+        f = write(root, context, **c.__dict__)
+        print('wrote file', f)
 
 if __name__ == '__main__':
     execute(sys.argv[1])

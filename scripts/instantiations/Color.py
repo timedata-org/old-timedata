@@ -11,8 +11,14 @@ namespace = 'tada::color'
 value_type = 'float'
 range = 1.0
 size = 3
-documentation = ''  # FIX!
+documentation = 'FIXME'
 fix_key = 'fixKey'
+
+methods = dict(
+    static=dict(
+        strings=(dict(name_cpp='colorNames', name_py='names'),),
+        )
+    )
 
 class_documentation = """A Color is an immutable RGB floating point color.
 
