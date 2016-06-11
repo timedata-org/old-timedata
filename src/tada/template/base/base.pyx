@@ -6,8 +6,13 @@ import cython
 from numbers import Number
 
 cdef extern from "<$include_file>" namespace "$namespace":
+    cdef cppclass $class_cpp:
+         $class_cpp()
+         $class_cpp($value_type, $value_type, $value_type)
+         $value_type& operator[](size_t)
+
     string $to_string($class_cpp&)
-    bool cmpToRichcmp(float cmp, int richcmp)
+    bool cmpToRichcmp($value_type cmp, int richcmp)
 
 ### define
 
