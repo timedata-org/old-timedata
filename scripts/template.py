@@ -1,6 +1,6 @@
 import os, split_parts, string
 
-def add(*names, **kwds):
+def format(*names, **kwds):
     filename = os.path.join(*names) + '.pyx'
     try:
         parts = split_parts.split(open(filename), filename)

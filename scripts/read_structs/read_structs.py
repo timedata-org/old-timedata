@@ -4,7 +4,8 @@ import datetime, os, re, string, sys
 from . read_header_file import read_header_file, Context
 from . make_enums import make_enums
 
-def make(header_file):
+
+def make(header_file, template):
     header = read_header_file(header_file)
     classname = header.classname
     namespace = ':'.join(header.namespaces)
@@ -44,11 +45,11 @@ def make(header_file):
             if prop in variables_to_enum_type:
                 Type = variables_to_enum_type[prop]
                 TYPE = Type.upper()
-                template = ENUM_PROP_TEMPLATE
+                tmpl = ENUM_PROP_TEMPLATE
             else:
-                template = PROP_TEMPLATE
+                tmpl = PROP_TEMPLATE
             typename, variables = s.typename, s.variables
-            property_list.append(format(template, locals()))
+            property_list.append(format(tmpl, locals()))
 
     property_list = '\n'.join(property_list)
     timestamp = datetime.datetime.utcnow().isoformat()
@@ -103,10 +104,10 @@ ENUM_PROP_TEMPLATE = """\
             self.$member_name.$prop = <$Type>(i)
 """
 
-def read_structs(files):
+def read_structs(files, template):
     for f in files:
         assert f.endswith('.h'), 'Not a header file: ' + f
-        data = make(f)
+        data = make(f, template)
         base, fname = os.path.split(os.path.splitext(f)[0])
         outfile = os.path.join(base, '_' + fname + '.pyx')
         open(outfile, 'w').write(data)

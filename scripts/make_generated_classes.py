@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-import datetime, os, sys, new_templates
+import datetime, os, sys, new_templates, template
 from read_structs import read_structs
 
 MAKE_PYX = """\
@@ -30,7 +30,7 @@ def write_old_templates():
 def write_make_pyx_templates():
     os.chdir('src')
     try:
-        read_structs.read_structs(STRUCT_FILES)
+        read_structs.read_structs(STRUCT_FILES, template)
     finally:
         os.chdir('..')
 

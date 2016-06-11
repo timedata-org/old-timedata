@@ -25,19 +25,24 @@ COLOR_DEFAULTS = dict(
 
 def write(root, config, *, output_file=None, **kwds):
     declare, define = [], []
+
+    def fmt(*names, **kwds):
+        dc, df = template.format(root, *names, **kwds)
+        dc and declare.append(dc)
+        df and define.append(df)
+
     for b in config['base']:
-        template.add(root, 'base', b, **kwds)
+        fmt('base', b, **kwds)
 
     for i, name in enumerate(kwds.get('properties', ())):
-        template.add(root, 'zero', 'property', name=name, index=i, **kwds)
+        fmt('zero', 'property', name=name, index=i, **kwds)
 
     for method_type in 'zero', 'one', 'two', 'static':
         for tmpl, methods in sorted(config.get(method_type, {}).items()):
             for m in methods:
                 if not isinstance(m, dict):
                     m = dict(name=m)
-                template.add(root, method_type, tmpl,
-                             **collections.ChainMap(m, kwds))
+                fmt(method_type, tmpl, **collections.ChainMap(m, kwds))
 
     while define and not define[-1].strip():
         define.pop()
