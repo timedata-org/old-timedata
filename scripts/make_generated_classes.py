@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 
-import datetime, os, sys
-import split_parts, new_templates
+import datetime, os, sys, new_templates
 from read_structs import read_structs
 
 MAKE_PYX = """\

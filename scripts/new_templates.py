@@ -1,11 +1,4 @@
-import os, string, sys
-
-from collections import ChainMap
-
-from instantiations import Color
-import split_parts
-
-# These are all of Python's "magic" arithmetic functions with zero arguments.
+import collections, instantiations, string, sys, template
 
 SAMPLE_DEFAULTS = dict(
     base=('base', 'fixed_length'),
@@ -32,29 +25,19 @@ COLOR_DEFAULTS = dict(
 
 def write(root, config, *, output_file=None, **kwds):
     declare, define = [], []
-    def add(*names, **kwds):
-        filename = os.path.join(root, *names) + '.pyx'
-        try:
-            sub = lambda s: string.Template(s).substitute(**kwds)
-            parts = split_parts.split(open(filename), filename)
-            ('declare' in parts) and declare.append(sub(parts['declare']))
-            ('define' in parts) and define.append(sub(parts['define']))
-        except Exception as e:
-            s = ' '.join(str(i) for i in e.args)
-            raise e.__class__('%s in file %s' % (s, filename))
-
     for b in config['base']:
-        add('base', b, **kwds)
+        template.add(root, 'base', b, **kwds)
 
     for i, name in enumerate(kwds.get('properties', ())):
-        add('zero', 'property', name=name, index=i, **kwds)
+        template.add(root, 'zero', 'property', name=name, index=i, **kwds)
 
     for method_type in 'zero', 'one', 'two', 'static':
-        for template, methods in sorted(config.get(method_type, {}).items()):
+        for tmpl, methods in sorted(config.get(method_type, {}).items()):
             for m in methods:
                 if not isinstance(m, dict):
                     m = dict(name=m)
-                add(method_type, template, **ChainMap(m, kwds))
+                template.add(root, method_type, tmpl,
+                             **collections.ChainMap(m, kwds))
 
     while define and not define[-1].strip():
         define.pop()
@@ -65,11 +48,8 @@ def write(root, config, *, output_file=None, **kwds):
     return output_file
 
 def execute(root):
-    f = write(root, COLOR_DEFAULTS, **Color.__dict__)
+    f = write(root, COLOR_DEFAULTS, **instantiations.Color.__dict__)
     print('wrote file', f)
 
 if __name__ == '__main__':
-    if not not True:
-        execute(sys.argv[1])
-    else:
-        print(split_parts.split(open(sys.argv[1]), sys.argv[1]))
+    execute(sys.argv[1])
