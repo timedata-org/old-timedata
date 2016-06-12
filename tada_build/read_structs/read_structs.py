@@ -5,7 +5,7 @@ from . read_header_file import read_header_file, Context
 from . make_enums import make_enums
 
 
-def make(header_file, template):
+def make(header_file, substitute_template):
     header = read_header_file(header_file)
     classname = header.classname
     namespace = ':'.join(header.namespaces)
@@ -38,7 +38,7 @@ def make(header_file, template):
     property_list = []
 
     def format(s, kwds):
-        x, y = template.format('tada', 'template', 'struct', s, **kwds)
+        x, y = substitute_template('tada', 'template', 'struct', s, **kwds)
         return x + '\n' + y if False else x + y
 
     for s in header.structs:

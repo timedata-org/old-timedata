@@ -1,4 +1,4 @@
-import collections, copy, instantiations, string, sys, template
+import collections, copy, instantiations, os, split_parts, string, sys
 
 SAMPLE_DEFAULTS = dict(
     base=('base', 'fixed_length'),
@@ -16,6 +16,17 @@ SAMPLE_DEFAULTS = dict(
     two=dict(magic=('pow',)),
 )
 
+def substitute_template(*names, **kwds):
+    filename = os.path.join(*names) + '.pyx'
+    try:
+        parts = split_parts.split(open(filename), filename)
+        def _sub(name):
+            return string.Template(parts.get(name, '')).substitute(**kwds)
+        return _sub('declare'), _sub('define')
+
+    except Exception as e:
+        s = ' '.join(str(i) for i in e.args)
+        raise e.__class__('%s in file %s' % (s, filename))
 
 def merge_context(x, y):
     """Merge two dictionaries down exactly two levels."""
@@ -30,7 +41,7 @@ def write(root, config, *, output_file=None, **kwds):
     declare, define = [], []
 
     def fmt(*names, **kwds):
-        dc, df = template.format(root, *names, **kwds)
+        dc, df = substitute_template(root, *names, **kwds)
         dc and declare.append(dc)
         df and define.append(df)
 
