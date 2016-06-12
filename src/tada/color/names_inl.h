@@ -35,7 +35,7 @@ struct ColorTraits {
         hex /= BYTE;
         auto r = hex % BYTE;
 
-        return {{denormalize(r), denormalize(g), denormalize(b)}};
+        return {denormalize(r), denormalize(g), denormalize(b)};
     };
 
     static bool isNearHex(float decimal) {
@@ -71,7 +71,7 @@ struct ColorTraits {
         auto addNegatives = [&](std::string const& value) {
             auto s = value;
             using BoolSamples = Model<RGB, Normal<bool>>::Array;
-            auto negative = BoolSamples{{c[0] < 0, c[1] < 0, c[2] < 0}};
+            auto negative = BoolSamples(c[0] < 0, c[1] < 0, c[2] < 0);
             if (negative[0] or negative[1] or negative[2]) {
                 for (auto n : negative)
                     s += "+-"[n];
@@ -121,7 +121,7 @@ struct ColorTraits {
         auto b = getNumber();
         THROW_IF(*p, "Extra characters after end", originalP);
 
-        return {{r, g, b}};
+        return {r, g, b};
     }
 
     static bool toColorNonNegative(char const* name, Color& result) {
@@ -149,7 +149,7 @@ struct ColorTraits {
             auto gray = static_cast<float>(strtod(name + 5, &endptr)) / 100;
             if (not *endptr) {
                 gray = normalize(gray);
-                result = {{gray, gray, gray}};
+                result = {gray, gray, gray};
                 return true;
             }
             return false;
@@ -216,7 +216,7 @@ inline std::string colorToString(Color c, Base base) {
 }
 
 inline std::string colorToString(float r, float g, float b, Base base) {
-    return colorToString({{r, g, b}}, base);
+    return colorToString({r, g, b}, base);
 }
 
 bool stringToColor(char const* name, ColorS& cs, Base base) {

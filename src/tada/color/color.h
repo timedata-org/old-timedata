@@ -41,7 +41,7 @@ struct ColorS {
     ColorS(float r, float g, float b) : red(r), green(g), blue(b) {}
     ColorS(Color const& c) : red(c[0]), green(c[1]), blue(c[2]) {}
 
-    operator Color() const { return {{red, green, blue}}; }
+    operator Color() const { return {red, green, blue}; }
 };
 
 inline ColorS rotate(ColorS c, int positions) {

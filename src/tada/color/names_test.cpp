@@ -7,9 +7,9 @@ namespace color {
 
 //
 TEST_CASE("color", "names") {
-    REQUIRE(colorToString(Color{{0.5, 0.5, 0.5}}, Base::normal) == "gray 50");
-    REQUIRE(colorToString(Color{{0, 0, 0}}, Base::normal) == "black");
-    REQUIRE(colorToString(Color{{-0.5, 0.5, 0.5}}, Base::normal) ==
+    REQUIRE(colorToString(Color{0.5, 0.5, 0.5}, Base::normal) == "gray 50");
+    REQUIRE(colorToString(Color{0, 0, 0}, Base::normal) == "black");
+    REQUIRE(colorToString(Color{-0.5, 0.5, 0.5}, Base::normal) ==
             "gray 50-++");
 
     auto c = stringToColor("gray 50-++", Base::normal);

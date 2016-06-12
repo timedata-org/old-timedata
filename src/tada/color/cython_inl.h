@@ -20,32 +20,32 @@ inline bool stringToColor(std::string const& x, Color& c) {
 }
 
 inline Color magic_abs(Color const& x) {
-    return {{std::abs(x[0]), std::abs(x[1]), std::abs(x[2])}};
+    return {std::abs(x[0]), std::abs(x[1]), std::abs(x[2])};
 }
 
 inline Color magic_ceil(Color const& x) {
-    return {{std::ceil(x[0]), std::ceil(x[1]), std::ceil(x[2])}};
+    return {std::ceil(x[0]), std::ceil(x[1]), std::ceil(x[2])};
 }
 
 inline Color magic_floor(Color const& x) {
-    return {{std::floor(x[0]), std::floor(x[1]), std::floor(x[2])}};
+    return {std::floor(x[0]), std::floor(x[1]), std::floor(x[2])};
 }
 
 inline Color magic_invert(Color const& x) {
-    return {{invert(x[0]), invert(x[1]), invert(x[2])}};
+    return {invert(x[0]), invert(x[1]), invert(x[2])};
 }
 
 inline Color magic_neg(Color const& x) {
-    return {{-x[0], -x[1], -x[2]}};
+    return {-x[0], -x[1], -x[2]};
 }
 
 inline Color magic_round(Color const& x) {
     // TODO: two argument version!
-    return {{std::round(x[0]), std::round(x[1]), std::round(x[2])}};
+    return {std::round(x[0]), std::round(x[1]), std::round(x[2])};
 }
 
 inline Color magic_trunc(Color const& x) {
-    return {{std::trunc(x[0]), std::trunc(x[1]), std::trunc(x[2])}};
+    return {std::trunc(x[0]), std::trunc(x[1]), std::trunc(x[2])};
 }
 
 inline int magic_hash(Color const& x) {
@@ -55,39 +55,39 @@ inline int magic_hash(Color const& x) {
 }
 
 inline Color magic_add(Color const& x, Color const& y) {
-    return {{x[0] + y[0], x[1] + y[1], x[2] + y[2]}};
+    return {x[0] + y[0], x[1] + y[1], x[2] + y[2]};
 }
 
 inline Color magic_truediv(Color const& x, Color const& y) {
-    return {{divPython(x[0], y[0]),
+    return {divPython(x[0], y[0]),
              divPython(x[1], y[1]),
-             divPython(x[2], y[2])}};
+             divPython(x[2], y[2])};
 }
 
 inline Color magic_mod(Color const& x, Color const& y) {
-    return {{modPython(x[0], y[0]),
+    return {modPython(x[0], y[0]),
              modPython(x[1], y[1]),
-             modPython(x[2], y[2])}};
+             modPython(x[2], y[2])};
 }
 
 inline Color magic_mul(Color const& x, Color const& y) {
-    return {{x[0] * y[0], x[1] * y[1], x[2] * y[2]}};
+    return {x[0] * y[0], x[1] * y[1], x[2] * y[2]};
 }
 
 inline Color magic_sub(Color const& x, Color const& y) {
-    return {{x[0] - y[0], x[1] - y[1], x[2] - y[2]}};
+    return {x[0] - y[0], x[1] - y[1], x[2] - y[2]};
 }
 
 inline Color limit_min(Color const& x, Color const& y) {
-    return {{std::max(x[0], y[0]),
+    return {std::max(x[0], y[0]),
              std::max(x[1], y[1]),
-             std::max(x[2], y[2])}};
+             std::max(x[2], y[2])};
 }
 
 inline Color limit_max(Color const& x, Color const& y) {
-    return {{std::min(x[0], y[0]),
+    return {std::min(x[0], y[0]),
              std::min(x[1], y[1]),
-             std::min(x[2], y[2])}};
+             std::min(x[2], y[2])};
 }
 
 inline Color rotated(Color const& x, int pos) {
@@ -105,15 +105,15 @@ inline float distance2(Color const& x, Color const& y) {
 }
 
 inline Color magic_pow(Color const& x, Color const& y) {
-    return {{powPython(x[0], y[0]),
+    return {powPython(x[0], y[0]),
              powPython(x[1], y[1]),
-             powPython(x[2], y[2])}};
+             powPython(x[2], y[2])};
 }
 
 inline Color magic_pow(Color const& x, Color const& y, Color const& z) {
-    return {{modPython(powPython(x[0], y[0]), z[0]),
+    return {modPython(powPython(x[0], y[0]), z[0]),
              modPython(powPython(x[1], y[1]), z[1]),
-             modPython(powPython(x[2], y[2]), z[2])}};
+             modPython(powPython(x[2], y[2]), z[2])};
 }
 
 inline std::vector<std::string> const& colorNames() {

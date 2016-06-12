@@ -12,7 +12,7 @@ using ColorVectorBase = std::vector<Color>;
 
 struct ColorVector : public ColorVectorBase {
     void setColor(size_t i, float r, float g, float b) {
-        (*this)[i] = {{r, g, b}};
+        (*this)[i] = {r, g, b};
     }
 
     // Returns negative for a bad key.

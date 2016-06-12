@@ -45,7 +45,7 @@ inline void spreadAppend(ColorVector& colors, size_t size, Color const& end) {
          dg = d * (end[1] - g),
          db = d * (end[2] - b);
     for (size_t i = 1; i <= size; ++i)
-        colors.push_back({{r + i * dr, g + i * dg, b + i * db}});
+        colors.push_back({r + i * dr, g + i * dg, b + i * db});
 
     colors.push_back(end);
 }

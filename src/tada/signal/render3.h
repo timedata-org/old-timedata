@@ -35,7 +35,7 @@ struct Render3 {
         auto r = static_cast<Type>(apply(c[perm[0]]));
         auto g = static_cast<Type>(apply(c[perm[1]]));
         auto b = static_cast<Type>(apply(c[perm[2]]));
-        return {{r, g, b}};
+        return ColorType(r, g, b);
     }
 };
 

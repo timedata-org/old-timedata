@@ -282,7 +282,7 @@ inline float distance2(ColorVector const& x, ColorVector const& y) {
         d += distance2(longer[i], shorter[i]);
 
     for (; i < longer.size(); ++i)
-        d += distance2(longer[i], Color{{0}});
+        d += distance2(longer[i], {0, 0, 0});
 
     return d;
 }
