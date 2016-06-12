@@ -51,7 +51,6 @@ if IS_MAC:
                          '-Wno-tautological-constant-out-of-range-compare'])
 
 
-
 class Clean(distutils.core.Command):
     description = 'Complete clean command'
     user_options = []
@@ -65,6 +64,12 @@ class Clean(distutils.core.Command):
     def run(self):
         assert os.getcwd() == self.cwd, 'Must be in package root: %s' % self.cwd
         execute('rm -Rf ./build src/tada.cpp')
+
+
+class Generated(distutils.core.Command):
+    description = 'Make generated classes'
+    user_options = []
+
 
 
 class Local(distutils.core.Command):
