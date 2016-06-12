@@ -1,4 +1,4 @@
-import collections, copy, instantiations, os, split_parts, string, sys
+import collections, copy, instantiations, os, read_templates, string, sys
 
 SAMPLE_DEFAULTS = dict(
     base=('base', 'fixed_length'),
@@ -19,7 +19,7 @@ SAMPLE_DEFAULTS = dict(
 def substitute_template(*names, **kwds):
     filename = os.path.join(*names) + '.pyx'
     try:
-        parts = split_parts.split(open(filename), filename)
+        parts = read_templates.read(open(filename), filename)
         def _sub(name):
             return string.Template(parts.get(name, '')).substitute(**kwds)
         return _sub('declare'), _sub('define')
@@ -66,11 +66,12 @@ def write(root, config, *, output_file=None, **kwds):
         f.write('\n' + '\n'.join(define))
     return output_file
 
+
 def execute(root):
     for c in (instantiations.Color,):
         context = merge_context(SAMPLE_DEFAULTS, c.methods)
         f = write(root, context, **c.__dict__)
-        print('wrote file', f)
+        print('Wrote file', f)
 
 if __name__ == '__main__':
     execute(sys.argv[1])

@@ -3,14 +3,6 @@
 import datetime, os, sys, new_templates
 from read_structs import read_structs
 
-MAKE_PYX = """\
-/development/make_pyx/make_pyx.py \
-    tada/signal/fade.h \
-    tada/signal/combiner.h \
-    tada/signal/render3.h\
-    tada/signal/stripe.h\
-"""
-
 STRUCTS = 'fade', 'combiner', 'render3', 'stripe'
 
 STRUCT_FILES = ['tada/signal/%s.h' % i for i in STRUCTS]
@@ -27,19 +19,11 @@ def write_old_templates():
             template = open(template_file).read()
             open(f + suffix + '.pyx', 'w').write(template.format(**locals()))
 
-def write_make_pyx_templates():
-    os.chdir('src')
-    try:
-        read_structs.read_structs(STRUCT_FILES,
-                                  new_templates.substitute_template)
-    finally:
-        os.chdir('..')
-
-def write_new_templates():
-    new_templates.execute('src/tada/template')
-
 
 if __name__ == '__main__':
     write_old_templates()
-    write_make_pyx_templates()
-    write_new_templates()
+    os.chdir('src')
+    read_structs.read_structs(STRUCT_FILES,
+                              new_templates.substitute_template)
+    os.chdir('..')
+    new_templates.execute('src/tada/template')
