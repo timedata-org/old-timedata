@@ -4,7 +4,7 @@
 Processing Python extension."""
 
 import datetime, glob, os, platform, shutil, subprocess
-import distutils.core, distutils.extension, Cython.Build
+import setuptools.extension, Cython.Build
 
 from tada_build import make_from_parts, old_templates, read_structs
 
@@ -59,7 +59,7 @@ if IS_MAC:
     COMPILE_ARGS.extend(['-mmacosx-version-min=10.9',
                          '-Wno-tautological-constant-out-of-range-compare'])
 
-class Command(distutils.core.Command):
+class Command(setuptools.Command):
     def initialize_options(self): pass
     def finalize_options(self): pass
 
@@ -93,7 +93,7 @@ class Local(Command):
     description = 'Install the .so locally'
     user_options = []
 
-    # TODO: need to get this from distutils somehow.
+    # TODO: need to get this from setuptools somehow.
 
     TARGET_LOCATIONS = 'tada', '/development/BiblioPixel'
     # TODO: awful hack.
@@ -110,7 +110,7 @@ class Local(Command):
             shutil.copy2(files[0], os.path.join(target, 'tada.so'))
 
 
-EXTENSION = distutils.extension.Extension(
+EXTENSION = setuptools.extension.Extension(
     name='tada',
     sources=['src/tada.pyx'],
     libraries=LIBRARIES,
@@ -130,7 +130,7 @@ EXT_MODULES=Cython.Build.cythonize(
         )
     )
 
-distutils.core.setup(
+setuptools.setup(
     name='tada',
     packages=['tada'],
     version='0.8',
