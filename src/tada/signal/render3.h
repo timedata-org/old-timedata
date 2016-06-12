@@ -35,7 +35,7 @@ struct Render3 {
         auto r = static_cast<Type>(apply(c[perm[0]]));
         auto g = static_cast<Type>(apply(c[perm[1]]));
         auto b = static_cast<Type>(apply(c[perm[2]]));
-        return {r, g, b};
+        return {{r, g, b}};
     }
 };
 
@@ -43,7 +43,7 @@ inline void renderColorVector(
     Render3 const& r3, ColorVector const& in, size_t pos, char* s) {
     // DANGER: C-style cast here.  Should work.  :-D
     // COPY_HACK!
-    using Color256 = RGBModelEightBit::Sample;
+    using Color256 = RGBModelEightBit::Array;
     auto out = (Color256*) s;
     for (size_t i = 0; i < r3.size; ++i)
         out[i] = r3.apply<Color256>(in.at(i + pos));

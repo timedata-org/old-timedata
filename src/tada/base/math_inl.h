@@ -6,6 +6,7 @@
 #include <sstream>
 #include <type_traits>
 
+#include <tada/base/math.h>
 #include <tada/base/throw.h>
 
 namespace tada {

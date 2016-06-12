@@ -17,7 +17,8 @@ enum class Base {normal, integer, last = integer};
 
 // enum class Stereo { left, right };
 
-using Color = std::array<float, 3>;  // HACK!!
+//using Color = std::array<float, 3>;  // HACK!!
+using Color = Model<RGB, Normal<float>>::Array;
 
 template <typename Number>
 struct EnumFields<RGB, Number> {
@@ -33,7 +34,15 @@ struct EnumFields<RGB, Number> {
 using RGBModel = Model<RGB, Normal<float>>;
 using RGBModelEightBit = Model<RGB, EightBit<uint8_t>>;
 
-using ColorS = RGBModel::Fields;
+struct ColorS {
+    float red = 0, green = 0, blue = 0;
+
+    ColorS() = default;
+    ColorS(float r, float g, float b) : red(r), green(g), blue(b) {}
+    ColorS(Color const& c) : red(c[0]), green(c[1]), blue(c[2]) {}
+
+    operator Color() const { return {{red, green, blue}}; }
+};
 
 inline ColorS rotate(ColorS c, int positions) {
     Color co = c;

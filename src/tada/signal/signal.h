@@ -2,6 +2,7 @@
 
 #include <array>
 #include <utility>
+#include <vector>
 
 #include <tada/base/enum.h>
 #include <tada/signal/range.h>
@@ -29,44 +30,12 @@ struct Model {
     static const auto SIZE = enumSize<Names>();
 
     using Number = typename Range::Number;
-    using Fields = EnumFields<Names, Number>;
     using Array = std::array<Number, SIZE>;
 
     using names_t = Names;
     using range_t = Range;
 
-    static_assert(sizeof(Array) == sizeof(Fields),
-                  "Names and Array must be the same size");
-
-    struct Sample {
-        union {
-            Fields fields;  // Access sample by name.
-            Array array;    // Access sample by index.
-        };
-
-        Sample() : fields{} {}
-        Sample(Fields const& f) : fields{f} {}
-        Sample(Array const& s) : array{s} {}
-
-        template<typename ...E>
-        Sample(E&&...e) : array{{std::forward<E>(e)...}} {}
-
-        operator Array() const { return array; }
-        operator Array&() { return array; }
-
-        operator Fields() const { return fields; }
-        operator Fields&() { return fields; }
-
-        Number at(size_t i) const { return array.at[i]; }
-        Number& at(size_t i) { return array.at[i]; }
-        Number operator[](size_t i) const { return array[i]; }
-        Number& operator[](size_t i) { return array[i]; }
-
-        using model_t = Model;
-        using value_type = Number;
-    };
-
-    using Vector = std::vector<Sample>;
+    using Vector = std::vector<Array>;
 };
 
 }  // tada
