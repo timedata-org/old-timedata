@@ -65,11 +65,9 @@ class Clean(distutils.core.Command):
         assert os.getcwd() == self.cwd, 'Must be in package root: %s' % self.cwd
         execute('rm -Rf ./build src/tada.cpp')
 
-
 class Generated(distutils.core.Command):
     description = 'Make generated classes'
     user_options = []
-
 
 
 class Local(distutils.core.Command):

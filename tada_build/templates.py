@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-import csv, json, pathlib, sys
+import csv, json, os, pathlib, string, sys
 
 def read(lines, f):
     parts = []
@@ -27,3 +27,16 @@ def read(lines, f):
             parts.append(line)
     new_section()
     return result
+
+
+def substitute(*names, **kwds):
+    filename = os.path.join(*names) + '.pyx'
+    try:
+        parts = read(open(filename), filename)
+        def _sub(name):
+            return string.Template(parts.get(name, '')).substitute(**kwds)
+        return _sub('declare'), _sub('define')
+
+    except Exception as e:
+        s = ' '.join(str(i) for i in e.args)
+        raise e.__class__('%s in file %s' % (s, filename))

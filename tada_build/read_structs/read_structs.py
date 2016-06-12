@@ -1,11 +1,13 @@
 #!/usr/bin/env python3
 
 import datetime, os, re, string, sys
+
 from . read_header_file import read_header_file, Context
 from . make_enums import make_enums
+from .. import templates
 
 
-def make(header_file, substitute_template):
+def make(header_file):
     header = read_header_file(header_file)
     classname = header.classname
     namespace = ':'.join(header.namespaces)
@@ -38,7 +40,7 @@ def make(header_file, substitute_template):
     property_list = []
 
     def format(s, kwds):
-        x, y = substitute_template('tada', 'template', 'struct', s, **kwds)
+        x, y = templates.substitute('tada', 'template', 'struct', s, **kwds)
         return x + '\n' + y if False else x + y
 
     for s in header.structs:
@@ -62,10 +64,12 @@ def make(header_file, substitute_template):
     return mt
 
 
-def read_structs(files, template):
+def read_structs(files):
+    os.chdir('src')
     for f in files:
         assert f.endswith('.h'), 'Not a header file: ' + f
-        data = make(f, template)
+        data = make(f)
         base, fname = os.path.split(os.path.splitext(f)[0])
         outfile = os.path.join(base, '_' + fname + '.pyx')
         open(outfile, 'w').write(data)
+    os.chdir('..')
