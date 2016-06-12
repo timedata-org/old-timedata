@@ -3,10 +3,8 @@
 """This is the main builder and installer for the Templated Digital Signal
 Processing Python extension."""
 
-import datetime, glob, os, platform, shutil, subprocess
+import datetime, generate, glob, os, platform, shutil, subprocess, unittest
 import setuptools.extension, Cython.Build
-
-from tada_build import make_from_parts, old_templates, read_structs
 
 import Cython.Compiler.Options
 
@@ -21,13 +19,6 @@ IS_LINUX = (platform.system() == 'Linux')
 IS_DEBIAN = IS_LINUX and (platform.linux_distribution()[0] == 'debian')
 
 LIBRARIES = [] if (IS_MAC or IS_LINUX) else ['m']
-
-STRUCT_FILES = [
-    'tada/signal/combiner.h',
-    'tada/signal/fade.h',
-    'tada/signal/render3.h',
-    'tada/signal/stripe.h',
-    ]
 
 def execute(command):
     result = os.system(command)
@@ -84,10 +75,7 @@ class Generate(Command):
     user_options = []
 
     def run(self):
-        old_templates.write()
-        read_structs.read_structs(STRUCT_FILES)
-        make_from_parts.execute('src/tada/template')
-
+        generate.generate()
 
 class Local(Command):
     description = 'Install the .so locally'
@@ -129,8 +117,6 @@ EXT_MODULES=Cython.Build.cythonize(
         # c_string_type='unicode', # Why doesn't this work?
         )
     )
-
-import unittest
 
 # http://stackoverflow.com/a/37033551/43839
 def my_test_suite():
