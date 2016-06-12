@@ -6,6 +6,8 @@ Processing Python extension."""
 import datetime, glob, os, platform, shutil, subprocess
 import distutils.core, distutils.extension, Cython.Build
 
+from tada_build import make_from_parts, old_templates, read_structs
+
 import Cython.Compiler.Options
 
 # Uncomment this next line if you want Cython to output HTML showing how C++-ey
@@ -19,6 +21,13 @@ IS_LINUX = (platform.system() == 'Linux')
 IS_DEBIAN = IS_LINUX and (platform.linux_distribution()[0] == 'debian')
 
 LIBRARIES = [] if (IS_MAC or IS_LINUX) else ['m']
+
+STRUCT_FILES = [
+    'tada/signal/combiner.h',
+    'tada/signal/fade.h',
+    'tada/signal/render3.h',
+    'tada/signal/stripe.h',
+    ]
 
 def execute(command):
     result = os.system(command)
@@ -50,8 +59,12 @@ if IS_MAC:
     COMPILE_ARGS.extend(['-mmacosx-version-min=10.9',
                          '-Wno-tautological-constant-out-of-range-compare'])
 
+class Command(distutils.core.Command):
+    def initialize_options(self): pass
+    def finalize_options(self): pass
 
-class Clean(distutils.core.Command):
+
+class Clean(Command):
     description = 'Complete clean command'
     user_options = []
 
@@ -65,12 +78,18 @@ class Clean(distutils.core.Command):
         assert os.getcwd() == self.cwd, 'Must be in package root: %s' % self.cwd
         execute('rm -Rf ./build src/tada.cpp')
 
-class Generated(distutils.core.Command):
+
+class Generate(Command):
     description = 'Make generated classes'
     user_options = []
 
+    def run(self):
+        old_templates.write()
+        read_structs.read_structs(STRUCT_FILES)
+        make_from_parts.execute('src/tada/template')
 
-class Local(distutils.core.Command):
+
+class Local(Command):
     description = 'Install the .so locally'
     user_options = []
 
@@ -78,12 +97,6 @@ class Local(distutils.core.Command):
 
     TARGET_LOCATIONS = 'tada', '/development/BiblioPixel'
     # TODO: awful hack.
-
-    def initialize_options(self):
-        pass
-
-    def finalize_options(self):
-        pass
 
     def run(self):
         files = glob.glob('build/lib*/*.so')
@@ -127,6 +140,6 @@ distutils.core.setup(
     url='https://github.com/rec/tada',
     # download_url='https://github.com/rec/tada/archive/binary-release-2016-05-28.tar.gz',
     download_url='https://github.com/rec/tada/tarball/binary-release-2016-05-28',
-    cmdclass={'clean': Clean, 'local': Local},
+    cmdclass={'clean': Clean, 'local': Local, 'generate': Generate},
     ext_modules=EXT_MODULES,
     )
