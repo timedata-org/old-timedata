@@ -5,6 +5,7 @@ Processing Python extension."""
 
 import datetime, generate, glob, os, platform, shutil, subprocess, unittest
 import setuptools.extension, Cython.Build
+from setuptools.command.build_ext import build_ext as _build_ext
 
 import Cython.Compiler.Options
 
@@ -98,25 +99,31 @@ class Local(Command):
             shutil.copy2(files[0], os.path.join(target, 'tada.so'))
 
 
-EXTENSION = setuptools.extension.Extension(
-    name='tada',
-    sources=['src/tada.pyx'],
-    libraries=LIBRARIES,
-    include_dirs=['src'],
-    extra_compile_args=COMPILE_ARGS,
-    language='c++',
-    )
+class build_ext(_build_ext):
+    # See https://groups.google.com/forum/#!topic/cython-users/IZMENRz6__s
+    def finalize_options(self):
+        extension = setuptools.extension.Extension(
+            name='tada',
+            sources=['src/tada.pyx'],
+            libraries=LIBRARIES,
+            include_dirs=['src'],
+            extra_compile_args=COMPILE_ARGS,
+            language='c++',
+            )
 
-EXT_MODULES=Cython.Build.cythonize(
-    [EXTENSION],
-    language='c++',
-    language_level=3,
+        module = Cython.Build.cythonize(
+            [extension],
+            language='c++',
+            language_level=3,
 
-    compiler_directives=dict(
-        c_string_encoding='ascii',
-        # c_string_type='unicode', # Why doesn't this work?
-        )
-    )
+            compiler_directives=dict(
+                c_string_encoding='ascii',
+                # c_string_type='unicode', # Why doesn't this work?
+                )
+            )
+        self.distribution.ext_modules = module
+        super(build_ext, self).finalize_options()
+
 
 # http://stackoverflow.com/a/37033551/43839
 def test_suite():
@@ -131,6 +138,10 @@ setuptools.setup(
     author_email='tom@swirly.com',
     url='https://github.com/rec/tada',
     test_suite='setup.test_suite',
-    cmdclass={'clean': Clean, 'local': Local, 'generate': Generate},
-    ext_modules=EXT_MODULES,
+    cmdclass={
+        'build_ext': build_ext,
+        'clean': Clean,
+        'generate': Generate,
+        'local': Local,
+        },
     )
