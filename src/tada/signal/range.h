@@ -4,22 +4,22 @@ namespace tada {
 
 template <typename T = float>
 struct Normal {
-    using Number = T;
+    using value_type = T;
 
-    static constexpr auto begin = Number(0);
-    static constexpr auto range = Number(1);
+    static constexpr auto begin = value_type(0);
+    static constexpr auto range = value_type(1);
 };
 
 template <typename T = float>
 struct EightBit {
-    using Number = T;
+    using value_type = T;
 
-    static constexpr auto begin = Number(0);
-    static constexpr auto range = Number(255);
+    static constexpr auto begin = value_type(0);
+    static constexpr auto range = value_type(255);
 };
 
 template <typename Range>
-using NumberOf = typename Range::Number;
+using NumberOf = typename Range::value_type;
 
 /** Unscale a ranged number to a range of [0, 1].  Numbers out of band get
     scaled proportionately. */
@@ -47,21 +47,21 @@ NumberOf<Range> scale(NumberOf<Range> y) {
     this is almost free. */
 template <typename Range>
 struct Ranged {
-    using Number = NumberOf<Range>;
+    using value_type = NumberOf<Range>;
 
-    Number number;
+    value_type number;
 
     Ranged() = default;
     Ranged(Ranged const&) = default;
-    Ranged(Number n) : number(n) {}
+    Ranged(value_type n) : number(n) {}
 
     template <typename Range2>
     operator Ranged<Range2>() const {
         return scale<Range2>(unscale<Range>(number));
     }
 
-    operator Number() const { return number; }
-    operator Number&() { return number; }
+    operator value_type() const { return number; }
+    operator value_type&() { return number; }
 };
 
 }  // tada

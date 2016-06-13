@@ -119,10 +119,8 @@ EXT_MODULES=Cython.Build.cythonize(
     )
 
 # http://stackoverflow.com/a/37033551/43839
-def my_test_suite():
-    test_loader = unittest.TestLoader()
-    test_suite = test_loader.discover('tada', pattern='*_test.py')
-    return test_suite
+def test_suite():
+    return unittest.TestLoader().discover('tada', pattern='*_test.py')
 
 setuptools.setup(
     name='tada',
@@ -132,9 +130,7 @@ setuptools.setup(
     author='Tom Swirly',
     author_email='tom@swirly.com',
     url='https://github.com/rec/tada',
-    test_suite='setup.my_test_suite',
-    # download_url='https://github.com/rec/tada/archive/binary-release-2016-05-28.tar.gz',
-    download_url='https://github.com/rec/tada/tarball/binary-release-2016-05-28',
+    test_suite='setup.test_suite',
     cmdclass={'clean': Clean, 'local': Local, 'generate': Generate},
     ext_modules=EXT_MODULES,
     )

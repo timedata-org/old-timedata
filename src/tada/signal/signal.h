@@ -16,23 +16,21 @@ template <typename Names, typename Range>
 struct Model {
     static const auto SIZE = enumSize<Names>();
 
-    using Number = typename Range::Number;
-    using BaseArray = std::array<Number, SIZE>;
+    using value_type = typename Range::value_type;
+    using BaseArray = std::array<value_type, SIZE>;
 
     struct Array : BaseArray {
         using BaseArray::BaseArray;
 
-        Array(Number r, Number g, Number b) : BaseArray{{r, g, b}} {}
+        Array(value_type r, value_type g, value_type b) : BaseArray{{r, g, b}} {}
         Array() {
             BaseArray::fill(0);
         }
 
-        using range_t = Range;
         using names_t = Names;
+        using range_t = Range;
+        using value_type = Model::value_type;
     };
-
-    using names_t = Names;
-    using range_t = Range;
 
     using Vector = std::vector<Array>;
 };
