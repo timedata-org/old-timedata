@@ -25,6 +25,7 @@ struct Model {
         Sample(value_type r, value_type g, value_type b)
                 : BaseSample{{r, g, b}} {
         }
+
         Sample() {
             BaseSample::fill(0);
         }
@@ -32,23 +33,26 @@ struct Model {
         using names_t = Names;
         using range_t = Range;
         using value_type = Model::value_type;
+        using FunctionPointer = value_type (*)(value_type);
 
         template <typename Function>
-        Sample forEach(Function f) {
+        Sample forEach(Function f) const {
             Sample result;
-            for (auto i = 0; i < this->size(); ++i)
-                result[i] = f(*this)[i];
+            for (auto i = 0; i < result.size(); ++i)
+                result[i] = f((*this)[i]);
             return result;
         }
-        Sample scale() const {
-            return forEach([](value_type x) {
-                return tada::scale<Range>(x);
-            });
+
+        Sample forEachF(FunctionPointer f) const {
+            return forEach(f);
         }
+
+        Sample scale() const {
+            return forEachF(tada::scale<Range>);
+        }
+
         Sample unscale() const {
-            return forEach([](value_type x) {
-                return tada::unscale<Range>(x);
-            });
+            return forEachF(tada::unscale<Range>);
         }
     };
 

@@ -38,4 +38,12 @@ ValueType<Range> scale(ValueType<Range> y) {
 /* TODO: above two functions only work for floating types! write/repurpose
    something for integral types. */
 
+template <typename Range>
+ValueType<Range> invert(ValueType<Range> y) {
+    if (Range::start < 0)
+        return -y;
+    // TODO: what if start > 0?  Why would this be?
+    return y > 0 ? Range::range - y : -(Range::range + y);
+}
+
 }  // tada

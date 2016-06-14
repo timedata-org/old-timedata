@@ -201,6 +201,10 @@ inline bool stringToColor(char const* s, Color& c, Base base) {
             ColorTraits<Base::integer>::toColor(s, c);
 }
 
+inline bool stringToColor(char const* s, Color& c) {
+    return detail::ColorTraits<Base::normal>::toColor(s, c);
+}
+
 inline Color stringToColor(char const* name, Base base) {
     using namespace tada::detail;
     return base == Base::normal ?
@@ -215,11 +219,15 @@ inline std::string colorToString(Color c, Base base) {
             ColorTraits<Base::integer>::toString(c);
 }
 
+inline std::string colorToString(Color c) {
+    return detail::ColorTraits<Base::normal>::toString(c);
+}
+
 inline std::string colorToString(float r, float g, float b, Base base) {
     return colorToString({r, g, b}, base);
 }
 
-bool stringToColor(char const* name, ColorS& cs, Base base) {
+inline bool stringToColor(char const* name, ColorS& cs, Base base) {
     Color c;
     if (not stringToColor(name, c, base))
         return false;
@@ -227,13 +235,13 @@ bool stringToColor(char const* name, ColorS& cs, Base base) {
     return true;
 }
 
-Color colorFromHex(uint32_t hex, Base base) {
+inline Color colorFromHex(uint32_t hex, Base base) {
     if (base == Base::normal)
         return detail::ColorTraits<Base::normal>::toColor(hex);
     return detail::ColorTraits<Base::integer>::toColor(hex);
 }
 
-uint32_t hexFromColor(Color const& c, Base base) {
+inline uint32_t hexFromColor(Color const& c, Base base) {
     if (base == Base::normal)
         return detail::ColorTraits<Base::normal>::toHex(c);
     return detail::ColorTraits<Base::integer>::toHex(c);
