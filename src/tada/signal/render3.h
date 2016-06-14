@@ -43,7 +43,7 @@ inline void renderColorVector(
     Render3 const& r3, ColorVector const& in, size_t pos, char* s) {
     // DANGER: C-style cast here.  Should work.  :-D
     // COPY_HACK!
-    using Color256 = RGBModelEightBit::Array;
+    using Color256 = RGBModelEightBit::Sample;
     auto out = (Color256*) s;
     for (size_t i = 0; i < r3.size; ++i)
         out[i] = r3.apply<Color256>(in.at(i + pos));

@@ -15,10 +15,7 @@ enum class HSB { hue, saturation, brightness, last = brightness };
 */
 enum class Base {normal, integer, last = integer};
 
-// enum class Stereo { left, right };
-
-//using Color = std::array<float, 3>;  // HACK!!
-using Color = Model<RGB, Normal<float>>::Array;
+using Color = Model<RGB, Normal<float>>::Sample;
 
 template <typename Number>
 struct EnumFields<RGB, Number> {

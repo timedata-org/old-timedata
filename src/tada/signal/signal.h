@@ -17,14 +17,16 @@ struct Model {
     static const auto SIZE = enumSize<Names>();
 
     using value_type = typename Range::value_type;
-    using BaseArray = std::array<value_type, SIZE>;
+    using BaseSample = std::array<value_type, SIZE>;
 
-    struct Array : BaseArray {
-        using BaseArray::BaseArray;
+    struct Sample : BaseSample {
+        using BaseSample::BaseSample;
 
-        Array(value_type r, value_type g, value_type b) : BaseArray{{r, g, b}} {}
-        Array() {
-            BaseArray::fill(0);
+        Sample(value_type r, value_type g, value_type b)
+                : BaseSample{{r, g, b}} {
+        }
+        Sample() {
+            BaseSample::fill(0);
         }
 
         using names_t = Names;
@@ -32,7 +34,7 @@ struct Model {
         using value_type = Model::value_type;
     };
 
-    using Vector = std::vector<Array>;
+    using Vector = std::vector<Sample>;
 };
 
 }  // tada
