@@ -32,6 +32,24 @@ struct Model {
         using names_t = Names;
         using range_t = Range;
         using value_type = Model::value_type;
+
+        template <typename Function>
+        Sample forEach(Function f) {
+            Sample result;
+            for (auto i = 0; i < this->size(); ++i)
+                result[i] = f(*this)[i];
+            return result;
+        }
+        Sample scale() const {
+            return forEach([](value_type x) {
+                return tada::scale<Range>(x);
+            });
+        }
+        Sample unscale() const {
+            return forEach([](value_type x) {
+                return tada::unscale<Range>(x);
+            });
+        }
     };
 
     using Vector = std::vector<Sample>;
