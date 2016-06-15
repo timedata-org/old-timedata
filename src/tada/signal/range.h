@@ -15,7 +15,7 @@ struct EightBit {
     using value_type = T;
 
     static constexpr auto start = value_type(0);
-    static constexpr auto range = value_type(255);
+    static constexpr auto range = value_type(256);
 };
 
 template <typename Range>

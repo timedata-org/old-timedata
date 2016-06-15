@@ -47,7 +47,8 @@ Color magic_floor(Color const& x) {
 
 template <typename Color>
 Color magic_invert(Color const& x) {
-    return {invert(x[0]), invert(x[1]), invert(x[2])};
+    auto r = Color::range_t::range;
+   return {invert(x[0], r), invert(x[1], r), invert(x[2], r)};
 }
 
 template <typename Color>
@@ -123,10 +124,12 @@ Color rotated(Color const& x, int pos) {
 
 template <typename Color>
 typename Color::value_type distance2(Color const& x, Color const& y) {
-    typename Color::value_type d = 0;
-    for (auto i = 0; i < x.size(); ++i)
-        d += x[i] * x[i] + y[i] * y[i];
-    return d;
+    typename Color::value_type total = 0;
+    for (auto i = 0; i < x.size(); ++i) {
+        auto d = x[i] - y[i];
+        total += d * d;
+    }
+    return total;
 }
 
 template <typename Color>

@@ -105,4 +105,7 @@ float powPython(float x, float y);
 */
 float modPython(float x, float y);
 
+template <typename Collection>
+typename Collection::value_type hashPython(Collection const&);
+
 }  // namespace tada

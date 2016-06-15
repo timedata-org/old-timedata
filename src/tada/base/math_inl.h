@@ -230,5 +230,4 @@ typename Collection::value_type hashPython(Collection const& c) {
     return h;
 }
 
-
 }  // namespace tada
