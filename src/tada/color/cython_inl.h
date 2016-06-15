@@ -10,16 +10,22 @@ namespace tada {
 namespace color {
 
 using ColorCpp = Color;
+using ColorCpp256 = Color256;
 
 template <typename Color>
 std::string colorToString(Color const& x) {
-    return colorToString(x.unscale(), Base::normal);
+    auto c = x.unscale();
+    return colorToString(ColorCpp(c[0], c[1], c[2]), Base::normal);
 }
 
 template <typename Color>
 bool stringToColor(std::string const& x, Color& c) {
-    if (not stringToColor(x.c_str(), c, Base::normal))
+    ColorCpp cpp;
+    if (not stringToColor(x.c_str(), cpp, Base::normal))
         return false;
+    c[0] = cpp[0];
+    c[1] = cpp[1];
+    c[2] = cpp[2];
     c = c.scale();
     return true;
 }
@@ -46,7 +52,7 @@ Color magic_invert(Color const& x) {
 
 template <typename Color>
 Color magic_neg(Color const& x) {
-    return {-x[0], -x[1], -x[2]};
+    return x.forEach(std::negate<typename Color::value_type>());
 }
 
 template <typename Color>
@@ -116,13 +122,16 @@ Color rotated(Color const& x, int pos) {
 }
 
 template <typename Color>
-float distance(Color const& x, Color const& y) {
-    return tada::distance(x, y);
+typename Color::value_type distance2(Color const& x, Color const& y) {
+    typename Color::value_type d = 0;
+    for (auto i = 0; i < x.size(); ++i)
+        d += x[i] * x[i] + y[i] * y[i];
+    return d;
 }
 
 template <typename Color>
-float distance2(Color const& x, Color const& y) {
-    return tada::distance2(x, y);
+float distance(Color const& x, Color const& y) {
+    return std::sqrt(distance2(x, y));
 }
 
 template <typename Color>
@@ -167,16 +176,19 @@ bool compare(Color const& x, Color const& y, int richCmp) {
     return cmpToRichcmp(compare(x, y), richCmp);
 }
 
-// template <typename Color>  // TODO!!
-inline
-Color from_hex(uint32_t hex) {
-    return colorFromHex(hex, Base::normal).unscale();
-
+template <typename Color>
+void from_hex(uint32_t hex, Color& x) {
+    auto c = colorFromHex(hex, Base::normal);
+    x[0] = c[0];
+    x[1] = c[1];
+    x[2] = c[2];
+    x = x.scale();
 }
 
 template <typename Color>
-uint32_t to_hex(Color const& c) {
-    return hexFromColor(c.scale(), Base::normal);
+uint32_t to_hex(Color const& x) {
+    auto c = x.unscale();
+    return hexFromColor(ColorCpp(c[0], c[1], c[2]), Base::normal);
 }
 
 } // color

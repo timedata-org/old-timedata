@@ -16,6 +16,7 @@ enum class HSB { hue, saturation, brightness, last = brightness };
 enum class Base {normal, integer, last = integer};
 
 using Color = Model<RGB, Normal<float>>::Sample;
+using Color256 = Model<RGB, EightBit<float>>::Sample;
 
 template <typename Number>
 struct EnumFields<RGB, Number> {

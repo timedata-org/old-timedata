@@ -18,15 +18,13 @@
         * Constructing from things that aren't iterable or have the wrong size
           throws the correct Python exception.
         """
-        cdef ${value_type} number
         if len(args) == 1:
             a = args[0]
             if isinstance(a, Number):
-                number = a
-                self.cdata.fill(number)
+                self.cdata.fill(<$value_type> a)
                 return
             if isinstance(a, str):
-                if $from_string(a, self.cdata):
+                if $from_string(<string> a, self.cdata):
                     return
                 raise ValueError("Can't understand sample string %s" % args)
             try:

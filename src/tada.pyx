@@ -22,6 +22,7 @@ include "tada/signal/fade.pyx"
 include "tada/signal/render3.pyx"
 
 include "tada/color/color.gen.pyx"
+include "tada/color/color256.gen.pyx"
 
 
 locals().update(

@@ -1,10 +1,10 @@
 ### declare
-    $class_cpp $name($argument_type)
+    void $name($argument_type, $class_cpp&)
 
 ### define
     @staticmethod
     def $name($argument_type arg):
         """{documentation}"""
-        cdef $class_py x = $class_py()
-        x.cdata = $name(arg)
-        return x
+        cdef $class_py result = $class_py()
+        $name(arg, result.cdata)
+        return result

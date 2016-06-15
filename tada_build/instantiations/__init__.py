@@ -1,1 +1,1 @@
-from . import Color
+from . import Color, Color256
