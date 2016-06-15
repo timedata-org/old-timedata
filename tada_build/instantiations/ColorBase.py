@@ -1,3 +1,5 @@
+from . SampleBase import *
+
 begin = 0
 compare = 'compare'
 from_string = 'stringToColor'
@@ -10,7 +12,9 @@ size = 3
 documentation = 'FIXME'
 fix_key = 'fixKey'
 
-methods = dict(
+methods = add_methods(
+    methods,
+
     static=dict(
         strings=(
             dict(name_cpp='colorNames',

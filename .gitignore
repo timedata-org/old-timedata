@@ -8,4 +8,4 @@ __pycache__
 tada/*.so
 *.so
 tada.egg-info/
-src/tada/color/color.gen.pyx
+src/tada/color/*.gen.pyx
