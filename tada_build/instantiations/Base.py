@@ -15,4 +15,4 @@ def add_methods(x=None, **y):
                 r_value[k2] = r_value.get(k2, ()) + v2
     return result
 
-methods = {}
+methods = add_methods({}, base=('base',))
