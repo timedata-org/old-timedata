@@ -53,3 +53,6 @@
 
         if not self._set_at(key, item):
             self.index_error(key)
+
+    def __len__(self):
+        return self.cdata.size()

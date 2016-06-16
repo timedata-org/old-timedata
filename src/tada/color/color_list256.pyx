@@ -146,7 +146,7 @@ cdef class ColorList256:
         appendInto(ColorList256(values).colors, self.colors)
         return self
 
-    def index(ColorList256 self, Color256 color):
+    cpdef index(ColorList256 self, Color256 color):
         """Returns an index to the first occurance of that Color, or
            raises a ValueError if that Color isn't there."""
         cdef int id = indexOf(self.colors, color.color)

@@ -146,7 +146,7 @@ cdef class ColorList{suffix}:
         appendInto(ColorList{suffix}(values).colors, self.colors)
         return self
 
-    def index(ColorList{suffix} self, Color{suffix} color):
+    cpdef index(ColorList{suffix} self, Color{suffix} color):
         """Returns an index to the first occurance of that Color, or
            raises a ValueError if that Color isn't there."""
         cdef int id = indexOf(self.colors, color.color)
