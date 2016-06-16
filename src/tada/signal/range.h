@@ -46,4 +46,38 @@ ValueType<Range> invert(ValueType<Range> y) {
     return y > 0 ? Range::range - y : -(Range::range + y);
 }
 
+/** A Ranged number looks like an underlying numeric type, but with a
+    generically attached Range.
+
+    "Generic" means that there is no cost at run-time to carrying this
+    information around - the downside is that we have to instantiate a new
+    template for each range we want, but since the total number is very small,
+    this is almost free. */
+template <typename Range>
+struct Ranged {
+    using value_type = ValueType<Range>;
+
+    value_type value;
+
+    Ranged() = default;
+    Ranged(Ranged const&) = default;
+    Ranged(value_type n) : value(n) {}
+
+    value_type unscale() const {
+        return tada::unscale<Range>(value);
+    }
+
+    static Ranged scale(value_type v) {
+        return tada::scale<Range>(v);
+    }
+
+    template <typename Range2>
+    operator Ranged<Range2>() const {
+        return tada::scale<Range2>(tada::unscale<Range>(value));
+    }
+
+    operator value_type() const { return value; }
+    operator value_type&() { return value; }
+};
+
 }  // tada
