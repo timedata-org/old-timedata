@@ -5,7 +5,7 @@
 #include <vector>
 
 #include <tada/base/enum.h>
-#include <tada/signal/range.h>
+#include <tada/signal/ranged.h>
 
 namespace tada {
 
