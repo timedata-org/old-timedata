@@ -35,7 +35,7 @@ class Ranged {
         if (Range::start < 0)
             return -value_;
         // TODO: what if start > 0?  Why would this be?
-        return (value_ > 0 ? Range::range: -Range::range) - value_;
+        return value_ >= 0 ? (Range::range - value_): -(value_ + Range::range);
     }
 
     template <typename Range2>
