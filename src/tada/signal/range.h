@@ -29,27 +29,23 @@ struct Range255 {
 };
 
 template <typename Range>
-using ValueType = typename Range::value_type;
+using ToValue = typename Range::value_type;
+
+template <typename Range>
+using ToNormal = Normal<ToValue<Range>>;
 
 /** Unscale a ranged number to a range of [0, 1].  Numbers out of band get
     scaled proportionately. */
 template <typename Range>
-ValueType<Range> unscale(ValueType<Range> x) {
+ToValue<Range> unscale(ToValue<Range> x) {
     return (x - Range::start) / Range::range;
 }
 
 /** Scale a number with a range of [0, 1] to a ranged number.
     Numbers out of band get scaled proportionately. */
 template <typename Range>
-ValueType<Range> scale(ValueType<Range> y) {
+ToValue<Range> scale(ToValue<Range> y) {
     return Range::start + y * Range::range;
-}
-
-/* TODO: above two functions only work for floating types! write/repurpose
-   something for integral types. */
-
-template <typename Range>
-ValueType<Range> invert(ValueType<Range> y) {
 }
 
 }  // tada

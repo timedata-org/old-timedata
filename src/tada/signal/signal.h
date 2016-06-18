@@ -20,6 +20,8 @@ struct Sample : SampleBase<Model, Range> {
     using value_type = typename base_t::value_type;
     using number_t = typename value_type::value_type;
 
+    using normal_t = Sample<Model, ToNormal<Range>>;
+
     using base_t::base_t;
 
     Sample(value_type r, value_type g, value_type b)

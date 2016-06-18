@@ -16,8 +16,47 @@
 namespace tada {
 namespace detail {
 
+inline Color toNormalColor(unsigned int hex) {
+    static const auto BYTE = 256;
+    auto b = hex % BYTE;
+
+    hex /= BYTE;
+    auto g = hex % BYTE;
+
+    hex /= BYTE;
+    auto r = hex % BYTE;
+
+    return {r, g, b};
+};
+
+inline float strtof(const char *nptr, char const **endptr) {
+    char* ep;
+    auto r = ::strtof(nptr, &ep);
+    *endptr = ep;
+    return r;
+}
+
+template <typename Range>
+bool isNearHex(Ranged<Range> number) {
+    return isNearFraction(number, 256 / Range::range);
+}
+
+template <typename Color>
+std::string addNegatives(Color const& c) {
+    std::string s;
+    using BoolSamples = Sample<RGB, Normal<bool>>;
+    auto negative = BoolSamples(*c[0] < 0, *c[1] < 0, *c[2] < 0);
+    if (negative[0] or negative[1] or negative[2]) {
+        for (auto n : negative)
+            s += "+-"[n];
+    }
+    return s;
+};
+
 template <Base base>
 struct ColorTraits {
+    class range_t;
+
     static constexpr float denormalize(float x) {
         return (base == Base::normal) ? x / 255.0 : x;
     }
@@ -26,16 +65,8 @@ struct ColorTraits {
     }
 
     static Color toColor(unsigned int hex) {
-        static const auto BYTE = 256;
-        auto b = hex % BYTE;
-
-        hex /= BYTE;
-        auto g = hex % BYTE;
-
-        hex /= BYTE;
-        auto r = hex % BYTE;
-
-        return {denormalize(r), denormalize(g), denormalize(b)};
+        auto c = toNormalColor(hex);
+        return {denormalize(c[0]), denormalize(c[1]), denormalize(c[2])};
     };
 
     static bool isNearHex(float decimal) {
@@ -45,13 +76,6 @@ struct ColorTraits {
 
     static bool isGray(Color color) {
         return normalize(colorfulness(color)) < 0.0001;
-    }
-
-    static float strtof(const char *nptr, char const **endptr) {
-        char* ep;
-        auto r = ::strtof(nptr, &ep);
-        *endptr = ep;
-        return r;
     }
 
     static uint32_t toHex(Color c) {
@@ -68,17 +92,6 @@ struct ColorTraits {
     }
 
     static std::string toString(Color c) {
-        auto addNegatives = [&](std::string const& value) {
-            auto s = value;
-            using BoolSamples = Sample<RGB, Normal<bool>>;
-            auto negative = BoolSamples(*c[0] < 0, *c[1] < 0, *c[2] < 0);
-            if (negative[0] or negative[1] or negative[2]) {
-                for (auto n : negative)
-                    s += "+-"[n];
-            }
-            return s;
-        };
-
         auto max = normalize(1.0);
         auto isMax = [=](float x) { return x <= max; };
         if (std::all_of(c.begin(), c.end(), isMax)) {
@@ -87,12 +100,12 @@ struct ColorTraits {
 
                 auto i = colorMapInverse().find(hex);
                 if (i != colorMapInverse().end())
-                    return addNegatives(i->second);
+                    return i->second + addNegatives(c);
             }
 
             if (isGray(c)) {
                 auto gray = 100.0f * normalize(std::abs(c[0]));
-                return addNegatives("gray " + tada::toString(gray, 4));
+                return "gray " + tada::toString(gray, 4) + addNegatives(c);
             }
         }
 
