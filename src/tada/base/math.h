@@ -5,7 +5,7 @@
 #include <iomanip>
 #include <sstream>
 #include <type_traits>
-
+#include <algorithm>
 #include <tada/base/throw.h>
 
 namespace tada {

@@ -18,6 +18,7 @@ import Cython.Compiler.Options
 IS_MAC = (platform.system() == 'Darwin')
 IS_LINUX = (platform.system() == 'Linux')
 IS_DEBIAN = IS_LINUX and (platform.linux_distribution()[0] == 'debian')
+IS_WINDOWS = (platform.system() == 'Windows')
 
 LIBRARIES = [] if (IS_MAC or IS_LINUX) else ['m']
 
@@ -30,7 +31,7 @@ def run(*cmds):
     return subprocess.check_output(cmds).strip().decode('ascii')
 
 def git_tags():
-    tags = run('git', 'describe', '--tags')
+    tags = run('git', 'describe', '--tags', '--always')
     branch = run('git', 'rev-parse', '--abbrev-ref', 'HEAD')
     remote = run('git', 'config', 'remote.origin.url')
     user = remote.split(':')[1].split('/')[0]
@@ -38,14 +39,39 @@ def git_tags():
 
 GIT_TAGS = git_tags()
 
-COMPILE_ARGS = [
-    '-O3',
-    '-DNDEBUG',
-    '-DCOMPILE_TIMESTAMP="%s"' % datetime.datetime.utcnow().isoformat(),
-    '-DGIT_TAGS="%s"' % git_tags(),
-    '-Wno-unused-function',
-    '-std=c++11',
-    ]
+if IS_LINUX or IS_MAC:
+    COMPILE_ARGS = [
+        '-O3',
+        '-DNDEBUG',
+        '-DCOMPILE_TIMESTAMP="%s"' % datetime.datetime.utcnow().isoformat(),
+        '-DGIT_TAGS="%s"' % git_tags(),
+        '-Wno-unused-function',
+        '-std=c++11',
+        ]
+elif IS_WINDOWS: #windows
+    COMPILE_ARGS = [
+        #'-O3',
+        '-DNDEBUG',
+        #'-std=c++11',
+        '-DWINDOWS',
+        '/Dand=&&',
+        '/Dand_eq=&=',
+        '/Dbitand=&',
+        '/Dbitor=|',
+        '/Dcompl=~',
+        '/Dnot=!',
+        '/Dnot_eq=!=',
+        '/Dor=||',
+        '/Dor_eq=|=',
+        '-DCOMPILE_TIMESTAMP=NOTIMPLEMENTED',
+        '-DGIT_TAGS=NOTIMPLEMENTED',
+        # nvcc does not seem to like a caret being the last character
+        # in a command line defined preprocessor symbol, so add an
+        # empty trailing comment to avoid this.
+        '/Dxor=^/**/',
+        '/Dxor_eq=^=',
+        '/Duint=size_t',
+        ]
 
 if IS_MAC:
     COMPILE_ARGS.extend(['-mmacosx-version-min=10.9',
@@ -68,6 +94,7 @@ class Clean(Command):
 
     def run(self):
         assert os.getcwd() == self.cwd, 'Must be in package root: %s' % self.cwd
+        print('Run Clean')
         execute('rm -Rf ./build src/tada.cpp')
 
 
@@ -76,6 +103,7 @@ class Generate(Command):
     user_options = []
 
     def run(self):
+        print('Run Generate')
         generate.generate()
 
 class Local(Command):
@@ -88,6 +116,7 @@ class Local(Command):
     # TODO: awful hack.
 
     def run(self):
+        print('Run Local')
         files = glob.glob('build/lib*/*.so')
         assert len(files) == 1, files
 

@@ -9,3 +9,4 @@ tada/*.so
 *.so
 tada.egg-info/
 src/tada/color/*.gen.pyx
+dist/
