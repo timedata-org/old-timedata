@@ -37,8 +37,6 @@ def git_tags():
     user = remote.split(':')[1].split('/')[0]
     return '%s+%s.%s' % (tags, branch, user)
 
-GIT_TAGS = git_tags()
-
 if IS_LINUX or IS_MAC:
     COMPILE_ARGS = [
         '-O3',
@@ -63,8 +61,8 @@ elif IS_WINDOWS: #windows
         '/Dnot_eq=!=',
         '/Dor=||',
         '/Dor_eq=|=',
-        '-DCOMPILE_TIMESTAMP=NOTIMPLEMENTED',
-        '-DGIT_TAGS=NOTIMPLEMENTED',
+        '-DCOMPILE_TIMESTAMP="not implemented"',
+        '-DGIT_TAGS="not implemented"',
         # nvcc does not seem to like a caret being the last character
         # in a command line defined preprocessor symbol, so add an
         # empty trailing comment to avoid this.

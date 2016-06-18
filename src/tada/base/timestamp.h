@@ -5,13 +5,19 @@
 namespace tada {
 
 inline std::string compileTimestamp() {
-    //return COMPILE_TIMESTAMP;
-    return "NOT IMPLEMENTED";
+#ifdef WINDOWS
+    return "not implemented";
+#else
+    return COMPILE_TIMESTAMP;
+#endif
 }
 
 inline std::string gitTags() {
-    //return GIT_TAGS;
-    return "NOT IMPLEMENTED";
+#ifdef WINDOWS
+    return "not implemented";
+#else
+    return GIT_TAGS;
+#endif
 }
 
 } // tada
