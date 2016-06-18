@@ -1,6 +1,6 @@
 import unittest
 
-from tada import Color, Color256, Colors, Colors256, NewColor256, NewColor
+from tada import Color, Color256, Colors, Colors256, NewColor255, NewColor256, NewColor
 
 Color = NewColor
 Color256 = NewColor256

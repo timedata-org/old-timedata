@@ -11,6 +11,7 @@ namespace color {
 
 using ColorCpp = Color;
 using ColorCpp256 = Color256;
+using ColorCpp255 = Color255;
 
 template <typename Color>
 ColorCpp unscale(Color const& x) {

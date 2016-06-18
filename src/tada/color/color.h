@@ -12,6 +12,7 @@ enum class HSB { hue, saturation, brightness, last = brightness };
 
 using Color = Sample<RGB, Normal<float>>;
 using Color256 = Sample<RGB, EightBit<float>>;
+using Color255 = Sample<RGB, Range255<float>>;
 
 // Everything below this point is DEPRECATED.
 

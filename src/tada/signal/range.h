@@ -20,6 +20,14 @@ struct EightBit {
     static constexpr auto range = value_type(256);
 };
 
+template <typename T = float>
+struct Range255 {
+    using value_type = T;
+
+    static constexpr auto start = value_type(0);
+    static constexpr auto range = value_type(255);
+};
+
 template <typename Range>
 using ValueType = typename Range::value_type;
 
