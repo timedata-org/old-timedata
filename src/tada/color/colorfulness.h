@@ -25,7 +25,7 @@ typename Collection::value_type maxPairedDistanceAbs(Collection const& coll) {
     using Number = typename Collection::value_type;
     Number result = 0;
     forEachPair(coll, [&](Number x, Number y) {
-        result = std::max(result, std::abs(std::abs(x) - std::abs(y)));
+        result = std::max(result, Number(std::abs(std::abs(*x) - std::abs(*y))));
     });
     return result;
 }

@@ -42,11 +42,6 @@ ValueType<Range> scale(ValueType<Range> y) {
 
 template <typename Range>
 ValueType<Range> invert(ValueType<Range> y) {
-    // TODO: this is basically bogus for the general case.  :-)
-    if (Range::start < 0)
-        return -y;
-    // TODO: what if start > 0?  Why would this be?
-    return y > 0 ? Range::range - y : -(Range::range + y);
 }
 
 }  // tada

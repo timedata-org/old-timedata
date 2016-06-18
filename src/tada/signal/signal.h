@@ -16,7 +16,10 @@ template <typename Names, typename Range>
 struct Model {
     static const auto SIZE = enumSize<Names>();
 
-    using value_type = typename Range::value_type;
+    // using value_type = typename Range::value_type;
+    using value_type = Ranged<Range>;
+    using number_t = typename value_type::value_type;
+
     using BaseSample = std::array<value_type, SIZE>;
 
     struct Sample : BaseSample {
@@ -33,7 +36,7 @@ struct Model {
         using names_t = Names;
         using range_t = Range;
         using value_type = Model::value_type;
-        using FunctionPointer = value_type (*)(value_type);
+        using FunctionPointer = number_t (*)(number_t);
 
         template <typename Function>
         Sample forEach(Function f) const {
@@ -51,9 +54,11 @@ struct Model {
             return forEachF(tada::scale<Range>);
         }
 
+#if 0
         Sample unscale() const {
             return forEachF(tada::unscale<Range>);
         }
+#endif
     };
 
     using Vector = std::vector<Sample>;

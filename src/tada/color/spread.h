@@ -37,13 +37,13 @@ inline void spreadAppend(ColorVector& colors, size_t size, Color const& end) {
         return;
     }
     auto begin = colors.back();
-    auto r = begin[0],
-         g = begin[1],
-         b = begin[2],
+    auto r = *begin[0],
+         g = *begin[1],
+         b = *begin[2],
          d = 1.0f / (size + 1),
-         dr = d * (end[0] - r),
-         dg = d * (end[1] - g),
-         db = d * (end[2] - b);
+         dr = d * (*end[0] - r),
+         dg = d * (*end[1] - g),
+         db = d * (*end[2] - b);
     for (size_t i = 1; i <= size; ++i)
         colors.push_back({r + i * dr, g + i * dg, b + i * db});
 

@@ -13,9 +13,14 @@ using ColorCpp = Color;
 using ColorCpp256 = Color256;
 
 template <typename Color>
+ColorCpp unscale(Color const& x) {
+    // TODO: hack!
+    return {x[0].unscale(), x[1].unscale(), x[2].unscale()};
+}
+
+template <typename Color>
 std::string colorToString(Color const& x) {
-    auto c = x.unscale();
-    return colorToString(ColorCpp(c[0], c[1], c[2]), Base::normal);
+    return colorToString(unscale(x), Base::normal);
 }
 
 template <typename Color>
@@ -47,8 +52,7 @@ Color magic_floor(Color const& x) {
 
 template <typename Color>
 Color magic_invert(Color const& x) {
-    auto r = Color::range_t::range;
-   return {invert(x[0], r), invert(x[1], r), invert(x[2], r)};
+    return {x[0].invert(), x[1].invert(), x[2].invert()};
 }
 
 template <typename Color>
@@ -69,7 +73,7 @@ Color magic_trunc(Color const& x) {
 
 template <typename Color>
 int magic_hash(Color const& x) {
-    return static_cast<int>(hashPython(x.unscale()) * 256);
+    return static_cast<int>(hashPython(x).unscale());
 }
 
 template <typename Color>
@@ -190,8 +194,7 @@ void from_hex(uint32_t hex, Color& x) {
 
 template <typename Color>
 uint32_t to_hex(Color const& x) {
-    auto c = x.unscale();
-    return hexFromColor(ColorCpp(c[0], c[1], c[2]), Base::normal);
+    return hexFromColor(unscale(x), Base::normal);
 }
 
 } // color

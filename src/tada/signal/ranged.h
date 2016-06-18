@@ -16,7 +16,7 @@ class Ranged {
   public:
     using value_type = ValueType<Range>;
 
-    Ranged() = default;
+    Ranged() : value_(0) {}
     Ranged(Ranged const&) = default;
     Ranged(Ranged&&) = default;
     Ranged(value_type n) : value_(n) {}
@@ -30,13 +30,24 @@ class Ranged {
         return tada::scale<Range>(v);
     }
 
+    Ranged invert() const {
+        // TODO: this is basically bogus for the general case.  :-)
+        if (Range::start < 0)
+            return -value_;
+        // TODO: what if start > 0?  Why would this be?
+        return (value_ > 0 ? Range::range: -Range::range) - value_;
+    }
+
     template <typename Range2>
     operator Ranged<Range2>() const {
         return tada::scale<Range2>(tada::unscale<Range>(value_));
     }
 
-    operator value_type() const { return value_; }
     operator value_type&() { return value_; }
+    operator value_type() const { return value_; }
+
+    value_type& operator*() { return value_; }
+    value_type operator*() const { return value_; }
 
     Ranged operator-() const { return {-value_}; }
 
@@ -47,10 +58,25 @@ class Ranged {
         return divPython(value_, x.value_);
     }
 
-    Ranged operator+=(Ranged const& x) { value_ += x.value_; }
-    Ranged operator-=(Ranged const& x) { value_ -= x.value_; }
-    Ranged operator*=(Ranged const& x) { value_ *= x.value_; }
-    Ranged operator/=(Ranged const& x) { value_ = divPython(value_, x.value_); }
+    Ranged& operator+=(Ranged const& x) {
+        value_ += x.value_;
+        return *this;
+    }
+
+    Ranged& operator-=(Ranged const& x) {
+        value_ -= x.value_;
+        return *this;
+    }
+
+    Ranged& operator*=(Ranged const& x) {
+        value_ *= x.value_;
+        return *this;
+    }
+
+    Ranged& operator/=(Ranged const& x) {
+        value_ = divPython(value_, x.value_);
+        return *this;
+    }
 
     bool operator==(Ranged const& x) const { return value_ == x.value_; }
     bool operator!=(Ranged const& x) const { return value_ != x.value_; }

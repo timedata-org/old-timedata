@@ -61,7 +61,7 @@ struct ColorTraits {
             total *= max;
             i = std::abs(i);
             if (base == Base::normal)
-                i *= max;
+                *i *= max;
             total += std::min(max - 1, static_cast<uint32_t>(i));
         }
         return total;
@@ -71,7 +71,7 @@ struct ColorTraits {
         auto addNegatives = [&](std::string const& value) {
             auto s = value;
             using BoolSamples = Model<RGB, Normal<bool>>::Sample;
-            auto negative = BoolSamples(c[0] < 0, c[1] < 0, c[2] < 0);
+            auto negative = BoolSamples(*c[0] < 0, *c[1] < 0, *c[2] < 0);
             if (negative[0] or negative[1] or negative[2]) {
                 for (auto n : negative)
                     s += "+-"[n];

@@ -224,10 +224,12 @@ inline float modPython(float x, float y) {
 template <typename Collection>
 typename Collection::value_type hashPython(Collection const& c) {
     // http://stackoverflow.com/a/2909572/43839
-    typename Collection::value_type h = 0;
+    using value_type = typename Collection::value_type;
+    static value_type const mult = 101;
+    value_type h = 0;
     for (auto& i: c)
-        (h *= 101) += i;
-    return h;
+        (h *= mult) += i;
+    return mult * h;
 }
 
 }  // namespace tada

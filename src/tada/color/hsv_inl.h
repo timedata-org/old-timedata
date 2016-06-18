@@ -50,19 +50,19 @@ Color hsvToRgb(Color c) {
 
 Color rgbToHsv(Color c, Base base) {
     if (base == Base::integer)
-        c = {c[0] / 255.0f, c[1] / 255.0f, c[2] / 255.0f};
+        c = {*c[0] / 255.0f, *c[1] / 255.0f, *c[2] / 255.0f};
     c = rgbToHsv(c);
     if (base == Base::integer)
-        c = {c[0] * 255.0f, c[1] * 255.0f, c[2] * 255.0f};
+        c = {*c[0] * 255.0f, *c[1] * 255.0f, *c[2] * 255.0f};
     return c;
 }
 
 Color hsvToRgb(Color c, Base base) {
     if (base == Base::integer)
-        c = {c[0] / 255.0f, c[1] / 255.0f, c[2] / 255.0f};
+        c = {*c[0] / 255.0f, *c[1] / 255.0f, *c[2] / 255.0f};
     c = hsvToRgb(c);
     if (base == Base::integer)
-        c = {c[0] * 255.0f, c[1] * 255.0f, c[2] * 255.0f};
+        c = {*c[0] * 255.0f, *c[1] * 255.0f, *c[2] * 255.0f};
     return c;
 }
 
