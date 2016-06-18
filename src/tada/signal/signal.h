@@ -9,59 +9,46 @@
 
 namespace tada {
 
-/** A Model encapsulates everything about a time arts signal except the
-    encoding into memory (interleaved, parallel, other...)
-*/
-template <typename Names, typename Range>
-struct Model {
-    static const auto SIZE = enumSize<Names>();
+template <typename Model, typename Range>
+using SampleBase = std::array<Ranged<Range>, enumSize<Model>()>;
 
-    // using value_type = typename Range::value_type;
-    using value_type = Ranged<Range>;
+template <typename Model, typename Range>
+struct Sample : SampleBase<Model, Range> {
+    using base_t = SampleBase<Model, Range>;
+    using model_t = Model;
+    using range_t = Range;
+    using value_type = typename base_t::value_type;
     using number_t = typename value_type::value_type;
 
-    using BaseSample = std::array<value_type, SIZE>;
+    using base_t::base_t;
 
-    struct Sample : BaseSample {
-        using BaseSample::BaseSample;
+    Sample(value_type r, value_type g, value_type b)
+            : base_t{{r, g, b}} {
+    }
+    Sample() {
+        base_t::fill(0);
+    }
 
-        Sample(value_type r, value_type g, value_type b)
-                : BaseSample{{r, g, b}} {
-        }
+    template <typename Function>
+    Sample forEach(Function f) const {
+        Sample result;
+        for (auto i = 0; i < result.size(); ++i)
+            result[i] = f((*this)[i]);
+        return result;
+    }
 
-        Sample() {
-            BaseSample::fill(0);
-        }
+    using FunctionPointer = number_t (*)(number_t);
+    Sample forEachF(FunctionPointer f) const {
+        return forEach(f);
+    }
 
-        using names_t = Names;
-        using range_t = Range;
-        using value_type = Model::value_type;
-        using FunctionPointer = number_t (*)(number_t);
+    Sample scale() const {
+        return forEachF(tada::scale<Range>);
+    }
 
-        template <typename Function>
-        Sample forEach(Function f) const {
-            Sample result;
-            for (auto i = 0; i < result.size(); ++i)
-                result[i] = f((*this)[i]);
-            return result;
-        }
-
-        Sample forEachF(FunctionPointer f) const {
-            return forEach(f);
-        }
-
-        Sample scale() const {
-            return forEachF(tada::scale<Range>);
-        }
-
-#if 0
-        Sample unscale() const {
-            return forEachF(tada::unscale<Range>);
-        }
-#endif
-    };
-
-    using Vector = std::vector<Sample>;
+    Sample unscale() const {
+        return forEachF(tada::unscale<Range>);
+    }
 };
 
 }  // tada

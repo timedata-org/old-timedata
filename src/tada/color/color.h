@@ -10,13 +10,15 @@ enum class RGB { red, green, blue, last = blue };
 enum class RGBW { red, green, blue, white, last = white };
 enum class HSB { hue, saturation, brightness, last = brightness };
 
+using Color = Sample<RGB, Normal<float>>;
+using Color256 = Sample<RGB, EightBit<float>>;
+
+// Everything below this point is DEPRECATED.
+
 /** Computational base - 0..1 float or 0..255 integer?
     TODO: needs to be replaced by a Range generic type!
 */
 enum class Base {normal, integer, last = integer};
-
-using Color = Model<RGB, Normal<float>>::Sample;
-using Color256 = Model<RGB, EightBit<float>>::Sample;
 
 template <typename Number>
 struct EnumFields<RGB, Number> {
@@ -28,9 +30,6 @@ struct EnumFields<RGB, Number> {
     EnumFields(Color const& c) : red(c[0]), green(c[1]), blue(c[2]) {}
     operator Color() const { return {{red, green, blue}}; }
 };
-
-using RGBModel = Model<RGB, Normal<float>>;
-using RGBModelEightBit = Model<RGB, EightBit<uint8_t>>;
 
 struct ColorS {
     float red = 0, green = 0, blue = 0;

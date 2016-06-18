@@ -9,6 +9,7 @@
 
 namespace tada {
 
+// TODO: Model is now an obsolete idea - it should probably be Sample.
 template <typename Model>
 struct Striped {
     using model_t = Model;

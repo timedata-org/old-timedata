@@ -19,7 +19,6 @@ struct Render3 {
         return std::min(max, min + (max - min + 1) * s);
     }
 
-
     template <typename ColorType = Color>
     ColorType apply(Color c) const {
         static std::vector<std::vector<uint8_t>> const perms = {
@@ -43,7 +42,7 @@ inline void renderColorVector(
     Render3 const& r3, ColorVector const& in, size_t pos, char* s) {
     // DANGER: C-style cast here.  Should work.  :-D
     // COPY_HACK!
-    using Color256 = RGBModelEightBit::Sample;
+    using Color256 = Sample<RGB, EightBit<uint8_t>>;
     auto out = (Color256*) s;
     for (size_t i = 0; i < r3.size; ++i)
         out[i] = r3.apply<Color256>(in.at(i + pos));
