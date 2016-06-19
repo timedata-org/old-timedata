@@ -53,6 +53,20 @@ std::string addNegatives(Color const& c) {
     return s;
 };
 
+
+template <typename Color>
+uint32_t toHexNormal(Color c) {
+    uint32_t total = 0;
+    static uint32_t const max = 256;
+    for (auto i : c) {
+        total *= max;
+        auto x = max * std::abs(i.unscale());
+        total += std::min(max - 1, static_cast<uint32_t>(x));
+    }
+    return total;
+}
+
+
 template <Base base>
 struct ColorTraits {
     class range_t;
@@ -79,16 +93,11 @@ struct ColorTraits {
     }
 
     static uint32_t toHex(Color c) {
-        uint32_t total = 0;
-        static uint32_t const max = 256;
-        for (auto i : c) {
-            total *= max;
-            i = std::abs(i);
-            if (base == Base::normal)
-                *i *= max;
-            total += std::min(max - 1, static_cast<uint32_t>(i));
+        if (base == Base::integer) {
+            for (auto& i: c)
+                *i /= 255;
         }
-        return total;
+        return toHexNormal(c);
     }
 
     static std::string toString(Color c) {
