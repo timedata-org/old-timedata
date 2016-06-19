@@ -46,6 +46,15 @@ inline float strtof(const char *nptr, char const **endptr) {
     return r;
 }
 
+inline bool getHexFromName(char const* name, uint& hex) {
+    auto i = colorMap().find(name);
+    if (i != colorMap().end())
+        hex = i->second;
+    else if (not fromHexWithPrefix(name, hex))
+        return false;
+    return true;
+}
+
 template <Base>
 struct BaseColor {
     // Temporary class while I dismantle this mess.
@@ -119,22 +128,15 @@ struct ColorTraits {
         if (not *name)
             return false;
 
-        auto i = colorMap().find(name);
-        if (i != colorMap().end()) {
-            result = colorFromHex(i->second);
-            return true;
-        }
-
         uint hex;
-        if (fromHexWithPrefix(name, hex)) {
+        if (getHexFromName(name, hex)) {
             result = colorFromHex(hex);
             return true;
         }
 
-        char* endptr;
-
         // Special case for grey and gray.
         if (strstr(name, "gray ") or strstr(name, "grey ")) {
+            char* endptr;
             auto gray = static_cast<float>(strtod(name + 5, &endptr)) / 100;
             if (not *endptr) {
                 gray = normalize(gray);
