@@ -16,17 +16,25 @@
 namespace tada {
 namespace detail {
 
-inline Color normalColorFromHex(unsigned int hex) {
+template <typename Color>
+void colorFromHex(uint hex, Color& c) {
+    using value_type = ValueType<Color>;
     static const auto BYTE = 256;
-    auto b = hex % BYTE;
 
+    c[2] = value_type::scale(hex % BYTE);
     hex /= BYTE;
-    auto g = hex % BYTE;
 
+    c[1] = value_type::scale(hex % BYTE);
     hex /= BYTE;
-    auto r = hex % BYTE;
 
-    return {r, g, b};
+    c[0] = value_type::scale(hex % BYTE);
+};
+
+template <typename C = Color>
+C normalColorFromHex(unsigned int hex) {
+    C c;
+    colorFromHex(hex, c);
+    return c;
 };
 
 inline float strtof(const char *nptr, char const **endptr) {
