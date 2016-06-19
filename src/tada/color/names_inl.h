@@ -16,25 +16,19 @@
 namespace tada {
 namespace detail {
 
-template <typename Color>
-void colorFromHex(uint hex, Color& c) {
-    using value_type = ValueType<Color>;
+using HexColor = std::array<uint8_t, 3>;
+
+HexColor hexColor(uint hex) {
     static const auto BYTE = 256;
 
-    c[2] = value_type::scale(hex % BYTE);
+    auto b = static_cast<uint8_t>(hex % BYTE);
     hex /= BYTE;
 
-    c[1] = value_type::scale(hex % BYTE);
+    auto g = static_cast<uint8_t>(hex % BYTE);
     hex /= BYTE;
 
-    c[0] = value_type::scale(hex % BYTE);
-};
-
-template <typename C = Color>
-C normalColorFromHex(unsigned int hex) {
-    C c;
-    colorFromHex(hex, c);
-    return c;
+    auto r = static_cast<uint8_t>(hex % BYTE);
+    return {{r, g, b}};
 };
 
 inline float strtof(const char *nptr, char const **endptr) {
@@ -92,9 +86,9 @@ struct ColorTraits {
         return (BASE == Base::integer) ? x * 255.0 : x;
     }
 
-    static Color colorFromHex(unsigned int hex) {
-        auto c = normalColorFromHex(hex);
-        return {denormalize(c[0]), denormalize(c[1]), denormalize(c[2])};
+    static Color colorFromHex(uint hex) {
+        auto h = hexColor(hex);
+        return {denormalize(h[0]), denormalize(h[1]), denormalize(h[2])};
     };
 
     static bool isNearHex(float decimal) {
