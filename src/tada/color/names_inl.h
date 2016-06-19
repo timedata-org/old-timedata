@@ -16,6 +16,15 @@
 namespace tada {
 namespace detail {
 
+// TODO: temporary while getting rid of Base.
+inline Color makeNormal(Color const& c) {
+    return c;
+}
+
+inline Color makeNormal(Color255 const& c) {
+    return {c[0].unscale(), c[1].unscale(), c[2].unscale()};
+}
+
 using HexColor = std::array<uint8_t, 3>;
 
 HexColor hexColor(uint hex) {
@@ -32,11 +41,12 @@ HexColor hexColor(uint hex) {
 };
 
 template <typename Color>
-void hexToColor(uint hex, Color& c) {
+void hexToColor(uint hex, Color& result) {
     auto h = hexColor(hex);
-    c[0] = *Color::value_type::scale(h[0]) / 255;
-    c[1] = *Color::value_type::scale(h[1]) / 255;
-    c[2] = *Color::value_type::scale(h[2]) / 255;
+    result = {
+        *Color::value_type::scale(h[0]) / 255,
+        *Color::value_type::scale(h[1]) / 255,
+        *Color::value_type::scale(h[2]) / 255};
 };
 
 inline float strtof(const char *nptr, char const **endptr) {
@@ -71,8 +81,8 @@ struct BaseColor<Base::integer> {
     using color_t = Color255;
 };
 
-template <Base base>
-using ColorType = typename BaseColor<base>::color_t;
+template <Base BASE>
+using ColorType = typename BaseColor<BASE>::color_t;
 
 template <typename Color>
 bool colorFromCommaSeparated(char const* p, Color& color) {
@@ -95,16 +105,17 @@ bool colorFromCommaSeparated(char const* p, Color& color) {
 }
 
 template <Base BASE>
+Color colorFromHex(uint hex) {
+    ColorType<BASE> c;
+    hexToColor(hex, c);
+    return makeNormal(c);
+};
+
+template <Base BASE>
 struct ColorTraits {
     static constexpr float normalize(float x) {
         return (BASE == Base::integer) ? x * 255.0 : x;
     }
-
-    static Color colorFromHex(uint hex) {
-        ColorType<BASE> c;
-        hexToColor(hex, c);
-        return {*c[0], *c[1], *c[2]};
-    };
 
     static bool isNearHex(float decimal) {
         auto denominator = (BASE == Base::normal) ? 255 : 1;
@@ -130,7 +141,7 @@ struct ColorTraits {
 
         uint hex;
         if (getHexFromName(name, hex)) {
-            result = colorFromHex(hex);
+            result = colorFromHex<BASE>(hex);
             return true;
         }
 
@@ -223,8 +234,8 @@ inline bool stringToColor(char const* name, ColorS& cs, Base base) {
 
 inline Color colorFromHex(uint32_t hex, Base base) {
     if (base == Base::normal)
-        return detail::ColorTraits<Base::normal>::colorFromHex(hex);
-    return detail::ColorTraits<Base::integer>::colorFromHex(hex);
+        return detail::colorFromHex<Base::normal>(hex);
+    return detail::colorFromHex<Base::integer>(hex);
 }
 
 inline uint32_t hexFromColor(Color const& c, Base base) {
