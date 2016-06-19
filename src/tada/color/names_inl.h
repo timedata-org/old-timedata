@@ -31,6 +31,14 @@ HexColor hexColor(uint hex) {
     return {{r, g, b}};
 };
 
+template <typename Color>
+void hexToColor(uint hex, Color& c) {
+    auto h = hexColor(hex);
+    c[0] = *Color::value_type::scale(h[0]) / 255;
+    c[1] = *Color::value_type::scale(h[1]) / 255;
+    c[2] = *Color::value_type::scale(h[2]) / 255;
+};
+
 inline float strtof(const char *nptr, char const **endptr) {
     char* ep;
     auto r = ::strtof(nptr, &ep);
@@ -79,16 +87,14 @@ bool colorFromCommaSeparated(char const* p, Color& color) {
 
 template <Base BASE>
 struct ColorTraits {
-    static constexpr float denormalize(float x) {
-        return (BASE == Base::normal) ? x / 255.0 : x;
-    }
     static constexpr float normalize(float x) {
         return (BASE == Base::integer) ? x * 255.0 : x;
     }
 
     static Color colorFromHex(uint hex) {
-        auto h = hexColor(hex);
-        return {denormalize(h[0]), denormalize(h[1]), denormalize(h[2])};
+        ColorType<BASE> c;
+        hexToColor(hex, c);
+        return {*c[0], *c[1], *c[2]};
     };
 
     static bool isNearHex(float decimal) {
