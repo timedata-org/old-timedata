@@ -111,6 +111,16 @@ Color colorFromHex(uint hex) {
     return makeNormal(c);
 };
 
+template <typename Color>
+bool colorFromHex(char const* name, Color& color) {
+    uint hex;
+    if (not getHexFromName(name, hex))
+        return false;
+
+    hexToColor(hex, color);
+    return true;
+}
+
 template <Base BASE>
 struct ColorTraits {
     static constexpr float normalize(float x) {
@@ -148,14 +158,23 @@ struct ColorTraits {
         result = {gray, gray, gray};
         return true;
     }
-
+#if 0
+    static bool toColorNonNegative(char const* name, Color& result) {
+        ColorType<BASE> c;
+        if (colorFromHex(name, c) or colorFromGray(name, c)) {
+            result = makeNormal(c);
+            return true;
+        }
+        return colorFromCommaSeparated<Color>(name, result);
+    }
+#endif
     static bool toColorNonNegative(char const* name, Color& result) {
         if (not *name)
             return false;
 
-        uint hex;
-        if (getHexFromName(name, hex)) {
-            result = colorFromHex<BASE>(hex);
+        ColorType<BASE> c;
+        if (colorFromHex(name, c)) {
+            result = makeNormal(c);
             return true;
         }
 
