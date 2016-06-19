@@ -16,25 +16,6 @@
 namespace tada {
 namespace detail {
 
-template <Base>
-struct BaseColor {
-    // Temporary class while I dismantle this mess.
-    class color_t;
-};
-
-template <>
-struct BaseColor<Base::normal> {
-    using color_t = Color;
-};
-
-template <>
-struct BaseColor<Base::integer> {
-    using color_t = Color255;
-};
-
-template <Base base>
-using ColorType = typename BaseColor<base>::color_t;
-
 inline Color toNormalColor(unsigned int hex) {
     static const auto BYTE = 256;
     auto b = hex % BYTE;
@@ -55,6 +36,51 @@ inline float strtof(const char *nptr, char const **endptr) {
     return r;
 }
 
+template <Base>
+struct BaseColor {
+    // Temporary class while I dismantle this mess.
+    class color_t;
+};
+
+template <>
+struct BaseColor<Base::normal> {
+    using color_t = Color;
+};
+
+template <>
+struct BaseColor<Base::integer> {
+    using color_t = Color255;
+};
+
+template <Base base>
+using ColorType = typename BaseColor<base>::color_t;
+
+template <typename Color>
+Color colorFromCommaSeparated(char const* p) {
+    auto originalP = p;
+    auto getNumber = [&]() {
+        auto x = strtof(p, &p);
+        skipSpaces(p);
+        return static_cast<float>(x);
+    };
+
+    auto skipComma = [&]() {
+        THROW_IF_NE(*p++, ',', "Expected a comma", originalP);
+        skipSpaces(p);
+    };
+
+    auto r = getNumber();
+    skipComma();
+
+    auto g = getNumber();
+    skipComma();
+
+    auto b = getNumber();
+    THROW_IF(*p, "Extra characters after end", originalP);
+
+    return {r, g, b};
+}
+
 template <Base BASE>
 struct ColorTraits {
     static constexpr float denormalize(float x) {
@@ -64,7 +90,7 @@ struct ColorTraits {
         return (BASE == Base::integer) ? x * 255.0 : x;
     }
 
-    static Color toColor(unsigned int hex) {
+    static Color colorFromHex(unsigned int hex) {
         auto c = toNormalColor(hex);
         return {denormalize(c[0]), denormalize(c[1]), denormalize(c[2])};
     };
@@ -87,47 +113,20 @@ struct ColorTraits {
         return tada::detail::toString(c2);
     }
 
-    static Color colorFromCommaSeparated(char const* p) {
-        auto originalP = p;
-        auto getNumber = [&]() {
-            auto x = strtof(p, &p);
-            skipSpaces(p);
-            return static_cast<float>(x);
-        };
-
-        auto skipComma = [&]() {
-            THROW_IF_NE(*p++, ',', "Expected a comma", originalP);
-            skipSpaces(p);
-        };
-
-        auto r = getNumber();
-        skipComma();
-
-        auto g = getNumber();
-        skipComma();
-
-        auto b = getNumber();
-        THROW_IF(*p, "Extra characters after end", originalP);
-
-        return {r, g, b};
-    }
-
     static bool toColorNonNegative(char const* name, Color& result) {
         if (not *name)
             return false;
 
         auto i = colorMap().find(name);
         if (i != colorMap().end()) {
-            result = toColor(i->second);
+            result = colorFromHex(i->second);
             return true;
         }
 
-        static const auto hexPrefixes = {"0x", "0X", "#"};
-        for (auto& prefix : hexPrefixes) {
-            if (strstr(name, prefix) == name) {
-                result = toColor(tada::fromHex(name + strlen(prefix)));
-                return true;
-            }
+        uint hex;
+        if (fromHexWithPrefix(name, hex)) {
+            result = colorFromHex(hex);
+            return true;
         }
 
         char* endptr;
@@ -144,7 +143,7 @@ struct ColorTraits {
         }
 
         try {
-            result = colorFromCommaSeparated(name);
+            result = colorFromCommaSeparated<Color>(name);
             return true;
         } catch (...) {
             return false;
@@ -225,8 +224,8 @@ inline bool stringToColor(char const* name, ColorS& cs, Base base) {
 
 inline Color colorFromHex(uint32_t hex, Base base) {
     if (base == Base::normal)
-        return detail::ColorTraits<Base::normal>::toColor(hex);
-    return detail::ColorTraits<Base::integer>::toColor(hex);
+        return detail::ColorTraits<Base::normal>::colorFromHex(hex);
+    return detail::ColorTraits<Base::integer>::colorFromHex(hex);
 }
 
 inline uint32_t hexFromColor(Color const& c, Base base) {

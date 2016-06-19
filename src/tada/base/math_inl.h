@@ -70,6 +70,17 @@ inline uint64_t fromHex(char const* s) {
     return decimalValue;
 }
 
+inline bool fromHexWithPrefix(char const* s, uint& result) {
+    if (s[0] == '#')
+        s++;
+    else if (not (strncmp("0x", s, 2) and strncmp("0X", s, 2)))
+        s += 2;
+    if (not (strlen(s) == 6 and isHex(s)))
+        return false;
+    sscanf(s, "%u", &result);
+    return true;
+ }
+
 // TODO: move elsewhere.
 template <typename Collection>
 std::string commaSeparated(Collection const& collection, int decimals) {
