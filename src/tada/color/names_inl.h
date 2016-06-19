@@ -22,7 +22,7 @@ inline Color makeNormal(Color const& c) {
 }
 
 inline Color makeNormal(Color255 const& c) {
-    return {c[0].unscale(), c[1].unscale(), c[2].unscale()};
+    return {c[0], c[1], c[2]};
 }
 
 using HexColor = std::array<uint8_t, 3>;
@@ -135,6 +135,20 @@ struct ColorTraits {
         return tada::detail::toString(c2);
     }
 
+    static bool getGray(char const* name, Color& result) {
+        // Special case for grey and gray.
+        if (not (strstr(name, "gray ") or strstr(name, "grey ")))
+            return false;
+
+        char* endptr;
+        auto gray = static_cast<float>(strtod(name + 5, &endptr)) / 100;
+        if (*endptr)
+            return false;
+        gray = normalize(gray);
+        result = {gray, gray, gray};
+        return true;
+    }
+
     static bool toColorNonNegative(char const* name, Color& result) {
         if (not *name)
             return false;
@@ -145,19 +159,8 @@ struct ColorTraits {
             return true;
         }
 
-        // Special case for grey and gray.
-        if (strstr(name, "gray ") or strstr(name, "grey ")) {
-            char* endptr;
-            auto gray = static_cast<float>(strtod(name + 5, &endptr)) / 100;
-            if (not *endptr) {
-                gray = normalize(gray);
-                result = {gray, gray, gray};
-                return true;
-            }
-            return false;
-        }
-
-        return colorFromCommaSeparated<Color>(name, result);
+        return getGray(name, result) or
+                colorFromCommaSeparated<Color>(name, result);
     }
 
     static bool toColor(char const* name, Color& result) {
