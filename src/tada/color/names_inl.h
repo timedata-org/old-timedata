@@ -64,29 +64,23 @@ template <Base base>
 using ColorType = typename BaseColor<base>::color_t;
 
 template <typename Color>
-Color colorFromCommaSeparated(char const* p) {
-    auto originalP = p;
+bool colorFromCommaSeparated(char const* p, Color& color) {
     auto getNumber = [&]() {
         auto x = strtof(p, &p);
         skipSpaces(p);
         return static_cast<float>(x);
     };
 
-    auto skipComma = [&]() {
-        THROW_IF_NE(*p++, ',', "Expected a comma", originalP);
-        skipSpaces(p);
-    };
+    color[0] = getNumber();
+    if (*p++ != ',')
+        return false;
 
-    auto r = getNumber();
-    skipComma();
+    color[1] = getNumber();
+    if (*p++ != ',')
+        return false;
 
-    auto g = getNumber();
-    skipComma();
-
-    auto b = getNumber();
-    THROW_IF(*p, "Extra characters after end", originalP);
-
-    return {r, g, b};
+    color[2] = getNumber();
+    return not *p;
 }
 
 template <Base BASE>
@@ -150,12 +144,7 @@ struct ColorTraits {
             return false;
         }
 
-        try {
-            result = colorFromCommaSeparated<Color>(name);
-            return true;
-        } catch (...) {
-            return false;
-        }
+        return colorFromCommaSeparated<Color>(name, result);
     }
 
     static bool toColor(char const* name, Color& result) {
