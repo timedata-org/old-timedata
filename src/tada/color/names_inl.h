@@ -121,6 +121,20 @@ bool colorFromHex(char const* name, Color& color) {
     return true;
 }
 
+template <typename Color>
+bool colorFromGray(char const* name, Color& result) {
+    // Special case for grey and gray.
+    if (not (strstr(name, "gray ") or strstr(name, "grey ")))
+        return false;
+
+    char* endptr;
+    auto gray = Color::value_type::scale(strtod(name + 5, &endptr) / 100);
+    if (*endptr)
+        return false;
+    result = {gray, gray, gray};
+    return true;
+}
+
 template <Base BASE>
 struct ColorTraits {
     static constexpr float normalize(float x) {
@@ -145,41 +159,17 @@ struct ColorTraits {
         return tada::detail::toString(c2);
     }
 
-    static bool getGray(char const* name, Color& result) {
-        // Special case for grey and gray.
-        if (not (strstr(name, "gray ") or strstr(name, "grey ")))
-            return false;
-
-        char* endptr;
-        auto gray = static_cast<float>(strtod(name + 5, &endptr)) / 100;
-        if (*endptr)
-            return false;
-        gray = normalize(gray);
-        result = {gray, gray, gray};
-        return true;
-    }
-#if 0
-    static bool toColorNonNegative(char const* name, Color& result) {
-        ColorType<BASE> c;
-        if (colorFromHex(name, c) or colorFromGray(name, c)) {
-            result = makeNormal(c);
-            return true;
-        }
-        return colorFromCommaSeparated<Color>(name, result);
-    }
-#endif
     static bool toColorNonNegative(char const* name, Color& result) {
         if (not *name)
             return false;
 
         ColorType<BASE> c;
-        if (colorFromHex(name, c)) {
+        if (colorFromHex(name, c) or colorFromGray(name, c)) {
             result = makeNormal(c);
             return true;
         }
 
-        return getGray(name, result) or
-                colorFromCommaSeparated<Color>(name, result);
+        return colorFromCommaSeparated<Color>(name, result);
     }
 
     static bool toColor(char const* name, Color& result) {
