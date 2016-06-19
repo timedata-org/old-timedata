@@ -17,6 +17,9 @@ class Ranged {
     using normal_t = ToNormal<Range>;
     using value_type = ToValue<Range>;
     using range_t = Range;
+    static constexpr auto START = Range::START;
+    static constexpr auto RANGE = Range::RANGE;
+    static constexpr auto STOP = START + RANGE;
 
     Ranged() : value_(0) {}
     Ranged(Ranged const&) = default;
@@ -24,20 +27,23 @@ class Ranged {
     Ranged(value_type n) : value_(n) {}
     Ranged& operator=(Ranged const&) = default;
 
-    value_type unscale() const {
-        return tada::unscale<Range>(value_);
-    }
-
-    static Ranged scale(value_type v) {
-        return tada::scale<Range>(v);
-    }
+    static
+    Ranged scale(value_type v) { return tada::scale<Range>(v); }
+    value_type unscale() const { return tada::unscale<Range>(value_); }
 
     Ranged invert() const {
         // TODO: this is basically bogus for the general case.  :-)
-        if (Range::start < 0)
+        if (START < 0)
             return -value_;
-        // TODO: what if start > 0?  Why would this be?
-        return value_ >= 0 ? (Range::range - value_): -(value_ + Range::range);
+        // TODO: what if START > 0?  Why would this be?
+        return value_ >= 0 ? (RANGE - value_): -(value_ + RANGE);
+    }
+
+    Ranged abs()  const { return std::abs(value_); }
+    bool inBand() const { return value_ >= START and value_ <= STOP; }
+
+    value_type limited() const {
+        return std::max(START, std::min(STOP, value_));
     }
 
     template <typename Range2>
@@ -53,9 +59,9 @@ class Ranged {
 
     Ranged operator-() const { return {-value_}; }
 
-    Ranged operator+(Ranged const& x) const { return {value_ + x.value_}; }
-    Ranged operator-(Ranged const& x) const { return {value_ - x.value_}; }
-    Ranged operator*(Ranged const& x) const { return {value_ * x.value_}; }
+    Ranged operator+(Ranged const& x) const { return value_ + x.value_; }
+    Ranged operator-(Ranged const& x) const { return value_ - x.value_; }
+    Ranged operator*(Ranged const& x) const { return value_ * x.value_; }
     Ranged operator/(Ranged const& x) const {
         return divPython(value_, x.value_);
     }

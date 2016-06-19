@@ -8,24 +8,24 @@ template <typename T = float>
 struct Normal {
     using value_type = T;
 
-    static constexpr auto start = value_type(0);
-    static constexpr auto range = value_type(1);
+    static constexpr auto START = value_type(0);
+    static constexpr auto RANGE = value_type(1);
 };
 
 template <typename T = float>
 struct EightBit {
     using value_type = T;
 
-    static constexpr auto start = value_type(0);
-    static constexpr auto range = value_type(256);
+    static constexpr auto START = value_type(0);
+    static constexpr auto RANGE = value_type(256);
 };
 
 template <typename T = float>
 struct Range255 {
     using value_type = T;
 
-    static constexpr auto start = value_type(0);
-    static constexpr auto range = value_type(255);
+    static constexpr auto START = value_type(0);
+    static constexpr auto RANGE = value_type(255);
 };
 
 template <typename Range>
@@ -38,14 +38,14 @@ using ToNormal = Normal<ToValue<Range>>;
     scaled proportionately. */
 template <typename Range>
 ToValue<Range> unscale(ToValue<Range> x) {
-    return (x - Range::start) / Range::range;
+    return (x - Range::START) / Range::RANGE;
 }
 
 /** Scale a number with a range of [0, 1] to a ranged number.
     Numbers out of band get scaled proportionately. */
 template <typename Range>
 ToValue<Range> scale(ToValue<Range> y) {
-    return Range::start + y * Range::range;
+    return Range::START + y * Range::RANGE;
 }
 
 }  // tada

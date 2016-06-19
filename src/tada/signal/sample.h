@@ -9,6 +9,9 @@
 
 namespace tada {
 
+template <typename T>
+using ValueType = typename T::value_type;
+
 template <typename Model, typename Range>
 using SampleBase = std::array<Ranged<Range>, enumSize<Model>()>;
 
@@ -17,8 +20,8 @@ struct Sample : SampleBase<Model, Range> {
     using base_t = SampleBase<Model, Range>;
     using model_t = Model;
     using range_t = Range;
-    using value_type = typename base_t::value_type;
-    using number_t = typename value_type::value_type;
+    using value_type = ValueType<base_t>;
+    using number_t = ValueType<value_type>;
 
     using normal_t = Sample<Model, ToNormal<Range>>;
 

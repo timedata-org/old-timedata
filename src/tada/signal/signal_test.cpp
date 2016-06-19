@@ -1,6 +1,6 @@
 #pragma once
 
-#include <tada/signal/signal.h>
+#include <tada/signal/sample.h>
 
 namespace tada {
 namespace range {

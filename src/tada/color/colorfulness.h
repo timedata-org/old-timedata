@@ -6,7 +6,8 @@ namespace tada {
 
 /** How far away is this color from gray, defined as the maximum distance
     between any two pairs of color. */
-float colorfulness(Color color);
+template <typename Color>
+ValueType<Color> colorfulness(Color const&);
 
 ////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////
@@ -20,18 +21,13 @@ void forEachPair(Collection const& coll, Function f) {
             f(coll[i], coll[j]);
 }
 
-template <typename Collection>
-typename Collection::value_type maxPairedDistanceAbs(Collection const& coll) {
-    using Number = typename Collection::value_type;
-    Number result = 0;
-    forEachPair(coll, [&](Number x, Number y) {
-        result = std::max(result, Number(std::abs(std::abs(*x) - std::abs(*y))));
+template <typename Color>
+ValueType<Color> colorfulness(Color const& color) {
+    ValueType<Color> result = 0;
+    forEachPair(color, [&](ValueType<Color> x, ValueType<Color> y) {
+        result = std::max(result, (x - y).abs());
     });
     return result;
-}
-
-inline float colorfulness(Color color) {
-    return maxPairedDistanceAbs(color);
 }
 
 }  // tada

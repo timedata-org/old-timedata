@@ -2,7 +2,7 @@
 
 #include <tada/base/enum.h>
 #include <tada/base/rotate.h>
-#include <tada/signal/signal.h>
+#include <tada/signal/sample.h>
 
 namespace tada {
 

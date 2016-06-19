@@ -16,6 +16,25 @@
 namespace tada {
 namespace detail {
 
+template <Base>
+struct BaseColor {
+    // Temporary class while I dismantle this mess.
+    class color_t;
+};
+
+template <>
+struct BaseColor<Base::normal> {
+    using color_t = Color;
+};
+
+template <>
+struct BaseColor<Base::integer> {
+    using color_t = Color255;
+};
+
+template <Base base>
+using ColorType = typename BaseColor<base>::color_t;
+
 inline Color toNormalColor(unsigned int hex) {
     static const auto BYTE = 256;
     auto b = hex % BYTE;
@@ -38,44 +57,65 @@ inline float strtof(const char *nptr, char const **endptr) {
 
 template <typename Range>
 bool isNearHex(Ranged<Range> number) {
-    return isNearFraction(number, 256 / Range::range);
+    return isNearFraction(number, 255 / Range::RANGE);
 }
 
 template <typename Color>
 std::string addNegatives(Color const& c) {
     std::string s;
-    using BoolSamples = Sample<RGB, Normal<bool>>;
-    auto negative = BoolSamples(*c[0] < 0, *c[1] < 0, *c[2] < 0);
-    if (negative[0] or negative[1] or negative[2]) {
-        for (auto n : negative)
-            s += "+-"[n];
+    auto r = (*c[0] < 0), g = (*c[1] < 0), b = (*c[2] < 0);
+    if (r or g or b) {
+        for (auto i: {r, g, b})
+            s += "+-"[i];
     }
     return s;
 };
 
-
 template <typename Color>
 uint32_t toHexNormal(Color c) {
     uint32_t total = 0;
-    static uint32_t const max = 256;
+    static uint32_t const MAX = 256;
     for (auto i : c) {
-        total *= max;
-        auto x = max * std::abs(i.unscale());
-        total += std::min(max - 1, static_cast<uint32_t>(x));
+        total *= MAX;
+        auto x = MAX * std::abs(i.unscale());
+        total += std::min(MAX - 1, static_cast<uint32_t>(x));
     }
     return total;
 }
 
+template <typename Color>
+bool isGray(Color color) {
+    return colorfulness(color).unscale() < 0.0001;
+}
 
-template <Base base>
+template <typename Color>
+std::string toString(Color c) {
+    using Range = typename Color::range_t;
+    auto bounded = [](ValueType<Color> x) { return x.abs().inBand(); };
+    if (std::all_of(c.begin(), c.end(), bounded)) {
+        if (std::all_of(c.begin(), c.end(), isNearHex<Range>)) {
+            auto hex = toHexNormal(c);
+
+            auto i = colorMapInverse().find(hex);
+            if (i != colorMapInverse().end())
+                return i->second + addNegatives(c);
+        }
+
+        if (isGray(c)) {
+            auto gray = 100.0f * c[0].abs().unscale();
+            return "gray " + tada::toString(gray, 4) + addNegatives(c);
+        }
+    }
+    return commaSeparated(c, 7);
+}
+
+template <Base BASE>
 struct ColorTraits {
-    class range_t;
-
     static constexpr float denormalize(float x) {
-        return (base == Base::normal) ? x / 255.0 : x;
+        return (BASE == Base::normal) ? x / 255.0 : x;
     }
     static constexpr float normalize(float x) {
-        return (base == Base::integer) ? x * 255.0 : x;
+        return (BASE == Base::integer) ? x * 255.0 : x;
     }
 
     static Color toColor(unsigned int hex) {
@@ -84,16 +124,12 @@ struct ColorTraits {
     };
 
     static bool isNearHex(float decimal) {
-        auto denominator = (base == Base::normal) ? 255 : 1;
+        auto denominator = (BASE == Base::normal) ? 255 : 1;
         return isNearFraction(decimal, denominator);
     }
 
-    static bool isGray(Color color) {
-        return normalize(colorfulness(color)) < 0.0001;
-    }
-
     static uint32_t toHex(Color c) {
-        if (base == Base::integer) {
+        if (BASE == Base::integer) {
             for (auto& i: c)
                 *i /= 255;
         }
@@ -101,24 +137,8 @@ struct ColorTraits {
     }
 
     static std::string toString(Color c) {
-        auto max = normalize(1.0);
-        auto isMax = [=](float x) { return x <= max; };
-        if (std::all_of(c.begin(), c.end(), isMax)) {
-            if (std::all_of(c.begin(), c.end(), isNearHex)) {
-                auto hex = toHex(c);
-
-                auto i = colorMapInverse().find(hex);
-                if (i != colorMapInverse().end())
-                    return i->second + addNegatives(c);
-            }
-
-            if (isGray(c)) {
-                auto gray = 100.0f * normalize(std::abs(c[0]));
-                return "gray " + tada::toString(gray, 4) + addNegatives(c);
-            }
-        }
-
-        return commaSeparated(c, 7);
+        ColorType<BASE> c2(*c[0], *c[1], *c[2]);
+        return tada::detail::toString(c2);
     }
 
     static Color colorFromCommaSeparated(char const* p) {
