@@ -160,16 +160,14 @@ struct ColorTraits {
     }
 
     static bool toColorNonNegative(char const* name, Color& result) {
-        if (not *name)
-            return false;
-
         ColorType<BASE> c;
-        if (colorFromHex(name, c) or colorFromGray(name, c)) {
+        if (colorFromHex(name, c) or
+            colorFromGray(name, c) or
+            colorFromCommaSeparated(name, c)) {
             result = makeNormal(c);
             return true;
         }
-
-        return colorFromCommaSeparated<Color>(name, result);
+        return false;
     }
 
     static bool toColor(char const* name, Color& result) {
