@@ -28,23 +28,23 @@ struct Range255 {
     static constexpr auto RANGE = value_type(255);
 };
 
-template <typename Range>
-using ToValue = typename Range::value_type;
+template <typename T>
+using ValueType = typename T::value_type;
 
 template <typename Range>
-using ToNormal = Normal<ToValue<Range>>;
+using NormalType = Normal<ValueType<Range>>;
 
 /** Unscale a ranged number to a range of [0, 1].  Numbers out of band get
     scaled proportionately. */
 template <typename Range>
-ToValue<Range> unscale(ToValue<Range> x) {
+ValueType<Range> unscale(ValueType<Range> x) {
     return (x - Range::START) / Range::RANGE;
 }
 
 /** Scale a number with a range of [0, 1] to a ranged number.
     Numbers out of band get scaled proportionately. */
 template <typename Range>
-ToValue<Range> scale(ToValue<Range> y) {
+ValueType<Range> scale(ValueType<Range> y) {
     return Range::START + y * Range::RANGE;
 }
 

@@ -14,8 +14,8 @@ namespace tada {
 template <typename Range>
 class Ranged {
   public:
-    using normal_t = ToNormal<Range>;
-    using value_type = ToValue<Range>;
+    using normal_t = NormalType<Range>;
+    using value_type = ValueType<Range>;
     using range_t = Range;
     static constexpr auto START = Range::START;
     static constexpr auto RANGE = Range::RANGE;

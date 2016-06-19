@@ -16,7 +16,7 @@
 namespace tada {
 namespace detail {
 
-inline Color toNormalColor(unsigned int hex) {
+inline Color normalColorFromHex(unsigned int hex) {
     static const auto BYTE = 256;
     auto b = hex % BYTE;
 
@@ -91,7 +91,7 @@ struct ColorTraits {
     }
 
     static Color colorFromHex(unsigned int hex) {
-        auto c = toNormalColor(hex);
+        auto c = normalColorFromHex(hex);
         return {denormalize(c[0]), denormalize(c[1]), denormalize(c[2])};
     };
 
