@@ -20,7 +20,12 @@ IS_LINUX = (platform.system() == 'Linux')
 IS_DEBIAN = IS_LINUX and (platform.linux_distribution()[0] == 'debian')
 IS_WINDOWS = (platform.system() == 'Windows')
 
-LIBRARIES = [] if (IS_MAC or IS_LINUX) else ['m']
+LIBRARIES = [] if (IS_MAC or IS_LINUX or IS_WINDOWS) else ['m']
+
+ROOT_DIR = os.path.dirname(os.path.realpath(__file__))
+
+CLEAN_DIRS = ['build']
+CLEAN_FILES = ['src/tada.cpp']
 
 
 def execute(command):
@@ -53,7 +58,10 @@ if IS_LINUX or IS_MAC:
         '-Wno-unused-function',
         '-Wno-extended-offsetof',
     ]
-elif IS_WINDOWS:  # windows
+    if IS_MAC:
+        COMPILE_ARGS.extend(['-mmacosx-version-min=10.9',
+                             '-Wno-tautological-constant-out-of-range-compare'])
+elif IS_WINDOWS:
     COMPILE_ARGS = [
         '-DNDEBUG',
         '-DWINDOWS',
@@ -62,11 +70,9 @@ elif IS_WINDOWS:  # windows
         '/Dnot_eq=!=',
         '/Dor=||',
         '/Duint=size_t',
+        # Disable warnings
+        '/wd4800'
     ]
-
-if IS_MAC:
-    COMPILE_ARGS.extend(['-mmacosx-version-min=10.9',
-                         '-Wno-tautological-constant-out-of-range-compare'])
 
 
 class Command(setuptools.Command):
@@ -88,9 +94,15 @@ class Clean(Command):
         self.cwd = os.getcwd()
 
     def run(self):
-        assert os.getcwd() == self.cwd, 'Must be in package root: %s' % self.cwd
-        print('Run Clean')
-        execute('rm -Rf ./build src/tada.cpp')
+        for d in CLEAN_DIRS:
+            print('Deleting ./{}/'.format(d))
+            shutil.rmtree(os.path.join(ROOT_DIR, d), ignore_errors=True)
+        for f in CLEAN_FILES:
+            print('Deleting ./{}'.format(f))
+            try:
+                os.remove(os.path.join(ROOT_DIR, f))
+            except OSError:
+                pass
 
 
 class Generate(Command):
@@ -103,7 +115,7 @@ class Generate(Command):
 
 
 class Local(Command):
-    description = 'Install the .so locally'
+    description = 'Install the binary locally'
     user_options = []
 
     # TODO: need to get this from setuptools somehow.
@@ -113,15 +125,17 @@ class Local(Command):
 
     def run(self):
         print('Run Local')
-        files = glob.glob('build/lib*/*.so')
+        files = glob.glob('build/lib*/*.so') + glob.glob('build/lib*/*.pyd')
         assert len(files) == 1, files
 
+        binfile = files[0]
+        _, ext = os.path.splitext(binfile)
         for target in self.TARGET_LOCATIONS:
             try:
                 os.remove(target)
             except:
                 pass
-            shutil.copy2(files[0], os.path.join(target, 'tada.so'))
+            shutil.copy2(binfile, os.path.join(target, 'tada' + ext))
 
 
 class build_ext(_build_ext):
@@ -157,7 +171,7 @@ def test_suite():
 
 setuptools.setup(
     name='tada',
-    packages=['tada'],
+    packages=['tada_tests'],
     version='0.8',
     description='High-performance color arithmetic.',
     author='Tom Swirly',
@@ -168,6 +182,5 @@ setuptools.setup(
         'build_ext': build_ext,
         'clean': Clean,
         'generate': Generate,
-        'local': Local,
     },
 )
