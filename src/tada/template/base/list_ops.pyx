@@ -1,3 +1,17 @@
+### declare
+    size_t count($class_cpp&, $sample_cpp&)
+    void extend($class_cpp&, $class_cpp&)
+    int index($class_cpp&, $sample_cpp&)
+    void insert(int key, $sample_cpp&, $class_cpp)
+    bool pop($class_cpp&, int key, $sample_cpp&):
+    void rotate($class_cpp&, int pos)
+    void sort($class_cpp&)
+    void round_cpp($class_cpp&, size_t digits)
+    $sample_cpp max_cpp($class_cpp&)
+    $sample_cpp min_cpp($class_cpp&)
+    void spreadAppend($class_cpp&, size_t, $sample_cpp&)
+
+### define
     cpdef $class_py append($class_py self, $sample_py c):
         """Append to the list of samples."""
         self.cdata.push_back(c.cdata)
@@ -9,13 +23,13 @@
 
     cpdef $class_py extend($class_py self, object values):
         """Extend the samples from an iterator."""
-        appendInto($class_py(values).cdata, self.cdata)
+        extend($class_py(values).cdata, self.cdata)
         return self
 
     cpdef index($class_py self, $sample_py sample):
         """Returns an index to the first occurance of that Sample, or
            raises a ValueError if that Sample isn't there."""
-        cdef int id = indexOf(self.cdata, sample.cdata)
+        cdef int id = index(self.cdata, sample.cdata)
         if id >= 0:
             return id
         raise ValueError('Can\'t find sample %s' % sample)
@@ -23,13 +37,13 @@
     cpdef $class_py insert($class_py self, int key,
                            $sample_py sample):
         """Insert a sample before key."""
-        insertBefore(self.cdata, key, sample.cdata)
+        insert(key, sample.cdata, self.cdata)
         return self
 
     cpdef $sample_py pop($class_py self, int key = -1):
         """Pop the sample at key."""
         cdef $sample_py result = $sample_py()
-        if popAt(self.cdata, key, result.cdata):
+        if pop(self.cdata, key, result.cdata):
             return result
         raise IndexError('pop index out of range')
 
@@ -51,7 +65,7 @@
     def sort($class_py self, object key=None, bool reverse=False):
         """Sort."""
         if key is None:
-            $name(self.cdata)
+            sort(self.cdata)
             if reverse:
                 self.reverse()
         else:
@@ -61,18 +75,20 @@
 
     cpdef $class_py round(self, uint digits=0):
         """Round each element in each sample to the nearest integer."""
-        roundSample(self.cdata, digits)
+        round_cpp(self.cdata, digits)
         return self
 
     cpdef $sample_py max(self):
         """Return the maximum values of each component."""
-        cdef SampleS c = maxSample(self.cdata)
-        return $sample_py(c.red, c.green, c.blue)
+        cdef $sample_py result = $sample_py()
+        result.cdata = max_cpp(self.cdata)
+        return result
 
     cpdef $sample_py min(self):
         """Return the minimum values of each component/"""
-        cdef SampleS c = minSample(self.cdata)
-        return $sample_py(c.red, c.green, c.blue)
+        cdef $sample_py result = $sample_py()
+        result.cdata = min_cpp(self.cdata)
+        return result
 
     @staticmethod
     def spread(*args):

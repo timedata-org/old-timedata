@@ -22,13 +22,13 @@ cdef class $class_py:
     cdef $class_cpp cdata
 
     @property
-    def begin($class_py self):
+    def start($class_py self):
         """Return the lowest in-band value for this class."""
-        return $begin
+        return $start
 
     @property
     def range($class_py self):
-        """Return the range from begin() to the highest in-band value."""
+        """Return the range from start() to the highest in-band value."""
         return $range
 
     cpdef $class_py copy($class_py self):

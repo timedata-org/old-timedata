@@ -1,13 +1,12 @@
 from . SampleBase import *
 
-begin = 0
+start = 0
 compare = 'compare'
 from_string = 'stringToColor'
 to_string = 'colorToString'
 include_file = 'tada/color/cython_inl.h'
 properties = 'red', 'green', 'blue'
 namespace = 'tada::color'
-value_type = 'float'
 size = 3
 documentation = 'FIXME'
 fix_key = 'fixKey'

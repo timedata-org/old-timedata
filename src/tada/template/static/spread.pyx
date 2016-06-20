@@ -1,6 +1,6 @@
 
 ### declare
-   void $name($class_cpp, size_t, $element_cpp)
+   void $name($class_cpp, size_t, $sample_cpp)
 
 ### define
     @staticmethod
@@ -12,8 +12,8 @@
         def accumulate(item=None):
             nonlocal last_number
             if last_number:
-                e = $element_py(item)
-                $name(cl.cdata, last_number - 1, e$element_member)
+                e = $sample_py(item)
+                $name(cl.cdata, last_number - 1, e.cdata)
                 last_number = 0
 
         for a in args:

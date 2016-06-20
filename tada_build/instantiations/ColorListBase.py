@@ -1,8 +1,23 @@
 from . Base import *
 
+start = 0
+compare = 'compare'
+from_string = 'stringToColor'
+to_string = 'colorToString'
+include_file = 'tada/color/cython_inl.h'
+properties = 'red', 'green', 'blue'
+namespace = 'tada::color'
+value_type = 'float'
+size = 3
+documentation = 'FIXME'
+fix_key = 'fixKey'
+set_at = 'setAt'
+slice_into = 'sliceIntoVector'
+slice_out = 'sliceVector'
+
 methods = add_methods(
     methods,
-    base=('variable_length', ),
+    base=('variable_length', 'list_ops'),
     zero=dict(
         mutator=('abs', 'clear', 'floor', 'ceil', 'invert', 'neg', 'reverse',
                  'trunc', 'zero'),
@@ -22,7 +37,7 @@ methods = add_methods(
         ),
 )
 
-class_description = """\
+class_documentation = """\
 A list of RGB floating point Colors, with many mutating functions.
 
        A ColorList looks quite like a Python list of Colors (which look like

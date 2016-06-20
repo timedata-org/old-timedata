@@ -161,6 +161,7 @@ std::vector<std::string> const& colorNames() {
     return tada::colorNames();
 }
 
+// TODO: mmove somewhere general-purpose!
 inline
 bool fixKey(int& key, size_t size) {
     if (key < 0)
