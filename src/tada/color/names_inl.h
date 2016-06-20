@@ -135,6 +135,14 @@ bool colorFromGray(char const* name, Color& result) {
     return true;
 }
 
+template <typename Color>
+bool toColorNonNegative(char const* name, Color& result) {
+    return colorFromHex(name, result) or
+        colorFromGray(name, result) or
+        colorFromCommaSeparated(name, result);
+}
+
+
 template <Base BASE>
 struct ColorTraits {
     static constexpr float normalize(float x) {
@@ -161,13 +169,11 @@ struct ColorTraits {
 
     static bool toColorNonNegative(char const* name, Color& result) {
         ColorType<BASE> c;
-        if (colorFromHex(name, c) or
-            colorFromGray(name, c) or
-            colorFromCommaSeparated(name, c)) {
-            result = makeNormal(c);
-            return true;
-        }
-        return false;
+        if (not detail::toColorNonNegative(name, c))
+            return false;
+
+        result = makeNormal(c);
+        return true;
     }
 
     static bool toColor(char const* name, Color& result) {
