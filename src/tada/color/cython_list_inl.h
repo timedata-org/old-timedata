@@ -7,10 +7,9 @@
 namespace tada {
 namespace color {
 
-template <typename ColorList>
-size_t count(ColorList const& c, ValueType<ColorList> const& s) {
-    return std::count(c.begin(), c.end(), s);
-}
+using ColorListCpp = std::vector<ColorCpp>;
+using ColorListCpp255 = std::vector<ColorCpp255>;
+using ColorListCpp256 = std::vector<ColorCpp256>;
 
 template <typename ColorList>
 size_t count(ColorList const& c, ValueType<ColorList> const& s) {
@@ -37,7 +36,7 @@ void insert(int key, ValueType<ColorList> const& color, ColorList& out) {
 
 template <typename ColorList>
 bool pop(ColorList& colors, int key, ValueType<ColorList>& result) {
-    if (not fixKey(key, out.size()))
+    if (not fixKey(key, colors.size()))
         return false;
     result = colors[key];
     colors.erase(colors.begin() + key);
@@ -51,21 +50,24 @@ void rotate(ColorList& colors, int pos) {
 
 template <typename ColorList>
 void sort(ColorList const& colors) {
-    using Color = ValueType<ColorList>
+    using Color = ValueType<ColorList>;
     auto comp = [](Color const& x, Color const& y) { return cmp(x, y) < 0.0f; };
     std::sort(colors.begin(), colors.end(), comp);
 }
 
 template <typename ColorList>
 void round_cpp(ColorList const& c, size_t digits) {
+    // TODO!
 }
 
 template <typename ColorList>
 ValueType<ColorList> max_cpp(ColorList const& c) {
+    // TODO!
 }
 
 template <typename ColorList>
 ValueType<ColorList> min_cpp(ColorList const& c) {
+    // TODO!
 }
 
 template <typename ColorList>

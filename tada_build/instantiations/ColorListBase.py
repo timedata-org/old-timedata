@@ -4,24 +4,23 @@ start = 0
 compare = 'compare'
 from_string = 'stringToColor'
 to_string = 'colorToString'
-include_file = 'tada/color/cython_inl.h'
-properties = 'red', 'green', 'blue'
+include_file = 'tada/color/cython_list_inl.h'
+properties = ()
 namespace = 'tada::color'
 value_type = 'float'
 size = 3
 documentation = 'FIXME'
 fix_key = 'fixKey'
 set_at = 'setAt'
-slice_into = 'sliceIntoVector'
-slice_out = 'sliceVector'
+slice_into = 'sliceInto'
+slice_out = 'sliceOut'
 
 methods = add_methods(
     methods,
-    base=('variable_length', 'list_ops'),
+    base='variable_length',
     zero=dict(
         mutator=('abs', 'clear', 'floor', 'ceil', 'invert', 'neg', 'reverse',
                  'trunc', 'zero'),
-        return_class='copy'
         ),
 
     one=dict(

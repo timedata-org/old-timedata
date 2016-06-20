@@ -6,12 +6,6 @@ import cython
 from numbers import Number
 
 cdef extern from "<$include_file>" namespace "$namespace":
-    cdef cppclass $class_cpp:
-         $class_cpp()
-         $class_cpp($value_type, $value_type, $value_type)
-         $value_type& operator[](size_t)
-         void fill($value_type)
-
     string $to_string($class_cpp&)
     bool $compare($class_cpp&, $class_cpp&, int richcmp)
 

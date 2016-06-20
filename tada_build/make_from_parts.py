@@ -32,7 +32,7 @@ def write(root, config, *, output_file=None, **kwds):
     return output_file
 
 def execute(root):
-    files = []
+    colors, lists = [], []
     for c in (
             instantiations.Color,
             instantiations.Color255,
@@ -42,8 +42,10 @@ def execute(root):
             instantiations.ColorList256):
         f = write(root, c.methods, **c.__dict__)
         print('Wrote file', f)
-        if 'List' not in c.__name__:
-            files.append(f)
+        if 'List' in c.__name__:
+            lists.append(f)
+        else:
+            colors.append(f)
     f = os.path.join(root, 'genfiles.pyx')
-    open(f, 'w').writelines('include "%s"\n' % f for f in files)
+    open(f, 'w').writelines('include "%s"\n' % f for f in colors) # + lists)
     print('Wrote genfile', f)

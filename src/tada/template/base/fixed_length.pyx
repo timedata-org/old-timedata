@@ -2,6 +2,13 @@
 """Basic methods for classes of a fixed length (like a Sample)."""
 
 ### declare
+cdef extern from "<$include_file>" namespace "$namespace":
+    cdef cppclass $class_cpp:
+         $class_cpp()
+         $class_cpp($value_type, $value_type, $value_type)
+         $value_type& operator[](size_t)
+         void fill($value_type)
+
     bool $from_string(string&, $class_cpp&)
     bool $fix_key(int& index, size_t size)
 

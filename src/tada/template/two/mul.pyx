@@ -6,7 +6,7 @@
     void magic_$name(size_t size, $class_cpp&)
 
 ### define
-    def __${name}__(object x, object y):
+    def __${name}__(object self, object other):
         # A little tricky because the $class_py can appear on the left or the
         # right side of the argument.
         cdef size_t mult
