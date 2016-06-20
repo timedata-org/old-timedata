@@ -22,13 +22,16 @@ IS_WINDOWS = (platform.system() == 'Windows')
 
 LIBRARIES = [] if (IS_MAC or IS_LINUX) else ['m']
 
+
 def execute(command):
     result = os.system(command)
     if result:
         raise Exception('%s\n failed with code %s' % (command, result))
 
+
 def run(*cmds):
     return subprocess.check_output(cmds).strip().decode('ascii')
+
 
 def git_tags():
     tags = run('git', 'describe', '--tags', '--always')
@@ -45,39 +48,29 @@ if IS_LINUX or IS_MAC:
         '-DGIT_TAGS="%s"' % git_tags(),
         '-Wno-unused-function',
         '-std=c++11',
-        ]
-elif IS_WINDOWS: #windows
+    ]
+elif IS_WINDOWS:  # windows
     COMPILE_ARGS = [
-        #'-O3',
         '-DNDEBUG',
-        #'-std=c++11',
         '-DWINDOWS',
         '/Dand=&&',
-        '/Dand_eq=&=',
-        '/Dbitand=&',
-        '/Dbitor=|',
-        '/Dcompl=~',
         '/Dnot=!',
         '/Dnot_eq=!=',
         '/Dor=||',
-        '/Dor_eq=|=',
-        '-DCOMPILE_TIMESTAMP="not implemented"',
-        '-DGIT_TAGS="not implemented"',
-        # nvcc does not seem to like a caret being the last character
-        # in a command line defined preprocessor symbol, so add an
-        # empty trailing comment to avoid this.
-        '/Dxor=^/**/',
-        '/Dxor_eq=^=',
         '/Duint=size_t',
-        ]
+    ]
 
 if IS_MAC:
     COMPILE_ARGS.extend(['-mmacosx-version-min=10.9',
                          '-Wno-tautological-constant-out-of-range-compare'])
 
+
 class Command(setuptools.Command):
-    def initialize_options(self): pass
-    def finalize_options(self): pass
+    def initialize_options(self):
+        pass
+
+    def finalize_options(self):
+        pass
 
 
 class Clean(Command):
@@ -104,6 +97,7 @@ class Generate(Command):
         print('Run Generate')
         generate.generate()
 
+
 class Local(Command):
     description = 'Install the .so locally'
     user_options = []
@@ -128,6 +122,7 @@ class Local(Command):
 
 class build_ext(_build_ext):
     # See https://groups.google.com/forum/#!topic/cython-users/IZMENRz6__s
+
     def finalize_options(self):
         extension = setuptools.extension.Extension(
             name='tada',
@@ -136,7 +131,7 @@ class build_ext(_build_ext):
             include_dirs=['src'],
             extra_compile_args=COMPILE_ARGS,
             language='c++',
-            )
+        )
 
         module = Cython.Build.cythonize(
             [extension],
@@ -146,8 +141,8 @@ class build_ext(_build_ext):
             compiler_directives=dict(
                 c_string_encoding='ascii',
                 # c_string_type='unicode', # Why doesn't this work?
-                )
             )
+        )
         self.distribution.ext_modules = module
         super(build_ext, self).finalize_options()
 
@@ -170,5 +165,5 @@ setuptools.setup(
         'clean': Clean,
         'generate': Generate,
         'local': Local,
-        },
-    )
+    },
+)

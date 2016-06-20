@@ -1,5 +1,6 @@
 #pragma once
 
+#include <functional>
 #include <tada/base/enum.h>
 #include <tada/base/math.h>
 #include <tada/base/rotate.h>
