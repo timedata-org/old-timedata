@@ -1,4 +1,4 @@
-#include <tada/signal/signal.h>
+#include <tada/signal/sample.h>
 
 #define CATCH_CONFIG_MAIN
 
