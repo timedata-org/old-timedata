@@ -211,15 +211,6 @@ inline void maxInto(ColorVector const& in, ColorVector& out) {
                           [](float i, float& o) { o = std::max(i, o); });
 }
 
-inline size_t getSize(float x) {
-    return std::numeric_limits<size_t>::max();
-}
-
-template <typename X>
-size_t getSize(X const& x) {
-    return x.size();
-}
-
 inline void hsvToRgbInto(ColorVector& out, Base b) {
     for (auto& c: out)
         c = hsvToRgb(c, b);

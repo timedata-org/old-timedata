@@ -124,7 +124,7 @@ Color rotated(Color const& x, int pos) {
 template <typename Color>
 typename Color::value_type distance2(Color const& x, Color const& y) {
     typename Color::value_type total = 0;
-    for (auto i = 0; i < x.size(); ++i) {
+    for (size_t i = 0; i < x.size(); ++i) {
         auto d = x[i] - y[i];
         total += d * d;
     }

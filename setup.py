@@ -46,8 +46,12 @@ if IS_LINUX or IS_MAC:
         '-DNDEBUG',
         '-DCOMPILE_TIMESTAMP="%s"' % datetime.datetime.utcnow().isoformat(),
         '-DGIT_TAGS="%s"' % git_tags(),
-        '-Wno-unused-function',
+        '-Wall',
+        '-Wextra',
+        '-Wpedantic',
         '-std=c++11',
+        '-Wno-unused-function',
+        '-Wno-extended-offsetof',
     ]
 elif IS_WINDOWS:  # windows
     COMPILE_ARGS = [

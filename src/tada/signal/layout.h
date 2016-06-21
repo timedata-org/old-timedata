@@ -62,7 +62,7 @@ using Component = typename Sample::component_t;
 template <typename Sample, typename Combiner>
 auto componentCombiner(Combiner combiner) {
     return [=] (Sample const& from, Sample& to) {
-        for (auto i = 0; i < Sample::SIZE; ++i)
+        for (size_t i = 0; i < Sample::SIZE; ++i)
             combiner(from[i], to[i]);
     };
 }

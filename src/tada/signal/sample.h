@@ -34,7 +34,7 @@ struct Sample : SampleBase<Model, Range> {
     template <typename Function>
     Sample forEach(Function f) const {
         Sample result;
-        for (auto i = 0; i < result.size(); ++i)
+        for (size_t i = 0; i < result.size(); ++i)
             result[i] = f((*this)[i]);
         return result;
     }
