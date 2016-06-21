@@ -53,7 +53,7 @@ class TestColor(unittest.TestCase):
         self.assertEqual(white * cyan, cyan)
 
     def test_methods(self):
-        self.assertEqual(Color().begin, 0)
+        self.assertEqual(Color().start, 0)
         self.assertEqual(Color().range, 1.0)
 
     def test_rotated(self):

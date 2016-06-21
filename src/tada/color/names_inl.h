@@ -142,9 +142,8 @@ bool toColorNonNegative(char const* name, Color& result) {
         colorFromCommaSeparated(name, result);
 }
 
-
 template <typename Color>
-bool toColorFull(char const* name, Color& result) {
+bool toColor(char const* name, Color& result) {
     auto isSign = [](char ch) { return ch == '-' or ch == '+'; };
     auto len = strlen(name), end = len;
     for (; end > 0 && isSign(name[end - 1]); --end);
@@ -178,12 +177,12 @@ struct ColorTraits {
 
     static std::string toString(Color c) {
         ColorType<BASE> c2(*c[0], *c[1], *c[2]);
-        return tada::detail::toString(c2);
+        return detail::toString(c2);
     }
 
     static bool toColor(char const* name, Color& result) {
         ColorType<BASE> c;
-        if (not toColorFull(name, c))
+        if (not detail::toColor(name, c))
             return false;
         result = makeNormal(c);
         return true;

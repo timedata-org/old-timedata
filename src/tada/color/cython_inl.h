@@ -26,14 +26,7 @@ std::string colorToString(Color const& x) {
 
 template <typename Color>
 bool stringToColor(std::string const& x, Color& c) {
-    ColorCpp cpp;
-    if (not stringToColor(x.c_str(), cpp, Base::normal))
-        return false;
-    c[0] = cpp[0];
-    c[1] = cpp[1];
-    c[2] = cpp[2];
-    c = c.scale();
-    return true;
+    return detail::toColor(x.c_str(), c);
 }
 
 template <typename Color>
