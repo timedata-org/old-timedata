@@ -173,11 +173,14 @@ setuptools.setup(
     name='timedata',
     packages=['timedata_tests'],
     version='0.8',
-    description='High-performance color arithmetic.',
+    keywords=['color', 'cython', 'dsp', 'C++'],
+    description="""\
+High-performance arithmetic for RGB color and for time data in general.""",
     author='Tom Swirly',
     author_email='tom@swirly.com',
     url='https://github.com/rec/timedata',
     test_suite='setup.test_suite',
+    download_url='https://github.com/rec/timedata/releases/tag/v0.8',
     cmdclass={
         'build_ext': build_ext,
         'clean': Clean,
