@@ -142,7 +142,7 @@ inline void removeTrailing(std::string& s, char ch) {
 /** Convert a float to a string. */
 inline std::string toString(float x, unsigned int decimals) {
     // Add 1 for the - sign and one for the .
-    size_t size = log10(x) + 3 + decimals + 2;
+    size_t size = log10(static_cast<uint64_t>(std::abs(x))) + 3 + decimals + 2;
     std::string number(size, ' ');
     number.resize(snprintf(&number[0], size, "%1.*f", decimals, x));
     if (number.find('.') != std::string::npos) {
@@ -170,7 +170,9 @@ inline bool cmpToRichcmp(float cmp, int richcmp) {
         case 3: return cmp != 0;
         case 4: return cmp > 0;
         case 5: return cmp >= 0;
-        default:  THROW("Bad richcmp", richcmp); return false;
+        default:
+            log("Bad richcmp", richcmp, cmp);
+            return false;
     }
 }
 
@@ -209,7 +211,7 @@ inline float powPython(float x, float y) {
         return pow(x, y);
     if (x < 0)
         return -pow(-x, y);
-    return y ? 0 : 1;
+    return y ? 0.0f : 1.0f;
 }
 
 inline float modPython(float x, float y) {

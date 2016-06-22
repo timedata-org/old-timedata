@@ -182,9 +182,9 @@ bool compare(Color const& x, Color const& y, int richCmp) {
 template <typename Color>
 void from_hex(uint32_t hex, Color& x) {
     auto c = colorFromHex(hex, Base::normal);
-    x[0] = c[0];
-    x[1] = c[1];
-    x[2] = c[2];
+    x[0] = *c[0];
+    x[1] = *c[1];
+    x[2] = *c[2];
     x = x.scale();
 }
 

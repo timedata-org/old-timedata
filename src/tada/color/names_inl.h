@@ -22,7 +22,7 @@ inline Color makeNormal(Color const& c) {
 }
 
 inline Color makeNormal(Color255 const& c) {
-    return {c[0], c[1], c[2]};
+    return {*c[0], *c[1], *c[2]};
 }
 
 using HexColor = std::array<uint8_t, 3>;

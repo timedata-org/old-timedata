@@ -46,11 +46,15 @@ class Ranged {
         return std::max(START, std::min(STOP, value_));
     }
 
+#if 0
+    // Not (yet?) used.
     template <typename Range2>
     operator Ranged<Range2>() const {
         return tada::scale<Range2>(tada::unscale<Range>(value_));
     }
+#endif
 
+    explicit operator bool() const { return value_ != 0.0f; }
     operator value_type&() { return value_; }
     operator value_type() const { return value_; }
 
