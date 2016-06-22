@@ -42,7 +42,7 @@ def make(header_file):
     def format(s, kwds):
         x, y = util.substitute_templates('timedata', 'template', 'struct', s,
                                          **kwds)
-        return x + '\n' + y if False else x + y
+        return x + y
 
     for s in header.structs:
         for prop in s.variables:
@@ -72,5 +72,5 @@ def read_structs(files):
         data = make(f)
         base, fname = os.path.split(os.path.splitext(f)[0])
         outfile = os.path.join(base, '_' + fname + '.pyx')
-        open(outfile, 'w').write(data)
+        util.write_if_different(outfile, data)
     os.chdir('..')
