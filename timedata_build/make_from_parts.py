@@ -1,24 +1,12 @@
 import collections, os, string, sys
 
-from . import instantiations, templates
-
-def write_if_different(fname, data):
-    try:
-        old_data = open(fname).read()
-    except:
-        old_data = None
-    if old_data != data:
-        open(fname, 'w').write(data)
-        print('Wrote changed file', fname)
-    else:
-        print(fname, 'unchanged')
-
+from . import instantiations, util
 
 def write(root, config, *, output_file=None, **kwds):
     declare, define = [], []
 
     def fmt(*names, **kwds):
-        dc, df = templates.substitute(root, *names, **kwds)
+        dc, df = util.substitute_templates(root, *names, **kwds)
         dc and declare.append(dc)
         df and define.append(df)
 
@@ -39,7 +27,7 @@ def write(root, config, *, output_file=None, **kwds):
         define.pop()
 
     data = ''.join(d for d in declare if d.strip()) + '\n' + '\n'.join(define)
-    write_if_different(output_file, data)
+    util.write_if_different(output_file, data)
     return output_file
 
 def execute(root):
@@ -58,4 +46,4 @@ def execute(root):
             colors.append(f)
     f = os.path.join(root, 'genfiles.pyx')
     data = ''.join('include "%s"\n' % f for f in colors) # + lists)
-    write_if_different(f, data)
+    util.write_if_different(f, data)

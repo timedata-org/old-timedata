@@ -2,6 +2,19 @@
 
 import csv, json, os, pathlib, string, sys
 
+
+def write_if_different(fname, data):
+    try:
+        old_data = open(fname).read()
+    except:
+        old_data = None
+    if old_data != data:
+        open(fname, 'w').write(data)
+        print('Wrote changed file', fname)
+    else:
+        print(fname, 'unchanged')
+
+
 def read(lines, f):
     parts = []
     result = {}
@@ -29,7 +42,7 @@ def read(lines, f):
     return result
 
 
-def substitute(*names, **kwds):
+def substitute_templates(*names, **kwds):
     filename = os.path.join(*names) + '.pyx'
     try:
         parts = read(open(filename), filename)
