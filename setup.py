@@ -25,7 +25,7 @@ LIBRARIES = [] if (IS_MAC or IS_LINUX or IS_WINDOWS) else ['m']
 ROOT_DIR = os.path.dirname(os.path.realpath(__file__))
 
 CLEAN_DIRS = ['build']
-CLEAN_FILES = ['src/tada.cpp']
+CLEAN_FILES = ['src/timedata.cpp']
 
 
 def execute(command):
@@ -120,7 +120,7 @@ class Local(Command):
 
     # TODO: need to get this from setuptools somehow.
 
-    TARGET_LOCATIONS = 'tada', '/development/BiblioPixel'
+    TARGET_LOCATIONS = 'timedata', '/development/BiblioPixel'
     # TODO: awful hack.
 
     def run(self):
@@ -135,7 +135,7 @@ class Local(Command):
                 os.remove(target)
             except:
                 pass
-            shutil.copy2(binfile, os.path.join(target, 'tada' + ext))
+            shutil.copy2(binfile, os.path.join(target, 'timedata' + ext))
 
 
 class build_ext(_build_ext):
@@ -143,8 +143,8 @@ class build_ext(_build_ext):
 
     def finalize_options(self):
         extension = setuptools.extension.Extension(
-            name='tada',
-            sources=['src/tada.pyx'],
+            name='timedata',
+            sources=['src/timedata.pyx'],
             libraries=LIBRARIES,
             include_dirs=['src'],
             extra_compile_args=COMPILE_ARGS,
@@ -167,16 +167,16 @@ class build_ext(_build_ext):
 
 # http://stackoverflow.com/a/37033551/43839
 def test_suite():
-    return unittest.TestLoader().discover('tada', pattern='*_test.py')
+    return unittest.TestLoader().discover('timedata', pattern='*_test.py')
 
 setuptools.setup(
-    name='tada',
-    packages=['tada_tests'],
+    name='timedata',
+    packages=['timedata_tests'],
     version='0.8',
     description='High-performance color arithmetic.',
     author='Tom Swirly',
     author_email='tom@swirly.com',
-    url='https://github.com/rec/tada',
+    url='https://github.com/rec/timedata',
     test_suite='setup.test_suite',
     cmdclass={
         'build_ext': build_ext,

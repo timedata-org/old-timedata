@@ -1,4 +1,4 @@
-### tada - time arts data. ###
+### timedata - time arts data. ###
 
 High-performance color arithmetic for C++ and Python.
 
@@ -16,7 +16,7 @@ resolution for smooth fades - particularly when everything is gamma corrected
 
 ## What do you get? ##
 
-_tada_ provides two main Python classes: `Color` and `ColorList`. (It also
+_timedata_ provides two main Python classes: `Color` and `ColorList`. (It also
 provides a generic C++ library, a bunch of unit tests in C++ and even more unit
 tests in Python, if that's the sort of thing you like.)
 
@@ -36,14 +36,14 @@ between 0 and 1.
 For legacy systems, `Color256` and `ColorList256` offer the same features except
 that the color components are expected to be between 0 and 255.
 
-(Note the use of the word "expected".  _tada_ does not bar color components that
+(Note the use of the word "expected".  _timedata_ does not bar color components that
 are out of range in intermediate calculations!  Components can be large, they
-can even be negative, and _tada_ will try to do a reasonable job.  Of course, at
+can even be negative, and _timedata_ will try to do a reasonable job.  Of course, at
 the very last step, these "extended colors" will need to be rendered into a
 visible color palette, and even then you can choose how to handle "out of band"
 colors.)
 
-_tada_ is optimized first for correctness of course, but then strongly for
+_timedata_ is optimized first for correctness of course, but then strongly for
 speed.  In particular, it's easy to organize real-time projects so that no
 memory allocation can occur on a frame update, and no locks are held.
 
@@ -53,8 +53,8 @@ memory allocation can occur on a frame update, and no locks are held.
 1. How do I write high-performance code?  How do I write thread-safe code
    without locks?
 
-At this time, you can't actually run _tada_ without any locks.  By default,
-Python's own GIL is locked every time you call anything in _tada_ - like most of
+At this time, you can't actually run _timedata_ without any locks.  By default,
+Python's own GIL is locked every time you call anything in _timedata_ - like most of
 Python's structures - so you'd have to work reasonably hard to shoot yourself in
 the foot.
 
@@ -80,10 +80,10 @@ speed, resource management, and features.
 2.1. Raw speed.
 
 Even though numpy is a rough order of magnitude faster than Python, in
-admittedly limited benchmarks, _tada_ outperformed numpy by half an order of
+admittedly limited benchmarks, _timedata_ outperformed numpy by half an order of
 magnitude yet again.
 
-The reason is specificity. In C++, _tada_ looks like a lot of generic, templated
+The reason is specificity. In C++, _timedata_ looks like a lot of generic, templated
 code - so at code generation time, the compiler knows, for example, that colors
 have three components and can unroll any loops it wants to.
 
@@ -92,8 +92,8 @@ you can actually do your arithmetic.
 
 And this costs you.
 
-In _tada_ you can see all these
-[repetitive code](https://github.com/rec/tada/blob/master/src/tada/color/colorList_inl.h#L104-L210).
+In _timedata_ you can see all these
+[repetitive code](https://github.com/rec/timedata/blob/master/src/timedata/color/colorList_inl.h#L104-L210).
 When I introduced _one_ level of indirection here - just a single integer to
 look up the operation to do - I lost between 4% and _40%_ of my performance on
 common numerical tasks!
@@ -105,7 +105,7 @@ function - returning new values.  Many functions by now do have the ability to
 pass in an existing array to mutate into, but then things are poorly defined if
 that array is also the source, and again - layers of indirection are not free.
 
-In _tada_, mutators - that means, things that change the state of a
+In _timedata_, mutators - that means, things that change the state of a
 `ColorList` - are the preferred way to go.  The reason is simple - memory
 management!  Every time you create a new Python object, and to a lesser extent
 each time you even create a new C++ vector, you're manipulating your heap, your
@@ -117,7 +117,7 @@ long they will take!  If you're requesting a chunk of memory from the heap,
 sometimes the program will stall for a few milliseconds... resulting in jitter
 or in the case of a DAC drop-outs or even noise.
 
-_tada_'s `ColorList` is built around mutators.  For each operation that creates
+_timedata_'s `ColorList` is built around mutators.  For each operation that creates
 a new list - like `+` - there's an equivalent operation that mutates the list -
 like `+=`.  And there are many useful operations that exist only in mutator form
 (*).
@@ -144,7 +144,7 @@ Having an API that understands color is really handy!
 3. What's the roadmap?
 
 This project is part of a larger project to provide generic, high-speed
-processing in C++ and Python for _all_ time arts data - thus the name _tada_.
+processing in C++ and Python for _all_ time arts data - thus the name _timedata_.
 
 This first phase centered on providing fast routines to do color processing
 because these were sorely lacking, and because of the author's own immediate
