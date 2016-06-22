@@ -2,6 +2,18 @@ import collections, os, string, sys
 
 from . import instantiations, templates
 
+def write_if_different(fname, data):
+    try:
+        old_data = open(fname).read()
+    except:
+        old_data = None
+    if old_data != data:
+        open(fname, 'w').write(data)
+        print('Wrote changed file', fname)
+    else:
+        print(fname, 'unchanged')
+
+
 def write(root, config, *, output_file=None, **kwds):
     declare, define = [], []
 
@@ -26,9 +38,8 @@ def write(root, config, *, output_file=None, **kwds):
     while define and not define[-1].strip():
         define.pop()
 
-    with open(output_file, 'w') as f:
-        f.writelines(d for d in declare if d.strip())
-        f.write('\n' + '\n'.join(define))
+    data = ''.join(d for d in declare if d.strip()) + '\n' + '\n'.join(define)
+    write_if_different(output_file, data)
     return output_file
 
 def execute(root):
@@ -41,11 +52,10 @@ def execute(root):
             instantiations.ColorList255,
             instantiations.ColorList256):
         f = write(root, c.methods, **c.__dict__)
-        print('Wrote file', f)
         if 'List' in c.__name__:
             lists.append(f)
         else:
             colors.append(f)
     f = os.path.join(root, 'genfiles.pyx')
-    open(f, 'w').writelines('include "%s"\n' % f for f in colors) # + lists)
-    print('Wrote genfile', f)
+    data = ''.join('include "%s"\n' % f for f in colors) # + lists)
+    write_if_different(f, data)
