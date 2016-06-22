@@ -27,13 +27,7 @@ def scale_triples(colors):
         colors[i] = (2 * r, 2 * g, 2 * b)
 
 def scale_timedata(colors):
-    colors *= 2
-
-def scale_timedata(colors):
-    colors *= 2
-
-def scale_new(colors):
-    colors = colors * 2
+    colors.add(colors)
 
 def run(command, value, number=200):
     return 100 * timeit.Timer(lambda: command(value)).timeit(number=number)
@@ -43,7 +37,6 @@ print('func:     ', run(scale_functional, CLASSIC))
 print('classic:  ', run(scale_classic, CLASSIC))
 print('triples:  ', run(scale_triples, TRIPLES))
 print('timedata:     ', run(scale_timedata, TIMEDATA))
-print('timedata2:    ', run(scale_new, TIMEDATA))
 
 
 def gamma_classic(colors):
@@ -56,10 +49,7 @@ def gamma_triples(colors):
         colors[i] = (r ** 1.2, g ** 1.2, g ** 1.2)
 
 def gamma_timedata(colors):
-    colors **= 1.2
-
-def gamma_new(colors):
-    colors = colors ** 1.2
+    colors.pow(1.2)
 
 # From https://github.com/scottjgibson/PixelPi/blob/master/pixelpi.py
 LPD8806 = [int(pow(float(i) / 255.0, 2.5) * 255.0 + 0.5) for i in range(256)]
@@ -82,7 +72,6 @@ CLASSIC = [int(c) for c in CLASSIC] # clear it out!
 print('classic table:', run(gamma_classic_table, CLASSIC))
 print('triples:      ', run(gamma_triples, TRIPLES))
 print('timedata:         ', run(gamma_timedata, TIMEDATA))
-print('timedata new:     ', run(gamma_new, TIMEDATA))
 
 
 # From https://stackoverflow.com/questions/449560
