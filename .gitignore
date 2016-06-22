@@ -11,3 +11,4 @@ tada.egg-info/
 src/tada/color/*.gen.pyx
 dist/
 *.pyd
+_*.pyx
