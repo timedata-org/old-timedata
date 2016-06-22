@@ -3,16 +3,22 @@
 """This is the main builder and installer for the Templated Digital Signal
 Processing Python extension."""
 
-import datetime, generate, glob, os, platform, shutil, subprocess, unittest
-import setuptools.extension, Cython.Build
+import datetime, generate, glob, os, platform, shutil, subprocess, sys, unittest
+import setuptools.extension
 from setuptools.command.build_ext import build_ext as _build_ext
 
-import Cython.Compiler.Options
+LEAST_PYTHON = 3, 4
+ACTUAL_PYTHON = sys.version_info[:2]
+
+assert ACTUAL_PYTHON >= LEAST_PYTHON, (
+    'Must use at least Python %d.%d but have version %d.%d' %
+    (LEAST_PYTHON[0], LEAST_PYTHON[1], ACTUAL_PYTHON[0], ACTUAL_PYTHON[1]))
 
 # Uncomment this next line if you want Cython to output HTML showing how C++-ey
 # it can make your code.
 # Same as --annotate here: http://docs.cython.org/src/quickstart/cythonize.html
 #
+# import Cython.Compiler.Options
 # Cython.Compiler.Options.annotate = True
 
 IS_MAC = (platform.system() == 'Darwin')
@@ -142,6 +148,13 @@ class build_ext(_build_ext):
     # See https://groups.google.com/forum/#!topic/cython-users/IZMENRz6__s
 
     def finalize_options(self):
+        try:
+            import Cython.Build
+        except:
+            print('You need to install Cython for a binary build:',
+                  'http://docs.cython.org/src/quickstart/install.html')
+            raise
+
         extension = setuptools.extension.Extension(
             name='timedata',
             sources=['src/timedata.pyx'],
