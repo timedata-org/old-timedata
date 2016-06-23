@@ -11,10 +11,7 @@ cdef extern from "<$include_file>" namespace "$namespace":
          void push_back($sample_cpp)
          void resize(size_t)
 
-    bool $from_string(string&, $class_cpp&)
     bool $fix_key(int& index, size_t size)
-
-    void append($class_cpp, $sample_cpp&)
     size_t count($class_cpp&, $sample_cpp&)
     void extend($class_cpp&, $class_cpp&)
     int index($class_cpp&, $sample_cpp&)
@@ -26,18 +23,11 @@ cdef extern from "<$include_file>" namespace "$namespace":
     $sample_cpp max_cpp($class_cpp&)
     $sample_cpp min_cpp($class_cpp&)
     void spreadAppend($class_cpp&, size_t, $sample_cpp&)
-    bool $set_at($class_cpp&, size_t, $sample_cpp)
-    bool $slice_into($class_cpp&, $class_cpp&, begin, end, step)
+    bool $set_at($class_cpp&, size_t, $sample_cpp&)
+    bool $slice_into($class_cpp&, $class_cpp&, int, int, int)
     $class_cpp $slice_out($class_cpp&, int, int, int)
 
 ### define
-    cdef bool _set_at(self, size_t i, object x):
-        return $set_at(self.cdata, i, $sample_py(x).cdata)
-
-    @staticmethod
-    def index_error(i):
-        raise IndexError('$class_py index out of range %s' + i)
-
     def __init__($class_py self, items=None):
         """Construct a $class_py with an iterator of items, each of which looks
            like a $sample_py."""
@@ -50,7 +40,7 @@ cdef extern from "<$include_file>" namespace "$namespace":
                 # A list of tuples, $class_py or strings.
                 self.cdata.resize(len(items))
                 for i, item in enumerate(items):
-                    self._set_at(i, item)
+                    self.cdata[i] = $sample_py(item).cdata
 
     def __setitem__($class_py self, object key, object x):
         cdef size_t length, slice_length
@@ -63,8 +53,10 @@ cdef extern from "<$include_file>" namespace "$namespace":
                 return
             raise ValueError('attempt to assign sequence of one size '
                              'to extended slice of another size')
-        if not self._set_at(key, x):
-            self.index_error(key)
+        index = key
+        if not $fix_key(index, self.cdata.size()):
+            raise IndexError('$class_py index out of range %s' + key)
+        self.cdata[index] = $sample_py(x).cdata
 
     def __getitem__(self, object key):
         cdef $sample_py s
@@ -77,7 +69,7 @@ cdef extern from "<$include_file>" namespace "$namespace":
             return cl
         k = key
         if not $fix_key(k, self.cdata.size()):
-            self.index_error(key)
+            raise IndexError('$class_py index out of range %s' + key)
         s = $sample_py()
         s.cdata = self.cdata[k]
         return s

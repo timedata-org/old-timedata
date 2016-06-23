@@ -108,4 +108,7 @@ float modPython(float x, float y);
 template <typename Collection>
 typename Collection::value_type hashPython(Collection const&);
 
+template <typename Number>
+Number roundPython(Number, uint digits);
+
 }  // namespace timedata

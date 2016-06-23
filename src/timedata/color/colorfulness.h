@@ -23,6 +23,7 @@ void forEachPair(Collection const& coll, Function f) {
 
 template <typename Color>
 ValueType<Color> colorfulness(Color const& color) {
+    using value_type = typename Color::value_type;
     ValueType<Color> result = 0;
     forEachPair(color, [&](ValueType<Color> x, ValueType<Color> y) {
         result = std::max(result, (x - y).abs());

@@ -54,6 +54,8 @@ def git_tags():
 
 if IS_LINUX or IS_MAC:
     COMPILE_ARGS = [
+        '-std=c++11',
+        '-ferror-limit=100',
         '-O3',
         '-DNDEBUG',
         '-DCOMPILE_TIMESTAMP="%s"' % datetime.datetime.utcnow().isoformat(),
@@ -61,7 +63,6 @@ if IS_LINUX or IS_MAC:
         '-Wall',
         '-Wextra',
         '-Wpedantic',
-        '-std=c++11',
         '-Wno-unused-function',
         '-Wno-extended-offsetof',
     ]

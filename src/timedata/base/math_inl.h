@@ -245,4 +245,10 @@ typename Collection::value_type hashPython(Collection const& c) {
     return mult * h;
 }
 
+template <typename Number>
+Number roundPython(Number x, uint digits) {
+    auto r = static_cast<Number>(pow10(digits));
+    return std::round(x * r) / r;
+}
+
 }  // namespace timedata

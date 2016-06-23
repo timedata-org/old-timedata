@@ -19,7 +19,7 @@ def generate():
     structs = ['src/' + s for s in structs]
     colors, lists = make_from_parts.execute(ROOT)
 
-    files = colors # + old + list
+    files = colors # + lists
     data = ''.join('include "%s"\n' % f for f in files)
     f = os.path.join(ROOT, 'genfiles.pyx')
     util.write_if_different(f, data)
