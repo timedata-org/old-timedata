@@ -66,11 +66,14 @@ def make(header_file):
 
 
 def read_structs(files):
+    results = []
     os.chdir('src')
     for f in files:
         assert f.endswith('.h'), 'Not a header file: ' + f
         data = make(f)
         base, fname = os.path.split(os.path.splitext(f)[0])
         outfile = os.path.join(base, '_' + fname + '.pyx')
+        results.append(outfile)
         util.write_if_different(outfile, data)
     os.chdir('..')
+    return results

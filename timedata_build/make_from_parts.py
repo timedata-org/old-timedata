@@ -1,5 +1,4 @@
-import collections, os, string, sys
-
+import collections
 from . import instantiations, util
 
 def write(root, config, *, output_file=None, **kwds):
@@ -44,6 +43,4 @@ def execute(root):
             lists.append(f)
         else:
             colors.append(f)
-    f = os.path.join(root, 'genfiles.pyx')
-    data = ''.join('include "%s"\n' % f for f in colors) # + lists)
-    util.write_if_different(f, data)
+    return colors, lists

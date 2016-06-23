@@ -3,9 +3,10 @@
 """This is the main builder and installer for the Templated Digital Signal
 Processing Python extension."""
 
-import datetime, generate, glob, os, platform, shutil, subprocess, sys, unittest
+import datetime, glob, os, platform, shutil, subprocess, sys, unittest
 import setuptools.extension
 from setuptools.command.build_ext import build_ext as _build_ext
+from timedata_build import generate
 
 LEAST_PYTHON = 3, 4
 ACTUAL_PYTHON = sys.version_info[:2]
