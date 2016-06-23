@@ -24,6 +24,25 @@ class TestColorList(unittest.TestCase):
         cl[:] = 'red', 'green', 'blue'
         self.assertEqual(cl, ColorList(['red', 'green', 'blue']))
         self.assertEqual(cl[1:2], ColorList(['green']))
+        self.assertEqual(cl[1:3], ColorList(['green', 'blue']))
+        self.assertEqual(cl[1:4], ColorList(['green', 'blue']))
+        self.assertEqual(cl[0:4], ColorList(['red', 'green', 'blue']))
+        self.assertEqual(cl[-1:4], ColorList(['blue']))
+        self.assertEqual(cl[-1:2], ColorList())
+
+        # Didn't even know this was legal!  :-D
+        cl[:] = cl[::-1]
+        self.assertEqual(cl, ColorList(['blue', 'green', 'red']))
+
+        cl = ColorList(('red', 'green', 'blue', 'black', 'white', 'yellow'))
+        cl[-1:-5:-2] = ('tan', 'tan')
+        self.assertEqual(
+            cl, ColorList(('red', 'green', 'blue', 'tan', 'white', 'tan')))
+
+        for i in range(5):
+            if i != 2:
+                with self.assertRaises(ValueError):
+                    cl[-1:-5:-2] = ['tan'] * i
 
     def test_rotate(self):
         cl = ColorList(('red', 'green', 'blue'))
