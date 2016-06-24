@@ -12,7 +12,7 @@ namespace timedata {
 // TODO: Model is now an obsolete idea - it should probably be Sample.
 template <typename Model>
 struct Striped {
-    using model_t = Model;
+    using model_type = Model;
     using Name = typename Model::Name;
     using Number = typename Model::Number;
     using Array = Number;
@@ -28,7 +28,7 @@ struct Striped {
 
 template <typename Model>
 struct Parallel {
-    using model_t = Model;
+    using model_type = Model;
     using Name = typename Model::Name;
     using Number = typename Model::Number;
     using Array = Number*;
@@ -44,7 +44,7 @@ struct Parallel {
 
 template <typename Layout>
 struct Strip {
-    using layout_t = Layout;
+    using layout_type = Layout;
     using Sample = typename Layout::Sample;
 
     Sample frame;

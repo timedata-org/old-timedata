@@ -68,21 +68,21 @@ inline bool getHexFromName(char const* name, uint& hex) {
 template <Base>
 struct BaseColor {
     // Temporary class while I dismantle this mess.
-    class color_t;
+    class color_type;
 };
 
 template <>
 struct BaseColor<Base::normal> {
-    using color_t = Color;
+    using color_type = Color;
 };
 
 template <>
 struct BaseColor<Base::integer> {
-    using color_t = Color255;
+    using color_type = Color255;
 };
 
 template <Base BASE>
-using ColorType = typename BaseColor<BASE>::color_t;
+using ColorType = typename BaseColor<BASE>::color_type;
 
 template <typename Color>
 bool colorFromCommaSeparated(char const* p, Color& color) {

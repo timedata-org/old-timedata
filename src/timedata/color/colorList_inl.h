@@ -38,18 +38,17 @@ inline std::string toString(ColorVector const& colors, Base base) {
     return result;
 }
 
-inline
-ColorVector sliceVector(
+template <typename ColorVector>
+ColorVector sliceVectorG(
         ColorVector const& in, int begin, int end, int step) {
-    // TODO: is this used?
     auto slice = make<Slice>(begin, end, step);
     ColorVector out;
     forEach(slice, [&](int j) { out.push_back(in[j]); });
     return out;
 }
 
-inline
-bool sliceIntoVector(ColorVector const& in, ColorVector& out,
+template <typename ColorVector>
+bool sliceIntoVectorG(ColorVector const& in, ColorVector& out,
                      int begin, int end, int step) {
     auto slice = make<Slice>(begin, end, step);
     auto size = slice.size();
@@ -75,6 +74,16 @@ bool sliceIntoVector(ColorVector const& in, ColorVector& out,
     }
 
     return true;
+}
+
+inline
+ColorVector sliceVector(ColorVector const& in, int b, int e, int s) {
+    return sliceVectorG(in, b, e, s);
+}
+
+inline
+bool sliceIntoVector(ColorVector const& i, ColorVector& o, int b, int e, int s) {
+    return sliceIntoVectorG(i, o, b, e, s);
 }
 
 template <typename Function>

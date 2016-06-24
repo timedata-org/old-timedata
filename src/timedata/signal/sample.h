@@ -14,21 +14,20 @@ using SampleBase = std::array<Ranged<Range>, enumSize<Model>()>;
 
 template <typename Model, typename Range>
 struct Sample : SampleBase<Model, Range> {
-    using base_t = SampleBase<Model, Range>;
-    using model_t = Model;
-    using range_t = Range;
-    using value_type = ValueType<base_t>;
-    using number_t = ValueType<value_type>;
+    using base_type = SampleBase<Model, Range>;
+    using model_type = Model;
+    using range_type = Range;
+    using value_type = ValueType<base_type>;
+    using sample_type = Sample;
+    using number_type = ValueType<value_type>;
 
-    using normal_t = Sample<Model, NormalType<Range>>;
-
-    using base_t::base_t;
+    using base_type::base_type;
 
     Sample(value_type r, value_type g, value_type b)
-            : base_t{{r, g, b}} {
+            : base_type{{r, g, b}} {
     }
     Sample() {
-        base_t::fill(0);
+        base_type::fill(0);
     }
 
     template <typename Function>
@@ -39,7 +38,7 @@ struct Sample : SampleBase<Model, Range> {
         return result;
     }
 
-    using FunctionPointer = number_t (*)(number_t);
+    using FunctionPointer = number_type (*)(number_type);
     Sample forEachF(FunctionPointer f) const {
         return forEach(f);
     }
@@ -51,6 +50,24 @@ struct Sample : SampleBase<Model, Range> {
     Sample unscale() const {
         return forEachF(timedata::unscale<Range>);
     }
+
+    using ListBase = std::vector<Sample>;
+    struct List : ListBase {
+        using ListBase::ListBase;
+
+        using model_type = Model;
+        using number_type = Sample::number_type;
+        using range_type = Range;
+        using sample_type = Sample;
+        using value_type = ValueType<ListBase>;
+    };
 };
+
+template <typename T>
+using NumberType = typename T::number_type;
+
+template <typename T>
+using SampleType = typename T::sample_type;
+
 
 }  // timedata

@@ -1,12 +1,13 @@
 #pragma once
 
 #include <algorithm>
+#include <type_traits>
+
 #include <timedata/color/cython_inl.h>
 #include <timedata/color/spread.h>
 
 namespace timedata {
 namespace color {
-
 
 using ColorListCpp = std::vector<ColorCpp>;
 using ColorListCpp255 = std::vector<ColorCpp255>;
@@ -100,52 +101,76 @@ void spreadAppend(ColorList& out, size_t size, ValueType<ColorList> const& end) 
 template <typename ColorList>
 bool sliceInto(
          ColorList const& in, ColorList& out, int begin, int end, int step) {
-    return sliceIntoVector(in, out, being, end, step);
+    return sliceIntoVectorG(in, out, begin, end, step);
 }
 
 template <typename ColorList>
-ColorList sliceOut(ColorList const& colors, int begin, int end, int step) {
-    return sliceVector(in, begin, end, step);
+ColorList sliceOut(ColorList const& in, int begin, int end, int step) {
+    return sliceVectorG(in, begin, end, step);
+}
+
+template <typename T>
+using Transform = typename std::add_pointer<T(T)>::type;
+
+template <typename ColorList, typename Function>
+void mutate(ColorList& colors, Function f) {
+    for (auto& i: colors)
+        for (auto& j: i)
+            i = f(i);
+}
+
+template <typename ColorList>
+void mutateF(ColorList& colors, Transform<NumberType<ColorList>> f) {
+    mutate(colors, f);
 }
 
 template <typename ColorList>
 void math_abs(ColorList& colors) {
+    mutate(colors, std::abs);
 }
 
 template <typename ColorList>
 void math_clear(ColorList& colors) {
+    colors.clear();
 }
 
 template <typename ColorList>
 void math_floor(ColorList& colors) {
+    mutate(colors, std::floor);
 }
 
 template <typename ColorList>
 void math_ceil(ColorList& colors) {
+    mutate(colors, std::ceil);
 }
 
 template <typename ColorList>
 void math_invert(ColorList& colors) {
+    mutate(colors, [](NumberType<ColorList> c) { return c.invert(); });
 }
 
 template <typename ColorList>
 void math_neg(ColorList& colors) {
+    mutate(colors, [](NumberType<ColorList> c) { return -c; });
 }
 
 template <typename ColorList>
 void math_reverse(ColorList& colors) {
+    std::reverse(colors.begin(), colors.end());
 }
 
 template <typename ColorList>
 void math_trunc(ColorList& colors) {
+    mutate(colors, std::trunc);
 }
 
 template <typename ColorList>
 void math_zero(ColorList& colors) {
+    colors.fill({});
 }
 
 template <typename ColorList>
-void math_add(float, ColorList& colors) {
+void math_add(NumberType<ColorList>, ColorList& colors) {
 }
 
 template <typename ColorList>
@@ -153,15 +178,15 @@ void math_add(ColorList const& in, ColorList& out) {
 }
 
 template <typename ColorList>
-void math_div(float, ColorList& colors) {
+void math_div(NumberType<ColorList>, ColorList& colors) {
 }
 
 template <typename ColorList>
 void math_div(ColorList const& in, ColorList& out) {
 }
 
- template <typename ColorList>
-void math_mul(float, ColorList& colors) {
+template <typename ColorList>
+void math_mul(NumberType<ColorList>, ColorList& colors) {
 }
 
 template <typename ColorList>
@@ -169,7 +194,7 @@ void math_mul(ColorList const& in, ColorList& out) {
 }
 
 template <typename ColorList>
-void math_pow(float, ColorList& colors) {
+void math_pow(NumberType<ColorList>, ColorList& colors) {
 }
 
 template <typename ColorList>
@@ -177,7 +202,7 @@ void math_pow(ColorList const& in, ColorList& out) {
 }
 
 template <typename ColorList>
-void math_sub(float, ColorList& colors) {
+void math_sub(NumberType<ColorList>, ColorList& colors) {
 }
 
 template <typename ColorList>
@@ -185,7 +210,7 @@ void math_sub(ColorList const& in, ColorList& out) {
 }
 
 template <typename ColorList>
-void math_rdiv(float, ColorList& colors) {
+void math_rdiv(NumberType<ColorList>, ColorList& colors) {
 }
 
 template <typename ColorList>
@@ -193,7 +218,7 @@ void math_rdiv(ColorList const& in, ColorList& out) {
 }
 
 template <typename ColorList>
-void math_rpow(float, ColorList& colors) {
+void math_rpow(NumberType<ColorList>, ColorList& colors) {
 }
 
 template <typename ColorList>
@@ -201,7 +226,7 @@ void math_rpow(ColorList const& in, ColorList& out) {
 }
 
 template <typename ColorList>
-void math_rsub(float, ColorList& colors) {
+void math_rsub(NumberType<ColorList>, ColorList& colors) {
 }
 
 template <typename ColorList>
@@ -217,14 +242,15 @@ ColorList limit_max(ColorList const& in, ColorList& out) {
 
 }
 
-template <typename ColorList>
-float distance(ColorList const& x, ColorList const& y) {
-    return timedata::distance(x, y);
+#if 0
+template <typename Color>
+typename Color::value_type distance2(Color const& x, Color const& y) {
+    return 0.0f;
 }
 
-template <typename ColorList>
-float distance2(ColorList const& x, ColorList const& y) {
-    return timedata::distance2(x, y);
+template <typename Color>
+float distance(Color const& x, Color const& y) {
+    return 0.0f;
 }
 
 template <typename ColorList>
@@ -236,6 +262,7 @@ template <typename ColorList>
 void magic_mul(size_t size, ColorList& colors) {
     duplicateInto(size< colors);
 }
+#endif
 
 } // color
 } // timedata

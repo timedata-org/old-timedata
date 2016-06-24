@@ -41,7 +41,7 @@ bool isGray(Color color) {
 
 template <typename Color>
 std::string toString(Color c) {
-    using Range = typename Color::range_t;
+    using Range = typename Color::range_type;
     auto bounded = [](ValueType<Color> x) { return x.abs().inBand(); };
     if (std::all_of(c.begin(), c.end(), bounded)) {
         if (std::all_of(c.begin(), c.end(), isNearHex<Range>)) {
