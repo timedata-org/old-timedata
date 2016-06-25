@@ -2,7 +2,7 @@
 
 import datetime, os, re, string, sys
 
-from . read_header_file import read_header_file, Context
+from . read_header_file import read_header_file
 from . make_enums import make_enums
 from .. import util
 

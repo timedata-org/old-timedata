@@ -1,13 +1,8 @@
+from timedata_build import util
 import re
 
-class Context(object):
-    def __init__(self, **kwds):
-        for (k, v) in kwds.items():
-            setattr(self, k, v)
-
-
 def read_header_file(header_file):
-    context = Context(
+    context = util.Context(
         namespaces=[],
         structs=[],
         classname='',
@@ -28,7 +23,7 @@ def read_header_file(header_file):
             was_equal = p == '='
 
         assert typename and parts and variables
-        return Context(typename=typename, variables=variables)
+        return util.Context(typename=typename, variables=variables)
 
     def struct_is_finished(line):
         return ('{' in line or
@@ -47,7 +42,7 @@ def read_header_file(header_file):
             if line:
                  yield line
 
-    regex = Context(
+    regex = util.Context(
         namespace=re.compile(r'namespace (\w+)'),
         cstruct=re.compile(r'struct (\w+)'),
         enum_class=re.compile(r'enum class (\w+) \{([^}]+)}'),

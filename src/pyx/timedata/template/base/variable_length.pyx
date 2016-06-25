@@ -2,6 +2,7 @@
 """Basic methods for classes with a variable length (like a List)."""
 
 ### declare
+
 cdef extern from "<$include_file>" namespace "$namespace":
     cdef cppclass $class_cpp:
          $class_cpp()

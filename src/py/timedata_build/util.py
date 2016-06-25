@@ -57,3 +57,9 @@ def substitute_templates(*names, **kwds):
     except Exception as e:
         s = ' '.join(str(i) for i in e.args)
         raise e.__class__('%s in file %s' % (s, filename))
+
+
+class Context(object):
+    def __init__(self, **kwds):
+        for (k, v) in kwds.items():
+            setattr(self, k, v)
