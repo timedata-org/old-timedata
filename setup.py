@@ -177,7 +177,7 @@ class build_ext(_build_ext):
 
 # http://stackoverflow.com/a/37033551/43839
 def test_suite():
-    return unittest.TestLoader().discover('timedata', pattern='*_test.py')
+    return unittest.TestLoader().discover('src/py', pattern='*_test.py')
 
 
 setuptools.setup(
@@ -190,7 +190,7 @@ High-performance arithmetic for RGB color and for time data in general.""",
     author='Tom Swirly',
     author_email='tom@swirly.com',
     url='https://github.com/rec/timedata',
-    # test_suite='setup.test_suite',
+    test_suite='setup.test_suite',
     download_url='https://github.com/rec/timedata/releases/tag/v0.8',
     cmdclass={
         'build_ext': build_ext,
