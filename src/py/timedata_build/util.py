@@ -4,11 +4,14 @@ import csv, json, os, pathlib, string, sys
 
 
 def write_if_different(fname, data):
+    """Writes a file if it is different from what's there, creating its
+       directory if necessary."""
     try:
         old_data = open(fname).read()
     except:
         old_data = None
     if old_data != data:
+        os.makedirs(os.path.dirname(fname), exist_ok=True)
         open(fname, 'w').write(data)
         print('Wrote changed file', fname)
     else:
@@ -43,7 +46,8 @@ def read(lines, f):
 
 
 def substitute_templates(*names, **kwds):
-    filename = os.path.join(*names) + '.pyx'
+    filename = os.path.join('src', 'pyx', 'timedata', 'template',
+                            *names) + '.pyx'
     try:
         parts = read(open(filename), filename)
         def _sub(name):

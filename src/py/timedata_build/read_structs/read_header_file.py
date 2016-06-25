@@ -5,6 +5,7 @@ class Context(object):
         for (k, v) in kwds.items():
             setattr(self, k, v)
 
+
 def read_header_file(header_file):
     context = Context(
         namespaces=[],

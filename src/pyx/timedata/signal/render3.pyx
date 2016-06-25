@@ -1,4 +1,4 @@
-include "_render3.pyx"
+include "build/genfiles/timedata/signal/render3.pyx"
 
 cdef extern from "<timedata/signal/render3.h>" namespace "timedata":
     void renderColorVector(

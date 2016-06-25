@@ -1,4 +1,4 @@
-include "_fade.pyx"
+include "build/genfiles/timedata/signal/fade.pyx"
 
 cdef extern from "<timedata/signal/fade.h>" namespace "timedata":
     void fadeOver(float fader, Fade& fade, ColorVector& in1, ColorVector& in2,

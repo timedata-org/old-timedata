@@ -3,7 +3,7 @@ dist/
 *.egg-info/
 __pycache__
 
-src/timedata.cpp
+timedata.cpp
 src/**/*.html
 
 *.gen.pyx

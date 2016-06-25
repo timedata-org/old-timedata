@@ -6,6 +6,8 @@ Processing Python extension."""
 import datetime, glob, os, platform, shutil, subprocess, sys, unittest
 import setuptools.extension
 from setuptools.command.build_ext import build_ext as _build_ext
+
+sys.path.append('src/py')
 from timedata_build import generate
 
 LEAST_PYTHON = 3, 4
@@ -32,7 +34,6 @@ LIBRARIES = [] if (IS_MAC or IS_LINUX or IS_WINDOWS) else ['m']
 ROOT_DIR = os.path.dirname(os.path.realpath(__file__))
 
 CLEAN_DIRS = ['build']
-CLEAN_FILES = ['src/timedata.cpp']
 
 
 def execute(command):
@@ -105,12 +106,6 @@ class Clean(Command):
         for d in CLEAN_DIRS:
             print('Deleting ./{}/'.format(d))
             shutil.rmtree(os.path.join(ROOT_DIR, d), ignore_errors=True)
-        for f in CLEAN_FILES:
-            print('Deleting ./{}'.format(f))
-            try:
-                os.remove(os.path.join(ROOT_DIR, f))
-            except OSError:
-                pass
 
 
 class Generate(Command):
@@ -128,7 +123,7 @@ class Local(Command):
 
     # TODO: need to get this from setuptools somehow.
 
-    TARGET_LOCATIONS = 'timedata', '/development/BiblioPixel'
+    TARGET_LOCATIONS = 'src/py', '/development/BiblioPixel'
     # TODO: awful hack.
 
     def run(self):
@@ -156,12 +151,12 @@ class build_ext(_build_ext):
             print('You need to install Cython for a binary build:',
                   'http://docs.cython.org/src/quickstart/install.html')
             raise
-
+        os.makedirs('build/genfiles/timedata', exist_ok=True)
         extension = setuptools.extension.Extension(
             name='timedata',
-            sources=['src/timedata.pyx'],
+            sources=['timedata.pyx'],
             libraries=LIBRARIES,
-            include_dirs=['src'],
+            include_dirs=['src/cpp'],
             extra_compile_args=COMPILE_ARGS,
             language='c++',
         )
@@ -184,9 +179,10 @@ class build_ext(_build_ext):
 def test_suite():
     return unittest.TestLoader().discover('timedata', pattern='*_test.py')
 
+
 setuptools.setup(
     name='timedata',
-    packages=['timedata_tests'],
+    packages=['src/py/timedata_tests'],
     version='0.8',
     keywords=['color', 'cython', 'dsp', 'C++'],
     description="""\
@@ -194,7 +190,7 @@ High-performance arithmetic for RGB color and for time data in general.""",
     author='Tom Swirly',
     author_email='tom@swirly.com',
     url='https://github.com/rec/timedata',
-    test_suite='setup.test_suite',
+    # test_suite='setup.test_suite',
     download_url='https://github.com/rec/timedata/releases/tag/v0.8',
     cmdclass={
         'build_ext': build_ext,

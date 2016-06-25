@@ -8,7 +8,8 @@ from .. import util
 
 
 def make(header_file):
-    header = read_header_file(header_file)
+    header_file += '.h'
+    header = read_header_file(os.path.join('src', 'cpp', header_file))
     classname = header.classname
     namespace = ':'.join(header.namespaces)
     member_name = '_instance'
@@ -40,8 +41,7 @@ def make(header_file):
     property_list = []
 
     def format(s, kwds):
-        x, y = util.substitute_templates('timedata', 'template', 'struct', s,
-                                         **kwds)
+        x, y = util.substitute_templates('struct', s, **kwds)
         return x + y
 
     for s in header.structs:
@@ -67,13 +67,10 @@ def make(header_file):
 
 def read_structs(files):
     results = []
-    os.chdir('src')
     for f in files:
-        assert f.endswith('.h'), 'Not a header file: ' + f
         data = make(f)
         base, fname = os.path.split(os.path.splitext(f)[0])
-        outfile = os.path.join(base, '_' + fname + '.pyx')
+        outfile = os.path.join('build', 'genfiles', f + '.pyx')
         results.append(outfile)
         util.write_if_different(outfile, data)
-    os.chdir('..')
     return results

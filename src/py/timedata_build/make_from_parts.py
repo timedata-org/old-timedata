@@ -1,11 +1,12 @@
 import collections
 from . import instantiations, util
 
-def write(root, config, *, output_file=None, **kwds):
+
+def write(config, *, output_file=None, **kwds):
     declare, define = [], []
 
     def fmt(*names, **kwds):
-        dc, df = util.substitute_templates(root, *names, **kwds)
+        dc, df = util.substitute_templates(*names, **kwds)
         dc and declare.append(dc)
         df and define.append(df)
 
@@ -29,7 +30,8 @@ def write(root, config, *, output_file=None, **kwds):
     util.write_if_different(output_file, data)
     return output_file
 
-def execute(root):
+
+def execute():
     colors, lists = [], []
     for c in (
             instantiations.Color,
@@ -38,7 +40,7 @@ def execute(root):
             instantiations.ColorList,
             instantiations.ColorList255,
             instantiations.ColorList256):
-        f = write(root, c.methods, **c.__dict__)
+        f = write(c.methods, **c.__dict__)
         if 'List' in c.__name__:
             lists.append(f)
         else:

@@ -1,9 +1,9 @@
 from . ColorBase import *
 
-class_cpp = 'ColorCpp256'
-class_py = 'NewColor256'
-output_file = 'src/timedata/color/color256.gen.pyx'
-range = 256.0
+class_cpp = 'ColorCpp'
+class_py = 'NewColor'
+output_file = 'build/genfiles/timedata/color/color.gen.pyx'
+range = 1.0
 
 class_documentation += """
         NewColor is a normalized color class, with components having a
