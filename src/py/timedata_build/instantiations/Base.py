@@ -1,21 +1,13 @@
-value_type = 'float'
+from timedata_build.util import add_methods
+
+number_type = 'float'
 documentation = 'FIXME'
 
-def add_methods(x=None, **y):
-    """Merge two dictionaries down exactly two levels."""
-    import copy
-    def tup(v):
-        return (v, ) if isinstance(v, str) else v
-
-    result = copy.deepcopy(x or {})
-    for k, v in y.items():
-        if k == 'base':
-            result[k] = result.get(k, ()) + tup(v)
-        else:
-            r_value = result.setdefault(k, {})
-            for k2, v2 in v.items():
-                v3 = r_value.get(k2, ())
-                r_value[k2] = v3  + tup(v2)
-    return result
+substitutions = dict(
+    class_cpp = '${class_py}Cpp',
+    class_py='New$class_py',
+    output_file='build/genfiles/timedata/color/New$class_py.pyx',
+    range='$range',
+    )
 
 methods = add_methods({}, base='base')

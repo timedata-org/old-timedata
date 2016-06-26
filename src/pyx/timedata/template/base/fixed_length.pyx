@@ -2,6 +2,7 @@
 """Basic methods for classes of a fixed length (like a Sample)."""
 
 ### declare
+
 cdef extern from "<$include_file>" namespace "$namespace":
     cdef cppclass $class_cpp:
          $class_cpp()

@@ -11,8 +11,8 @@ namespace timedata {
 namespace color {
 
 using ColorCpp = Color;
-using ColorCpp256 = Color256;
-using ColorCpp255 = Color255;
+using Color256Cpp = Color256;
+using Color255Cpp = Color255;
 
 template <typename Color>
 ColorCpp unscale(Color const& x) {

@@ -3,6 +3,10 @@
 import csv, json, os, pathlib, string, sys
 
 
+def substituter(**kwds):
+    return lambda t: string.Template(t or '').substitute(**kwds)
+
+
 def write_if_different(fname, data):
     """Writes a file if it is different from what's there, creating its
        directory if necessary."""
@@ -48,11 +52,11 @@ def read(lines, f):
 def substitute_templates(*names, **kwds):
     filename = os.path.join('src', 'pyx', 'timedata', 'template',
                             *names) + '.pyx'
+    sub = substituter(**kwds)
+
     try:
         parts = read(open(filename), filename)
-        def _sub(name):
-            return string.Template(parts.get(name, '')).substitute(**kwds)
-        return _sub('declare'), _sub('define')
+        return [sub(parts.get(i)) for i in ('declare', 'define')]
 
     except Exception as e:
         s = ' '.join(str(i) for i in e.args)
@@ -63,3 +67,30 @@ class Context(object):
     def __init__(self, **kwds):
         for (k, v) in kwds.items():
             setattr(self, k, v)
+
+
+def substitute_context(context, **kwds):
+    context = dict(context)
+    sub = substituter(**kwds)
+
+    for k, v in context.pop('substitutions', {}).items():
+        context[k] = sub(v)
+    return Context(**context)
+
+
+def add_methods(x=None, **y):
+    """Merge two dictionaries down exactly two levels."""
+    import copy
+    def tup(v):
+        return (v, ) if isinstance(v, str) else v
+
+    result = copy.deepcopy(x or {})
+    for k, v in y.items():
+        if k == 'base':
+            result[k] = result.get(k, ()) + tup(v)
+        else:
+            r_value = result.setdefault(k, {})
+            for k2, v2 in v.items():
+                v3 = r_value.get(k2, ())
+                r_value[k2] = v3  + tup(v2)
+    return result

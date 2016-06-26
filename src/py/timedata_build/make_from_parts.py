@@ -37,9 +37,10 @@ def execute():
             instantiations.Color,
             instantiations.Color255,
             instantiations.Color256,
-            instantiations.ColorList,
-            instantiations.ColorList255,
-            instantiations.ColorList256):
+            # instantiations.ColorList,
+            # instantiations.ColorList255,
+            # instantiations.ColorList256,
+            ):
         f = write(c.methods, **c.__dict__)
         if 'List' in c.__name__:
             lists.append(f)

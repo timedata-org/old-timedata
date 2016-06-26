@@ -1,5 +1,7 @@
 from . Base import *
 
+value_type = 'float'
+
 methods = add_methods(
     methods,
     base='fixed_length',
