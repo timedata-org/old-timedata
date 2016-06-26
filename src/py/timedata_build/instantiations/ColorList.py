@@ -37,7 +37,10 @@ methods = add_methods(
         ),
 )
 
-class_documentation = """\
+substitutions = dict(
+    substitutions,
+    sample_name='$sample_name',
+    class_documentation = """\
 A list of RGB floating point Colors, with many mutating functions.
 
        A ColorList looks quite like a Python list of Colors (which look like
@@ -52,10 +55,5 @@ A list of RGB floating point Colors, with many mutating functions.
        create new ColorLists, in each case there is a corresponding mutating
        function or operation that works "in-place" with no heap allocations
        at all, for best performance.
-"""
-
-substitutions = dict(
-    substitutions,
-    sample_cpp='$sample_cpp',
-    sample_py='$sample_py',
-)
+""",
+    )

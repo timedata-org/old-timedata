@@ -4,9 +4,9 @@ number_type = 'float'
 documentation = 'FIXME'
 
 substitutions = dict(
-    class_cpp = '${class_py}Cpp',
-    class_py='New$class_py',
-    output_file='build/genfiles/timedata/color/New$class_py.pyx',
+    class_cpp='${name}Cpp',
+    class_py='New$name',
+    output_file='build/genfiles/timedata/color/New$name.pyx',
     range='$range',
     )
 
