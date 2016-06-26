@@ -17,17 +17,17 @@
 """
 
 ### declare
-    $class_cpp magic_$name($value_type&, $class_cpp&)
-    $class_cpp magic_$name($class_cpp&, $value_type&)
+    C$classname magic_$name($value_type&, C$classname&)
+    C$classname magic_$name(C$classname&, $value_type&)
 
 ### define
     def __${name}__(object self, object other):
         """$documentation"""
-        cdef $class_py result = $class_py()
+        cdef $classname result = $classname()
 
-        if isinstance(self, $class_py):
-            result.cdata = magic_$name((<$class_py> self).cdata, other)
+        if isinstance(self, $classname):
+            result.cdata = magic_$name((<$classname> self).cdata, other)
         else:
-            result.cdata = magic_$name(self, (<$class_py> other).cdata)
+            result.cdata = magic_$name(self, (<$classname> other).cdata)
 
         return result

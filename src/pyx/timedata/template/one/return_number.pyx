@@ -1,8 +1,8 @@
 ### declare
-    $value_type $name($class_cpp&, $class_cpp&)
+    $value_type $name(C$classname&, C$classname&)
 
 ### define
-    cpdef $value_type $name($class_py self, object x):
+    cpdef $value_type $name($classname self, object x):
         """$documentation"""
-        cdef $class_py s = x if isinstance(x, $class_py) else $class_py(x)
+        cdef $classname s = x if isinstance(x, $classname) else $classname(x)
         return $name(self.cdata, s.cdata)

@@ -6,36 +6,36 @@ import cython
 from numbers import Number
 
 cdef extern from "<$include_file>" namespace "$namespace":
-    string $to_string($class_cpp&)
-    bool $compare($class_cpp&, $class_cpp&, int richcmp)
+    string toString(C$classname&)
+    bool compare(C$classname&, C$classname&, int richcmp)
 
 ### define
 
-cdef class $class_py:
+cdef class $classname:
     """$class_documentation"""
-    cdef $class_cpp cdata
+    cdef C$classname cdata
 
     @property
-    def start($class_py self):
+    def start($classname self):
         """Return the lowest in-band value for this class."""
         return $start
 
     @property
-    def range($class_py self):
+    def range($classname self):
         """Return the range from start() to the highest in-band value."""
         return $range
 
-    cpdef $class_py copy($class_py self):
+    cpdef $classname copy($classname self):
         """Return a shallow copy of self."""
-        cdef $class_py s = $class_py()
+        cdef $classname s = $classname()
         s.cdata = self.cdata
         return s
 
-    def __repr__($class_py self):
-        return '$class_py(%s)' % str(self)
+    def __repr__($classname self):
+        return '$classname(%s)' % str(self)
 
-    def __str__($class_py self):
-        return $to_string(self.cdata).decode('ascii')
+    def __str__($classname self):
+        return toString(self.cdata).decode('ascii')
 
-    def __richcmp__($class_py self, $class_py other, int rcmp):
-        return $compare(self.cdata, other.cdata, rcmp)
+    def __richcmp__($classname self, $classname other, int rcmp):
+        return compare(self.cdata, other.cdata, rcmp)

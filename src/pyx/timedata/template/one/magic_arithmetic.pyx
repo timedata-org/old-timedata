@@ -1,10 +1,10 @@
 ### declare
-    $class_cpp magic_$name($class_cpp&, $class_cpp&)
+    C$classname magic_$name(C$classname&, C$classname&)
 
 ### define
     def __${name}__(object x, object y):
-        cdef $class_py result = $class_py()
-        cdef $class_py a = <$class_py> x if isinstance(x, $class_py) else $class_py(x)
-        cdef $class_py b = <$class_py> y if isinstance(y, $class_py) else $class_py(y)
+        cdef $classname result = $classname()
+        cdef $classname a = <$classname> x if isinstance(x, $classname) else $classname(x)
+        cdef $classname b = <$classname> y if isinstance(y, $classname) else $classname(y)
         result.cdata = magic_$name(a.cdata, b.cdata);
         return result

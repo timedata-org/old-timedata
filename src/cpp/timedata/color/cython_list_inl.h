@@ -7,11 +7,11 @@
 #include <timedata/color/spread.h>
 
 namespace timedata {
-namespace color {
+namespace color_list {
 
-using ColorListCpp = std::vector<ColorCpp>;
-using ColorListCpp255 = std::vector<ColorCpp255>;
-using ColorListCpp256 = std::vector<ColorCpp256>;
+using CNewColorList = std::vector<CNewColor>;
+using CNewColorList255 = std::vector<CNewColor255>;
+using CNewColorList256 = std::vector<CNewColor256>;
 
 template <typename ColorList>
 size_t count(ColorList const& c, ValueType<ColorList> const& s) {
@@ -264,5 +264,5 @@ void magic_mul(size_t size, ColorList& colors) {
 }
 #endif
 
-} // color
+} // color_list
 } // timedata

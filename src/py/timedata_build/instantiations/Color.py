@@ -1,16 +1,11 @@
 from . SampleBase import *
-from timedata_build import util
 
 start = 0
-compare = 'compare'
-from_string = 'stringToColor'
-to_string = 'colorToString'
 include_file = 'timedata/color/cython_inl.h'
 properties = 'red', 'green', 'blue'
 namespace = 'timedata::color'
 size = 3
 documentation = 'FIXME'
-fix_key = 'fixKey'
 
 methods = add_methods(
     methods,
@@ -61,11 +56,3 @@ A $name is an immutable RGB floating point color.
      it's perfectly acceptable to have any value in intermediate calculations,
      even infinity.""",
      )
-
-_locals = dict(locals())
-
-Color = util.substitute_context(_locals, name='Color', range='1')
-Color255 = util.substitute_context(_locals, name='Color255', range='255')
-Color256 = util.substitute_context(_locals, name='Color256', range='256')
-
-__all__ = 'Color', 'Color255', 'Color256'

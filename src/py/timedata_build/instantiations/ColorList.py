@@ -1,21 +1,12 @@
 from . Base import *
 
-__all__ = 'ColorList', 'ColorList255', 'ColorList256',
-
 start = 0
-compare = 'compare'
-from_string = 'stringToColor'
-to_string = 'colorToString'
 include_file = 'timedata/color/cython_list_inl.h'
 properties = ()
-namespace = 'timedata::color'
+namespace = 'timedata::color_list'
 value_type = 'float'
 size = 3
 documentation = 'FIXME'
-fix_key = 'fixKey'
-set_at = 'setAt'
-slice_into = 'sliceInto'
-slice_out = 'sliceOut'
 
 methods = add_methods(
     methods,
@@ -39,7 +30,7 @@ methods = add_methods(
 
 substitutions = dict(
     substitutions,
-    sample_name='$sample_name',
+    sampleclass='$sampleclass',
     class_documentation = """\
 A list of RGB floating point Colors, with many mutating functions.
 

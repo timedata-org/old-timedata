@@ -1,10 +1,10 @@
 ### declare
-    $class_cpp $name($class_cpp&, $class_cpp&)
+    C$classname $name(C$classname&, C$classname&)
 
 ### define
-    cpdef $name($class_py self, object x):
+    cpdef $name($classname self, object x):
         """$documentation"""
-        cdef $class_py s = x if isinstance(x, $class_py) else $class_py(x)
-        cdef $class_py result = $class_py()
+        cdef $classname s = x if isinstance(x, $classname) else $classname(x)
+        cdef $classname result = $classname()
         result.cdata = $name(self.cdata, s.cdata)
         return result

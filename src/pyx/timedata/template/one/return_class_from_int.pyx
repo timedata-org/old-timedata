@@ -1,9 +1,9 @@
 ### declare
-    $class_cpp $name($class_cpp&, int)
+    C$classname $name(C$classname&, int)
 
 ### define
-    cpdef $class_py $name($class_py self, int index):
+    cpdef $classname $name($classname self, int index):
         """$documentation"""
-        cdef $class_py result = $class_py()
+        cdef $classname result = $classname()
         result.cdata = $name(self.cdata, index)
         return result

@@ -10,23 +10,23 @@
 namespace timedata {
 namespace color {
 
-using ColorCpp = Color;
-using Color256Cpp = Color256;
-using Color255Cpp = Color255;
+using CNewColor = Color;
+using CNewColor256 = Color256;
+using CNewColor255 = Color255;
 
 template <typename Color>
-ColorCpp unscale(Color const& x) {
+CNewColor unscale(Color const& x) {
     // TODO: hack!
     return {x[0].unscale(), x[1].unscale(), x[2].unscale()};
 }
 
 template <typename Color>
-std::string colorToString(Color const& x) {
+std::string toString(Color const& x) {
     return colorToString(unscale(x), Base::normal);
 }
 
 template <typename Color>
-bool stringToColor(std::string const& x, Color& c) {
+bool fromString(std::string const& x, Color& c) {
     return detail::toColor(x.c_str(), c);
 }
 

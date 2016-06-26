@@ -4,21 +4,21 @@
 ### declare
 
 cdef extern from "<$include_file>" namespace "$namespace":
-    cdef cppclass $class_cpp:
-         $class_cpp()
-         $class_cpp($value_type, $value_type, $value_type)
+    cdef cppclass C$classname:
+         C$classname()
+         C$classname($value_type, $value_type, $value_type)
          $value_type& operator[](size_t)
          void fill($value_type)
 
-    bool $from_string(string&, $class_cpp&)
-    bool $fix_key(int& index, size_t size)
+    bool fromString(string&, C$classname&)
+    bool fixKey(int& index, size_t size)
 
 ### define
     def __init__(self, *args):
-        """There are various different ways to construct a $class_py.
+        """There are various different ways to construct a $classname.
 
-        * The empty constructor $class_py() set all components to zero.
-        * ${class_py}s can be constructed from string names.
+        * The empty constructor $classname() set all components to zero.
+        * ${classname}s can be constructed from string names.
         * Constructing from a single number results in all components
           having that value.
         * Constructing from any iteratable the right size works
@@ -32,7 +32,7 @@ cdef extern from "<$include_file>" namespace "$namespace":
                 self.cdata.fill(<$value_type> a)
                 return
             if isinstance(a, str):
-                if $from_string(<string> a, self.cdata):
+                if fromString(<string> a, self.cdata):
                     return
                 raise ValueError("Can't understand sample string %s" % args)
             try:
@@ -48,16 +48,16 @@ cdef extern from "<$include_file>" namespace "$namespace":
             for i, a in enumerate(args):
                 self.cdata[i] = a
 
-    def __getitem__($class_py self, object key):
+    def __getitem__($classname self, object key):
         cdef int index
         if isinstance(key, slice):
             r = tuple(self[i] for i in range(*key.indices(len(self))))
-            return $class_py(*r) if len(r) == $size else r
+            return $classname(*r) if len(r) == $size else r
 
         index = <int> key
-        if $fix_key(index, $size):
+        if fixKey(index, $size):
             return self.cdata[index]
-        raise IndexError('$class_py index out of range')
+        raise IndexError('$classname index out of range')
 
-    def __len__($class_py self):
+    def __len__($classname self):
         return $size

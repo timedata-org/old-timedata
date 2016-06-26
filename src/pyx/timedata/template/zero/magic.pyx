@@ -1,8 +1,8 @@
 ### declare
-    $class_cpp magic_$name($class_cpp&)
+    C$classname magic_$name(C$classname&)
 
 ### define
-    def  __${name}__($class_py self):
-        cdef $class_py s = $class_py()
+    def  __${name}__($classname self):
+        cdef $classname s = $classname()
         s.cdata = magic_$name(self.cdata)
         return s

@@ -32,14 +32,6 @@ def write(config, *, output_file=None, **kwds):
 
 
 def execute():
-    colors, lists = [], []
     for cname in instantiations.__all__:
-        if 'List' in cname:
-            continue
         c = getattr(instantiations, cname)
-        f = write(c.methods, **c.__dict__)
-        if 'List' in cname:
-            lists.append(f)
-        else:
-            colors.append(f)
-    return colors, lists
+        yield write(c.methods, **c.__dict__)
