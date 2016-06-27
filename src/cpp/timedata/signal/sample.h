@@ -23,6 +23,7 @@ struct Sample : SampleBase<Model, Range> {
 
     using base_type::base_type;
 
+    // TODO: need to use std::initializer_list!
     Sample(value_type r, value_type g, value_type b)
             : base_type{{r, g, b}} {
     }
@@ -30,6 +31,7 @@ struct Sample : SampleBase<Model, Range> {
         base_type::fill(0);
     }
 
+    // TODO?: this could be offloaded from this class into free functions.
     template <typename Function>
     Sample forEach(Function f) const {
         Sample result;
@@ -51,6 +53,11 @@ struct Sample : SampleBase<Model, Range> {
         return forEachF(timedata::unscale<Range>);
     }
 
+    static Sample infinity() {
+        auto inf = value_type::infinity();
+        return {inf, inf, inf};
+    }
+
     using ListBase = std::vector<Sample>;
     struct List : ListBase {
         using ListBase::ListBase;
@@ -68,6 +75,5 @@ using NumberType = typename T::number_type;
 
 template <typename T>
 using SampleType = typename T::sample_type;
-
 
 }  // timedata

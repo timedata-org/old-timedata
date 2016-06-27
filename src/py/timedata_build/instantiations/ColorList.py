@@ -10,16 +10,16 @@ documentation = 'FIXME'
 
 methods = add_methods(
     methods,
-    base='variable_length',
+    base='sample_list',
     zero=dict(
         mutator=('abs', 'clear', 'floor', 'ceil', 'invert', 'neg', 'reverse',
                  'trunc', 'zero'),
         ),
 
     one=dict(
-        arithmetic=('add', 'div', 'mul', 'pow', 'sub', 'rdiv', 'rpow', 'rsub'),
+        arithmetic=('add', 'div', 'pow', 'sub', 'rdiv', 'rpow', 'rsub',
+                    'max_limit', 'min_limit'),
         return_number=('distance', 'distance2'),
-        return_class=('limit_min', 'limit_max'),
         ),
 
     two=dict(

@@ -3,15 +3,16 @@
 #include <algorithm>
 #include <type_traits>
 
+#include <timedata/base/enum.h>
 #include <timedata/color/cython_inl.h>
 #include <timedata/color/spread.h>
 
 namespace timedata {
 namespace color_list {
 
-using CNewColorList = std::vector<CNewColor>;
-using CNewColorList255 = std::vector<CNewColor255>;
-using CNewColorList256 = std::vector<CNewColor256>;
+using CNewColorList = color::CNewColor::List;
+using CNewColorList255 = color::CNewColor255::List;
+using CNewColorList256 = color::CNewColor256::List;
 
 template <typename ColorList>
 size_t count(ColorList const& c, ValueType<ColorList> const& s) {
@@ -31,30 +32,30 @@ int index(ColorList const& c, ValueType<ColorList> const& s) {
 
 template <typename ColorList>
 void insert(int key, ValueType<ColorList> const& color, ColorList& out) {
-    if (not fixKey(key, out.size()))
+    if (not resolvePythonIndex(key, out.size()))
         key = std::max(0, std::min(static_cast<int>(out.size()), key));
     out.insert(out.begin() + key, color);
 }
 
 template <typename ColorList>
-bool pop(ColorList& colors, int key, ValueType<ColorList>& result) {
-    if (not fixKey(key, colors.size()))
+bool pop(ColorList& out, int key, ValueType<ColorList>& result) {
+    if (not resolvePythonIndex(key, out.size()))
         return false;
-    result = colors[key];
-    colors.erase(colors.begin() + key);
+    result = out[key];
+    out.erase(out.begin() + key);
     return true;
 }
 
 template <typename ColorList>
-void rotate(ColorList& colors, int pos) {
-    timedata::rotate(colors, pos);
+void rotate(ColorList& out, int pos) {
+    timedata::rotate(out, pos);
 }
 
 template <typename ColorList>
-void sort(ColorList const& colors) {
+void sort(ColorList const& out) {
     using Color = ValueType<ColorList>;
     auto comp = [](Color const& x, Color const& y) { return cmp(x, y) < 0.0f; };
-    std::sort(colors.begin(), colors.end(), comp);
+    std::sort(out.begin(), out.end(), comp);
 }
 
 template <typename ColorList>
@@ -85,7 +86,7 @@ ValueType<ColorList> max_cpp(ColorList const& cl) {
     using value_type = ValueType<Color>;
 
     Color result;
-    result.fill(std::numeric_limits<value_type>::infinity());
+    result.fill(-std::numeric_limits<value_type>::infinity());
     for (auto& c: cl) {
         for (size_t i = 0; i < c.size(); ++i)
             result[i] = std::max(result[i], c[i]);
@@ -113,144 +114,201 @@ template <typename T>
 using Transform = typename std::add_pointer<T(T)>::type;
 
 template <typename ColorList, typename Function>
-void mutate(ColorList& colors, Function f) {
-    for (auto& i: colors)
+void applyEach(ColorList& out, Function f) {
+    for (auto& i: out)
         for (auto& j: i)
             i = f(i);
 }
 
 template <typename ColorList>
-void mutateF(ColorList& colors, Transform<NumberType<ColorList>> f) {
-    mutate(colors, f);
+void applyEachF(ColorList& out, Transform<NumberType<ColorList>> f) {
+    applyEach(out, f);
 }
 
 template <typename ColorList>
-void math_abs(ColorList& colors) {
-    mutate(colors, std::abs);
+void math_abs(ColorList& out) {
+    applyEach(out, std::abs);
 }
 
 template <typename ColorList>
-void math_clear(ColorList& colors) {
-    colors.clear();
+void math_clear(ColorList& out) {
+    out.clear();
+}
+
+template <typename T> void math_floor(T& out) {
+    applyEach(out, std::floor);
 }
 
 template <typename ColorList>
-void math_floor(ColorList& colors) {
-    mutate(colors, std::floor);
+void math_ceil(ColorList& out) {
+    applyEach(out, std::ceil);
 }
 
 template <typename ColorList>
-void math_ceil(ColorList& colors) {
-    mutate(colors, std::ceil);
+void math_invert(ColorList& out) {
+    applyEach(out, [](NumberType<ColorList> c) { return c.invert(); });
 }
 
 template <typename ColorList>
-void math_invert(ColorList& colors) {
-    mutate(colors, [](NumberType<ColorList> c) { return c.invert(); });
+void math_neg(ColorList& out) {
+    applyEach(out, [](NumberType<ColorList> c) { return -c; });
 }
 
 template <typename ColorList>
-void math_neg(ColorList& colors) {
-    mutate(colors, [](NumberType<ColorList> c) { return -c; });
+void math_reverse(ColorList& out) {
+    std::reverse(out.begin(), out.end());
 }
 
 template <typename ColorList>
-void math_reverse(ColorList& colors) {
-    std::reverse(colors.begin(), colors.end());
+void math_trunc(ColorList& out) {
+    applyEach(out, std::trunc);
 }
 
 template <typename ColorList>
-void math_trunc(ColorList& colors) {
-    mutate(colors, std::trunc);
+void math_zero(ColorList& out) {
+    out.fill({});
 }
 
 template <typename ColorList>
-void math_zero(ColorList& colors) {
-    colors.fill({});
+NumberType<ColorList> component(ColorList const& in, size_t i, size_t j) {
+    return (i < in.size()) ? in[i][j] : {};
 }
 
 template <typename ColorList>
-void math_add(NumberType<ColorList>, ColorList& colors) {
+NumberType<Color> component(ValueType<ColorList> const& c, size_t i, size_t j) {
+    return c[j];
 }
 
 template <typename ColorList>
-void math_add(ColorList const& in, ColorList& out) {
+NumberType<Color> component(NumberType<ColorList> const& c, size_t i, size_t j) {
+    return c;
 }
 
 template <typename ColorList>
-void math_div(NumberType<ColorList>, ColorList& colors) {
+size_t maxSize(ColorList const& in, ColorList const& out) {
+    return std::max(in.size(), out.size());
+}
+
+template <typename Input, typename ColorList>
+size_t maxSize(Input, ColorList const& out) {
+    return out.size();
 }
 
 template <typename ColorList>
-void math_div(ColorList const& in, ColorList& out) {
+void resizeIf(ColorList const& in, ColorList& out) {
+    if (out.size() < in.size())
+        out.resize(in.size());
 }
 
-template <typename ColorList>
-void math_mul(NumberType<ColorList>, ColorList& colors) {
+template <typename T, typename ColorList>
+void resizeIf(T, ColorList& out) {
 }
 
-template <typename ColorList>
-void math_mul(ColorList const& in, ColorList& out) {
+template <typename ColorList, typename Func>
+void forEach(ColorList const& in, ColorList& out, Func f) {
+    for (size_t i = 0; i < out.size(); ++i)
+        for (size_t j = 0; j < out[i].size(); ++j)
+            f(in[i][j], out[i][j]);
 }
 
-template <typename ColorList>
-void math_pow(NumberType<ColorList>, ColorList& colors) {
+template <typename ColorList, typename Func>
+void forEach(ValueType<ColorList> const& in, ColorList& out, Func f) {
+    for (size_t i = 0; i < out.size(); ++i)
+        for (size_t j = 0; j < out[i].size(); ++j)
+            f(in, out[i][j]);
 }
 
-template <typename ColorList>
-void math_pow(ColorList const& in, ColorList& out) {
+template <typename ColorList, typename Func>
+void forEach(NumberType<ColorList> const& in, ColorList& out, Func f) {
+    for (size_t i = 0; i < out.size(); ++i) {
+        for (size_t j = 0; j < out[i].size(); ++j)
+            f(in, out[i][j]);
 }
 
-template <typename ColorList>
-void math_sub(NumberType<ColorList>, ColorList& colors) {
+template <typename Input, typename ColorList, typename Func>
+void applyEach(Input const& in, ColorList& out, Func f) {
+    using Number = NumberType<ColorList>;
+    resizeIf(in, out);
+    forEach(in, out, [&f](Number x, Number &y) { y = f(x); });
 }
 
-template <typename ColorList>
-void math_sub(ColorList const& in, ColorList& out) {
+template <typename Input, typename ColorList>
+void math_add(Input const& in, ColorList& out) {
+    using Number = NumberType<ColorList>;
+    applyEach(in, out, [](Number x, Number y) { return x + y; });
 }
 
-template <typename ColorList>
-void math_rdiv(NumberType<ColorList>, ColorList& colors) {
+template <typename Input, typename ColorList>
+void math_div(Input const& in, ColorList& out) {
+    using Number = NumberType<ColorList>;
+    applyEach(in, out, [](Number x, Number y) { return pythonDiv(x, y); });
 }
 
-template <typename ColorList>
-void math_rdiv(ColorList const& in, ColorList& out) {
+template <typename Input, typename ColorList>
+void math_rdiv(Input const& in, ColorList& out) {
+    using Number = NumberType<ColorList>;
+    applyEach(in, out, [](Number x, Number y) { return pythonDiv(y, x); });
 }
 
-template <typename ColorList>
-void math_rpow(NumberType<ColorList>, ColorList& colors) {
+template <typename Input, typename ColorList>
+void math_mul(Input const& in, ColorList& out) {
+    using Number = NumberType<ColorList>;
+    applyEach(in, out, [](Number x, Number y) { return x * y; });
 }
 
-template <typename ColorList>
-void math_rpow(ColorList const& in, ColorList& out) {
+template <typename Input, typename ColorList>
+void math_pow(Input const& in, ColorList& out) {
+    using Number = NumberType<ColorList>;
+    applyEach(in, out, [](Number x, Number y) { return std::pow(x, y); });
 }
 
-template <typename ColorList>
-void math_rsub(NumberType<ColorList>, ColorList& colors) {
+template <typename Input, typename ColorList>
+void math_rpow(Input const& in, ColorList& out) {
+    using Number = NumberType<ColorList>;
+    applyEach(in, out, [](Number x, Number y) { return std::pow(y, x); });
 }
 
-template <typename ColorList>
-void math_rsub(ColorList const& in, ColorList& out) {
+template <typename Input, typename ColorList>
+void math_sub(Input const& in, ColorList& out) {
+    using Number = NumberType<ColorList>;
+    applyEach(in, out, [](Number x, Number y) { return x - y; });
 }
 
-template <typename ColorList>
-ColorList limit_min(ColorList const& in, ColorList& out) {
+template <typename Input, typename ColorList>
+void math_rsub(Input const& in, ColorList& out) {
+    using Number = NumberType<ColorList>;
+    applyEach(in, out, [](Number x, Number y) { return y - x; });
 }
 
-template <typename ColorList>
-ColorList limit_max(ColorList const& in, ColorList& out) {
-
+template <typename Input, typename ColorList>
+void math_min_limit(Input const& in, ColorList& out) {
+    using Number = NumberType<ColorList>;
+    applyEach(in, out, [](Number x, Number y) { return std::max(x, y); });
 }
 
-#if 0
-template <typename Color>
-typename Color::value_type distance2(Color const& x, Color const& y) {
-    return 0.0f;
+template <typename Input, typename ColorList>
+void math_max_limit(Input const& in, ColorList& out) {
+    using Number = NumberType<ColorList>;
+    applyEach(in, out, [](Number x, Number y) { return std::min(x, y); });
 }
 
-template <typename Color>
-float distance(Color const& x, Color const& y) {
-    return 0.0f;
+template <typename Input, typename ColorList>
+NumberType<ColorList> distance2(Input const& x, ColorList const& y) {
+    NumberType<ColorList> result{};
+    auto size = maxSize(x, y);
+
+    for (size_t i = 0; i < size; ++i) {
+        for (size_t j = 0; j < y[i].size(); ++j) {
+            auto d = component(x, i, j) - component(y, i, j);
+            result += d * d;
+        }
+    }
+    return result;
+}
+
+template <typename Input, typename ColorList>
+NumberType<ColorList> distance(Input const& x, ColorList const& y) {
+    return std::sqrt(distance2(x, y));
 }
 
 template <typename ColorList>
@@ -259,10 +317,9 @@ void magic_add(ColorList const& in, ColorList& out) {
 }
 
 template <typename ColorList>
-void magic_mul(size_t size, ColorList& colors) {
-    duplicateInto(size< colors);
+void magic_mul(size_t size, ColorList& out) {
+    duplicateInto(size< out);
 }
-#endif
 
 } // color_list
 } // timedata

@@ -11,10 +11,12 @@ def _add_classes(d):
     for name in '', '255', '256':
         cname = 'NewColor' + name
         lname = 'NewColorList' + name
+        rng = float(name or '1')
 
-        sub(Color, cname, range=name or '1')
-        sub(ColorList, lname, range=name or '1', sampleclass=cname)
+        sub(Color, cname, range=rng)
+        sub(ColorList, lname, range=rng, sampleclass=cname)
     return results
+
 
 _classes = _add_classes(locals())
 locals().update(_classes)

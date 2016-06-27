@@ -157,7 +157,7 @@ std::vector<std::string> const& colorNames() {
 
 // TODO: mmove somewhere general-purpose!
 inline
-bool fixKey(int& key, size_t size) {
+bool resolvePythonIndex(int& key, size_t size) {
     if (key < 0)
         key += size;
     return key >= 0 and key < int(size);

@@ -5,7 +5,7 @@ cdef extern from "<timedata/color/colorList_inl.h>" namespace "timedata":
         size_t size()
         void resize(size_t)
         void clear();
-        bool fixKey(int& key)
+        bool resolvePythonIndex(int& key)
         void setColor(size_t, float r, float g, float b)
         bool getColor(size_t, float r, float g, float b)
         size_t getSizeOf()

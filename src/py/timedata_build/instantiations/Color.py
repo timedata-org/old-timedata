@@ -1,6 +1,6 @@
 from . SampleBase import *
 
-start = 0
+start = 0.0
 include_file = 'timedata/color/cython_inl.h'
 properties = 'red', 'green', 'blue'
 namespace = 'timedata::color'
@@ -14,13 +14,13 @@ methods = add_methods(
         strings=(
             dict(name_cpp='colorNames',
                  name_py='names',
-                 documentation='Return a list all names for colors'),
-            ),
+                 documentation='Return a list of all names for $classname'),
+            ),  # TODO: that substitution for $classname doesn't happen.
 
         from_cpp=(
             dict(name='from_hex',
                  argument_type='uint32_t',
-                 documentation='Create a color from a hex integer'),
+                 documentation='Create a $classname from a hex integer'),
             ),
         ),
 
@@ -37,7 +37,7 @@ substitutions = dict(substitutions,
                      class_documentation="""\
 A $name is an immutable RGB floating point color.
 
-     A $name looks very much like a Python tuple with three floating point
+     A $name looks very much like a Python tuple with $$size floating point
      numbers, with the big exception that operators like + and * perform
      arithmetic, not list-style operations.
 

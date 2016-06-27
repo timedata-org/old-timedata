@@ -4,7 +4,7 @@
 ### define
     @staticmethod
     def $name($argument_type arg):
-        """{documentation}"""
+        """$documentation"""
         cdef $classname result = $classname()
         $name(arg, result.cdata)
         return result

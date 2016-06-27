@@ -12,7 +12,7 @@ cdef extern from "<$include_file>" namespace "$namespace":
          void push_back(C$sampleclass)
          void resize(size_t)
 
-    bool fixKey(int& index, size_t size)
+    bool resolvePythonIndex(int& index, size_t size)
     size_t count(C$classname&, C$sampleclass&)
     void extend(C$classname&, C$classname&)
     int index(C$classname&, C$sampleclass&)
@@ -54,7 +54,7 @@ cdef extern from "<$include_file>" namespace "$namespace":
             raise ValueError('attempt to assign sequence of one size '
                              'to extended slice of another size')
         index = key
-        if not fixKey(index, self.cdata.size()):
+        if not resolvePythonIndex(index, self.cdata.size()):
             raise IndexError('$classname index out of range %s' + key)
         self.cdata[index] = $sampleclass(x).cdata
 
@@ -68,7 +68,7 @@ cdef extern from "<$include_file>" namespace "$namespace":
             cl.cdata = sliceOut(self.cdata, begin, end, step)
             return cl
         k = key
-        if not fixKey(k, self.cdata.size()):
+        if not resolvePythonIndex(k, self.cdata.size()):
             raise IndexError('$classname index out of range %s' + key)
         s = $sampleclass()
         s.cdata = self.cdata[k]

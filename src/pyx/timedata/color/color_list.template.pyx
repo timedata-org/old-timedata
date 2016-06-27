@@ -51,7 +51,7 @@ cdef class ColorList{suffix}:
             raise ValueError('attempt to assign sequence of one size '
                              'to extended slice of another size')
         index = key
-        if not self.colors.fixKey(index):
+        if not self.colors.resolvePythonIndex(index):
             raise IndexError('ColorList index out of range ' + str(index))
         try:
             if isinstance(x, str):
@@ -71,7 +71,7 @@ cdef class ColorList{suffix}:
             return cl
 
         index = key
-        if not self.colors.fixKey(index):
+        if not self.colors.resolvePythonIndex(index):
             raise IndexError('ColorList index out of range ' + str(key))
 
         c = self.colors[index]

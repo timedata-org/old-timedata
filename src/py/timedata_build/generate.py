@@ -3,7 +3,7 @@
 import os
 from . import make_from_parts, old_templates, read_structs, util
 
-USE_LISTS =  False
+USE_LISTS = not not False
 
 STRUCT_FILES = [
     'timedata/signal/combiner',

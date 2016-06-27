@@ -45,6 +45,10 @@ class Ranged {
         return std::max(START, std::min(STOP, value_));
     }
 
+    static Ranged infinity() {
+        return {std::numeric_limits<value_type>::infinity()};
+    }
+
 #if 0
     // Not (yet?) used.
     template <typename Range2>

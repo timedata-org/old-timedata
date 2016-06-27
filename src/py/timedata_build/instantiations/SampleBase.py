@@ -4,7 +4,7 @@ value_type = 'float'
 
 methods = add_methods(
     methods,
-    base='fixed_length',
+    base='sample',
     zero=dict(
         magic=('abs', 'ceil', 'floor', 'invert', 'neg', 'round', 'trunc'),
         magic_int='hash'),

@@ -16,7 +16,7 @@ struct ColorVector : public ColorVectorBase {
     }
 
     // Returns negative for a bad key.
-    bool fixKey(int& key) const {
+    bool resolvePythonIndex(int& key) const {
         if (key < 0)
             key += size();
         return key >= 0 and key < int(size());
