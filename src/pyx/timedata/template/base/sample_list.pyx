@@ -12,20 +12,25 @@ cdef extern from "<$include_file>" namespace "$namespace":
          void push_back(C$sampleclass)
          void resize(size_t)
 
-    bool resolvePythonIndex(int& index, size_t size)
-    size_t count(C$classname&, C$sampleclass&)
-    void extend(C$classname&, C$classname&)
-    int index(C$classname&, C$sampleclass&)
-    void insert(int key, C$sampleclass&, C$classname)
-    bool pop(C$classname&, int key, C$sampleclass&)
-    void rotate(C$classname&, int pos)
-    void sort(C$classname&)
-    void round_cpp(C$classname&, size_t digits)
+    C$classname sliceOut(C$classname&, int begin, int end, int step)
     C$sampleclass max_cpp(C$classname&)
     C$sampleclass min_cpp(C$classname&)
-    void spreadAppend(C$classname&, size_t, C$sampleclass&)
-    bool sliceInto(C$classname&, C$classname&, int, int, int)
-    C$classname sliceOut(C$classname&, int, int, int)
+
+    bool pop(C$classname&, int key, C$sampleclass&)
+    bool resolvePythonIndex(int& index, size_t size)
+    bool sliceInto(C$classname&, C$classname&, int begin, int end, int step)
+
+    int index(C$classname&, C$sampleclass&)
+
+    size_t count(C$classname&, C$sampleclass&)
+
+    void extend(C$classname&, C$classname&)
+    void insert(int key, C$sampleclass&, C$classname)
+    void rotate(C$classname&, int pos)
+    void round_cpp(C$classname&, size_t digits)
+    void sort(C$classname&)
+    void spreadAppend(C$sampleclass& target, size_t, C$classname&)
+
 
 ### define
     def __init__($classname self, items=None):

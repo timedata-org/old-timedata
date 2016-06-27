@@ -1,4 +1,4 @@
-#pragma once
+ #pragma once
 
 #include <algorithm>
 #include <type_traits>
@@ -15,56 +15,10 @@ using CNewColorList255 = color::CNewColor255::List;
 using CNewColorList256 = color::CNewColor256::List;
 
 template <typename ColorList>
-size_t count(ColorList const& c, ValueType<ColorList> const& s) {
-    return std::count(c.begin(), c.end(), s);
+ColorList sliceOut(ColorList const& in, int begin, int end, int step) {
+    return sliceVectorG(in, begin, end, step);
 }
 
-template <typename ColorList>
-void extend(ColorList const& in, ColorList& out) {
-    in.insert(in.end(), out.begin(), out.end());
-}
-
-template <typename ColorList>
-int index(ColorList const& c, ValueType<ColorList> const& s) {
-    auto i = std::find(c.begin(), c.end(), s);
-    return i != c.end() ? c - c.begin() : -1;
-}
-
-template <typename ColorList>
-void insert(int key, ValueType<ColorList> const& color, ColorList& out) {
-    if (not resolvePythonIndex(key, out.size()))
-        key = std::max(0, std::min(static_cast<int>(out.size()), key));
-    out.insert(out.begin() + key, color);
-}
-
-template <typename ColorList>
-bool pop(ColorList& out, int key, ValueType<ColorList>& result) {
-    if (not resolvePythonIndex(key, out.size()))
-        return false;
-    result = out[key];
-    out.erase(out.begin() + key);
-    return true;
-}
-
-template <typename ColorList>
-void rotate(ColorList& out, int pos) {
-    timedata::rotate(out, pos);
-}
-
-template <typename ColorList>
-void sort(ColorList const& out) {
-    using Color = ValueType<ColorList>;
-    auto comp = [](Color const& x, Color const& y) { return cmp(x, y) < 0.0f; };
-    std::sort(out.begin(), out.end(), comp);
-}
-
-template <typename ColorList>
-void round_cpp(ColorList& cl, size_t digits) {
-    for (auto& c: cl) {
-        for (auto& i: c)
-            i = roundPython(*i, digits);
-    }
-}
 
 template <typename ColorList>
 ValueType<ColorList> min_cpp(ColorList const& cl) {
@@ -94,9 +48,20 @@ ValueType<ColorList> max_cpp(ColorList const& cl) {
     return result;
 }
 
+////////////////////////////////////////////////////////////////////////////////
+
 template <typename ColorList>
-void spreadAppend(ColorList& out, size_t size, ValueType<ColorList> const& end) {
-    return timedata::spreadAppend(out, size, end);
+bool pop(ColorList& out, int key, ValueType<ColorList>& result) {
+    if (not resolvePythonIndex(key, out.size()))
+        return false;
+    result = out[key];
+    out.erase(out.begin() + key);
+    return true;
+}
+
+inline
+bool resolvePythonIndex(int& index, size_t size) {
+    return timedata::resolvePythonIndex(index, six);
 }
 
 template <typename ColorList>
@@ -105,11 +70,62 @@ bool sliceInto(
     return sliceIntoVectorG(in, out, begin, end, step);
 }
 
+////////////////////////////////////////////////////////////////////////////////
+
 template <typename ColorList>
-ColorList sliceOut(ColorList const& in, int begin, int end, int step) {
-    return sliceVectorG(in, begin, end, step);
+int index(ColorList const& c, ValueType<ColorList> const& s) {
+    auto i = std::find(c.begin(), c.end(), s);
+    return i != c.end() ? c - c.begin() : -1;
 }
 
+////////////////////////////////////////////////////////////////////////////////
+
+template <typename ColorList>
+size_t count(ColorList const& c, ValueType<ColorList> const& s) {
+    return std::count(c.begin(), c.end(), s);
+}
+
+////////////////////////////////////////////////////////////////////////////////
+
+template <typename ColorList>
+void extend(ColorList const& in, ColorList& out) {
+    in.insert(in.end(), out.begin(), out.end());
+}
+
+
+template <typename ColorList>
+void insert(int key, ValueType<ColorList> const& color, ColorList& out) {
+    if (not resolvePythonIndex(key, out.size()))
+        key = std::max(0, std::min(static_cast<int>(out.size()), key));
+    out.insert(out.begin() + key, color);
+}
+
+template <typename ColorList>
+void rotate(ColorList& out, int pos) {
+    timedata::rotate(out, pos);
+}
+
+template <typename ColorList>
+void round_cpp(ColorList& cl, size_t digits) {
+    for (auto& c: cl) {
+        for (auto& i: c)
+            i = roundPython(*i, digits);
+    }
+}
+
+template <typename ColorList>
+void sort(ColorList const& out) {
+    using Color = ValueType<ColorList>;
+    auto comp = [](Color const& x, Color const& y) { return cmp(x, y) < 0.0f; };
+    std::sort(out.begin(), out.end(), comp);
+}
+
+template <typename ColorList>
+void spreadAppend(ValueType<ColorList> const& end, size_t size, ColorList& out) {
+    return timedata::spreadAppend(out, size, end);
+}
+
+////////////////////////////////////////////////////////////////////////////////
 template <typename T>
 using Transform = typename std::add_pointer<T(T)>::type;
 
@@ -135,7 +151,7 @@ void math_clear(ColorList& out) {
     out.clear();
 }
 
-template <typename T> void math_floor(T& out) {
+template <typename ColorList> void math_floor(ColorList& out) {
     applyEach(out, std::floor);
 }
 
@@ -169,30 +185,7 @@ void math_zero(ColorList& out) {
     out.fill({});
 }
 
-template <typename ColorList>
-NumberType<ColorList> component(ColorList const& in, size_t i, size_t j) {
-    return (i < in.size()) ? in[i][j] : {};
-}
-
-template <typename ColorList>
-NumberType<Color> component(ValueType<ColorList> const& c, size_t i, size_t j) {
-    return c[j];
-}
-
-template <typename ColorList>
-NumberType<Color> component(NumberType<ColorList> const& c, size_t i, size_t j) {
-    return c;
-}
-
-template <typename ColorList>
-size_t maxSize(ColorList const& in, ColorList const& out) {
-    return std::max(in.size(), out.size());
-}
-
-template <typename Input, typename ColorList>
-size_t maxSize(Input, ColorList const& out) {
-    return out.size();
-}
+////////////////////////////////////////////////////////////////////////////////
 
 template <typename ColorList>
 void resizeIf(ColorList const& in, ColorList& out) {
@@ -290,6 +283,31 @@ template <typename Input, typename ColorList>
 void math_max_limit(Input const& in, ColorList& out) {
     using Number = NumberType<ColorList>;
     applyEach(in, out, [](Number x, Number y) { return std::min(x, y); });
+}
+
+template <typename ColorList>
+NumberType<ColorList> component(ColorList const& in, size_t i, size_t j) {
+    return (i < in.size()) ? in[i][j] : {};
+}
+
+template <typename ColorList>
+NumberType<Color> component(ValueType<ColorList> const& c, size_t i, size_t j) {
+    return c[j];
+}
+
+template <typename ColorList>
+NumberType<Color> component(NumberType<ColorList> const& c, size_t i, size_t j) {
+    return c;
+}
+
+template <typename ColorList>
+size_t maxSize(ColorList const& in, ColorList const& out) {
+    return std::max(in.size(), out.size());
+}
+
+template <typename Input, typename ColorList>
+size_t maxSize(Input, ColorList const& out) {
+    return out.size();
 }
 
 template <typename Input, typename ColorList>
