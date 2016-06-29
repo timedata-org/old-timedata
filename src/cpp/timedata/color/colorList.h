@@ -32,7 +32,6 @@ struct ColorVector : public ColorVectorBase {
 void clearInto(ColorVector&);
 void reverse(ColorVector&);
 void appendInto(ColorVector const&, ColorVector&);
-void duplicateInto(size_t count, ColorVector&);
 void insertBefore(ColorVector&, int index, Color const&);
 
 std::string toString(ColorVector const&, Base base = Base::normal);
@@ -87,6 +86,8 @@ void maxInto(ColorVector const& in, ColorVector& out);
 void hsvToRgbInto(ColorVector&, Base);
 void rgbToHsvInto(ColorVector&, Base);
 void appendInto(ColorVector const&, ColorVector&);
+
+template <typename ColorVector>
 void duplicateInto(size_t count, ColorVector&);
 size_t count(ColorVector const&, Color const&);
 int indexOf(ColorVector const&, Color const&);

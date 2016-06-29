@@ -28,7 +28,7 @@ std::string toString(ColorList const& colors) {
 }
 
 template <typename ColorList>
-NumberType<ColorList> comp(ColorList const& x, ColorList const& y) {
+NumberType<ColorList> compCL(ColorList const& x, ColorList const& y) {
     auto size = std::min(x.size(), y.size());
     for (size_t i = 0; i < size; ++i) {
         for (size_t j = 0; j < y[i].size(); ++j) {
@@ -41,7 +41,7 @@ NumberType<ColorList> comp(ColorList const& x, ColorList const& y) {
 }
 
 template <typename ColorList>
-NumberType<ColorList> comp(ValueType<ColorList> const& x, ColorList const& y) {
+NumberType<ColorList> compCL(ValueType<ColorList> const& x, ColorList const& y) {
     for (size_t i = 0; i < y.size(); ++i) {
         for (size_t j = 0; j < y[i].size(); ++j) {
             if (auto d = x[j] - y[i][j])
@@ -53,7 +53,7 @@ NumberType<ColorList> comp(ValueType<ColorList> const& x, ColorList const& y) {
 }
 
 template <typename ColorList>
-NumberType<ColorList> comp(NumberType<ColorList> x, ColorList const& y) {
+NumberType<ColorList> compCL(NumberType<ColorList> x, ColorList const& y) {
     for (size_t i = 0; i < y.size(); ++i) {
         for (size_t j = 0; j < y[i].size(); ++j) {
             if (auto d = x - y[i][j])
@@ -66,7 +66,7 @@ NumberType<ColorList> comp(NumberType<ColorList> x, ColorList const& y) {
 
 template <typename Input, typename ColorList>
 bool compare(Input x, ColorList const& y, int richCmp) {
-    return cmpToRichcmp(comp(x, y), richCmp);
+    return cmpToRichcmp(compCL(x, y), richCmp);
 }
 
 using CNewColorList = color::CNewColor::List;
@@ -174,8 +174,9 @@ void round_cpp(ColorList& cl, size_t digits) {
 template <typename ColorList>
 void sort(ColorList& out) {
     using Color = ValueType<ColorList>;
-    auto comp = [](Color const& x, Color const& y) { return cmp(x, y) < 0.0f; };
-    std::sort(out.begin(), out.end(), comp);
+    std::sort(out.begin(), out.end(), [](Color const& x, Color const& y) {
+        return color::compare(x, y) < 0.0f;
+    });
 }
 
 template <typename ColorList>
@@ -191,7 +192,7 @@ template <typename ColorList, typename Function>
 void applyEach(ColorList& out, Function f) {
     for (auto& i: out)
         for (auto& j: i)
-            i = f(i);
+            j = f(j);
 }
 
 template <typename ColorList>
@@ -201,7 +202,7 @@ void applyEachF(ColorList& out, Transform<NumberType<ColorList>> f) {
 
 template <typename ColorList>
 void math_abs(ColorList& out) {
-    applyEach(out, std::abs);
+    applyEachF(out, std::abs);
 }
 
 template <typename ColorList>
@@ -210,17 +211,18 @@ void math_clear(ColorList& out) {
 }
 
 template <typename ColorList> void math_floor(ColorList& out) {
-    applyEach(out, std::floor);
+    applyEachF(out, std::floor);
 }
 
 template <typename ColorList>
 void math_ceil(ColorList& out) {
-    applyEach(out, std::ceil);
+    applyEachF(out, std::ceil);
 }
 
 template <typename ColorList>
 void math_invert(ColorList& out) {
-    applyEach(out, [](NumberType<ColorList> c) { return c.invert(); });
+    using Ranged = typename ColorList::ranged_type;
+    applyEach(out, [](Ranged c) { return c.invert(); });
 }
 
 template <typename ColorList>
@@ -235,12 +237,12 @@ void math_reverse(ColorList& out) {
 
 template <typename ColorList>
 void math_trunc(ColorList& out) {
-    applyEach(out, std::trunc);
+    applyEachF(out, std::trunc);
 }
 
 template <typename ColorList>
 void math_zero(ColorList& out) {
-    out.fill({});
+    std::fill(out.begin(), out.end(), ValueType<ColorList>{});
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -256,7 +258,7 @@ template <typename ColorList, typename Func>
 void forEach(ValueType<ColorList> const& in, ColorList& out, Func f) {
     for (size_t i = 0; i < out.size(); ++i)
         for (size_t j = 0; j < out[i].size(); ++j)
-            f(in, out[i][j]);
+            f(in[j], out[i][j]);
 }
 
 template <typename ColorList, typename Func>
@@ -278,27 +280,29 @@ void resizeIf(T, ColorList&) {
 
 template <typename Input, typename ColorList, typename Func>
 void applyEach(Input const& in, ColorList& out, Func f) {
-    using Number = NumberType<ColorList>;
+    // using Number = NumberType<ColorList>;
+    using Number = RangedType<ColorList>;
     resizeIf(in, out);
-    forEach(in, out, [&f](Number x, Number &y) { y = f(x); });
+    forEach(in, out, [&f](Number x, Number &y) { y = f(x, y); });
 }
 
 template <typename Input, typename ColorList>
 void math_add(Input const& in, ColorList& out) {
-    using Number = NumberType<ColorList>;
+    // using Number = NumberType<ColorList>;
+    using Number = RangedType<ColorList>;
     applyEach(in, out, [](Number x, Number y) { return x + y; });
 }
 
 template <typename Input, typename ColorList>
 void math_div(Input const& in, ColorList& out) {
     using Number = NumberType<ColorList>;
-    applyEach(in, out, [](Number x, Number y) { return pythonDiv(x, y); });
+    applyEach(in, out, [](Number x, Number y) { return divPython(x, y); });
 }
 
 template <typename Input, typename ColorList>
 void math_rdiv(Input const& in, ColorList& out) {
     using Number = NumberType<ColorList>;
-    applyEach(in, out, [](Number x, Number y) { return pythonDiv(y, x); });
+    applyEach(in, out, [](Number x, Number y) { return divPython(y, x); });
 }
 
 template <typename Input, typename ColorList>
@@ -352,14 +356,14 @@ NumberType<ColorList> distance2(ColorList const& x, ColorList const& y) {
 
     size_t i = 0;
     for (; i < shorter.size(); ++i) {
-        for (auto j = 0; j < longer[i].size(); ++j) {
+        for (size_t j = 0; j < longer[i].size(); ++j) {
             auto d = longer[i][j] - shorter[i][j];
             result += d * d;
         }
     }
 
     for (; i < longer.size(); ++i) {
-        for (auto j = 0; j < longer[i].size(); ++j) {
+        for (size_t j = 0; j < longer[i].size(); ++j) {
             result += longer[i][j] * longer[i][j];
         }
     }
@@ -372,7 +376,7 @@ NumberType<ColorList> distance2(
         ValueType<ColorList> const& x, ColorList const& y) {
     NumberType<ColorList> result = 0.0f;
     for (size_t i = 0; i < y.size(); ++i) {
-        for (auto j = 0; j < y[i].size(); ++j) {
+        for (size_t j = 0; j < y[i].size(); ++j) {
             auto d = x[j] - y[i][j];
             result += d * d;
         }
@@ -384,7 +388,7 @@ template <typename ColorList>
 NumberType<ColorList> distance2(NumberType<ColorList> x, ColorList const& y) {
     NumberType<ColorList> result = 0.0f;
     for (size_t i = 0; i < y.size(); ++i) {
-        for (auto j = 0; j < y[i].size(); ++j) {
+        for (size_t j = 0; j < y[i].size(); ++j) {
             auto d = x - y[i][j];
             result += d * d;
         }
@@ -399,12 +403,12 @@ NumberType<ColorList> distance(Input const& x, ColorList const& y) {
 
 template <typename ColorList>
 void magic_add(ColorList const& in, ColorList& out) {
-    appendInto(in, out);
+    out.insert(out.end(), in.begin(), in.end());
 }
 
 template <typename ColorList>
 void magic_mul(size_t size, ColorList& out) {
-    duplicateInto(size< out);
+    duplicateInto(size, out);
 }
 
 } // color_list

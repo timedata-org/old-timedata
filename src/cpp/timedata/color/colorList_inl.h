@@ -234,7 +234,8 @@ inline void appendInto(ColorVector const& in, ColorVector& out) {
     out.insert(out.end(), in.begin(), in.end());
 }
 
-inline void duplicateInto(size_t count, ColorVector& colors) {
+template <typename ColorVector>
+void duplicateInto(size_t count, ColorVector& colors) {
     auto size = colors.size();
     colors.resize(size * count);
 

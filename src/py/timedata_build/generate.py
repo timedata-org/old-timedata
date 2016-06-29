@@ -3,8 +3,6 @@
 import os
 from . import make_from_parts, old_templates, read_structs, util
 
-USE_LISTS = not not False
-
 STRUCT_FILES = [
     'timedata/signal/combiner',
     'timedata/signal/fade',
@@ -24,8 +22,5 @@ def generate():
     files = make_from_parts.execute()
 
     print('writing genfiles.pyx')
-    if not USE_LISTS:
-        files = [f for f in files if 'List' not in f]
-
     data = ''.join('include "%s"\n' % f for f in files)
     util.write_if_different('build/genfiles/timedata/genfiles.pyx', data)

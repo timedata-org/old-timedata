@@ -17,8 +17,9 @@ struct Sample : SampleBase<Model, Range> {
     using base_type = SampleBase<Model, Range>;
     using model_type = Model;
     using range_type = Range;
-    using value_type = ValueType<base_type>;
     using sample_type = Sample;
+
+    using value_type = ValueType<base_type>;
     using number_type = ValueType<value_type>;
 
     using base_type::base_type;
@@ -65,6 +66,7 @@ struct Sample : SampleBase<Model, Range> {
         using model_type = Model;
         using number_type = Sample::number_type;
         using range_type = Range;
+        using ranged_type = Sample::value_type;
         using sample_type = Sample;
         using value_type = ValueType<ListBase>;
     };
@@ -72,6 +74,9 @@ struct Sample : SampleBase<Model, Range> {
 
 template <typename T>
 using NumberType = typename T::number_type;
+
+template <typename T>
+using RangedType = typename T::ranged_type;
 
 template <typename T>
 using SampleType = typename T::sample_type;
