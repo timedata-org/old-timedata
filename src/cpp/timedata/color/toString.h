@@ -42,7 +42,9 @@ bool isGray(Color color) {
 template <typename Color>
 std::string toString(Color c) {
     using Range = typename Color::range_type;
-    auto bounded = [](ValueType<Color> x) { return x.abs().inBand(); };
+    auto bounded = [](ValueType<Color> x) {
+        return ValueType<Color>(std::abs(x)).inBand();
+    };
     if (std::all_of(c.begin(), c.end(), bounded)) {
         if (std::all_of(c.begin(), c.end(), isNearHex<Range>)) {
             auto hex = toHexNormal(c);
@@ -53,7 +55,7 @@ std::string toString(Color c) {
         }
 
         if (isGray(c)) {
-            auto gray = 100.0f * c[0].abs().unscale();
+            auto gray = 100.0f * std::abs(c[0].unscale());
             return "gray " + timedata::toString(gray, 4) + addNegatives(c);
         }
     }

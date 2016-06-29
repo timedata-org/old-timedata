@@ -26,7 +26,7 @@ ValueType<Color> colorfulness(Color const& color) {
     using value_type = typename Color::value_type;
     ValueType<Color> result = 0;
     forEachPair(color, [&](ValueType<Color> x, ValueType<Color> y) {
-        result = std::max(result, (x - y).abs());
+        result = std::max(result, ValueType<Color>(std::abs(x - y)));
     });
     return result;
 }

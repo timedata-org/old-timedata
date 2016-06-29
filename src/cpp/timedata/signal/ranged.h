@@ -16,6 +16,7 @@ class Ranged {
   public:
     using value_type = ValueType<Range>;
     using range_type = Range;
+
     static constexpr auto START = Range::START;
     static constexpr auto RANGE = Range::RANGE;
     static constexpr auto STOP = START + RANGE;
@@ -23,6 +24,8 @@ class Ranged {
     Ranged() : value_(0) {}
     Ranged(Ranged const&) = default;
     Ranged(Ranged&&) = default;
+
+    // TODO: should be explicit
     Ranged(value_type n) : value_(n) {}
     Ranged& operator=(Ranged const&) = default;
 
@@ -38,18 +41,17 @@ class Ranged {
         return value_ >= 0 ? (RANGE - value_): -(value_ + RANGE);
     }
 
-    Ranged abs()  const { return std::abs(value_); }
     bool inBand() const { return value_ >= START and value_ <= STOP; }
-
-    value_type limited() const {
-        return std::max(START, std::min(STOP, value_));
-    }
 
     static Ranged infinity() {
         return {std::numeric_limits<value_type>::infinity()};
     }
 
 #if 0
+    value_type limited() const {
+        return std::max(START, std::min(STOP, value_));
+    }
+
     // Not (yet?) used.
     template <typename Range2>
     operator Ranged<Range2>() const {
