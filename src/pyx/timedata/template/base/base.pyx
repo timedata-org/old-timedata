@@ -7,7 +7,6 @@ from numbers import Number
 
 cdef extern from "<$include_file>" namespace "$namespace":
     string toString(C$classname&)
-    bool compare(C$classname&, C$classname&, int richcmp)
 
 ### define
 
@@ -36,6 +35,3 @@ cdef class $classname:
 
     def __str__($classname self):
         return toString(self.cdata).decode('ascii')
-
-    def __richcmp__($classname self, $classname other, int rcmp):
-        return compare(self.cdata, other.cdata, rcmp)

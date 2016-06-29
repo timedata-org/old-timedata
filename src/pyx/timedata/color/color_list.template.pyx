@@ -361,7 +361,7 @@ cdef class ColorList{suffix}:
             nonlocal last_number
             if last_number:
                 color = _toColor{suffix}(item)
-                spreadAppend(cl.colors, last_number - 1, color.color)
+                spreadAppend(color.color, last_number - 1, cl.colors)
                 last_number = 0
 
         for a in args:

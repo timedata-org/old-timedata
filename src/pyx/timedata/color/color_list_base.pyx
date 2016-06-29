@@ -80,4 +80,4 @@ cdef extern from "<timedata/color/hsv_inl.h>" namespace "timedata":
 
 cdef extern from "<timedata/color/spread.h>" namespace "timedata":
     ColorVector fillSpread(ColorS& c1, ColorS& c2, size_t size)
-    void spreadAppend(ColorVector&, size_t size, ColorS&)
+    void spreadAppend(ColorS&, size_t size, ColorVector&)

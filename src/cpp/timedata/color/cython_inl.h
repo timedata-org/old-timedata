@@ -22,6 +22,7 @@ CNewColor unscale(Color const& x) {
 
 template <typename Color>
 std::string toString(Color const& x) {
+    // TODO: hack!
     return colorToString(unscale(x), Base::normal);
 }
 
@@ -155,7 +156,7 @@ std::vector<std::string> const& colorNames() {
     return timedata::colorNames();
 }
 
-// TODO: mmove somewhere general-purpose!
+// TODO: move somewhere general-purpose!
 inline
 bool resolvePythonIndex(int& key, size_t size) {
     if (key < 0)

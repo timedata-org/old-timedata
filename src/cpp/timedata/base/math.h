@@ -76,9 +76,8 @@ inline float normalize(float x, float max = 1.0f) {
     return std::min(max, std::max(0.0f, x));
 }
 
-template <typename T>
-T signum(T x) {
-    return static_cast<T>(x > 0 ? 1 : x < 0 ? -1 : 0);
+template <typename T> int signum(T x, T y = {}) {
+    return (y < x) - (x < y);
 }
 
 inline uint8_t to256(float x) {

@@ -9,7 +9,7 @@
         if isinstance(c, Number):
             math_$name(<$value_type> c, self.cdata)
         elif isinstance(c, $sampleclass):
-            math_$name(<$sampleclass> c, self.cdata)
+            math_$name((<$sampleclass> c).cdata, self.cdata)
         else:
             math_$name((<$classname> c).cdata, self.cdata)
         return self

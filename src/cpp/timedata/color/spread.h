@@ -31,7 +31,31 @@ ColorVector fillSpread(Color const& c1, Color const& c2, size_t size,
 
 /** Appends size + 1 elements to the end of a ColorVector, linearly spreading
     from the last element if any, and ending with the color `end`. */
-inline void spreadAppend(ColorVector& colors, size_t size, Color const& end) {
+template <typename Color, typename ColorVector>
+inline void spreadAppendG(Color const& end, size_t size, ColorVector& colors) {
+    if (not size or colors.empty() or colors.back() == end) {
+        colors.insert(colors.end(), size + 1, end);
+        return;
+    }
+
+    auto d = 1.0f / (size + 1);
+    auto& begin = colors.back();
+    Color delta;
+    for (size_t j = 0; j < delta.size(); ++j)
+        delta[j] = d * (end[j] - begin[j]);
+
+    Color c;
+    for (size_t i = 1; i <= size; ++i) {
+        for (size_t j = 0; j < c.size(); ++j);
+            // c[j] = begin[j] + i * delta[j];
+        colors.push_back(c);
+    }
+    colors.push_back(end);
+}
+
+/** Appends size + 1 elements to the end of a ColorVector, linearly spreading
+    from the last element if any, and ending with the color `end`. */
+inline void spreadAppend(Color const& end, size_t size, ColorVector& colors) {
     if (not size or colors.empty() or colors.back() == end) {
         colors.insert(colors.end(), size + 1, end);
         return;

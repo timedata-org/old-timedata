@@ -16,6 +16,9 @@ cdef extern from "<$include_file>" namespace "$namespace":
     C$sampleclass max_cpp(C$classname&)
     C$sampleclass min_cpp(C$classname&)
 
+    bool compare(C$classname&, C$classname&, int richcmp)
+    bool compare(C$sampleclass&, C$classname&, int richcmp)
+    bool compare($value_type, C$classname&, int richcmp)
     bool pop(C$classname&, int key, C$sampleclass&)
     bool resolvePythonIndex(int& index, size_t size)
     bool sliceInto(C$classname&, C$classname&, int begin, int end, int step)
@@ -29,8 +32,7 @@ cdef extern from "<$include_file>" namespace "$namespace":
     void rotate(C$classname&, int pos)
     void round_cpp(C$classname&, size_t digits)
     void sort(C$classname&)
-    void spreadAppend(C$sampleclass& target, size_t, C$classname&)
-
+    void spreadAppend(C$sampleclass& end, size_t size, C$classname& out)
 
 ### define
     def __init__($classname self, items=None):
@@ -81,6 +83,18 @@ cdef extern from "<$include_file>" namespace "$namespace":
 
     def __len__(self):
         return self.cdata.size()
+
+    def __richcmp__(object self, object other, int rcmp):
+        cdef $classname cl
+        if isinstance(self, $classname):
+            self, other = other, self
+            rcmp = 5 - rcmp
+        cl = <$classname> self
+        if isinstance(other, Number):
+            return compare((<$value_type> other), cl.cdata, rcmp)
+        if isinstance(other, $sampleclass):
+            return compare((<$sampleclass> other).cdata, cl.cdata, rcmp)
+        return compare((<$classname> other).cdata, cl.cdata, rcmp)
 
     cpdef $classname append($classname self, $sampleclass c):
         """Append to the list of samples."""
@@ -171,7 +185,7 @@ cdef extern from "<$include_file>" namespace "$namespace":
             nonlocal last_number
             if last_number:
                 sample = $sampleclass(item)
-                spreadAppend(cl.cdata, last_number - 1, sample.cdata)
+                spreadAppend(sample.cdata, last_number - 1, cl.cdata)
                 last_number = 0
 
         for a in args:

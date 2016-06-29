@@ -25,6 +25,7 @@ def generate():
 
     print('writing genfiles.pyx')
     if not USE_LISTS:
-        files = (f for f in files if 'List' not in f)
+        files = [f for f in files if 'List' not in f]
+
     data = ''.join('include "%s"\n' % f for f in files)
     util.write_if_different('build/genfiles/timedata/genfiles.pyx', data)

@@ -10,6 +10,7 @@ cdef extern from "<$include_file>" namespace "$namespace":
          $value_type& operator[](size_t)
          void fill($value_type)
 
+    bool compare(C$classname&, C$classname&, int richcmp)
     bool fromString(string&, C$classname&)
     bool resolvePythonIndex(int& index, size_t size)
 
@@ -71,3 +72,6 @@ cdef extern from "<$include_file>" namespace "$namespace":
 
     def __len__($classname self):
         return $size
+
+    def __richcmp__($classname self, $classname other, int rcmp):
+        return compare(self.cdata, other.cdata, rcmp)
