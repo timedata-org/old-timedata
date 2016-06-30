@@ -1,10 +1,17 @@
 #!/usr/bin/env python3
 
-import csv, json, os, pathlib, string, sys
+import contextlib, csv, json, os, pathlib, stat, string, sys
 
 
 def substituter(**kwds):
     return lambda t: string.Template(t or '').substitute(**kwds)
+
+
+def make_writable(f, is_writable=True):
+    try:
+        os.chmod(f, stat.S_IWRITE if is_writable else stat.S_IREAD)
+    except:
+        pass
 
 
 def write_if_different(fname, data):
@@ -16,7 +23,9 @@ def write_if_different(fname, data):
         old_data = None
     if old_data != data:
         os.makedirs(os.path.dirname(fname), exist_ok=True)
+        make_writable(fname)
         open(fname, 'w').write(data)
+        make_writable(fname, False)
         print('Wrote changed file', fname)
     else:
         print(fname, 'unchanged')
