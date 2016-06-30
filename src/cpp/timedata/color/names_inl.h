@@ -144,6 +144,13 @@ bool toColorNonNegative(char const* name, Color& result) {
 
 template <typename Color>
 bool toColor(char const* name, Color& result) {
+    // HACK: replace _ with spaces.  Fix once we're done.
+    std::string nameS = name;
+    for (auto& c: nameS)
+        if (c == '_')
+            c = ' ';
+    name = nameS.c_str();
+
     auto isSign = [](char ch) { return ch == '-' or ch == '+'; };
     auto len = strlen(name), end = len;
     for (; end > 0 && isSign(name[end - 1]); --end);

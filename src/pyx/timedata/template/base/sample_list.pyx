@@ -62,7 +62,7 @@ cdef extern from "<$include_file>" namespace "$namespace":
                              'to extended slice of another size')
         index = key
         if not resolvePythonIndex(index, self.cdata.size()):
-            raise IndexError('$classname index out of range %s' + key)
+            raise IndexError('$classname index out of range ' + str(key))
         self.cdata[index] = $sampleclass(x).cdata
 
     def __getitem__(self, object key):
