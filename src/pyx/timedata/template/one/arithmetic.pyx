@@ -1,5 +1,5 @@
 ### declare
-    void math_$name($value_type, C$classname&)
+    void math_$name($number_type, C$classname&)
     void math_$name(C$sampleclass&, C$classname&)
     void math_$name(C$classname&, C$classname&)
 
@@ -7,7 +7,7 @@
     cpdef $classname $name($classname self, object c):
         """ into colors from either a number or a ColorList."""
         if isinstance(c, Number):
-            math_$name(<$value_type> c, self.cdata)
+            math_$name(<$number_type> c, self.cdata)
         elif isinstance(c, $sampleclass):
             math_$name((<$sampleclass> c).cdata, self.cdata)
         else:

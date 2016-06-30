@@ -17,8 +17,8 @@
 """
 
 ### declare
-    C$classname magic_$name($value_type&, C$classname&)
-    C$classname magic_$name(C$classname&, $value_type&)
+    C$classname magic_$name($number_type&, C$classname&)
+    C$classname magic_$name(C$classname&, $number_type&)
 
 ### define
     def __${name}__(object self, object other):

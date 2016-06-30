@@ -6,9 +6,9 @@
 cdef extern from "<$include_file>" namespace "$namespace":
     cdef cppclass C$classname:
          C$classname()
-         C$classname($value_type, $value_type, $value_type)
-         $value_type& operator[](size_t)
-         void fill($value_type)
+         C$classname($number_type, $number_type, $number_type)
+         $number_type& operator[](size_t)
+         void fill($number_type)
 
     bool compare(C$classname&, C$classname&, int richcmp)
     bool fromString(string&, C$classname&)
@@ -23,7 +23,7 @@ cdef extern from "<$include_file>" namespace "$namespace":
         * ${classname}s can be constructed intuitively from string names.
           Details TBD.
 
-        * Constructing from a $value_type sets each component to that
+        * Constructing from a $number_type sets each component to that
           value.
 
         * Constructing from an iteratable of size $size sets each
@@ -37,7 +37,7 @@ cdef extern from "<$include_file>" namespace "$namespace":
         while len(args) == 1:
             a = args[0]
             if isinstance(a, Number):
-                self.cdata.fill(<$value_type> a)
+                self.cdata.fill(<$number_type> a)
                 return
             if isinstance(a, str):
                 if fromString(<string> a, self.cdata):

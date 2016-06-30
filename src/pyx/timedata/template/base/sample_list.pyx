@@ -17,9 +17,9 @@ cdef extern from "<$include_file>" namespace "$namespace":
     C$sampleclass min_cpp(C$classname&)
 
     bool cmpToRichcmp(float cmp, int richcmp)
-    $value_type compare(C$classname&, C$classname&)
-    $value_type compare(C$sampleclass&, C$classname&)
-    $value_type compare($value_type, C$classname&)
+    $number_type compare(C$classname&, C$classname&)
+    $number_type compare(C$sampleclass&, C$classname&)
+    $number_type compare($number_type, C$classname&)
     bool pop(C$classname&, int key, C$sampleclass&)
     bool resolvePythonIndex(int& index, size_t size)
     bool sliceInto(C$classname&, C$classname&, int begin, int end, int step)
@@ -88,13 +88,13 @@ cdef extern from "<$include_file>" namespace "$namespace":
     def __richcmp__(object self, object other, int rcmp):
         cdef $classname cl
         cdef bool inv = not isinstance(self, $classname)
-        cdef $value_type c, mult = 1
+        cdef $number_type c, mult = 1
         if not inv:
             self, other = other, self
             mult = -1
         cl = <$classname> self
         if isinstance(other, Number):
-            c = compare((<$value_type> other), cl.cdata)
+            c = compare((<$number_type> other), cl.cdata)
         elif isinstance(other, $sampleclass):
             c = compare((<$sampleclass> other).cdata, cl.cdata)
         else:
