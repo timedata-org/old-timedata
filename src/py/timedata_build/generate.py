@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 
 import os
-from . import make_from_parts, old_templates, read_structs, util
+from . import make_from_parts, read_structs, util
+
 
 STRUCT_FILES = [
     'timedata/signal/combiner',
@@ -12,9 +13,6 @@ STRUCT_FILES = [
 
 
 def generate():
-    print('writing old templates')
-    old = old_templates.write()
-
     print('writing structs')
     structs = read_structs.read_structs(STRUCT_FILES)
 

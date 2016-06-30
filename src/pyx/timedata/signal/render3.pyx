@@ -9,7 +9,7 @@ cdef class _Render3Impl(_Render3):
     cpdef byte_size(self):
         return 3 * self.size
 
-    cpdef render(self, OldColorList cl, size_t pos, bytearray buffer):
+    cpdef render(self, ColorList cl, size_t pos, bytearray buffer):
         cdef char* buf
         buf = buffer
         buf += self.offset

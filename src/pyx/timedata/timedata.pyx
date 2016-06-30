@@ -9,26 +9,20 @@ ctypedef unsigned int uint
 include "src/pyx/timedata/base/math.pyx"
 include "src/pyx/timedata/base/wrapper.pyx"
 include "src/pyx/timedata/base/timestamp.pyx"
-include "src/pyx/timedata/color/color_base.pyx"
-include "build/genfiles/timedata/color/color.pyx"
-include "build/genfiles/timedata/color/color256.pyx"
-include "src/pyx/timedata/color/color_list_base.pyx"
-include "build/genfiles/timedata/color/color_list.pyx"
-include "build/genfiles/timedata/color/color_list256.pyx"
 include "src/pyx/timedata/color/colors.pyx"
 include "build/genfiles/timedata/signal/combiner.pyx"
 include "build/genfiles/timedata/signal/stripe.pyx"
-include "src/pyx/timedata/signal/fade.pyx"
-include "src/pyx/timedata/signal/render3.pyx"
+#include "src/pyx/timedata/signal/fade.pyx"
+#include "src/pyx/timedata/signal/render3.pyx"
 
 include "build/genfiles/timedata/genfiles.pyx"
 
 locals().update(
-    Combiner=_Combiner,
-    Fade=_FadeImpl,
-    Render3=_Render3Impl,
-    Stripe=_Stripe,
-    )
+     Combiner=_Combiner,
+#     Fade=_FadeImpl,
+#     Render3=_Render3Impl,
+     Stripe=_Stripe,
+     )
 
 _load_colors()
 

@@ -1,6 +1,6 @@
 import unittest
 
-from timedata import Stripe, Combiner, Render3
+from timedata import Stripe, Combiner
 
 class TestGenerated(unittest.TestCase):
     def test_stripe(self):
@@ -12,8 +12,3 @@ class TestGenerated(unittest.TestCase):
         s.skip = 2
         s.reflect = True
         self.assertEqual(str(s), '(begin=0, skip=2, repeats=1, reflect=True)')
-
-    def test_render(self):
-        s = Render3()
-        self.assertEqual(str(s), '(min=0.0, max=255.0, scale=1.0, gamma=1.0, '
-                         'permutation=\'rgb\', offset=0, size=0)')

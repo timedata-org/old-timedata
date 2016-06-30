@@ -41,6 +41,7 @@ Color fadeTo(float fader, Fade const& fade, Color const& in1, Color const& in2) 
     return out;
 }
 
+#if 0
 void fadeOver(float fader, Fade const& fade,
               ColorVector const& in1, ColorVector const& in2, ColorVector& out) {
     auto size = std::min(in1.size(), in2.size());
@@ -48,5 +49,6 @@ void fadeOver(float fader, Fade const& fade,
     for (size_t i = 0; i < size; ++i)
         out[i] = fadeTo(fader, fade, in1[i], in2[i]);
 }
+#endif
 
 } // timedata

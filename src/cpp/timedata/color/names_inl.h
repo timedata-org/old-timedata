@@ -237,14 +237,6 @@ inline std::string colorToString(float r, float g, float b, Base base) {
     return colorToString({r, g, b}, base);
 }
 
-inline bool stringToColor(char const* name, OldColorS& cs, Base base) {
-    Color c;
-    if (not stringToColor(name, c, base))
-        return false;
-    cs = c;
-    return true;
-}
-
 inline Color colorFromHex(uint32_t hex, Base base) {
     if (base == Base::normal)
         return detail::colorFromHex<Base::normal>(hex);

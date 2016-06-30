@@ -5,6 +5,7 @@
 
 #include <timedata/base/enum.h>
 #include <timedata/color/cython_inl.h>
+#include <timedata/color/colorList.h>
 #include <timedata/color/spread.h>
 
 namespace timedata {
