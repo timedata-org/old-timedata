@@ -4,9 +4,11 @@
 #include <type_traits>
 
 #include <timedata/base/enum.h>
+#include <timedata/base/make.h>
+#include <timedata/base/math_inl.h>
 #include <timedata/color/cython_inl.h>
-#include <timedata/color/colorList.h>
 #include <timedata/color/spread.h>
+#include <timedata/signal/slice.h>
 
 namespace timedata {
 namespace color_list {
@@ -73,9 +75,13 @@ using CColorList = color::CColor::List;
 using CColorList255 = color::CColor255::List;
 using CColorList256 = color::CColor256::List;
 
-template <typename ColorList>
-ColorList sliceOut(ColorList const& in, int begin, int end, int step) {
-    return sliceVectorG(in, begin, end, step);
+
+template <typename ColorVector>
+ColorVector sliceOut(ColorVector const& in, int begin, int end, int step) {
+    auto slice = make<Slice>(begin, end, step);
+    ColorVector out;
+    forEach(slice, [&](int j) { out.push_back(in[j]); });
+    return out;
 }
 
 template <typename ColorList>
@@ -125,7 +131,30 @@ bool pop(ColorList& out, int key, ValueType<ColorList>& result) {
 template <typename ColorList>
 bool sliceInto(
          ColorList const& in, ColorList& out, int begin, int end, int step) {
-    return sliceIntoVectorG(in, out, begin, end, step);
+    auto slice = make<Slice>(begin, end, step);
+    auto size = slice.size();
+
+    if (in.size() == size) {
+        auto i = in.begin();
+        forEach(slice, [&](int j) { out[j] = *(i++); });
+        return true;
+    }
+
+    if (step != 1)
+        return false;
+
+    auto ob = out.begin() + begin;
+    if (in.size() < size) {
+        // Shrink!  Copy the input, then erase the remains.
+        std::copy(in.begin(), in.end(), ob);
+        out.erase(ob + in.size(), ob + size);
+    } else {
+        // Grow!  Copy the first segment, then insert the second.
+        std::copy(in.begin(), in.begin() + size, ob);
+        out.insert(ob + slice.begin, in.begin() + size, in.end());
+    }
+
+    return true;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -406,9 +435,13 @@ void magic_add(ColorList const& in, ColorList& out) {
     out.insert(out.end(), in.begin(), in.end());
 }
 
-template <typename ColorList>
-void magic_mul(size_t size, ColorList& out) {
-    duplicateInto(size, out);
+template <typename ColorVector>
+void magic_mul(size_t count, ColorVector& colors) {
+    auto size = colors.size();
+    colors.resize(size * count);
+
+    for (auto i = colors.begin(); i < colors.end() - size; i += size)
+        std::copy(i, i + size, i + size);
 }
 
 } // color_list

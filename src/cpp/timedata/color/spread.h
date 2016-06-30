@@ -1,6 +1,5 @@
 #pragma once
 
-#include <timedata/color/colorList.h>
 #include <timedata/signal/fade.h>
 
 namespace timedata {
