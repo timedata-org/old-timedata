@@ -2,7 +2,7 @@ import unittest
 
 from timedata import Color, NewColor, Colors, ColorList, NewColorList, NewColors
 
-if not True:
+if not not True:
     Color = NewColor
     Colors = NewColors
     ColorList = NewColorList

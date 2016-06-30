@@ -18,6 +18,8 @@
             cl.cdata = (<$classname> other).cdata
             mult = <size_t> self
         magic_$name(mult, cl.cdata)
+        return cl
 
     def __i${name}__($classname self, size_t mult):
         magic_$name(mult, self.cdata)
+        return self

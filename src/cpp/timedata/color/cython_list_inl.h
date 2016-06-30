@@ -28,7 +28,7 @@ std::string toString(ColorList const& colors) {
 }
 
 template <typename ColorList>
-NumberType<ColorList> compCL(ColorList const& x, ColorList const& y) {
+NumberType<ColorList> compare(ColorList const& x, ColorList const& y) {
     auto size = std::min(x.size(), y.size());
     for (size_t i = 0; i < size; ++i) {
         for (size_t j = 0; j < y[i].size(); ++j) {
@@ -41,7 +41,7 @@ NumberType<ColorList> compCL(ColorList const& x, ColorList const& y) {
 }
 
 template <typename ColorList>
-NumberType<ColorList> compCL(ValueType<ColorList> const& x, ColorList const& y) {
+NumberType<ColorList> compare(ValueType<ColorList> const& x, ColorList const& y) {
     for (size_t i = 0; i < y.size(); ++i) {
         for (size_t j = 0; j < y[i].size(); ++j) {
             if (auto d = x[j] - y[i][j])
@@ -52,8 +52,12 @@ NumberType<ColorList> compCL(ValueType<ColorList> const& x, ColorList const& y) 
     return 0;
 }
 
+inline bool cmpToRichcmp(float cmp, int richcmp) {
+    return timedata::cmpToRichcmp(cmp, richcmp);
+}
+
 template <typename ColorList>
-NumberType<ColorList> compCL(NumberType<ColorList> x, ColorList const& y) {
+NumberType<ColorList> compare(NumberType<ColorList> x, ColorList const& y) {
     for (size_t i = 0; i < y.size(); ++i) {
         for (size_t j = 0; j < y[i].size(); ++j) {
             if (auto d = x - y[i][j])
@@ -62,11 +66,6 @@ NumberType<ColorList> compCL(NumberType<ColorList> x, ColorList const& y) {
     }
 
     return 0;
-}
-
-template <typename Input, typename ColorList>
-bool compare(Input x, ColorList const& y, int richCmp) {
-    return cmpToRichcmp(compCL(x, y), richCmp);
 }
 
 using CNewColorList = color::CNewColor::List;
@@ -296,13 +295,13 @@ void math_add(Input const& in, ColorList& out) {
 template <typename Input, typename ColorList>
 void math_div(Input const& in, ColorList& out) {
     using Number = NumberType<ColorList>;
-    applyEach(in, out, [](Number x, Number y) { return divPython(x, y); });
+    applyEach(in, out, [](Number x, Number y) { return divPython(y, x); });
 }
 
 template <typename Input, typename ColorList>
 void math_rdiv(Input const& in, ColorList& out) {
     using Number = NumberType<ColorList>;
-    applyEach(in, out, [](Number x, Number y) { return divPython(y, x); });
+    applyEach(in, out, [](Number x, Number y) { return divPython(x, y); });
 }
 
 template <typename Input, typename ColorList>
@@ -314,13 +313,13 @@ void math_mul(Input const& in, ColorList& out) {
 template <typename Input, typename ColorList>
 void math_pow(Input const& in, ColorList& out) {
     using Number = NumberType<ColorList>;
-    applyEach(in, out, [](Number x, Number y) { return std::pow(x, y); });
+    applyEach(in, out, [](Number x, Number y) { return powPython(y, x); });
 }
 
 template <typename Input, typename ColorList>
 void math_rpow(Input const& in, ColorList& out) {
     using Number = NumberType<ColorList>;
-    applyEach(in, out, [](Number x, Number y) { return std::pow(y, x); });
+    applyEach(in, out, [](Number x, Number y) { return powPython(x, y); });
 }
 
 template <typename Input, typename ColorList>

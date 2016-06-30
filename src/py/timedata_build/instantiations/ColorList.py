@@ -17,7 +17,7 @@ methods = add_methods(
         ),
 
     one=dict(
-        arithmetic=('add', 'div', 'pow', 'sub', 'rdiv', 'rpow', 'rsub',
+        arithmetic=('add', 'div', 'mul', 'pow', 'sub', 'rdiv', 'rpow', 'rsub',
                     'max_limit', 'min_limit'),
         return_number=('distance', 'distance2'),
         ),
