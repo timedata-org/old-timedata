@@ -2,8 +2,8 @@ import unittest
 
 from timedata import *
 
-ColorList = OldColorList
-Colors = OldColors
+ColorList = NewColorList
+Colors = NewColors
 
 class TestOperations(unittest.TestCase):
     def assertSpread(self, args, expect):

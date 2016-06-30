@@ -39,15 +39,15 @@ inline void spreadAppendG(Color const& end, size_t size, ColorVector& colors) {
     }
 
     auto d = 1.0f / (size + 1);
-    auto& begin = colors.back();
+    auto begin = colors.back();
     Color delta;
     for (size_t j = 0; j < delta.size(); ++j)
         delta[j] = d * (end[j] - begin[j]);
 
     Color c;
     for (size_t i = 1; i <= size; ++i) {
-        for (size_t j = 0; j < c.size(); ++j);
-            // c[j] = begin[j] + i * delta[j];
+        for (size_t j = 0; j < c.size(); ++j)
+            c[j] = begin[j] + ValueType<Color>{i * delta[j]};
         colors.push_back(c);
     }
     colors.push_back(end);
