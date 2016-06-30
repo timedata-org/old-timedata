@@ -10,12 +10,12 @@
 namespace timedata {
 namespace color {
 
-using CNewColor = Color;
-using CNewColor256 = Color256;
-using CNewColor255 = Color255;
+using CColor = Color;
+using CColor256 = Color256;
+using CColor255 = Color255;
 
 template <typename Color>
-CNewColor unscale(Color const& x) {
+CColor unscale(Color const& x) {
     // TODO: hack!
     return {x[0].unscale(), x[1].unscale(), x[2].unscale()};
 }

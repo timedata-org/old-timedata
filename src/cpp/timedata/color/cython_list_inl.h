@@ -69,9 +69,9 @@ NumberType<ColorList> compare(NumberType<ColorList> x, ColorList const& y) {
     return 0;
 }
 
-using CNewColorList = color::CNewColor::List;
-using CNewColorList255 = color::CNewColor255::List;
-using CNewColorList256 = color::CNewColor256::List;
+using CColorList = color::CColor::List;
+using CColorList255 = color::CColor255::List;
+using CColorList256 = color::CColor256::List;
 
 template <typename ColorList>
 ColorList sliceOut(ColorList const& in, int begin, int end, int step) {

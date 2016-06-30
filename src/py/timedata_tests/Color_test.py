@@ -1,10 +1,6 @@
 import unittest
 
-from timedata import NewColor255, NewColor256, NewColor, NewColors
-
-Color = NewColor
-Color256 = NewColor256
-Colors = NewColors
+from timedata import Color255, Color256, Color, Colors
 
 class TestColor(unittest.TestCase):
     def test_white(self):

@@ -1,26 +1,26 @@
-class NewColors(object):
-    """NewColors is a convenience class whose static members are named Colors, like
+class Colors(object):
+    """Colors is a convenience class whose static members are named Colors, like
        Colors.red, or Colors.deep_sky_blue."""
     pass
 
 
-class NewColors255(object):
-    """NewColors is a convenience class whose static members are named Colors, like
+class Colors255(object):
+    """Colors is a convenience class whose static members are named Colors, like
        Colors.red, or Colors.deep_sky_blue."""
     pass
 
 
-class NewColors256(object):
-    """NewColors is a convenience class whose static members are named Colors, like
+class Colors256(object):
+    """Colors is a convenience class whose static members are named Colors, like
        Colors.red, or Colors.deep_sky_blue."""
     pass
 
 
 def _load_colors():
     for cs, c in (
-            (NewColors, NewColor),
-            (NewColors255, NewColor255),
-            (NewColors256, NewColor256),
+            (Colors, Color),
+            (Colors255, Color255),
+            (Colors256, Color256),
             ):
         for name in c.names():
             setattr(cs, name.replace(' ', '_'), c(name))
