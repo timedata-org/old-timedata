@@ -8,7 +8,7 @@ cdef class Renderer:
             self.colors = _make_ColorList
 
     def __cinit__(self, colors=None):
-        self.colors = colors or ColorList()
+        self.colors = colors or OldColorList()
 
     cpdef void render(self):
         # Call this to update self.colors

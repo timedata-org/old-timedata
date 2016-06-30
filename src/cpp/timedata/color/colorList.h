@@ -97,7 +97,7 @@ Color minColor(ColorVector const&);
 float distance2(ColorVector const&, ColorVector const&);
 float distance(ColorVector const&, ColorVector const&);
 
-bool popAt(ColorVector&, int key, ColorS&);
+bool popAt(ColorVector&, int key, OldColorS&);
 void sortColors(ColorVector&);
 
 } // timedata

@@ -9,32 +9,32 @@ cdef extern from "<timedata/color/names_inl.h>" namespace "timedata::Base":
     cdef Base integer
 
 cdef extern from "<timedata/color/names_inl.h>" namespace "timedata":
-    cdef cppclass ColorS:
+    cdef cppclass OldColorS:
         float red, green, blue
 
-        ColorS()
-        ColorS(float, float, float)
+        OldColorS()
+        OldColorS(float, float, float)
 
     # These next operations might make sense with any time data.
-    void minInto(ColorS&, ColorS&);
-    void maxInto(ColorS&, ColorS&);
+    void minInto(OldColorS&, OldColorS&);
+    void maxInto(OldColorS&, OldColorS&);
 
     float invert(float, float)
     float normalize(float, float)
-    ColorS rotate(ColorS, int)
+    OldColorS rotate(OldColorS, int)
     bool cmpToRichcmp(float cmp, int richcmp)
-    float distance2(ColorS&, ColorS&)
-    float distance(ColorS&, ColorS&)
-    float cmp(ColorS&, ColorS&)
+    float distance2(OldColorS&, OldColorS&)
+    float distance(OldColorS&, OldColorS&)
+    float cmp(OldColorS&, OldColorS&)
 
     # Color-only operations
-    bool stringToColor(const char*, ColorS&, Base)
-    string colorToString(ColorS&, Base)
+    bool stringToColor(const char*, OldColorS&, Base)
+    string colorToString(OldColorS&, Base)
     vector[string] colorNames()
-    ColorS colorFromHex(uint32_t hex, Base base);
-    uint32_t hexFromColor(ColorS&, Base base);
+    OldColorS colorFromHex(uint32_t hex, Base base);
+    uint32_t hexFromColor(OldColorS&, Base base);
 
 
 cdef extern from "<timedata/color/hsv.h>" namespace "timedata":
-    ColorS hsvToRgb(ColorS, Base)
-    ColorS rgbToHsv(ColorS, Base)
+    OldColorS hsvToRgb(OldColorS, Base)
+    OldColorS rgbToHsv(OldColorS, Base)

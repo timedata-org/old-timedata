@@ -1,7 +1,7 @@
 cdef extern from "<timedata/color/colorList_inl.h>" namespace "timedata":
     cppclass ColorVector:
-        ColorS& operator[](size_t)
-        ColorS& back()
+        OldColorS& operator[](size_t)
+        OldColorS& back()
         size_t size()
         void resize(size_t)
         void clear();
@@ -9,14 +9,14 @@ cdef extern from "<timedata/color/colorList_inl.h>" namespace "timedata":
         void setColor(size_t, float r, float g, float b)
         bool getColor(size_t, float r, float g, float b)
         size_t getSizeOf()
-        void push_back(ColorS&)
+        void push_back(OldColorS&)
 
     void appendInto(ColorVector&, ColorVector& out)
     void duplicateInto(size_t, ColorVector&)
-    size_t count(ColorVector&, ColorS&)
-    int indexOf(ColorVector&, ColorS&)
-    void insertBefore(ColorVector&, int, ColorS&)
-    bool popAt(ColorVector&, int key, ColorS&)
+    size_t count(ColorVector&, OldColorS&)
+    int indexOf(ColorVector&, OldColorS&)
+    void insertBefore(ColorVector&, int, OldColorS&)
+    bool popAt(ColorVector&, int key, OldColorS&)
     void sortColors(ColorVector&)
 
     void reverse(ColorVector&)
@@ -28,8 +28,8 @@ cdef extern from "<timedata/color/colorList_inl.h>" namespace "timedata":
     bool sliceIntoVector(ColorVector& _in, ColorVector& out,
                          int begin, int end, int step)
 
-    ColorS maxColor(ColorVector&)
-    ColorS minColor(ColorVector&)
+    OldColorS maxColor(ColorVector&)
+    OldColorS minColor(ColorVector&)
 
     void rotate(ColorVector&, int positions)
 
@@ -79,5 +79,5 @@ cdef extern from "<timedata/color/hsv_inl.h>" namespace "timedata":
     void rgbToHsvInto(ColorVector&, Base)
 
 cdef extern from "<timedata/color/spread.h>" namespace "timedata":
-    ColorVector fillSpread(ColorS& c1, ColorS& c2, size_t size)
-    void spreadAppend(ColorS&, size_t size, ColorVector&)
+    ColorVector fillSpread(OldColorS& c1, OldColorS& c2, size_t size)
+    void spreadAppend(OldColorS&, size_t size, ColorVector&)

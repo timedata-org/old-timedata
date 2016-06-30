@@ -1,9 +1,10 @@
 import unittest
 
-from timedata import Color, Color256, Colors, Colors256, NewColor255, NewColor256, NewColor
+from timedata import NewColor255, NewColor256, NewColor, NewColors
 
 Color = NewColor
 Color256 = NewColor256
+Colors = NewColors
 
 class TestColor(unittest.TestCase):
     def test_white(self):
@@ -200,10 +201,10 @@ class TestColor256(unittest.TestCase):
             'aquamarine 2'])
 
     def test_limit(self):
-        self.assertEqual((Colors.red * 2).max_limit(0), Colors.black)
-        self.assertEqual((Colors.red * 2).min_limit(0), Colors.red * 2)
-        self.assertEqual((Colors.red * 2).max_limit(1), Colors.red)
-        self.assertEqual(tuple((Colors.red * 2).min_limit(1)), (2, 1, 1))
+        self.assertEqual((Colors.red * 2).limit_max(0), Colors.black)
+        self.assertEqual((Colors.red * 2).limit_min(0), Colors.red * 2)
+        self.assertEqual((Colors.red * 2).limit_max(1), Colors.red)
+        self.assertEqual(tuple((Colors.red * 2).limit_min(1)), (2, 1, 1))
         self.assertEqual(Color(1, 2, 3).limit_max(Color(3, 2, 1)),
                          Color(1, 2, 1))
         self.assertEqual(Color(1, 2, 3).limit_min(Color(3, 2, 1)),

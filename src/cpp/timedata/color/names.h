@@ -10,7 +10,7 @@ namespace timedata {
 
 /** Convert a string to a Color.  Returns true if the conversion succeeded. */
 bool stringToColor(char const*, Color&, Base base);
-bool stringToColor(char const*, ColorS&, Base base);
+bool stringToColor(char const*, OldColorS&, Base base);
 bool stringToColor(char const*, Color&);
 
 /** Convert a string to a Color.  Throws an exception on failure. */

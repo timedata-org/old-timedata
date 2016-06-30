@@ -237,7 +237,7 @@ inline std::string colorToString(float r, float g, float b, Base base) {
     return colorToString({r, g, b}, base);
 }
 
-inline bool stringToColor(char const* name, ColorS& cs, Base base) {
+inline bool stringToColor(char const* name, OldColorS& cs, Base base) {
     Color c;
     if (not stringToColor(name, c, base))
         return false;

@@ -32,35 +32,35 @@ struct EnumFields<RGB, Number> {
     operator Color() const { return {{red, green, blue}}; }
 };
 
-struct ColorS {
+struct OldColorS {
     float red = 0, green = 0, blue = 0;
 
-    ColorS() = default;
-    ColorS(float r, float g, float b) : red(r), green(g), blue(b) {}
-    ColorS(Color const& c) : red(c[0]), green(c[1]), blue(c[2]) {}
+    OldColorS() = default;
+    OldColorS(float r, float g, float b) : red(r), green(g), blue(b) {}
+    OldColorS(Color const& c) : red(c[0]), green(c[1]), blue(c[2]) {}
 
     operator Color() const { return {red, green, blue}; }
 };
 
-inline ColorS rotate(ColorS c, int positions) {
+inline OldColorS rotate(OldColorS c, int positions) {
     Color co = c;
     rotate(co, positions);
     return co;
 }
 
-inline void minInto(ColorS const& in, ColorS& out) {
+inline void minInto(OldColorS const& in, OldColorS& out) {
     out.red = std::min(in.red, out.red);
     out.green = std::min(in.green, out.green);
     out.blue = std::min(in.blue, out.blue);
 }
 
-inline void maxInto(ColorS const& in, ColorS& out) {
+inline void maxInto(OldColorS const& in, OldColorS& out) {
     out.red = std::max(in.red, out.red);
     out.green = std::max(in.green, out.green);
     out.blue = std::max(in.blue, out.blue);
 }
 
-inline float cmp(ColorS const& x, ColorS const& y) {
+inline float cmp(OldColorS const& x, OldColorS const& y) {
     if (auto d = x.red - y.red)
         return d;
     if (auto d = x.green - y.green)

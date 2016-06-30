@@ -311,7 +311,7 @@ inline void insertBefore(ColorVector& colors, int index, Color const& color) {
     colors.insert(colors.begin() + fixInsertIndex(colors, index), color);
 }
 
-inline bool popAt(ColorVector& colors, int index, ColorS& color) {
+inline bool popAt(ColorVector& colors, int index, OldColorS& color) {
     if (not colors.resolvePythonIndex(index))
         return false;
     color = colors[index];

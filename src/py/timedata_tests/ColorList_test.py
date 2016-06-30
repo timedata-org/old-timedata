@@ -1,11 +1,10 @@
 import unittest
 
-from timedata import Color, NewColor, Colors, ColorList, NewColorList, NewColors
+from timedata import NewColor, NewColorList, NewColors
 
-if not not True:
-    Color = NewColor
-    Colors = NewColors
-    ColorList = NewColorList
+Color = NewColor
+Colors = NewColors
+ColorList = NewColorList
 
 class TestColorList(unittest.TestCase):
     def test_trivial(self):
