@@ -4,11 +4,10 @@
 #include <timedata/color/names_table_inl.h>
 
 namespace timedata {
-namespace detail {
 
 template <typename Range>
 bool isNearHex(Ranged<Range> number) {
-    return isNearFraction(number, 255 / Range::RANGE);
+    return isNearFraction(number, 255.0f / Range::RANGE);
 }
 
 template <typename Color>
@@ -23,7 +22,12 @@ std::string addNegatives(Color const& c) {
 };
 
 template <typename Color>
-uint32_t toHexNormal(Color c) {
+bool isGray(Color color) {
+    return colorfulness(color).unscale() < 0.0001;
+}
+
+template <typename Color>
+uint32_t colorToHex(Color c) {
     uint32_t total = 0;
     static uint32_t const MAX = 256;
     for (auto i : c) {
@@ -34,20 +38,16 @@ uint32_t toHexNormal(Color c) {
     return total;
 }
 
-template <typename Color>
-bool isGray(Color color) {
-    return colorfulness(color).unscale() < 0.0001;
-}
 
 template <typename Color>
-std::string toString(Color c) {
+std::string colorToString(Color c) {
     using Range = typename Color::range_type;
     auto bounded = [](ValueType<Color> x) {
         return ValueType<Color>(std::abs(x)).inBand();
     };
     if (std::all_of(c.begin(), c.end(), bounded)) {
         if (std::all_of(c.begin(), c.end(), isNearHex<Range>)) {
-            auto hex = toHexNormal(c);
+            auto hex = colorToHex(c);
 
             auto i = colorMapInverse().find(hex);
             if (i != colorMapInverse().end())
@@ -62,5 +62,4 @@ std::string toString(Color c) {
     return commaSeparated(c, 7);
 }
 
-}  // detail
 }  // timedata

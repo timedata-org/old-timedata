@@ -41,7 +41,7 @@ NumberType<ColorList> compare(ColorList const& x, ColorList const& y) {
         }
     }
 
-    return signum(x.size(), y.size());
+    return static_cast<NumberType<ColorList>>(signum(x.size(), y.size()));
 }
 
 template <typename ColorList>
@@ -75,7 +75,6 @@ NumberType<ColorList> compare(NumberType<ColorList> x, ColorList const& y) {
 using CColorList = color::CColor::List;
 using CColorList255 = color::CColor255::List;
 using CColorList256 = color::CColor256::List;
-
 
 template <typename ColorVector>
 ColorVector sliceOut(ColorVector const& in, int begin, int end, int step) {
