@@ -22,8 +22,22 @@ struct Sample : SampleBase<Model, Range> {
     using value_type = ValueType<base_type>;
     using number_type = ValueType<value_type>;
 
+    using FunctionPointer = number_type (*)(number_type);
+
     using base_type::base_type;
     static const auto SIZE = enumSize<Model>();
+
+    using ListBase = std::vector<Sample>;
+    struct List : ListBase {
+        using ListBase::ListBase;
+
+        using model_type = Model;
+        using number_type = Sample::number_type;
+        using range_type = Range;
+        using ranged_type = Sample::value_type;
+        using sample_type = Sample;
+        using value_type = ValueType<ListBase>;
+    };
 
     // TODO: need to use std::initializer_list!
     Sample(value_type r, value_type g, value_type b)
@@ -33,26 +47,31 @@ struct Sample : SampleBase<Model, Range> {
         base_type::fill(0);
     }
 
-    // TODO?: this could be offloaded from this class into free functions.
     template <typename Function>
-    Sample forEach(Function f) const {
-        Sample result;
-        for (size_t i = 0; i < result.size(); ++i)
-            result[i] = f((*this)[i]);
-        return result;
+    Sample& into(Function f) {
+        for (size_t i = 0; i < SIZE; ++i)
+            (*this)[i] = f((*this)[i]);
+        return (*this);
     }
 
-    using FunctionPointer = number_type (*)(number_type);
-    Sample forEachF(FunctionPointer f) const {
-        return forEach(f);
+    template <typename Function>
+    Sample& into(Sample const& x, Function f) {
+        auto& th = *this;
+        for (size_t i = 0; i < SIZE; ++i)
+            (*this)[i] = f((*this)[i], x[i]);
+        return (*this);
+    }
+
+    Sample forEachF(FunctionPointer fp) const {
+        return Sample(*this).into(fp);
     }
 
     Sample scale() const {
-        return forEachF(timedata::scale<Range>);
+        return Sample(*this).into(&timedata::scale<Range>);
     }
 
     Sample unscale() const {
-        return forEachF(timedata::unscale<Range>);
+        return Sample(*this).into(&timedata::unscale<Range>);
     }
 
     static Sample infinity() {
@@ -67,24 +86,38 @@ struct Sample : SampleBase<Model, Range> {
         return {};
     }
 
-    bool operator==(Sample const& x) const { return cmp(x) == 0; }
-    bool operator!=(Sample const& x) const { return cmp(x) != 0; }
-    bool operator<(Sample const& x) const { return cmp(x) < 0; }
-    bool operator<=(Sample const& x) const { return cmp(x) <= 0; }
-    bool operator>(Sample const& x) const { return cmp(x) > 0; }
-    bool operator>=(Sample const& x) const { return cmp(x) >= 0; }
+    bool operator==(Sample const& s) const { return cmp(s) == 0; }
+    bool operator!=(Sample const& s) const { return cmp(s) != 0; }
+    bool operator<(Sample const& s) const { return cmp(s) < 0; }
+    bool operator<=(Sample const& s) const { return cmp(s) <= 0; }
+    bool operator>(Sample const& s) const { return cmp(s) > 0; }
+    bool operator>=(Sample const& s) const { return cmp(s) >= 0; }
 
-    using ListBase = std::vector<Sample>;
-    struct List : ListBase {
-        using ListBase::ListBase;
+    Sample operator+(Sample const& s) const { auto r = *this; return r += s; }
+    Sample operator-(Sample const& s) const { auto r = *this; return r -= s; }
+    Sample operator*(Sample const& s) const { auto r = *this; return r *= s; }
+    Sample operator/(Sample const& s) const { auto r = *this; return r /= s; }
+    Sample operator%(Sample const& s) const { auto r = *this; return r %= s; }
 
-        using model_type = Model;
-        using number_type = Sample::number_type;
-        using range_type = Range;
-        using ranged_type = Sample::value_type;
-        using sample_type = Sample;
-        using value_type = ValueType<ListBase>;
-    };
+    Sample& operator+=(Sample const& s) {
+        return into(s, [](value_type x, value_type y) { return x + y; });
+    }
+    Sample& operator-=(Sample const& s) {
+        return into(s, [](value_type x, value_type y) { return x - y; });
+    }
+    Sample& operator*=(Sample const& s) {
+        return into(s, [](value_type x, value_type y) { return x * y; });
+    }
+    Sample& operator/=(Sample const& s) {
+        return into(s, [](value_type x, value_type y) {
+            return divPython(x, y);
+        });
+    }
+    Sample& operator%=(Sample const& s) {
+        return into(s, [](value_type x, value_type y) {
+            return modPython(x, y);
+        });
+    }
 };
 
 template <typename T>

@@ -5,6 +5,8 @@ namespace color_list {
 
 template <typename ColorList, typename Function>
 void forParts1(ColorList const& in, ColorList& out, Function f) {
+    if (out.size() < in.size())
+        out.resize(in.size());
     for (size_t i = 0; i < in.size(); ++i) {
         for (size_t j = 0; j < in[i].size(); ++j)
             out[i][j] = f(in[i][j]);
@@ -27,6 +29,8 @@ void forParts2Imp(ColorList const& in, ColorList& out, Function f, Getter get) {
 template <typename ColorList, typename Function>
 void forParts2(ColorList const& in, ColorList const& in2,
                ColorList& out, Function f) {
+    if (out.size() < in.size())
+        out.resize(in.size());
     forParts2Impl(in, out, f, [&](size_t i, size_t j) { return in2[i][j]; });
 }
 

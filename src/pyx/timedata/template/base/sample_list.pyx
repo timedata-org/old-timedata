@@ -32,9 +32,12 @@ cdef extern from "<$include_file>" namespace "$namespace":
     void extend(C$classname&, C$classname&)
     void insert(int key, C$sampleclass&, C$classname)
     void rotate(C$classname&, int pos)
+    void rotate(C$classname&, C$classname&, int pos)
     void round_cpp(C$classname&, size_t digits)
+    void round_cpp(C$classname&, C$classname&, size_t digits)
     void sliceDelete(C$classname&, int begin, int end, int step)
     void sort(C$classname&)
+    void sort(C$classname&, C$classname&, bool reverse)
     void spreadAppend(C$sampleclass& end, size_t size, C$classname& out)
 
 ### define
@@ -164,6 +167,11 @@ cdef extern from "<$include_file>" namespace "$namespace":
         rotate(self.cdata, pos)
         return self
 
+    cpdef $classname rotate_to(self, int pos, $classname out):
+        """In-place rotation of the samples forward by `pos` positions."""
+        rotate(self.cdata, out.cdata, pos)
+        return out
+
     def sort($classname self, object key=None, bool reverse=False):
         """Sort."""
         if key is None:
@@ -175,10 +183,25 @@ cdef extern from "<$include_file>" namespace "$namespace":
             self[:] = sorted(self, key=key, reverse=reverse)
         return self
 
-    cpdef $classname round(self, uint digits=0):
+    def sort_to($classname self, $classname out,
+                object key=None, bool reverse=False):
+        """Sort to another vector."""
+        if key is None:
+            sort(self.cdata, out.cdata, reverse)
+        else:
+            # Use Python.
+            out[:] = sorted(self, key=key, reverse=reverse)
+        return out
+
+    cpdef $classname round($classname self, uint digits=0):
         """Round each element in each sample to the nearest integer."""
         round_cpp(self.cdata, digits)
         return self
+
+    cpdef $classname round_to($classname self, $classname out, uint digits=0):
+        """Round each element in each sample to the nearest integer."""
+        round_cpp(self.cdata, out.cdata, digits)
+        return out
 
     cpdef $sampleclass max(self):
         """Return the maximum values of each component."""

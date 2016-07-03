@@ -219,16 +219,38 @@ void rotate(ColorList& out, int pos) {
 }
 
 template <typename ColorList>
-void round_cpp(ColorList& cl, size_t digits) {
-    for (auto& c: cl) {
-        for (auto& i: c)
-            i = roundPython(*i, digits);
-    }
+void rotate(ColorList const& in, ColorList& out, int pos) {
+    resizeIf(in, out);
+    pos = pos % in.size();
+    if (pos < 0)
+        pos += in.size();
+    std::rotate_copy(in.begin(), in.begin() + pos, in.end(), out.begin());
+}
+
+template <typename ColorList>
+void round_cpp(ColorList& out, size_t digits) {
+    using T = NumberType<ColorList>;
+    forParts1(out, [=](T x) { return roundPython(x, digits); });
+}
+
+template <typename ColorList>
+void round_cpp(ColorList& in, ColorList& out, size_t digits) {
+    using T = NumberType<ColorList>;
+    forParts1(in, out, [=](T x) { return roundPython(x, digits); });
 }
 
 template <typename ColorList>
 void sort(ColorList& out) {
     std::sort(out.begin(), out.end());
+}
+
+template <typename ColorList>
+void sort(ColorList const& i, ColorList& o, bool reversed) {
+    resizeIf(i, o);
+    if (not reversed)
+        std::partial_sort_copy(i.begin(), i.end(), o.begin(), o.end());
+    else
+        std::partial_sort_copy(i.begin(), i.end(), o.rbegin(), o.rend());
 }
 
 template <typename ColorList>
@@ -262,7 +284,8 @@ void math_clear(ColorList& out) {
     out.clear();
 }
 
-template <typename ColorList> void math_floor(ColorList& out) {
+template <typename ColorList>
+void math_floor(ColorList& out) {
     applyEachF(out, std::floor);
 }
 
@@ -301,7 +324,6 @@ void math_zero(ColorList& out) {
 
 template <typename Input, typename ColorList>
 void math_add(Input const& in, ColorList& out) {
-    // using Number = NumberType<ColorList>;
     using Number = RangedType<ColorList>;
     applyEach(in, out, [](Number x, Number y) { return x + y; });
 }
