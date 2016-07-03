@@ -141,6 +141,10 @@ class TestColor256(unittest.TestCase):
 
     def test_string(self):
         self.assertEqual(list(Color256('white')), [256, 256, 256])
+        self.assertEqual(repr(Color256(512, 512, 512)),
+                         'Color256(512, 512, 512)')
+        self.assertEqual(repr(Color255(255, 510, 765)),
+                         'Color255(255, 510, 765)')
 
     def test_red(self):
         red = Color256((256, 0, 0))

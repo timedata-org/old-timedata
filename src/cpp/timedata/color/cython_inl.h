@@ -22,8 +22,7 @@ CColor unscale(Color const& x) {
 
 template <typename Color>
 std::string toString(Color const& x) {
-    // TODO: hack!
-    return colorToString(unscale(x));
+    return colorToString(x);
 }
 
 template <typename Color>

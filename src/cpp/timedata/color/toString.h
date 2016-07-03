@@ -38,7 +38,6 @@ uint32_t colorToHex(Color c) {
     return total;
 }
 
-
 template <typename Color>
 std::string colorToString(Color c) {
     using Range = typename Color::range_type;
