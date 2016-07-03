@@ -15,12 +15,6 @@ using CColor256 = Color256;
 using CColor255 = Color255;
 
 template <typename Color>
-CColor unscale(Color const& x) {
-    // TODO: hack!
-    return {x[0].unscale(), x[1].unscale(), x[2].unscale()};
-}
-
-template <typename Color>
 std::string toString(Color const& x) {
     return colorToString(x);
 }
@@ -190,7 +184,7 @@ void from_hex(uint32_t hex, Color& x) {
 
 template <typename Color>
 uint32_t to_hex(Color const& x) {
-    return colorToHex(unscale(x));
+    return colorToHex(x);
 }
 
 } // color
