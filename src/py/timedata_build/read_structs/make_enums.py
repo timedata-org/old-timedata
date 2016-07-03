@@ -7,8 +7,8 @@ def make_enums(enum_classes, header_file, namespace, classname):
             parts.pop()
         enums.append((enum_name, parts))
         main = ENUM_CLASS_TEMPLATE.format(**locals())
-        defs = ('    cdef %s %s' % (enum_name, p) for p in parts)
-        declarations.append(main + '\n'.join(defs))
+        defs = '    cdef %s %s' % (enum_name, ', '.join(parts))
+        declarations.append(main + defs)
 
     decl = '\n\n'.join(declarations)
     if decl:

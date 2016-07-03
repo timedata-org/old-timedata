@@ -11,9 +11,9 @@ include "src/pyx/timedata/base/wrapper.pyx"
 include "src/pyx/timedata/base/timestamp.pyx"
 include "src/pyx/timedata/color/colors.pyx"
 include "build/genfiles/timedata/signal/combiner.pyx"
+include "build/genfiles/timedata/signal/fade.pyx"
+#include "build/genfiles/timedata/signal/render3.pyx"
 include "build/genfiles/timedata/signal/stripe.pyx"
-#include "src/pyx/timedata/signal/fade.pyx"
-#include "src/pyx/timedata/signal/render3.pyx"
 
 include "build/genfiles/timedata/genfiles.pyx"
 

@@ -62,7 +62,12 @@ def make(header_file):
         if mt:
             mt += '\n'
         mt += format('class', locals())
-    return mt
+    # Brutally remove trailing empty line.
+    mt = mt.split('\n')
+    while mt and not mt[-1].strip():
+        mt.pop()
+
+    return '\n'.join(mt) + '\n'
 
 
 def read_structs(files):
