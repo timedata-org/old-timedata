@@ -228,10 +228,7 @@ void round_cpp(ColorList& cl, size_t digits) {
 
 template <typename ColorList>
 void sort(ColorList& out) {
-    using Color = ValueType<ColorList>;
-    std::sort(out.begin(), out.end(), [](Color const& x, Color const& y) {
-        return color::compare(x, y) < 0.0f;
-    });
+    std::sort(out.begin(), out.end());
 }
 
 template <typename ColorList>

@@ -23,6 +23,7 @@ struct Sample : SampleBase<Model, Range> {
     using number_type = ValueType<value_type>;
 
     using base_type::base_type;
+    static const auto SIZE = enumSize<Model>();
 
     // TODO: need to use std::initializer_list!
     Sample(value_type r, value_type g, value_type b)
@@ -58,6 +59,20 @@ struct Sample : SampleBase<Model, Range> {
         auto inf = value_type::infinity();
         return {inf, inf, inf};
     }
+
+    number_type cmp(Sample const& x) const {
+        for (size_t i = 0; i < SIZE; ++i)
+            if (auto d = (*this)[i] - x[i])
+                return d;
+        return {};
+    }
+
+    bool operator==(Sample const& x) const { return cmp(x) == 0; }
+    bool operator!=(Sample const& x) const { return cmp(x) != 0; }
+    bool operator<(Sample const& x) const { return cmp(x) < 0; }
+    bool operator<=(Sample const& x) const { return cmp(x) <= 0; }
+    bool operator>(Sample const& x) const { return cmp(x) > 0; }
+    bool operator>=(Sample const& x) const { return cmp(x) >= 0; }
 
     using ListBase = std::vector<Sample>;
     struct List : ListBase {
