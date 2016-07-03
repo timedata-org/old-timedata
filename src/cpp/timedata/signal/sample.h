@@ -32,9 +32,9 @@ struct Sample : SampleBase<Model, Range> {
         using ListBase::ListBase;
 
         using model_type = Model;
-        using number_type = Sample::number_type;
+        using number_type = typename Sample::number_type;
         using range_type = Range;
-        using ranged_type = Sample::value_type;
+        using ranged_type = typename Sample::value_type;
         using sample_type = Sample;
         using value_type = ValueType<ListBase>;
     };
