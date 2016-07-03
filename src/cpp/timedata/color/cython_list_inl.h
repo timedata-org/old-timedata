@@ -270,49 +270,56 @@ void applyEach(ColorList& out, Function f) {
 }
 
 template <typename ColorList>
-void applyEachF(ColorList& out, Transform<NumberType<ColorList>> f) {
-    applyEach(out, f);
+void forParts1F(ColorList const& in, ColorList& out,
+                Transform<NumberType<ColorList>> f) {
+    forParts1(in, out, f);
 }
 
 template <typename ColorList>
-void math_abs(ColorList& out) {
-    applyEachF(out, std::abs);
+void math_abs(ColorList const& in, ColorList& out) {
+    forParts1F(in, out, std::abs);
 }
+
+template <typename ColorList>
+void math_floor(ColorList const& in, ColorList& out) {
+    forParts1F(in, out, std::floor);
+}
+
+template <typename ColorList>
+void math_ceil(ColorList const& in, ColorList& out) {
+    forParts1F(in, out, std::ceil);
+}
+
+template <typename ColorList>
+void math_invert(ColorList const& in, ColorList& out) {
+    using Ranged = typename ColorList::ranged_type;
+    forParts1(in, out, [](Ranged c) { return c.invert(); });
+}
+
+template <typename ColorList>
+void math_neg(ColorList const& in, ColorList& out) {
+    forParts1(in, out, [](NumberType<ColorList> c) { return -c; });
+}
+
+template <typename ColorList>
+void math_reverse(ColorList const& in, ColorList& out) {
+    resizeIf(in, out);
+    if (&out == &in)
+        std::reverse(out.begin(), out.end());
+    else
+        std::reverse_copy(in.begin(), in.end(), out.begin());
+}
+
+template <typename ColorList>
+void math_trunc(ColorList const& in, ColorList& out) {
+    forParts1F(in, out, std::trunc);
+}
+
+////////////////////////////////////////////////////////////////////////////////
 
 template <typename ColorList>
 void math_clear(ColorList& out) {
     out.clear();
-}
-
-template <typename ColorList>
-void math_floor(ColorList& out) {
-    applyEachF(out, std::floor);
-}
-
-template <typename ColorList>
-void math_ceil(ColorList& out) {
-    applyEachF(out, std::ceil);
-}
-
-template <typename ColorList>
-void math_invert(ColorList& out) {
-    using Ranged = typename ColorList::ranged_type;
-    applyEach(out, [](Ranged c) { return c.invert(); });
-}
-
-template <typename ColorList>
-void math_neg(ColorList& out) {
-    applyEach(out, [](NumberType<ColorList> c) { return -c; });
-}
-
-template <typename ColorList>
-void math_reverse(ColorList& out) {
-    std::reverse(out.begin(), out.end());
-}
-
-template <typename ColorList>
-void math_trunc(ColorList& out) {
-    applyEachF(out, std::trunc);
 }
 
 template <typename ColorList>
@@ -325,7 +332,7 @@ void math_zero(ColorList& out) {
 template <typename Input, typename ColorList>
 void math_add(ColorList const& in, Input const& in2, ColorList& out) {
     using Number = RangedType<ColorList>;
-    forParts2(in, in2, out, [](Number x, Number y) { return x + y; });
+     forParts2(in, in2, out, [](Number x, Number y) { return x + y; });
 }
 
 template <typename Input, typename ColorList>

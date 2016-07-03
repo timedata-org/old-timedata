@@ -12,8 +12,8 @@ methods = add_methods(
     methods,
     base='sample_list',
     zero=dict(
-        mutator=('abs', 'clear', 'floor', 'ceil', 'invert', 'neg', 'reverse',
-                 'trunc', 'zero'),
+        simple_mutator=('clear', 'zero'),
+        mutator=('abs', 'floor', 'ceil', 'invert', 'neg', 'reverse', 'trunc'),
         ),
 
     one=dict(
