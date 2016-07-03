@@ -21,7 +21,7 @@ std::string toString(ColorList const& colors) {
         if (result.size() > 1)
             result += ", ";
         auto s = color::toString(c);
-        auto isTriple = isdigit(s[0]) or s[0] == '-';
+        auto isTriple = s.find(",") != std::string::npos;
         auto digit =  isTriple ? 1 : 0;
         result += "'("[digit];
         result += s;
@@ -323,63 +323,63 @@ void math_zero(ColorList& out) {
 ////////////////////////////////////////////////////////////////////////////////
 
 template <typename Input, typename ColorList>
-void math_add(Input const& in, ColorList& out) {
+void math_add(ColorList const& in, Input const& in2, ColorList& out) {
     using Number = RangedType<ColorList>;
-    applyEach(in, out, [](Number x, Number y) { return x + y; });
+    forParts2(in, in2, out, [](Number x, Number y) { return x + y; });
 }
 
 template <typename Input, typename ColorList>
-void math_div(Input const& in, ColorList& out) {
+void math_div(ColorList const& in, Input const& in2, ColorList& out) {
     using Number = NumberType<ColorList>;
-    applyEach(in, out, [](Number x, Number y) { return divPython(y, x); });
+    forParts2(in, in2, out, [](Number x, Number y) { return divPython(y, x); });
 }
 
 template <typename Input, typename ColorList>
-void math_rdiv(Input const& in, ColorList& out) {
+void math_rdiv(ColorList const& in, Input const& in2, ColorList& out) {
     using Number = NumberType<ColorList>;
-    applyEach(in, out, [](Number x, Number y) { return divPython(x, y); });
+    forParts2(in, in2, out, [](Number x, Number y) { return divPython(x, y); });
 }
 
 template <typename Input, typename ColorList>
-void math_mul(Input const& in, ColorList& out) {
+void math_mul(ColorList const& in, Input const& in2, ColorList& out) {
     using Number = NumberType<ColorList>;
-    applyEach(in, out, [](Number x, Number y) { return x * y; });
+    forParts2(in, in2, out, [](Number x, Number y) { return x * y; });
 }
 
 template <typename Input, typename ColorList>
-void math_pow(Input const& in, ColorList& out) {
+void math_pow(ColorList const& in, Input const& in2, ColorList& out) {
     using Number = NumberType<ColorList>;
-    applyEach(in, out, [](Number x, Number y) { return powPython(y, x); });
+    forParts2(in, in2, out, [](Number x, Number y) { return powPython(y, x); });
 }
 
 template <typename Input, typename ColorList>
-void math_rpow(Input const& in, ColorList& out) {
+void math_rpow(ColorList const& in, Input const& in2, ColorList& out) {
     using Number = NumberType<ColorList>;
-    applyEach(in, out, [](Number x, Number y) { return powPython(x, y); });
+    forParts2(in, in2, out, [](Number x, Number y) { return powPython(x, y); });
 }
 
 template <typename Input, typename ColorList>
-void math_sub(Input const& in, ColorList& out) {
+void math_sub(ColorList const& in, Input const& in2, ColorList& out) {
     using Number = NumberType<ColorList>;
-    applyEach(in, out, [](Number x, Number y) { return x - y; });
+    forParts2(in, in2, out, [](Number x, Number y) { return x - y; });
 }
 
 template <typename Input, typename ColorList>
-void math_rsub(Input const& in, ColorList& out) {
+void math_rsub(ColorList const& in, Input const& in2, ColorList& out) {
     using Number = NumberType<ColorList>;
-    applyEach(in, out, [](Number x, Number y) { return y - x; });
+    forParts2(in, in2, out, [](Number x, Number y) { return y - x; });
 }
 
 template <typename Input, typename ColorList>
-void math_min_limit(Input const& in, ColorList& out) {
+void math_min_limit(ColorList const& in, Input const& in2, ColorList& out) {
     using Number = NumberType<ColorList>;
-    applyEach(in, out, [](Number x, Number y) { return std::max(x, y); });
+    forParts2(in, in2, out, [](Number x, Number y) { return std::max(x, y); });
 }
 
 template <typename Input, typename ColorList>
-void math_max_limit(Input const& in, ColorList& out) {
+void math_max_limit(ColorList const& in, Input const& in2, ColorList& out) {
     using Number = NumberType<ColorList>;
-    applyEach(in, out, [](Number x, Number y) { return std::min(x, y); });
+    forParts2(in, in2, out, [](Number x, Number y) { return std::min(x, y); });
 }
 
 template <typename ColorList>
