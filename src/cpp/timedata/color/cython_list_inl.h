@@ -1,4 +1,4 @@
- #pragma once
+#pragma once
 
 #include <algorithm>
 #include <type_traits>
@@ -7,6 +7,7 @@
 #include <timedata/base/make.h>
 #include <timedata/base/math_inl.h>
 #include <timedata/color/cython_inl.h>
+#include <timedata/color/for.h>
 #include <timedata/color/spread.h>
 #include <timedata/signal/slice.h>
 
@@ -300,45 +301,6 @@ void math_zero(ColorList& out) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-
-template <typename ColorList, typename Func>
-void forEach(ColorList const& in, ColorList& out, Func f) {
-    for (size_t i = 0; i < out.size(); ++i)
-        for (size_t j = 0; j < out[i].size(); ++j)
-            f(in[i][j], out[i][j]);
-}
-
-template <typename ColorList, typename Func>
-void forEach(ValueType<ColorList> const& in, ColorList& out, Func f) {
-    for (size_t i = 0; i < out.size(); ++i)
-        for (size_t j = 0; j < out[i].size(); ++j)
-            f(in[j], out[i][j]);
-}
-
-template <typename ColorList, typename Func>
-void forEach(NumberType<ColorList> const& in, ColorList& out, Func f) {
-    for (size_t i = 0; i < out.size(); ++i)
-        for (size_t j = 0; j < out[i].size(); ++j)
-            f(in, out[i][j]);
-}
-
-template <typename ColorList>
-void resizeIf(ColorList const& in, ColorList& out) {
-    if (out.size() < in.size())
-        out.resize(in.size());
-}
-
-template <typename T, typename ColorList>
-void resizeIf(T, ColorList&) {
-}
-
-template <typename Input, typename ColorList, typename Func>
-void applyEach(Input const& in, ColorList& out, Func f) {
-    // using Number = NumberType<ColorList>;
-    using Number = RangedType<ColorList>;
-    resizeIf(in, out);
-    forEach(in, out, [&f](Number x, Number &y) { y = f(x, y); });
-}
 
 template <typename Input, typename ColorList>
 void math_add(Input const& in, ColorList& out) {
