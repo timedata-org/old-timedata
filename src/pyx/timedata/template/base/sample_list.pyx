@@ -7,8 +7,8 @@ cdef extern from "<$include_file>" namespace "$namespace":
     cdef cppclass C$classname:
          C$classname()
          C$sampleclass& operator[](size_t)
-         void fill(C$sampleclass)
          size_t size()
+         void fill(C$sampleclass)
          void push_back(C$sampleclass)
          void resize(size_t)
 
@@ -28,10 +28,12 @@ cdef extern from "<$include_file>" namespace "$namespace":
 
     size_t count(C$classname&, C$sampleclass&)
 
+    void erase(int key, C$classname&)
     void extend(C$classname&, C$classname&)
     void insert(int key, C$sampleclass&, C$classname)
     void rotate(C$classname&, int pos)
     void round_cpp(C$classname&, size_t digits)
+    void sliceDelete(C$classname&, int begin, int end, int step)
     void sort(C$classname&)
     void spreadAppend(C$sampleclass& end, size_t size, C$classname& out)
 
@@ -66,7 +68,7 @@ cdef extern from "<$include_file>" namespace "$namespace":
             raise IndexError('$classname index out of range %s' % key)
         self.cdata[index] = $sampleclass(x).cdata
 
-    def __getitem__(self, object key):
+    def __getitem__($classname self, object key):
         cdef $sampleclass s
         cdef $classname cl
         cdef int k, begin, end, step
@@ -82,7 +84,18 @@ cdef extern from "<$include_file>" namespace "$namespace":
         s.cdata = self.cdata[k]
         return s
 
-    def __len__(self):
+    def __delitem__($classname self, object key):
+        cdef int k, begin, end, step
+        if isinstance(key, slice):
+            begin, end, step = key.indices(self.cdata.size())
+            sliceDelete(self.cdata, begin, end, step)
+        else:
+            k = key
+            if not resolvePythonIndex(k, self.cdata.size()):
+                raise IndexError('$classname index out of range %s' % key)
+            erase(k, self.cdata)
+
+    def __len__($classname self):
         return self.cdata.size()
 
     def __richcmp__(object self, object other, int rcmp):

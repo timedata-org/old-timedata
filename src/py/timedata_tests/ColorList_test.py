@@ -19,6 +19,12 @@ class TestColorList(unittest.TestCase):
         self.assertEqual(cl.copy().add(cl), cl.copy().mul(2))
         # self.assertEqual(2 + (2 * cl * 3) + 2 - 2 * cl, 4 + 4 * cl)
 
+    def test_indexing2(self):
+        cl = ColorList(('red', 'green', 'blue'))
+        self.assertEqual(cl[0], Colors.red)
+        del cl[0]
+        self.assertEqual(cl[0], Colors.green)
+
     def test_slicing(self):
         cl = ColorList()
         cl[:] = 'red', 'green', 'blue'
@@ -39,6 +45,8 @@ class TestColorList(unittest.TestCase):
         self.assertEqual(
             cl, ColorList(('red', 'green', 'blue', 'tan', 'white', 'tan')))
 
+        del cl[1:7:3]
+        self.assertEqual(cl, ColorList(('red', 'blue', 'tan', 'tan')))
         for i in range(5):
             if i != 2:
                 with self.assertRaises(ValueError):

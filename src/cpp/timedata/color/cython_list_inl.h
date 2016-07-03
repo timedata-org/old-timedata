@@ -84,6 +84,31 @@ ColorVector sliceOut(ColorVector const& in, int begin, int end, int step) {
     return out;
 }
 
+template <typename ColorVector>
+void erase(int key, ColorVector& v) {
+    v.erase(v.begin() + key);
+}
+
+template <typename ColorVector>
+void sliceDelete(ColorVector& colors, int begin, int end, int step) {
+    auto b = static_cast<size_t>(begin);
+    if (step < 0) {
+        std::swap(begin, end);
+        step = -step;
+    }
+    size_t offset = 0;
+    for (size_t i = 0; i < colors.size(); ++i) {
+        if (i == b) {
+            b += step;
+            offset += 1;
+        } else if (offset) {
+            colors[i - offset] = colors[i];
+        }
+    }
+    if (offset)
+        colors.resize(colors.size() - offset);
+}
+
 template <typename ColorList>
 ValueType<ColorList> min_cpp(ColorList const& cl) {
     using Color = ValueType<ColorList>;
