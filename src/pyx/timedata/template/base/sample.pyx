@@ -34,6 +34,8 @@ cdef extern from "<$include_file>" namespace "$namespace":
 
         * Anything else throws an exception.
 """
+        cdef string model
+        cdef uint64_t pointer
         while len(args) == 1:
             a = args[0]
             if isinstance(a, Number):
@@ -46,6 +48,15 @@ cdef extern from "<$include_file>" namespace "$namespace":
             if isinstance(a, $classname):
                 self.cdata = (<$classname> a).cdata
                 return
+            m = getattr(a, 'MODEL', None)
+            if m:
+                model = m
+                pointer = a._get_pointer()
+                if convertModel(pointer, model, self.cdata):
+                    return
+                raise ValueError("Can't convert from model %s, value %s" %
+                                 (model, a))
+
             try:
                 args = tuple(a)
             except:
@@ -58,6 +69,9 @@ cdef extern from "<$include_file>" namespace "$namespace":
         else:
             for i, a in enumerate(args):
                 self.cdata[i] = a
+
+    cpdef uint64_t _get_pointer($classname self):
+        return referenceToInteger(self.cdata)
 
     def __getitem__($classname self, object key):
         cdef int index

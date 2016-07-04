@@ -4,6 +4,7 @@
 #include <utility>
 #include <vector>
 
+#include <timedata/base/className.h>
 #include <timedata/base/enum.h>
 #include <timedata/signal/ranged.h>
 
