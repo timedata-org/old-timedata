@@ -14,15 +14,9 @@ cdef class $classname:
     """$class_documentation"""
     cdef C$classname cdata
 
-    @property
-    def start($classname self):
-        """Return the lowest in-band value for this class."""
-        return $start
-
-    @property
-    def range($classname self):
-        """Return the range from start() to the highest in-band value."""
-        return $range
+    START = $start
+    RANGE = $range
+    MODEL = '$model'
 
     cpdef $classname copy($classname self):
         """Return a shallow copy of self."""

@@ -43,6 +43,9 @@ cdef extern from "<$include_file>" namespace "$namespace":
                 if fromString(<string> a, self.cdata):
                     return
                 raise ValueError("Can't understand sample string %s" % args)
+            if isinstance(a, $classname):
+                self.cdata = (<$classname> a).cdata
+                return
             try:
                 args = tuple(a)
             except:

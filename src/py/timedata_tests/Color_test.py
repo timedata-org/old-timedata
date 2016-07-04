@@ -50,8 +50,8 @@ class TestColor(unittest.TestCase):
         self.assertEqual(white * cyan, cyan)
 
     def test_methods(self):
-        self.assertEqual(Color().start, 0)
-        self.assertEqual(Color().range, 1.0)
+        self.assertEqual(Color().START, 0)
+        self.assertEqual(Color().RANGE, 1.0)
 
     def test_rotated(self):
         self.assertEqual(Color('red').rotated(1), Color('blue'))
@@ -183,7 +183,7 @@ class TestColor256(unittest.TestCase):
         b = Color256('green') + Color256('red') * 0.5
         self.assertTrue(a.distance(b) < 0.0001)
         self.assertEqual(Color256('red').rotated(1), Color256('blue'))
-        self.assertEqual(Color256().range, 256.0)
+        self.assertEqual(Color256().RANGE, 256.0)
 
     def test_names(self):
         names = Color.names()

@@ -2,6 +2,7 @@ from timedata_build.util import add_methods
 
 number_type = 'float'
 documentation = 'FIXME'
+model = 'RGB'
 
 substitutions = dict(
     classname='$name',
