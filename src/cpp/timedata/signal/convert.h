@@ -19,4 +19,11 @@ bool convertModel(PointerAsInt, std::string const&, Sample&) {
     return false;
 }
 
+struct Model {};
+
+template <typename T>
+Model getModel() {
+    return {};
+}
+
 } // timedata

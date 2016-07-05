@@ -16,7 +16,7 @@ cdef class $classname:
 
     START = $start
     RANGE = $range
-    MODEL = '$model'
+    MODEL_NAME = '$model'
 
     cpdef $classname copy($classname self):
         """Return a shallow copy of self."""

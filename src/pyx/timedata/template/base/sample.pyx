@@ -15,6 +15,8 @@ cdef extern from "<$include_file>" namespace "$namespace":
     bool resolvePythonIndex(int& index, size_t size)
 
 ### define
+    MODEL = className[C$classname]()
+
     def __init__($classname self, *args):
         """A $classname can be constructed as follows:
 
@@ -52,7 +54,9 @@ cdef extern from "<$include_file>" namespace "$namespace":
             if m:
                 model = m
                 pointer = a._get_pointer()
-                if convertModel(pointer, model, self.cdata):
+                # error = getModel[C$classname].convert(self.cdata, pointer, model)
+                error = '' # getModel[C$classname].name()
+                if not error:
                     return
                 raise ValueError("Can't convert from model %s, value %s" %
                                  (model, a))
