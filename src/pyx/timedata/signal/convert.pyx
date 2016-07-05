@@ -4,3 +4,4 @@ cdef extern from "<timedata/signal/convert.h>" namespace "timedata":
     cdef PointerAsInt referenceToInteger[T](T&)
 
     string className[T]()
+    string convertTo[T](PointerAsInt input, string model, T& result)

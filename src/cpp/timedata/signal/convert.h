@@ -26,4 +26,11 @@ Model getModel() {
     return {};
 }
 
+template <typename T>
+//string convertTo(PointerAsInt input, string model, T& result) {
+std::string convertTo(PointerAsInt, std::string const&, T&) {
+    return "Can't do conversions yet";
+}
+
+
 } // timedata

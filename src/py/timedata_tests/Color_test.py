@@ -1,6 +1,6 @@
 import unittest
 
-from timedata import Color255, Color256, Color, Colors
+from timedata import Color255, Color256, Color, Colors, Colors255
 
 class TestColor(unittest.TestCase):
     def test_white(self):
@@ -209,3 +209,8 @@ class TestColor256(unittest.TestCase):
                          Color(1, 2, 1))
         self.assertEqual(Color(1, 2, 3).limit_min(Color(3, 2, 1)),
                          Color(3, 2, 3))
+
+    def test_conversions(self):
+        with self.assertRaises(ValueError):
+            Color(Colors255.red)
+        Color(*Colors255.red)
