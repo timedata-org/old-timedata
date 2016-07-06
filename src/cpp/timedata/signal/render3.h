@@ -18,7 +18,7 @@ struct Render3 {
         return std::min(max, min + (max - min + 1) * s);
     }
 
-    template <typename ColorType = Color>
+    template <typename ColorType = ColorRGB>
     ColorType apply(Color c) const {
         static std::vector<std::vector<uint8_t>> const PERMS = {
             {0, 1, 2},

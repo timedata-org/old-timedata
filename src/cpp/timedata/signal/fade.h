@@ -34,8 +34,8 @@ struct Fade {
 };
 
 inline
-Color fadeTo(float fader, Fade const& fade, Color const& in1, Color const& in2) {
-    Color out;
+ColorRGB fadeTo(float fader, Fade const& fade, ColorRGB const& in1, ColorRGB const& in2) {
+    ColorRGB out;
     for (size_t i = 0; i < out.size(); ++i)
         out[i] = fade(fader, in1[i], in2[i]);
     return out;

@@ -5,7 +5,7 @@
 namespace timedata {
 
 template <typename Iter>
-void fillSpread(Color const& c1, Color const& c2, Iter begin, Iter end,
+void fillSpread(ColorRGB const& c1, ColorRGB const& c2, Iter begin, Iter end,
                 Fade const& fade) {
     THROW_IF(end < begin, "Bad spread");
     auto size = end - begin;

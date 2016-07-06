@@ -10,9 +10,9 @@
 namespace timedata {
 namespace color {
 
-using CColor = Color;
-using CColor256 = Color256;
-using CColor255 = Color255;
+using CColor = ColorRGB;
+using CColor256 = ColorRGB256;
+using CColor255 = ColorRGB255;
 
 template <typename Color>
 std::string toString(Color const& x) {
@@ -171,6 +171,12 @@ float compare(Color const& x, Color const& y) {
 template <typename Color>
 bool compare(Color const& x, Color const& y, int richCmp) {
     return cmpToRichcmp(compare(x, y), richCmp);
+}
+
+inline ColorRGB colorFromHex(uint hex) {
+    ColorRGB c;
+    detail::hexToColor(hex, c);
+    return c;
 }
 
 template <typename Color>

@@ -139,10 +139,4 @@ bool toColor(char const* name, Color& result) {
     return true;
 }
 
-inline Color colorFromHex(uint hex) {
-    Color c;
-    detail::hexToColor(hex, c);
-    return c;
-};
-
 }  // timedata
