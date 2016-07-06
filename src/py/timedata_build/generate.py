@@ -13,12 +13,8 @@ STRUCT_FILES = [
 
 
 def generate():
-    print('writing structs')
     structs = read_structs.read_structs(STRUCT_FILES)
-
-    print('writing parts')
     files = make_from_parts.execute()
 
-    print('writing genfiles.pyx')
-    data = ''.join('include "%s"\n' % f for f in files)
+    data = ''.join('include "%s"\n' % f for f in sorted(files))
     util.write_if_different('build/genfiles/timedata/genfiles.pyx', data)

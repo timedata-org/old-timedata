@@ -113,7 +113,6 @@ class Generate(Command):
     user_options = []
 
     def run(self):
-        print('Run Generate')
         generate.generate()
 
 
