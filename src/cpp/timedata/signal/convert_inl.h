@@ -1,104 +1,144 @@
 #pragma once
 
+#include <functional>
 #include <map>
 #include <string>
 
-#include <timedata/signal/convert.h>
+#include <timedata/base/className.h>
 #include <timedata/base/deletable.h>
 #include <timedata/base/join.h>
+#include <timedata/color/color.h>  // oops!
+#include <timedata/signal/convert.h>
 
 namespace timedata {
 namespace converter {
 
+/** The problem: there are many different sample models, and some of them are
+    interconvertible but some will not be.  How do we represent this in C++ in
+    such a way as to be usable from Python?
+
+    Making converters for each pair of models is not feasible as the number of
+    pairs of models grows as the square of the number of models.
+
+    So for each model, we define a "normal" model, and each new model must only
+    provide two conversion functions: to and from the normal model.
+
+    These conversion functions need to be "very nearly round-trip" - in other
+    words, if you convert back and forth ("round-trip") between any pair of
+    models you should get what you started with - "very nearly" because with all
+    floating point arithmetic, it's not possible to do any calculations with
+    perfect precision.
+
+    However, a color model based on 8-bit integers is _not_ round-trip with a
+    floating point model, because of the tremendous loss of precision.
+
+    For version 1.0, we in fact only have one normal model, ColorRGB and all
+    samples are interconvertible.  I don't generally write for features not yet
+    implemented but I think that if I had assumed that all samples were the same
+    interconvertible family, I'd have had big problems later...
+
+*/
+
+/* Even though we're converting between a lot of different types, all this
+   interface has to be uniform so we can put it into a single table.
+
+   So we hide the intermediate
+*/
 struct Converter {
-    /** Abstract base class with the actual implementation. */
-    struct Convert : Deletable {
-        /** Convert from this model to the base type, returned as a Deleteable.
-            (because this is a facade for a lot of disparate classes which are
-            keeping different types of data behind the scenes).
-        */
-        virtual Deletable::Ptr from(PointerAsInt fromPtr) const = 0;
-
-        /** Convert from the base type to this model.
-            Returns false if the DeletablePtr can't be upcast to the correct actual
-            type for this model. */
-        virtual bool to(PointerAsInt toPtr, DeletablePtr&& from) const = 0;
-    };
-
-    using ConvertPtr = std::unique_ptr<Impl>;
+    using From = Ptr<Deletable> (*)(PointerAsInt);
+    using To = void (*)(Deletable const&, PointerAsInt outPtr);
 
     std::string name;
-    ConvertPtr convert;
-    Converter const* base; // nullptr means "this is the base".
-
-    Converter(std::string const& n, ConvertPtr&& c,
-              Converter const* b = nullptr)
-            : name(n), convert(std::move(c)), base(b) {
-    }
+    From from;
+    To to;
+    Converter const* normal; // nullptr means "this is the normal form".
 };
 
-using Converters = std::map<std::string, Converter>;
+using Converters = std::map<std::string, Converter const*>;
 
-// Singleton.
+/** Get the singleton list of converters. */
+Converters& converters();
+
+bool canConvert(Converter const&, Converter const&);
+
+template <typename Sample>
+Converter const& getConverterByType();
+
+template <typename Sample>
+std::string loadConverter() {
+    auto name = className<Sample>();
+    if (converters().find(name) == converters().end())
+        converters()[name] = &getConverterByType<Sample>();
+    return name;
+}
+
+template <typename T>
+bool convertSamples(PointerAsInt inPtr, std::string const& modelName, T& out) {
+    auto i = converters().find(modelName);
+    if (i == converters().end()) {
+        log("Couldn't find converter", modelName);
+        return false;
+    }
+
+    auto& to = getConverterByType<T>();
+    auto& from = *(i->second);
+    if (not canConvert(to, from)) {
+        log("Did not share common normal", modelName, className<T>());
+        return false;
+    }
+
+    auto outPtr = referenceToInteger(out);
+    to.to(*from.from(inPtr), outPtr);
+    return true;
+}
+
 inline Converters& converters() {
     static Converters CONVERTERS;
     return CONVERTERS;
 }
 
-inline void addConverter(Converter&& c) {
-    if (converters().count(c.name))
-        log("Converter", c.name, "added twice.");
-    else
-        converters()[c.name] = std::move(c);
+inline bool canConvert(Converter const& x, Converter const& y) {
+    return (&x == &y) or
+           (&x == y.normal) or
+           (&y == x.normal) or
+           (x.normal and (x.normal == y.normal));
 }
-
-template <typename Model>
-Converter& make() {
-
-};
-
-
-/*
-auto timedata_color_rgb = timedata::converter:make<timedata::color::RGB>();
-*/
-struct Registrar {
-    Registrar(std::string const& name,
-
-template <typename Impl>
-inline void addBaseConverter(std::string name) {
-    addConverter({name, std::make_unique<Impl>(), nullptr});
-}
-
-template <typename Impl>
-inline void addConverter(std::string name, Converter const& base) {
-    addConverter({name, std::make_unique<Impl>(), &base});
-}
-
 
 template <typename Sample>
-std::string convertConverter(PointerAsInt fromPtr, std::string const& converter,
-                             Sample& sample) {
-    auto toName = className<typename Sample::model_type>();
-    auto f = converters().find(fromName),
-         t = converters().find(toName);
+Ptr<Deletable> convertFrom(PointerAsInt p) {
+    auto& in = integerToReference<Sample const>(p);
+    auto out = makeWrapper<NormalType<Sample>>();
+    convertSamples(in, out->value);
+    return std::move(out);
+}
 
-    if (f == converters().end())
-        return "Can't find converter " + fromName;
-    if (t == converters().end())
-        return "Can't find converter " + toName;
+template <typename Sample>
+void convertTo(Deletable const& input, PointerAsInt outPtr) {
+    auto& out = integerToReference<Sample>(outPtr);
+    if (auto in = unwrap<NormalType<Sample>>(input))
+        convertSamples(*in, out);
+    else
+        log("Horrible programmer error", className<Sample>());
+}
 
-    auto& fromConverter = f.second;
-    auto& toConverter = t.second;
+template <typename Sample>
+Converter const& getConverterByType();
 
-    if (&fromConverter.base != &toConverter.base) {
-        return "Converter " + toName + " and converter " + fromName +
-                " have different base converters: " + fromConverter.base.name + " and " +
-                toConverter.base.name;
-    }
-    auto toPtr = pointerToInteger(sample);
-    if (not toConverter.to(toPtr, fromConverter.from(fromPtr)))  // Can't happen.
-        return "Internal error converting from " + fromName + " to " + toName;
-    return "";
+template <typename Sample>
+Converter makeConverterByType() {
+    auto name = className<Sample>();
+
+    using Normal = NormalType<Sample>;
+    auto isNormal = std::is_same<Normal, Sample>::value;
+    auto normal = isNormal ? nullptr : &getConverterByType<Normal>();
+
+    return {name, &convertFrom<Sample>, &convertTo<Sample>, normal};
+}
+
+template <typename Sample>
+Converter const& getConverterByType() {
+    static const auto c = makeConverterByType<Sample>();
+    return c;
 }
 
 } // converter

@@ -47,7 +47,6 @@ class Ranged {
         return {std::numeric_limits<value_type>::infinity()};
     }
 
-#if 0
     value_type limited() const {
         return std::max(START, std::min(STOP, value_));
     }
@@ -57,7 +56,6 @@ class Ranged {
     operator Ranged<Range2>() const {
         return timedata::scale<Range2>(timedata::unscale<Range>(value_));
     }
-#endif
 
     explicit operator bool() const { return value_ != 0.0f; }
     operator value_type&() { return value_; }

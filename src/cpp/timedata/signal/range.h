@@ -31,9 +31,6 @@ struct Range255 {
 template <typename T>
 using ValueType = typename T::value_type;
 
-template <typename Range>
-using NormalType = Normal<ValueType<Range>>;
-
 /** Unscale a ranged number to a range of [0, 1].  Numbers out of band get
     scaled proportionately. */
 template <typename Range>

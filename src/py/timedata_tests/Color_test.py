@@ -211,6 +211,6 @@ class TestColor256(unittest.TestCase):
                          Color(3, 2, 3))
 
     def test_conversions(self):
-        with self.assertRaises(ValueError):
-            Color(Colors255.red)
-        Color(*Colors255.red)
+        for name in Color.names():
+            name = str(Color(name))  # Get the canonical name.
+            self.assertEqual(str(Color256(Color255(Color(name)))), name)

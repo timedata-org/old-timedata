@@ -15,7 +15,7 @@ cdef extern from "<$include_file>" namespace "$namespace":
     bool resolvePythonIndex(int& index, size_t size)
 
 ### define
-    MODEL = className[C$classname]()
+    MODEL = loadConverter[C$classname]()
 
     def __init__($classname self, *args):
         """A $classname can be constructed as follows:
@@ -23,7 +23,7 @@ cdef extern from "<$include_file>" namespace "$namespace":
         * The empty constructor $classname() sets each component to zero.
 
         * ${classname}s can be constructed intuitively from string names.
-          Details TBD.
+          Details TODO.
 
         * Constructing from a $number_type sets each component to that
           value.
@@ -54,8 +54,7 @@ cdef extern from "<$include_file>" namespace "$namespace":
             if m:
                 model = m
                 pointer = a._get_pointer()
-                error = convertTo[C$classname](pointer, model, self.cdata)
-                if not error:
+                if convertSamples[C$classname](pointer, model, self.cdata):
                     return
                 raise ValueError("Can't convert from model %s, value %s" %
                                  (model, a))

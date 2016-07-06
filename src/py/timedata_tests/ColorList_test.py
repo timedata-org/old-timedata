@@ -1,6 +1,6 @@
 import unittest
 
-from timedata import Color, ColorList, Colors
+from timedata import *
 
 class TestColorList(unittest.TestCase):
     def test_trivial(self):
@@ -277,3 +277,13 @@ class TestColorList(unittest.TestCase):
         cl = ColorList(((-0.2, -0.2, -0.4), (0.2, 0.2, 0.4)))
         self.assertEqual(str(cl),
                          '((-0.2, -0.2, -0.4), (0.2, 0.2, 0.4))')
+
+    def test_conversions(self):
+        cl = ColorList(('red', 'green', 'blue'))
+        self.assertEqual(str(cl), str(ColorList255(cl)))
+        self.assertEqual(str(cl), str(ColorList256(cl)))
+        x = cl
+        for c in ColorList255, ColorList256, ColorList:
+            x = c(x)
+        self.assertEqual(x.distance(cl), 0)
+        self.assertEqual(x, cl)

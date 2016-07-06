@@ -1,7 +1,7 @@
-cdef extern from "<timedata/signal/convert.h>" namespace "timedata":
+cdef extern from "<timedata/signal/convert_inl.h>" namespace "timedata::converter":
     ctypedef uint64_t PointerAsInt
 
     cdef PointerAsInt referenceToInteger[T](T&)
 
-    string className[T]()
-    string convertTo[T](PointerAsInt input, string model, T& result)
+    string loadConverter[T]()
+    bool convertSamples[T](PointerAsInt input, string model, T& out)

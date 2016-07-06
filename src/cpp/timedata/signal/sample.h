@@ -37,7 +37,7 @@ struct Sample : SampleBase<Model, Range> {
         using range_type = Range;
         using ranged_type = typename Sample::value_type;
         using sample_type = Sample;
-        using value_type = ValueType<ListBase>;
+        using value_type = Sample;
     };
 
     // TODO: need to use std::initializer_list!
@@ -121,13 +121,21 @@ struct Sample : SampleBase<Model, Range> {
     }
 };
 
-template <typename T>
-using NumberType = typename T::number_type;
+template <typename Model, typename Range>
+void convertSamples(Sample<Model, Range> const& in,
+                    Sample<Model, Range>& out) {
+    out = in;
+}
 
-template <typename T>
-using RangedType = typename T::ranged_type;
+template <typename Model, typename RangeIn, typename RangeOut>
+void convertSamples(Sample<Model, RangeIn> const& in,
+                    Sample<Model, RangeOut>& out) {
+    for (size_t i = 0; i < out.size(); ++i)
+        out[i] = in[i];
+}
 
-template <typename T>
-using SampleType = typename T::sample_type;
+template <typename T> using NumberType = typename T::number_type;
+template <typename T> using RangedType = typename T::ranged_type;
+template <typename T> using SampleType = typename T::sample_type;
 
 }  // timedata

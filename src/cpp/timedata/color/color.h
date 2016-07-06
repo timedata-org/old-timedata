@@ -21,4 +21,15 @@ template <> inline std::string className<Color>() { return "RGBColor"; }
 template <> inline std::string className<Color255>() { return "RGBColor255"; }
 template <> inline std::string className<Color256>() { return "RGBColor256"; }
 
+template <typename Sample>
+struct NormalSample {
+    // TODO: conflicts with Normal, the range.
+    /* Right now, we only have one family of Sample, so everything shares the
+       same base and is interconvertible. */
+    using normal_type = Color;
+};
+
+template <typename Sample>
+using NormalType = typename NormalSample<Sample>::normal_type;
+
 } // timedata
