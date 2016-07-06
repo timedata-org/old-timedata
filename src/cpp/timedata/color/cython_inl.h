@@ -10,9 +10,9 @@
 namespace timedata {
 namespace color {
 
-using CColor = ColorRGB;
-using CColor256 = ColorRGB256;
-using CColor255 = ColorRGB255;
+using CColorRGB = ColorRGB;
+using CColorRGB256 = ColorRGB256;
+using CColorRGB255 = ColorRGB255;
 
 template <typename Color>
 std::string toString(Color const& x) {

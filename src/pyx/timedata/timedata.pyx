@@ -17,8 +17,7 @@ locals().update(
 #     Fade=_FadeImpl,
 #     Render3=_Render3Impl,
      Stripe=_Stripe,
-     )
+     **_make_module())
 
-color = _make_module()
 
 print(timestamp())

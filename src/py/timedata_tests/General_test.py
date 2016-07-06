@@ -1,6 +1,6 @@
 import unittest
 
-from timedata import compile_timestamp, Color, Color256
+from timedata import compile_timestamp
 
 class TestGeneral(unittest.TestCase):
     def test_timestamp(self):

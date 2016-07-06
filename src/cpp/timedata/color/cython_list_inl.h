@@ -14,6 +14,10 @@
 namespace timedata {
 namespace color_list {
 
+using CColorListRGB = color::CColorRGB::List;
+using CColorListRGB255 = color::CColorRGB255::List;
+using CColorListRGB256 = color::CColorRGB256::List;
+
 template <typename ColorList>
 std::string toString(ColorList const& colors) {
     std::string result = "(";
@@ -71,10 +75,6 @@ NumberType<ColorList> compare(NumberType<ColorList> x, ColorList const& y) {
 
     return 0;
 }
-
-using CColorList = color::CColor::List;
-using CColorList255 = color::CColor255::List;
-using CColorList256 = color::CColor256::List;
 
 template <typename ColorVector>
 ColorVector sliceOut(ColorVector const& in, int begin, int end, int step) {

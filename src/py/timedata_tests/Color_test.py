@@ -1,6 +1,9 @@
 import unittest
 
-from timedata import Color255, Color256, Color
+from timedata import *
+
+c255 = color.rgb.c255
+c256 = color.rgb.c256
 
 Colors = Color.by_name
 
@@ -135,22 +138,22 @@ class TestColor(unittest.TestCase):
 
 class TestColor256(unittest.TestCase):
     def test_first(self):
-        white = Color256(256, 256, 256)
+        white = c256.Color(256, 256, 256)
         self.assertEqual(str(white), 'white')
         self.assertEqual(white[:], white)
         self.assertEqual(white[::-1], white)
         self.assertEqual(white[0:2], (256, 256))
 
     def test_string(self):
-        self.assertEqual(list(Color256('white')), [256, 256, 256])
-        self.assertEqual(repr(Color256(512, 512, 512)),
-                         'Color256(512, 512, 512)')
-        self.assertEqual(repr(Color255(255, 510, 765)),
-                         'Color255(255, 510, 765)')
+        self.assertEqual(list(c256.Color('white')), [256, 256, 256])
+        self.assertEqual(repr(c256.Color(512, 512, 512)),
+                         'ColorRGB256(512, 512, 512)')
+        self.assertEqual(repr(c255.Color(255, 510, 765)),
+                         'ColorRGB255(255, 510, 765)')
 
     def test_red(self):
-        red = Color256((256, 0, 0))
-        blue = Color256('blue')
+        red = c256.Color((256, 0, 0))
+        blue = c256.Color('blue')
 
         self.assertEqual(str(red), 'red')
         self.assertEqual(red[:], red)
@@ -162,7 +165,7 @@ class TestColor256(unittest.TestCase):
 
     def test_arithmetic(self):
         black, red, green, blue, white, yellow, cyan, magenta = (
-            Color256(i) for i in ('black', 'red', 'green', 'blue', 'white',
+            c256.Color(i) for i in ('black', 'red', 'green', 'blue', 'white',
                                   'yellow', 'cyan', 'magenta'))
 
         self.assertEqual(red + green + blue, white)
@@ -181,11 +184,11 @@ class TestColor256(unittest.TestCase):
         self.assertEqual(white * cyan / 256, cyan)
 
     def test_methods(self):
-        a = (Color256('red') + Color256('blue') * 0.5).rotated(-1)
-        b = Color256('green') + Color256('red') * 0.5
+        a = (c256.Color('red') + c256.Color('blue') * 0.5).rotated(-1)
+        b = c256.Color('green') + c256.Color('red') * 0.5
         self.assertTrue(a.distance(b) < 0.0001)
-        self.assertEqual(Color256('red').rotated(1), Color256('blue'))
-        self.assertEqual(Color256().RANGE, 256.0)
+        self.assertEqual(c256.Color('red').rotated(1), c256.Color('blue'))
+        self.assertEqual(c256.Color().RANGE, 256.0)
 
     def test_names(self):
         self.assertEqual(len(Color.names), 481)
@@ -214,4 +217,4 @@ class TestColor256(unittest.TestCase):
     def test_conversions(self):
         for name in Color.names:
             name = str(Color(name))  # Get the canonical name.
-            self.assertEqual(str(Color256(Color255(Color(name)))), name)
+            self.assertEqual(str(c256.Color(c255.Color(Color(name)))), name)

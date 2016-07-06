@@ -9,8 +9,8 @@ def _add_classes(d):
 
     results = {}
     for name in '', '255', '256':
-        cname = 'Color' + name
-        lname = 'ColorList' + name
+        cname = 'ColorRGB' + name
+        lname = 'ColorListRGB' + name
         rng = float(name or '1')
 
         sub(Color, cname, range=rng)

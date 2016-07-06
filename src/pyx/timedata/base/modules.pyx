@@ -2,7 +2,7 @@ def _make_module():
     def make(package, name, **kwds):
         import types
         m = types.ModuleType(name)
-        package = package + '.' + name
+        package = package + ('.' if package else '') + name
         m.__package__ = package
         for k, v in kwds.items():
             if isinstance(v, dict):
@@ -11,18 +11,21 @@ def _make_module():
         return m
 
     normal = dict(
-        Color=Color,
-        ColorList=ColorList)
+        Color=ColorRGB,
+        ColorList=ColorListRGB)
 
-    return make(
-        'timedata', 'color',
-        rgb=dict(
-            normal=normal,
-            c255=dict(
-                Color=Color255,
-                ColorList=ColorList255),
-            c256=dict(
-                Color=Color256,
-                ColorList=ColorList256),
+    d = make(
+        '', 'timedata',
+        color=dict(
+            rgb=dict(
+                normal=normal,
+                c255=dict(
+                    Color=ColorRGB255,
+                    ColorList=ColorListRGB255),
+                c256=dict(
+                    Color=ColorRGB256,
+                    ColorList=ColorListRGB256),
+                **normal),
             **normal),
-        **normal)
+        **normal).__dict__
+    return {k: v for (k, v) in d.items() if not k.startswith('_')}
