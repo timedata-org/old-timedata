@@ -19,7 +19,6 @@ locals().update(
      Stripe=_Stripe,
      )
 
-_load_colors()
 color = _make_module()
 
 print(timestamp())

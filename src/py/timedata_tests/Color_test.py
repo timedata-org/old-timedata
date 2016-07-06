@@ -1,6 +1,8 @@
 import unittest
 
-from timedata import Color255, Color256, Color, Colors, Colors255
+from timedata import Color255, Color256, Color
+
+Colors = Color.by_name
 
 class TestColor(unittest.TestCase):
     def test_white(self):
@@ -186,9 +188,8 @@ class TestColor256(unittest.TestCase):
         self.assertEqual(Color256().RANGE, 256.0)
 
     def test_names(self):
-        names = Color.names()
-        self.assertEqual(len(names), 481)
-        self.assertEqual(names[:10], [
+        self.assertEqual(len(Color.names), 481)
+        self.assertEqual(Color.names[:10], (
             'alice blue',
             'antique white',
             'antique white 1',
@@ -198,7 +199,7 @@ class TestColor256(unittest.TestCase):
             'aqua',
             'aquamarine',
             'aquamarine 1',
-            'aquamarine 2'])
+            'aquamarine 2'))
 
     def test_limit(self):
         self.assertEqual((Colors.red * 2).limit_max(0), Colors.black)
@@ -211,6 +212,6 @@ class TestColor256(unittest.TestCase):
                          Color(3, 2, 3))
 
     def test_conversions(self):
-        for name in Color.names():
+        for name in Color.names:
             name = str(Color(name))  # Get the canonical name.
             self.assertEqual(str(Color256(Color255(Color(name)))), name)

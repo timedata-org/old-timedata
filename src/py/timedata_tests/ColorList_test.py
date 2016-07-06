@@ -1,6 +1,7 @@
 import unittest
 
 from timedata import *
+Colors = Color.by_name
 
 class TestColorList(unittest.TestCase):
     def test_trivial(self):

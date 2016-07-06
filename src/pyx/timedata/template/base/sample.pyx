@@ -17,6 +17,8 @@ cdef extern from "<$include_file>" namespace "$namespace":
 ### define
     MODEL = loadConverter[C$classname]()
 
+    names, by_name = _colors_by_name($classname)
+
     def __init__($classname self, *args):
         """A $classname can be constructed as follows:
 

@@ -28,7 +28,7 @@ class TestOperations(unittest.TestCase):
                           ['white', 'gray 75', 'gray 50', 'gray 25', 'black'])
 
     def test_spread(self):
-        r, g = Colors.red, Colors.green
+        r, g = Color.by_name.red, Color.by_name.green
         self.assertSpread(
             [r, 2, 6, g],
             [r,

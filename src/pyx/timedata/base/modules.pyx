@@ -12,20 +12,7 @@ def _make_module():
 
     normal = dict(
         Color=Color,
-        ColorList=ColorList,
-        Colors=Colors)
-
-    rgb=dict(
-        normal=normal,
-        c255=dict(
-            Color=Color255,
-            ColorList=ColorList255,
-            Colors=Colors255),
-        c256=dict(
-            Color=Color256,
-            ColorList=ColorList256,
-            Colors=Colors256),
-        **normal)
+        ColorList=ColorList)
 
     return make(
         'timedata', 'color',
@@ -33,11 +20,9 @@ def _make_module():
             normal=normal,
             c255=dict(
                 Color=Color255,
-                ColorList=ColorList255,
-                Colors=Colors255),
+                ColorList=ColorList255),
             c256=dict(
                 Color=Color256,
-                ColorList=ColorList256,
-                Colors=Colors256),
+                ColorList=ColorList256),
             **normal),
         **normal)

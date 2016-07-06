@@ -1,6 +1,7 @@
 #pragma once
 
 #include <timedata/color/names_table.h>
+#include <timedata/base/stl.h>
 
 namespace timedata {
 

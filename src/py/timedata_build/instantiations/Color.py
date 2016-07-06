@@ -11,12 +11,6 @@ methods = add_methods(
     methods,
 
     static=dict(
-        strings=(
-            dict(name_cpp='colorNames',
-                 name_py='names',
-                 documentation='Return a list of all names for $classname'),
-            ),  # TODO: that substitution for $classname doesn't happen.
-
         from_cpp=(
             dict(name='from_hex',
                  argument_type='uint32_t',
