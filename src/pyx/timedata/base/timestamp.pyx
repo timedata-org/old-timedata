@@ -8,3 +8,7 @@ def compile_timestamp():
 
 def git_tags():
     return gitTags().decode('ascii')
+
+def timestamp():
+    return 'timedata compiled on %s with tags %s' % (
+        compile_timestamp(), git_tags())
