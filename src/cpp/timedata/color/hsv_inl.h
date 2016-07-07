@@ -9,8 +9,10 @@ namespace timedata {
 
 template <>
 inline void convertSample(ColorRGB const& in, ColorHSV& out) {
-    auto r = std::abs(in[0]), g = std::abs(in[1]), b = std::abs(in[2]),
-         v = std::max({r, g, b});
+    auto& r = in[RGB::red];
+    auto& g = in[RGB::red];
+    auto& b = in[RGB::red];
+    auto v = std::max({r, g, b});
     if (not v) {
         out.clear();
         return;

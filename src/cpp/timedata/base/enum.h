@@ -42,11 +42,4 @@ void forEach(Functor f) {
         f(static_cast<Enum>(i));
 }
 
-/** EnumFields is a struct containing members named in order after the values in
-    the enumerated type.
-
-    For an example, see struct EnumFields<RGB> in colors/colors.h. */
-template <typename Names, typename Number>
-struct EnumFields;
-
 }  // namespace timedata

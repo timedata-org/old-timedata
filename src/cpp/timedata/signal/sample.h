@@ -26,6 +26,8 @@ struct Sample : SampleBase<Model, Range> {
     using FunctionPointer = number_type (*)(number_type);
 
     using base_type::base_type;
+    using base_type::operator[];
+
     static const auto SIZE = enumSize<Model>();
 
     using ListBase = std::vector<Sample>;
@@ -45,8 +47,13 @@ struct Sample : SampleBase<Model, Range> {
             : base_type{{r, g, b}} {
     }
 
-    Sample() { clear(); }
-    void clear() { base_type::fill({}); }
+    Sample() {
+        clear();
+    }
+
+    void clear() {
+        base_type::fill({});
+    }
 
     template <typename Function>
     Sample& into(Function f) {
@@ -78,6 +85,14 @@ struct Sample : SampleBase<Model, Range> {
     static Sample infinity() {
         auto inf = value_type::infinity();
         return {inf, inf, inf};
+    }
+
+    value_type const& operator[](Model m) const {
+        return base_type::at(static_cast<size_t>(m));
+    }
+
+    value_type& operator[](Model m) {
+        return base_type::at(static_cast<size_t>(m));
     }
 
     number_type cmp(Sample const& x) const {
