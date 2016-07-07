@@ -73,7 +73,7 @@ std::string loadConverter() {
 }
 
 template <typename T>
-bool convertSamples(PointerAsInt inPtr, std::string const& modelName, T& out) {
+bool convertSample(PointerAsInt inPtr, std::string const& modelName, T& out) {
     auto i = converters().find(modelName);
     if (i == converters().end()) {
         log("Couldn't find converter", modelName);
@@ -108,7 +108,7 @@ template <typename Sample>
 Ptr<Deletable> convertFrom(PointerAsInt p) {
     auto& in = integerToReference<Sample const>(p);
     auto out = makeWrapper<NormalType<Sample>>();
-    convertSamples(in, out->value);
+    convertSample(in, out->value);
     return std::move(out);
 }
 
@@ -116,7 +116,7 @@ template <typename Sample>
 void convertTo(Deletable const& input, PointerAsInt outPtr) {
     auto& out = integerToReference<Sample>(outPtr);
     if (auto in = unwrap<NormalType<Sample>>(input))
-        convertSamples(*in, out);
+        convertSample(*in, out);
     else
         log("Horrible programmer error", className<Sample>());
 }

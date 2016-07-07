@@ -8,18 +8,24 @@
 namespace timedata {
 
 enum class RGB { red, green, blue, last = blue };
-enum class HSB { hue, saturation, brightness, last = brightness };
 
-template <> inline std::string className<RGB>() { return "RGB"; }
-template <> inline std::string className<HSB>() { return "HSB"; }
-
-using ColorRGB = Sample<RGB, Normal<float>>;
-using ColorRGB256 = Sample<RGB, EightBit<float>>;
+using ColorRGB = Sample<RGB>;
+using ColorRGB256 = Sample<RGB, Range256<float>>;
 using ColorRGB255 = Sample<RGB, Range255<float>>;
 
 template <> inline std::string className<ColorRGB>() { return "ColorRGB"; }
 template <> inline std::string className<ColorRGB255>() { return "ColorRGB255"; }
 template <> inline std::string className<ColorRGB256>() { return "ColorRGB256"; }
+
+enum class HSV { hue, saturation, value, last = value };
+
+using ColorHSV = Sample<HSV>;
+using ColorHSV256 = Sample<HSV, Range256<float>>;
+using ColorHSV255 = Sample<HSV, Range255<float>>;
+
+template <> inline std::string className<ColorHSV>() { return "ColorHSV"; }
+template <> inline std::string className<ColorHSV255>() { return "ColorHSV255"; }
+template <> inline std::string className<ColorHSV256>() { return "ColorHSV256"; }
 
 template <typename Sample>
 struct NormalSample {

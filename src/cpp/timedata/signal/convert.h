@@ -49,7 +49,40 @@ T& integerToReference(PointerAsInt t) {
 
 /** Converts samples from one model to another, returning true on success. */
 template <typename T>
-bool convertSamples(PointerAsInt inPtr, std::string const& inputModel, T& out);
+bool convertSample(PointerAsInt inPtr, std::string const& inputModel, T& out);
+
+
+template <typename Model, typename Range>
+void convertSample(Sample<Model, Range> const& in,
+                   Sample<Model, Range>& out) {
+    out = in;
+}
+
+template <typename Model, typename RangeIn, typename RangeOut>
+void convertSample(Sample<Model, RangeIn> const& in,
+                   Sample<Model, RangeOut>& out) {
+    for (size_t i = 0; i < out.size(); ++i)
+        out[i] = in[i];
+}
+
+#if 0
+template <typename ModelIn, typename ModelOut>
+void convertSample(Sample<ModelIn> const& in, Sample<ModelOut>& out);
+
+template <typename ModelIn, typename ModelOut, typename RangeIn>
+void convertSample(Sample<ModelIn, RangeIn> const& in, Sample<ModelOut>& out) {
+    Sample<ModelIn> normalIn;
+    convertSample(in, normalIn);
+    convertSample(normalIn, out);
+}
+
+template <typename ModelIn, typename ModelOut, typename RangeOut>
+void convertSample(Sample<ModelIn> const& in, Sample<ModelOut, RangeOut>& out) {
+    Sample<ModelOut> normalOut;
+    convertSample(in, normalOut);
+    convertSample(normalOut, out);
+}
+#endif
 
 } // converter
 } // timedata

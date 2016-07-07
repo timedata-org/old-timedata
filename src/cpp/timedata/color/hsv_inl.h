@@ -6,13 +6,17 @@
 namespace timedata {
 
 // See https://www.cs.rit.edu/~ncs/color/t_convert.html for these next two.
-Color rgbToHsv(Color c) {
-    auto r = std::abs(c[0]), g = std::abs(c[1]), b = std::abs(c[2]),
-         v = std::max(r, std::max(g, b));
-    if (not v)
-        return {-1, 0, 0};
 
-    auto delta = v - std::min(r, std::min(g, b));
+template <>
+inline void convertSample(ColorRGB const& in, ColorHSV& out) {
+    auto r = std::abs(in[0]), g = std::abs(in[1]), b = std::abs(in[2]),
+         v = std::max({r, g, b});
+    if (not v) {
+        out.clear();
+        return;
+    }
+
+    auto delta = v - std::min({r, g, b});
     auto s = delta / v;
     float h;
     if (r == v)
@@ -25,7 +29,7 @@ Color rgbToHsv(Color c) {
     if (h < 0)
         h += 1;
 
-    return {h, s, v};
+    out = {h, s, v};
 }
 
 Color hsvToRgb(Color c) {
@@ -46,24 +50,6 @@ Color hsvToRgb(Color c) {
         case 4:  return {t(), p(), v};
         default: return {v, p(), q()};
     }
-}
-
-Color rgbToHsv(Color c, Base base) {
-    if (base == Base::integer)
-        c = {*c[0] / 255.0f, *c[1] / 255.0f, *c[2] / 255.0f};
-    c = rgbToHsv(c);
-    if (base == Base::integer)
-        c = {*c[0] * 255.0f, *c[1] * 255.0f, *c[2] * 255.0f};
-    return c;
-}
-
-Color hsvToRgb(Color c, Base base) {
-    if (base == Base::integer)
-        c = {*c[0] / 255.0f, *c[1] / 255.0f, *c[2] / 255.0f};
-    c = hsvToRgb(c);
-    if (base == Base::integer)
-        c = {*c[0] * 255.0f, *c[1] * 255.0f, *c[2] * 255.0f};
-    return c;
 }
 
 } // timedata

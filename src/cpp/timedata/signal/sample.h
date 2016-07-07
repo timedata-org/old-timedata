@@ -13,7 +13,7 @@ namespace timedata {
 template <typename Model, typename Range>
 using SampleBase = std::array<Ranged<Range>, enumSize<Model>()>;
 
-template <typename Model, typename Range>
+template <typename Model, typename Range = Normal<float>>
 struct Sample : SampleBase<Model, Range> {
     using base_type = SampleBase<Model, Range>;
     using model_type = Model;
@@ -44,9 +44,9 @@ struct Sample : SampleBase<Model, Range> {
     Sample(value_type r, value_type g, value_type b)
             : base_type{{r, g, b}} {
     }
-    Sample() {
-        base_type::fill(0);
-    }
+
+    Sample() { clear(); }
+    void clear() { base_type::fill({}); }
 
     template <typename Function>
     Sample& into(Function f) {
@@ -120,19 +120,6 @@ struct Sample : SampleBase<Model, Range> {
         });
     }
 };
-
-template <typename Model, typename Range>
-void convertSamples(Sample<Model, Range> const& in,
-                    Sample<Model, Range>& out) {
-    out = in;
-}
-
-template <typename Model, typename RangeIn, typename RangeOut>
-void convertSamples(Sample<Model, RangeIn> const& in,
-                    Sample<Model, RangeOut>& out) {
-    for (size_t i = 0; i < out.size(); ++i)
-        out[i] = in[i];
-}
 
 template <typename T> using NumberType = typename T::number_type;
 template <typename T> using RangedType = typename T::ranged_type;

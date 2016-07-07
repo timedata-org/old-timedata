@@ -13,7 +13,7 @@ struct Normal {
 };
 
 template <typename T = float>
-struct EightBit {
+struct Range256 {
     using value_type = T;
 
     static constexpr auto START = value_type(0);

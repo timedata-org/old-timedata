@@ -56,7 +56,7 @@ cdef extern from "<$include_file>" namespace "$namespace":
             if m:
                 model = m
                 pointer = a._get_pointer()
-                if convertSamples[C$classname](pointer, model, self.cdata):
+                if convertSample[C$classname](pointer, model, self.cdata):
                     return
                 raise ValueError("Can't convert from model %s, value %s" %
                                  (model, a))
