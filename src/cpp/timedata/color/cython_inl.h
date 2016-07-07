@@ -4,7 +4,9 @@
 #include <timedata/base/enum.h>
 #include <timedata/base/math.h>
 #include <timedata/base/rotate.h>
-#include <timedata/color/color.h>
+#include <timedata/signal/sample.h>
+#include <timedata/color/rgb.h>
+#include <timedata/color/hsv.h>
 #include <timedata/color/names_inl.h>
 
 namespace timedata {

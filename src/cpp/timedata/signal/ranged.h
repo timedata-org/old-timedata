@@ -59,10 +59,10 @@ class Ranged {
 
     explicit operator bool() const { return value_ != 0.0f; }
     operator value_type&() { return value_; }
-    operator value_type() const { return value_; }
+    operator value_type const&() const { return value_; }
 
     value_type& operator*() { return value_; }
-    value_type operator*() const { return value_; }
+    value_type const &operator*() const { return value_; }
 
     Ranged operator-() const { return {-value_}; }
 

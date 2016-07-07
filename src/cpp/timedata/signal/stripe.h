@@ -1,7 +1,7 @@
 #pragma once
 
 #include <timedata/base/enum.h>
-#include <timedata/color/color.h>
+#include <timedata/color/rgb.h>
 
 namespace timedata {
 

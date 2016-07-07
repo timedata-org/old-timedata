@@ -6,7 +6,6 @@
 #include <iostream>
 #include <map>
 
-#include <timedata/color/names.h>
 #include <timedata/base/enum.h>
 #include <timedata/base/throw.h>
 #include <timedata/base/math_inl.h>

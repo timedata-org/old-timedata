@@ -47,16 +47,19 @@ T& integerToReference(PointerAsInt t) {
     return *reinterpret_cast<T*>(t);
 }
 
-/** Converts samples from one model to another, returning true on success. */
+/** Converts samples from one model to another, returning true on success.
+
+    Sample conversion is only guaranteed to have a reasonable result on in-band
+    signals.  For out-of-band values, the only guarantee you get is that it
+    won't crash and it will return some value - there are no guarantees that
+    this operation is one-to-one or onto or invertible or anything else.
+
+    For in-band conversions, convertSample is guaranteed to give results that
+    are as invertible as possible, given that not every color model directly
+    maps onto every part of every other one...
+*/
 template <typename T>
 bool convertSample(PointerAsInt inPtr, std::string const& inputModel, T& out);
-
-
-template <typename Model, typename Range>
-void convertSample(Sample<Model, Range> const& in,
-                   Sample<Model, Range>& out) {
-    out = in;
-}
 
 template <typename Model, typename RangeIn, typename RangeOut>
 void convertSample(Sample<Model, RangeIn> const& in,
@@ -65,24 +68,31 @@ void convertSample(Sample<Model, RangeIn> const& in,
         out[i] = in[i];
 }
 
-#if 0
-template <typename ModelIn, typename ModelOut>
+/** Convert between normalized versions of two different models. */
+template <typename ModelIn,
+          typename ModelOut,
+          typename = enable_if_t<not std::is_same<ModelIn, ModelOut>::value>>
 void convertSample(Sample<ModelIn> const& in, Sample<ModelOut>& out);
 
-template <typename ModelIn, typename ModelOut, typename RangeIn>
+template <typename ModelIn,
+          typename ModelOut,
+          typename RangeIn,
+          typename = enable_if_t<not std::is_same<ModelIn, ModelOut>::value>>
 void convertSample(Sample<ModelIn, RangeIn> const& in, Sample<ModelOut>& out) {
     Sample<ModelIn> normalIn;
     convertSample(in, normalIn);
     convertSample(normalIn, out);
 }
 
-template <typename ModelIn, typename ModelOut, typename RangeOut>
+template <typename ModelIn,
+          typename ModelOut,
+          typename RangeOut,
+          typename = enable_if_t<not std::is_same<ModelIn, ModelOut>::value>>
 void convertSample(Sample<ModelIn> const& in, Sample<ModelOut, RangeOut>& out) {
     Sample<ModelOut> normalOut;
     convertSample(in, normalOut);
     convertSample(normalOut, out);
 }
-#endif
 
 } // converter
 } // timedata
