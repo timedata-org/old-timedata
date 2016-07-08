@@ -6,6 +6,7 @@
 #include <timedata/base/rotate.h>
 #include <timedata/signal/sample.h>
 #include <timedata/color/rgb.h>
+#include <timedata/color/hsl.h>
 #include <timedata/color/hsv.h>
 #include <timedata/color/names_inl.h>
 
@@ -15,9 +16,14 @@ namespace color {
 using CColorRGB = ColorRGB;
 using CColorRGB256 = ColorRGB256;
 using CColorRGB255 = ColorRGB255;
+
 using CColorHSV = ColorHSV;
 using CColorHSV256 = ColorHSV256;
 using CColorHSV255 = ColorHSV255;
+
+using CColorHSL = ColorHSL;
+using CColorHSL256 = ColorHSL256;
+using CColorHSL255 = ColorHSL255;
 
 template <typename Color>
 std::string toString(Color const& x) {

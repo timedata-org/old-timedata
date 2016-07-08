@@ -11,6 +11,7 @@ def _add_classes(d):
     for model, prop in (
             ('RGB', ('red', 'green', 'blue')),
             ('HSV', ('hue', 'saturation', 'value')),
+            ('HSL', ('hue', 'saturation', 'lightness')),
             ):
         for name in '', '255', '256':
             cname = 'Color' + model + name
