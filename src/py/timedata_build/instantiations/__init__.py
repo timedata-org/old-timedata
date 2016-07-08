@@ -8,13 +8,17 @@ def _add_classes(d):
         results[name] = substitute_context(cl.__dict__, name=name, **kwds)
 
     results = {}
-    for name in '', '255', '256':
-        cname = 'ColorRGB' + name
-        lname = 'ColorListRGB' + name
-        rng = float(name or '1')
+    for model, prop in (
+            ('RGB', ('red', 'green', 'blue')),
+#            ('HSV', ('hue', 'saturation', 'value')),
+            ):
+        for name in '', '255', '256':
+            cname = 'Color' + model + name
+            lname = 'ColorList' + model + name
+            rng = float(name or '1')
 
-        sub(Color, cname, range=rng)
-        sub(ColorList, lname, range=rng, sampleclass=cname)
+            sub(Color, cname, range=rng, properties=prop)
+            sub(ColorList, lname, range=rng, sampleclass=cname, properties=prop)
     return results
 
 

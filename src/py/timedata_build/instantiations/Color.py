@@ -2,7 +2,6 @@ from . SampleBase import *
 
 start = 0.0
 include_file = 'timedata/color/cython_inl.h'
-properties = 'red', 'green', 'blue'
 namespace = 'timedata::color'
 size = 3
 documentation = 'FIXME'
