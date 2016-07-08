@@ -1,6 +1,7 @@
 #pragma once
 
 #include <timedata/color/rgb.h>
+#include <timedata/signal/convert.h>
 
 namespace timedata {
 
@@ -19,7 +20,7 @@ namespace converter {
 // See: https://www.cs.rit.edu/~ncs/color/t_convert.html
 // http://codeitdown.com/hsl-hsb-hsv-color/
 
-//template <>
+template <>
 inline void convertSample(ColorRGB const& in, ColorHSV& out) {
     auto& red = *in[RGB::red];
     auto& green = *in[RGB::green];
@@ -48,8 +49,8 @@ inline void convertSample(ColorRGB const& in, ColorHSV& out) {
     if (hue < 0.0f)
         hue += 1.0f;
 }
-#if 0
-// template <>
+
+template <>
 inline void convertSample(ColorHSV const& in, ColorRGB& out) {
     auto& hue = *in[HSV::hue];
     auto& saturation = *in[HSV::saturation];
@@ -68,17 +69,16 @@ inline void convertSample(ColorHSV const& in, ColorRGB& out) {
     auto c = [&]() { return value * (1.0f - saturation * (1.0f - f)); };
     auto d = [&]() {
         switch (sector) {
-            case 0:  return {value, c(), a()};
-            case 1:  return {b(), value, a()};
-            case 2:  return {a(), value, c()};
-            case 3:  return {a(), b(), value};
-            case 4:  return {c(), a(), value};
-            default: return {value, a(), b()};
+            case 0:  return ColorRGB{value, c(), a()};
+            case 1:  return ColorRGB{b(), value, a()};
+            case 2:  return ColorRGB{a(), value, c()};
+            case 3:  return ColorRGB{a(), b(), value};
+            case 4:  return ColorRGB{c(), a(), value};
+            default: return ColorRGB{value, a(), b()};
         }
     };
     out = d();
 }
-#endif
 
 } // converter
 } // timedata

@@ -7,12 +7,47 @@
 #include <timedata/base/className.h>
 #include <timedata/base/deletable.h>
 #include <timedata/base/join.h>
-#include <timedata/color/rgb.h>  // oops!
-#include <timedata/color/hsv.h>  // oops!
+#include <timedata/color/rgb.h>
+#include <timedata/color/hsv.h>
 #include <timedata/signal/convert.h>
 
 namespace timedata {
 namespace converter {
+
+template <typename Model, typename RangeIn, typename RangeOut>
+void convertSample(Sample<Model, RangeIn> const& in,
+                   Sample<Model, RangeOut>& out) {
+    for (size_t i = 0; i < out.size(); ++i)
+        out[i] = in[i];
+}
+
+#if 0
+/** Convert between normalized versions of two different models. */
+template <typename ModelIn,
+          typename ModelOut,
+          typename = enable_if_t<not std::is_same<ModelIn, ModelOut>::value>>
+void convertSample(Sample<ModelIn> const& in, Sample<ModelOut>& out);
+#endif
+
+template <typename ModelIn,
+          typename ModelOut,
+          typename RangeIn,
+          typename = enable_if_t<not std::is_same<ModelIn, ModelOut>::value>>
+void convertSample(Sample<ModelIn, RangeIn> const& in, Sample<ModelOut>& out) {
+    Sample<ModelIn> normalIn;
+    convertSample(in, normalIn);
+    convertSample(normalIn, out);
+}
+
+template <typename ModelIn,
+          typename ModelOut,
+          typename RangeOut,
+          typename = enable_if_t<not std::is_same<ModelIn, ModelOut>::value>>
+void convertSample(Sample<ModelIn> const& in, Sample<ModelOut, RangeOut>& out) {
+    Sample<ModelOut> normalOut;
+    convertSample(in, normalOut);
+    convertSample(normalOut, out);
+}
 
 /** The problem: there are many different sample models, and some of them are
     interconvertible but some will not be.  How do we represent this in C++ in
@@ -43,7 +78,7 @@ namespace converter {
 /* Even though we're converting between a lot of different types, all this
    interface has to be uniform so we can put it into a single table.
 
-   So we hide the intermediate
+   So we hide the intermediate.
 */
 struct Converter {
     using From = Ptr<Deletable> (*)(PointerAsInt);
@@ -74,7 +109,8 @@ std::string loadConverter() {
 }
 
 template <typename T>
-bool convertSample(PointerAsInt inPtr, std::string const& modelName, T& out) {
+bool convertSampleCython(PointerAsInt inPtr,
+                         std::string const& modelName, T& out) {
     auto i = converters().find(modelName);
     if (i == converters().end()) {
         log("Couldn't find converter", modelName);

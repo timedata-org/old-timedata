@@ -1,5 +1,7 @@
 #pragma once
 
+#include <timedata/signal/sample.h>
+
 namespace timedata {
 namespace converter {
 
@@ -47,6 +49,10 @@ T& integerToReference(PointerAsInt t) {
     return *reinterpret_cast<T*>(t);
 }
 
+/** Generic conversion function*/
+template <typename Sample1, typename Sample2>
+void convertSample(Sample1 const& in, Sample2& out);
+
 /** Converts samples from one model to another, returning true on success.
 
     Sample conversion is only guaranteed to have a reasonable result on in-band
@@ -59,40 +65,8 @@ T& integerToReference(PointerAsInt t) {
     maps onto every part of every other one...
 */
 template <typename T>
-bool convertSample(PointerAsInt inPtr, std::string const& inputModel, T& out);
-
-template <typename Model, typename RangeIn, typename RangeOut>
-void convertSample(Sample<Model, RangeIn> const& in,
-                   Sample<Model, RangeOut>& out) {
-    for (size_t i = 0; i < out.size(); ++i)
-        out[i] = in[i];
-}
-
-/** Convert between normalized versions of two different models. */
-template <typename ModelIn,
-          typename ModelOut,
-          typename = enable_if_t<not std::is_same<ModelIn, ModelOut>::value>>
-void convertSample(Sample<ModelIn> const& in, Sample<ModelOut>& out);
-
-template <typename ModelIn,
-          typename ModelOut,
-          typename RangeIn,
-          typename = enable_if_t<not std::is_same<ModelIn, ModelOut>::value>>
-void convertSample(Sample<ModelIn, RangeIn> const& in, Sample<ModelOut>& out) {
-    Sample<ModelIn> normalIn;
-    convertSample(in, normalIn);
-    convertSample(normalIn, out);
-}
-
-template <typename ModelIn,
-          typename ModelOut,
-          typename RangeOut,
-          typename = enable_if_t<not std::is_same<ModelIn, ModelOut>::value>>
-void convertSample(Sample<ModelIn> const& in, Sample<ModelOut, RangeOut>& out) {
-    Sample<ModelOut> normalOut;
-    convertSample(in, normalOut);
-    convertSample(normalOut, out);
-}
+bool convertSampleCython(
+    PointerAsInt inPtr, std::string const& inputModel, T& out);
 
 } // converter
 } // timedata
