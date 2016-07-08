@@ -38,14 +38,12 @@ uint32_t colorToHex(Color c) {
     return total;
 }
 
-template <typename Color>
-std::string colorToString(Color c) {
-    using Range = typename Color::range_type;
-    auto bounded = [](ValueType<Color> x) {
-        return ValueType<Color>(std::abs(x)).inBand();
+inline std::string colorToStringNormal(ColorRGB const& c) {
+    auto bounded = [](Ranged<> x) {
+        return Ranged<>(std::abs(x)).inBand();
     };
     if (std::all_of(c.begin(), c.end(), bounded)) {
-        if (std::all_of(c.begin(), c.end(), isNearHex<Range>)) {
+        if (std::all_of(c.begin(), c.end(), isNearHex<Normal<>>)) {
             auto hex = colorToHex(c);
 
             auto i = colorMapInverse().find(hex);
@@ -54,11 +52,24 @@ std::string colorToString(Color c) {
         }
 
         if (isGray(c)) {
-            auto gray = 100.0f * std::abs(c[0].unscale());
+            auto gray = 100.0f * std::abs(c[0]);
             return "gray " + timedata::toString(gray, 4) + addNegatives(c);
         }
     }
-    return commaSeparated(c, 7);
+    return "";
+}
+
+inline std::string colorToString(ColorRGB const& c) {
+    auto s = colorToStringNormal(c);
+    return s.empty() ? commaSeparated(c, 7) : s;
+}
+
+template <typename Color>
+std::string colorToString(Color const& c) {
+    ColorRGB normal;
+    converter::convertSample(c, normal);
+    auto s = colorToStringNormal(normal);
+    return s.empty() ? commaSeparated(c, 7) : s;
 }
 
 }  // timedata

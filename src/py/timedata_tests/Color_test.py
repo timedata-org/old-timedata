@@ -4,8 +4,9 @@ from timedata import *
 
 c255 = color.rgb.c255
 c256 = color.rgb.c256
-
+HSV = color.hsv.Color
 Colors = Color.by_name
+HSVColors = HSV.by_name
 
 class TestColor(unittest.TestCase):
     def test_white(self):
@@ -218,3 +219,9 @@ class TestColor256(unittest.TestCase):
         for name in Color.names:
             name = str(Color(name))  # Get the canonical name.
             self.assertEqual(str(c256.Color(c255.Color(Color(name)))), name)
+
+class TestColorHSV(unittest.TestCase):
+    def test_basics(self):
+        for c in 'red', 'orange', 'yellow', 'green', 'black':
+            self.assertEqual(str(HSV(c)), c)
+            self.assertEqual(str(Color(HSV(c))), c)

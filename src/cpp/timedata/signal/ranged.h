@@ -11,7 +11,7 @@ namespace timedata {
     information around - the downside is that we have to instantiate a new
     template for each range we want, but since the total number is very small,
     this is almost free. */
-template <typename Range>
+template <typename Range = Normal<>>
 class Ranged {
   public:
     using value_type = ValueType<Range>;
