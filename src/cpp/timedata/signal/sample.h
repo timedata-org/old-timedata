@@ -108,32 +108,6 @@ struct Sample : SampleBase<Model, Range> {
     bool operator<=(Sample const& s) const { return cmp(s) <= 0; }
     bool operator>(Sample const& s) const { return cmp(s) > 0; }
     bool operator>=(Sample const& s) const { return cmp(s) >= 0; }
-
-    Sample operator+(Sample const& s) const { auto r = *this; return r += s; }
-    Sample operator-(Sample const& s) const { auto r = *this; return r -= s; }
-    Sample operator*(Sample const& s) const { auto r = *this; return r *= s; }
-    Sample operator/(Sample const& s) const { auto r = *this; return r /= s; }
-    Sample operator%(Sample const& s) const { auto r = *this; return r %= s; }
-
-    Sample& operator+=(Sample const& s) {
-        return into(s, [](value_type x, value_type y) { return x + y; });
-    }
-    Sample& operator-=(Sample const& s) {
-        return into(s, [](value_type x, value_type y) { return x - y; });
-    }
-    Sample& operator*=(Sample const& s) {
-        return into(s, [](value_type x, value_type y) { return x * y; });
-    }
-    Sample& operator/=(Sample const& s) {
-        return into(s, [](value_type x, value_type y) {
-            return divPython(x, y);
-        });
-    }
-    Sample& operator%=(Sample const& s) {
-        return into(s, [](value_type x, value_type y) {
-            return modPython(x, y);
-        });
-    }
 };
 
 template <typename T> using NumberType = typename T::number_type;

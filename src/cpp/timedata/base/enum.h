@@ -41,5 +41,5 @@ void forEach(Functor f) {
     for (uint8_t i = 0; i < enumSize<Enum>(); ++i)
         f(static_cast<Enum>(i));
 }
-
-}  // namespace timedata
+}
+ // namespace timedata
