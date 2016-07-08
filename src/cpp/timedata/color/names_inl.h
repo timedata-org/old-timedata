@@ -11,32 +11,24 @@
 #include <timedata/base/math_inl.h>
 #include <timedata/color/toString.h>
 #include <timedata/color/names_table_inl.h>
+#include <timedata/signal/convert_inl.h>
 
 namespace timedata {
 namespace detail {
 
-using HexColor = std::array<uint8_t, 3>;
-
-HexColor hexColor(uint hex) {
+template <typename Color>
+void hexToColor(uint hex, Color& out) {
     static const auto BYTE = 256;
 
-    auto b = static_cast<uint8_t>(hex % BYTE);
+    auto b = hex % BYTE;
     hex /= BYTE;
 
-    auto g = static_cast<uint8_t>(hex % BYTE);
+    auto g = hex % BYTE;
     hex /= BYTE;
 
-    auto r = static_cast<uint8_t>(hex % BYTE);
-    return {{r, g, b}};
-};
-
-template <typename Color>
-void hexToColor(uint hex, Color& result) {
-    auto h = hexColor(hex);
-    result = {
-        *Color::value_type::scale(h[0]) / 255,
-        *Color::value_type::scale(h[1]) / 255,
-        *Color::value_type::scale(h[2]) / 255};
+    auto r = hex % BYTE;
+    ColorRGB c{r / 255.0f, g / 255.0f, b / 255.0f};
+    converter::convertSample(c, out);
 };
 
 inline float strtof(const char *nptr, char const **endptr) {
