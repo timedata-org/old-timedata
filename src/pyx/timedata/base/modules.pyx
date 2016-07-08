@@ -10,22 +10,20 @@ def _make_module():
             setattr(m, k, v)
         return m
 
-    normal = dict(
-        Color=ColorRGB,
-        ColorList=ColorListRGB)
-
     d = make(
         '', 'timedata',
         color=dict(
             rgb=dict(
-                normal=normal,
-                c255=dict(
-                    Color=ColorRGB255,
-                    ColorList=ColorListRGB255),
-                c256=dict(
-                    Color=ColorRGB256,
-                    ColorList=ColorListRGB256),
-                **normal),
-            **normal),
-        **normal).__dict__
+                normal=dict(Color=ColorRGB, ColorList=ColorListRGB),
+                c255=dict(Color=ColorRGB255, ColorList=ColorListRGB255),
+                c256=dict(Color=ColorRGB256, ColorList=ColorListRGB256),
+                Color=ColorRGB, ColorList=ColorListRGB),
+            hsv=dict(
+                normal=dict(Color=ColorHSV, ColorList=ColorListHSV),
+                c255=dict(Color=ColorHSV255, ColorList=ColorListHSV255),
+                c256=dict(Color=ColorHSV256, ColorList=ColorListHSV256),
+                Color=ColorHSV, ColorList=ColorListHSV),
+            Color=ColorRGB, ColorList=ColorListRGB),
+        Color=ColorRGB, ColorList=ColorListRGB).__dict__
+
     return {k: v for (k, v) in d.items() if not k.startswith('_')}

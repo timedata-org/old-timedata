@@ -10,7 +10,7 @@ def _add_classes(d):
     results = {}
     for model, prop in (
             ('RGB', ('red', 'green', 'blue')),
-#            ('HSV', ('hue', 'saturation', 'value')),
+            ('HSV', ('hue', 'saturation', 'value')),
             ):
         for name in '', '255', '256':
             cname = 'Color' + model + name

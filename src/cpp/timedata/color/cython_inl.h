@@ -15,6 +15,9 @@ namespace color {
 using CColorRGB = ColorRGB;
 using CColorRGB256 = ColorRGB256;
 using CColorRGB255 = ColorRGB255;
+using CColorHSV = ColorHSV;
+using CColorHSV256 = ColorHSV256;
+using CColorHSV255 = ColorHSV255;
 
 template <typename Color>
 std::string toString(Color const& x) {

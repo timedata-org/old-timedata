@@ -21,18 +21,11 @@ void convertSample(Sample<Model, RangeIn> const& in,
         out[i] = in[i];
 }
 
-#if 0
-/** Convert between normalized versions of two different models. */
-template <typename ModelIn,
-          typename ModelOut,
-          typename = enable_if_t<not std::is_same<ModelIn, ModelOut>::value>>
-void convertSample(Sample<ModelIn> const& in, Sample<ModelOut>& out);
-#endif
-
 template <typename ModelIn,
           typename ModelOut,
           typename RangeIn,
-          typename = enable_if_t<not std::is_same<ModelIn, ModelOut>::value>>
+          typename = enable_if_t<not std::is_same<ModelIn, ModelOut>::value>,
+          typename = enable_if_t<not std::is_same<RangeIn, Normal<>>::value>>
 void convertSample(Sample<ModelIn, RangeIn> const& in, Sample<ModelOut>& out) {
     Sample<ModelIn> normalIn;
     convertSample(in, normalIn);
@@ -42,7 +35,8 @@ void convertSample(Sample<ModelIn, RangeIn> const& in, Sample<ModelOut>& out) {
 template <typename ModelIn,
           typename ModelOut,
           typename RangeOut,
-          typename = enable_if_t<not std::is_same<ModelIn, ModelOut>::value>>
+          typename = enable_if_t<not std::is_same<ModelIn, ModelOut>::value>,
+          typename = enable_if_t<not std::is_same<RangeOut, Normal<>>::value>>
 void convertSample(Sample<ModelIn> const& in, Sample<ModelOut, RangeOut>& out) {
     Sample<ModelOut> normalOut;
     convertSample(in, normalOut);
