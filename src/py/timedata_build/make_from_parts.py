@@ -1,5 +1,5 @@
 import collections
-from . import instantiations, util
+from . import class_descriptions, util
 
 
 def write(config, *, output_file=None, **kwds):
@@ -32,6 +32,6 @@ def write(config, *, output_file=None, **kwds):
 
 
 def execute():
-    for cname in instantiations.__all__:
-        c = getattr(instantiations, cname)
+    for cname in class_descriptions.__all__:
+        c = getattr(class_descriptions, cname)
         yield write(c.methods, **c.__dict__)
