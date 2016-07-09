@@ -54,19 +54,19 @@ def git_tags():
     return '%s+%s.%s' % (tags, branch, user)
 
 if IS_LINUX or IS_MAC:
+    OPTIMIZATION_FLAGS = ['-O3', '-DNDEBUG']
     COMPILE_ARGS = [
         '-std=c++11',
         '-ferror-limit=100',
-        '-O3',
-        '-DNDEBUG',
         '-DCOMPILE_TIMESTAMP="%s"' % datetime.datetime.utcnow().isoformat(),
+        '-DOPTIMIZATION_FLAGS="%s"' % ' '.join(OPTIMIZATION_FLAGS),
         '-DGIT_TAGS="%s"' % git_tags(),
         '-Wall',
         '-Wextra',
         '-Wpedantic',
         '-Wno-unused-function',
         '-Wno-extended-offsetof',
-    ]
+    ] + OPTIMIZATION_FLAGS
     if IS_MAC:
         COMPILE_ARGS.extend(['-mmacosx-version-min=10.9',
                              '-Wno-tautological-constant-out-of-range-compare'])

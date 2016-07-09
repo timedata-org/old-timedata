@@ -20,4 +20,12 @@ inline std::string gitTags() {
 #endif
 }
 
+inline std::string optimizationFlags() {
+#ifdef WINDOWS
+    return "not implemented";
+#else
+    return OPTIMIZATION_FLAGS;
+#endif
+}
+
 } // timedata
