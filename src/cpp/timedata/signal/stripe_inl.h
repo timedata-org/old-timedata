@@ -31,7 +31,11 @@ inline void Stripe::Iterator::adjustIndex() {
 }
 
 inline void Stripe::Iterator::next() {
-    THROW_IF(done_, "Can't call next() on a completed iterator");
+    if (not done_) {
+        log("Iterating when done!");
+        return;
+    }
+
     index_ += stripe_.skip;
     adjustIndex();
 }

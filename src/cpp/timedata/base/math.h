@@ -6,7 +6,6 @@
 #include <sstream>
 #include <type_traits>
 #include <algorithm>
-#include <timedata/base/throw.h>
 
 namespace timedata {
 

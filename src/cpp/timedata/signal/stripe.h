@@ -34,7 +34,10 @@ class Stripe::Iterator {
 
 template <typename C1, typename C2, typename Function>
 void combine(Stripe sIn, C1& cIn, Stripe sOut, C2& cOut, Function f) {
-    THROW_IF(not (sIn.repeats or sOut.repeats), "Infinite loop");
+    if (not (sIn.repeats or sOut.repeats)) {
+        log("Infinite loop in combiner.");
+        return;
+    }
 
     for (Stripe::Iterator ii(sIn, cIn.size()), io(sOut, cOut.size());
          not (ii.done() or io.done()); ii.next(), io.next()) {

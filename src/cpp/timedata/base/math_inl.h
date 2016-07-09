@@ -7,7 +7,6 @@
 #include <type_traits>
 
 #include <timedata/base/math.h>
-#include <timedata/base/throw.h>
 
 namespace timedata {
 

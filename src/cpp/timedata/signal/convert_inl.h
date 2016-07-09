@@ -6,7 +6,7 @@
 
 #include <timedata/base/className.h>
 #include <timedata/base/deletable.h>
-#include <timedata/base/join.h>
+#include <timedata/base/join_inl.h>
 #include <timedata/color/models/rgb.h>
 #include <timedata/color/models/hsv.h>
 #include <timedata/signal/convert.h>

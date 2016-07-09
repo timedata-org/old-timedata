@@ -13,7 +13,10 @@ inline ColorMapInverse const& colorMapInverse() {
             auto& hex = i.second;
             if (secondaryColors().count(name))
                 continue;
-            THROW_IF(inverse.count(hex), "Duplicate name", name, hex);
+            if (inverse.count(hex)) {
+                throw std::runtime_error("Duplicate name :" + name + " " +
+                                         std::to_string(hex));
+            }
             inverse[hex] = name;
         }
         return inverse;

@@ -5,9 +5,10 @@
 namespace timedata {
 
 template <typename Iter>
-void fillSpread(ColorRGB const& c1, ColorRGB const& c2, Iter begin, Iter end,
+bool fillSpread(ColorRGB const& c1, ColorRGB const& c2, Iter begin, Iter end,
                 Fade const& fade) {
-    THROW_IF(end < begin, "Bad spread");
+    if (end < begin)
+        return false;
     auto size = end - begin;
     if (size > 0) {
         *begin++ = fadeTo(0, fade, c1, c2);
@@ -17,6 +18,7 @@ void fillSpread(ColorRGB const& c1, ColorRGB const& c2, Iter begin, Iter end,
                 *begin = fadeTo(d * i, fade, c1, c2);
         }
     }
+    return true;
 }
 
 /** Appends size + 1 elements to the end of a ColorVector, linearly spreading

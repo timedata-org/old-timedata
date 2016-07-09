@@ -7,7 +7,6 @@
 #include <map>
 
 #include <timedata/base/enum.h>
-#include <timedata/base/throw.h>
 #include <timedata/base/math_inl.h>
 #include <timedata/color/toString.h>
 #include <timedata/color/names_table_inl.h>
