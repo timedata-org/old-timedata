@@ -18,6 +18,7 @@ using CColorListRGB = color::CColorRGB::List;
 using CColorListHSV = color::CColorHSV::List;
 using CColorListHSL = color::CColorHSL::List;
 using CColorListYIQ = color::CColorYIQ::List;
+using CColorListYUV = color::CColorYUV::List;
 
 using CColorListRGB255 = color::CColorRGB255::List;
 using CColorListRGB256 = color::CColorRGB256::List;

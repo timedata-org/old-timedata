@@ -22,6 +22,7 @@ def _make_module():
             hsl=dict(Color=ColorHSL, ColorList=ColorListHSL),
             hsv=dict(Color=ColorHSV, ColorList=ColorListHSV),
             yiq=dict(Color=ColorYIQ, ColorList=ColorListYIQ),
+            yuv=dict(Color=ColorYUV, ColorList=ColorListYUV),
             Color=ColorRGB, ColorList=ColorListRGB),
 
         Color=ColorRGB, ColorList=ColorListRGB).__dict__

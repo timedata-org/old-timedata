@@ -11,6 +11,7 @@ def _add_classes(d):
             ('HSV', ('hue', 'saturation', 'value')),
             ('HSL', ('hue', 'saturation', 'lightness')),
             ('YIQ', ('luma', 'inphase', 'quadrature')),
+            ('YUV', ('luma', 'uchrominance', 'vchrominance')),
             ):
         for name in '', '255', '256':
             if name and model != 'RGB':

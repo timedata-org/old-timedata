@@ -9,6 +9,7 @@
 #include <timedata/color/hsl.h>
 #include <timedata/color/hsv.h>
 #include <timedata/color/yiq.h>
+#include <timedata/color/yuv.h>
 #include <timedata/color/names_inl.h>
 
 namespace timedata {
@@ -18,6 +19,7 @@ using CColorRGB = ColorRGB;
 using CColorHSV = ColorHSV;
 using CColorHSL = ColorHSL;
 using CColorYIQ = ColorYIQ;
+using CColorYUV = ColorYUV;
 
 using CColorRGB256 = ColorRGB256;
 using CColorRGB255 = ColorRGB255;
