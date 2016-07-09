@@ -70,7 +70,7 @@ def make(header_file):
     return '\n'.join(mt) + '\n'
 
 
-def read_structs(files):
+def make_structs(files):
     results = []
     for f in files:
         data = make(f)

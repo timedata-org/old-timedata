@@ -1,5 +1,5 @@
 import collections
-from . import class_descriptions, util
+from . import read_classes, util
 
 
 def write(config, *, output_file=None, **kwds):
@@ -31,7 +31,6 @@ def write(config, *, output_file=None, **kwds):
     return output_file
 
 
-def execute():
-    for cname in class_descriptions.__all__:
-        c = getattr(class_descriptions, cname)
+def make_classes():
+    for c in read_classes.read_classes():
         yield write(c.methods, **c.__dict__)
