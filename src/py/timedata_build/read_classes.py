@@ -1,7 +1,7 @@
 from . class_descriptions import Color, ColorList
 from . util import substitute_context
 
-def read_classes():
+def read_classes(tiny=False):
     for model, prop in (
             ('RGB', ('red', 'green', 'blue')),
             ('HSV', ('hue', 'saturation', 'value')),
@@ -10,8 +10,11 @@ def read_classes():
             ('YUV', ('luma', 'uchrominance', 'vchrominance')),
             ):
         for name in '', '255', '256':
-            if name and model != 'RGB':
+            if name and (tiny or model != 'RGB'):
                 continue
+            if tiny and model not in ('RGB', 'HSV'):
+                continue
+
             cname = 'Color' + model + name
             lname = 'ColorList' + model + name
             rng = float(name or '1')

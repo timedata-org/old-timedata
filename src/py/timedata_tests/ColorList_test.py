@@ -4,9 +4,6 @@ from timedata import *
 
 Colors = Color.by_name
 
-c255 = color.rgb.c255
-c256 = color.rgb.c256
-
 class TestColorList(unittest.TestCase):
     def test_trivial(self):
         cl = ColorList()
@@ -282,13 +279,3 @@ class TestColorList(unittest.TestCase):
         cl = ColorList(((-0.2, -0.2, -0.4), (0.2, 0.2, 0.4)))
         self.assertEqual(str(cl),
                          '((-0.2, -0.2, -0.4), (0.2, 0.2, 0.4))')
-
-    def test_conversions(self):
-        cl = ColorList(('red', 'green', 'blue'))
-        self.assertEqual(str(cl), str(c255.ColorList(cl)))
-        self.assertEqual(str(cl), str(c256.ColorList(cl)))
-        x = cl
-        for c in c255.ColorList, c256.ColorList, ColorList:
-            x = c(x)
-        self.assertEqual(x.distance(cl), 0)
-        self.assertEqual(x, cl)

@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 import os
-from . import make_classes, make_structs, util
+from . import read_classes, write_classes, make_structs, util
 
 
 STRUCT_FILES = [
@@ -12,9 +12,10 @@ STRUCT_FILES = [
     ]
 
 
-def generate():
-    structs = make_structs.make_structs(STRUCT_FILES)
-    classes = list(make_classes.make_classes())
+def generate(tiny=False):
+    files = list(make_structs.make_structs(STRUCT_FILES))
+    for c in read_classes.read_classes(tiny=tiny):
+        files.append(write_classes.write_classes(c.methods, **c.__dict__))
 
-    data = ''.join('include "%s"\n' % f for f in sorted(structs + classes))
+    data = ''.join('include "%s"\n' % f for f in sorted(files))
     util.write_if_different('build/genfiles/timedata/genfiles.pyx', data)

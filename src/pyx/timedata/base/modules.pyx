@@ -10,21 +10,25 @@ def _make_module():
             setattr(m, k, v)
         return m
 
-    d = make(
-        '', 'timedata',
-        color=dict(
-            rgb=dict(
-                normal=dict(Color=ColorRGB, ColorList=ColorListRGB),
-                c255=dict(Color=ColorRGB255, ColorList=ColorListRGB255),
-                c256=dict(Color=ColorRGB256, ColorList=ColorListRGB256),
-                Color=ColorRGB, ColorList=ColorListRGB),
+    def add(d, key, name):
+        c = globals().get('Color' + name)
+        cl = globals().get('ColorList' + name)
+        if c and cl:
+            d[key] = dict(Color=c, ColorList=cl)
 
-            hsl=dict(Color=ColorHSL, ColorList=ColorListHSL),
-            hsv=dict(Color=ColorHSV, ColorList=ColorListHSV),
-            yiq=dict(Color=ColorYIQ, ColorList=ColorListYIQ),
-            yuv=dict(Color=ColorYUV, ColorList=ColorListYUV),
-            Color=ColorRGB, ColorList=ColorListRGB),
+    rgb = dict(
+        normal=dict(Color=ColorRGB, ColorList=ColorListRGB),
+        Color=ColorRGB, ColorList=ColorListRGB)
+    add(rgb, 'c255', 'RGB255')
+    add(rgb, 'c256', 'RGB256')
 
-        Color=ColorRGB, ColorList=ColorListRGB).__dict__
+    color = dict(rgb=rgb, Color=ColorRGB, ColorList=ColorListRGB)
+    add(color, 'hsl', 'HSL')
+    add(color, 'hsv', 'HSV')
+    add(color, 'yiq', 'YIQ')
+    add(color, 'yuv', 'YUV')
+
+    d = make('', 'timedata', Color=ColorRGB, ColorList=ColorListRGB,
+             color=color).__dict__
 
     return {k: v for (k, v) in d.items() if not k.startswith('_')}

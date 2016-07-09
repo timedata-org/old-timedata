@@ -110,34 +110,14 @@ class Clean(Command):
 
 class Generate(Command):
     description = 'Make generated classes'
-    user_options = []
+    user_options = [['tiny=', None, 'Make a tiny build.']]
+
+    def initialize_options(self):
+        self.tiny = False
 
     def run(self):
-        generate.generate()
-
-
-class Local(Command):
-    description = 'Install the binary locally'
-    user_options = []
-
-    # TODO: need to get this from setuptools somehow.
-
-    TARGET_LOCATIONS = 'src/py', '/development/BiblioPixel'
-    # TODO: awful hack.
-
-    def run(self):
-        print('Run Local')
-        files = glob.glob('build/lib*/*.so') + glob.glob('build/lib*/*.pyd')
-        assert len(files) == 1, files
-
-        binfile = files[0]
-        _, ext = os.path.splitext(binfile)
-        for target in self.TARGET_LOCATIONS:
-            try:
-                os.remove(target)
-            except:
-                pass
-            shutil.copy2(binfile, os.path.join(target, 'timedata' + ext))
+        print('Generate ' + ('tiny' if self.tiny else ''))
+        generate.generate(tiny=self.tiny)
 
 
 class build_ext(_build_ext):

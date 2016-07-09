@@ -1,8 +1,8 @@
 import collections
-from . import read_classes, util
+from . import util
 
 
-def write(config, *, output_file=None, **kwds):
+def write_classes(config, *, output_file=None, **kwds):
     declare, define = [], []
 
     def fmt(*names, **kwds):
@@ -29,8 +29,3 @@ def write(config, *, output_file=None, **kwds):
     data = ''.join(d for d in declare if d.strip()) + '\n' + '\n'.join(define)
     util.write_if_different(output_file, data)
     return output_file
-
-
-def make_classes():
-    for c in read_classes.read_classes():
-        yield write(c.methods, **c.__dict__)
