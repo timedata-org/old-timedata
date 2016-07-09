@@ -8,12 +8,7 @@ namespace timedata {
 enum class HSL { hue, saturation, lightness, last = lightness };
 
 using ColorHSL = Sample<HSL>;
-using ColorHSL256 = Sample<HSL, Range256<float>>;
-using ColorHSL255 = Sample<HSL, Range255<float>>;
-
 template <> inline std::string className<ColorHSL>() { return "ColorHSL"; }
-template <> inline std::string className<ColorHSL255>() { return "ColorHSL255"; }
-template <> inline std::string className<ColorHSL256>() { return "ColorHSL256"; }
 
 namespace converter {
 

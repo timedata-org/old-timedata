@@ -8,12 +8,8 @@ namespace timedata {
 enum class YIQ { luma, inphase, quadrature, last = quadrature };
 
 using ColorYIQ = Sample<YIQ>;
-using ColorYIQ256 = Sample<YIQ, Range256<float>>;
-using ColorYIQ255 = Sample<YIQ, Range255<float>>;
 
 template <> inline std::string className<ColorYIQ>() { return "ColorYIQ"; }
-template <> inline std::string className<ColorYIQ255>() { return "ColorYIQ255"; }
-template <> inline std::string className<ColorYIQ256>() { return "ColorYIQ256"; }
 
 namespace converter {
 

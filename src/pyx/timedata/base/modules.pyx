@@ -19,24 +19,9 @@ def _make_module():
                 c256=dict(Color=ColorRGB256, ColorList=ColorListRGB256),
                 Color=ColorRGB, ColorList=ColorListRGB),
 
-            hsl=dict(
-                normal=dict(Color=ColorHSL, ColorList=ColorListHSL),
-                c255=dict(Color=ColorHSL255, ColorList=ColorListHSL255),
-                c256=dict(Color=ColorHSL256, ColorList=ColorListHSL256),
-                Color=ColorHSL, ColorList=ColorListHSL),
-
-            hsv=dict(
-                normal=dict(Color=ColorHSV, ColorList=ColorListHSV),
-                c255=dict(Color=ColorHSV255, ColorList=ColorListHSV255),
-                c256=dict(Color=ColorHSV256, ColorList=ColorListHSV256),
-                Color=ColorHSV, ColorList=ColorListHSV),
-
-            yiq=dict(
-                normal=dict(Color=ColorYIQ, ColorList=ColorListYIQ),
-                c255=dict(Color=ColorYIQ255, ColorList=ColorListYIQ255),
-                c256=dict(Color=ColorYIQ256, ColorList=ColorListYIQ256),
-                Color=ColorYIQ, ColorList=ColorListYIQ),
-
+            hsl=dict(Color=ColorHSL, ColorList=ColorListHSL),
+            hsv=dict(Color=ColorHSV, ColorList=ColorListHSV),
+            yiq=dict(Color=ColorYIQ, ColorList=ColorListYIQ),
             Color=ColorRGB, ColorList=ColorListRGB),
 
         Color=ColorRGB, ColorList=ColorListRGB).__dict__

@@ -1,6 +1,4 @@
 def _add_classes(d):
-    """Automatically generate classes.  This is a bit overkill now but
-       will be necessary when we have half-a-dozen color models."""
     from . import Color, ColorList
     from .. util import substitute_context
 
@@ -15,6 +13,8 @@ def _add_classes(d):
             ('YIQ', ('luma', 'inphase', 'quadrature')),
             ):
         for name in '', '255', '256':
+            if name and model != 'RGB':
+                continue
             cname = 'Color' + model + name
             lname = 'ColorList' + model + name
             rng = float(name or '1')

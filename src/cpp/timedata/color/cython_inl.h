@@ -15,20 +15,12 @@ namespace timedata {
 namespace color {
 
 using CColorRGB = ColorRGB;
+using CColorHSV = ColorHSV;
+using CColorHSL = ColorHSL;
+using CColorYIQ = ColorYIQ;
+
 using CColorRGB256 = ColorRGB256;
 using CColorRGB255 = ColorRGB255;
-
-using CColorHSV = ColorHSV;
-using CColorHSV256 = ColorHSV256;
-using CColorHSV255 = ColorHSV255;
-
-using CColorHSL = ColorHSL;
-using CColorHSL256 = ColorHSL256;
-using CColorHSL255 = ColorHSL255;
-
-using CColorYIQ = ColorYIQ;
-using CColorYIQ256 = ColorYIQ256;
-using CColorYIQ255 = ColorYIQ255;
 
 template <typename Color>
 std::string toString(Color const& x) {

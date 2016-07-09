@@ -15,20 +15,12 @@ namespace timedata {
 namespace color_list {
 
 using CColorListRGB = color::CColorRGB::List;
+using CColorListHSV = color::CColorHSV::List;
+using CColorListHSL = color::CColorHSL::List;
+using CColorListYIQ = color::CColorYIQ::List;
+
 using CColorListRGB255 = color::CColorRGB255::List;
 using CColorListRGB256 = color::CColorRGB256::List;
-
-using CColorListHSV = color::CColorHSV::List;
-using CColorListHSV255 = color::CColorHSV255::List;
-using CColorListHSV256 = color::CColorHSV256::List;
-
-using CColorListHSL = color::CColorHSL::List;
-using CColorListHSL255 = color::CColorHSL255::List;
-using CColorListHSL256 = color::CColorHSL256::List;
-
-using CColorListYIQ = color::CColorYIQ::List;
-using CColorListYIQ255 = color::CColorYIQ255::List;
-using CColorListYIQ256 = color::CColorYIQ256::List;
 
 template <typename ColorList>
 std::string toString(ColorList const& colors) {

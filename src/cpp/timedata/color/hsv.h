@@ -8,12 +8,8 @@ namespace timedata {
 enum class HSV { hue, saturation, value, last = value };
 
 using ColorHSV = Sample<HSV>;
-using ColorHSV256 = Sample<HSV, Range256<float>>;
-using ColorHSV255 = Sample<HSV, Range255<float>>;
 
 template <> inline std::string className<ColorHSV>() { return "ColorHSV"; }
-template <> inline std::string className<ColorHSV255>() { return "ColorHSV255"; }
-template <> inline std::string className<ColorHSV256>() { return "ColorHSV256"; }
 
 namespace converter {
 
