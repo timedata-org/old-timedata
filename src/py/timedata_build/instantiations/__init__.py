@@ -12,6 +12,7 @@ def _add_classes(d):
             ('RGB', ('red', 'green', 'blue')),
             ('HSV', ('hue', 'saturation', 'value')),
             ('HSL', ('hue', 'saturation', 'lightness')),
+            ('YIQ', ('luma', 'inphase', 'quadrature')),
             ):
         for name in '', '255', '256':
             cname = 'Color' + model + name

@@ -31,6 +31,12 @@ def _make_module():
                 c256=dict(Color=ColorHSV256, ColorList=ColorListHSV256),
                 Color=ColorHSV, ColorList=ColorListHSV),
 
+            yiq=dict(
+                normal=dict(Color=ColorYIQ, ColorList=ColorListYIQ),
+                c255=dict(Color=ColorYIQ255, ColorList=ColorListYIQ255),
+                c256=dict(Color=ColorYIQ256, ColorList=ColorListYIQ256),
+                Color=ColorYIQ, ColorList=ColorListYIQ),
+
             Color=ColorRGB, ColorList=ColorListRGB),
 
         Color=ColorRGB, ColorList=ColorListRGB).__dict__

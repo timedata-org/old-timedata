@@ -8,6 +8,7 @@
 #include <timedata/color/rgb.h>
 #include <timedata/color/hsl.h>
 #include <timedata/color/hsv.h>
+#include <timedata/color/yiq.h>
 #include <timedata/color/names_inl.h>
 
 namespace timedata {
@@ -24,6 +25,10 @@ using CColorHSV255 = ColorHSV255;
 using CColorHSL = ColorHSL;
 using CColorHSL256 = ColorHSL256;
 using CColorHSL255 = ColorHSL255;
+
+using CColorYIQ = ColorYIQ;
+using CColorYIQ256 = ColorYIQ256;
+using CColorYIQ255 = ColorYIQ255;
 
 template <typename Color>
 std::string toString(Color const& x) {

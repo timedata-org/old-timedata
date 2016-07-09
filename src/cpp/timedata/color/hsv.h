@@ -22,9 +22,9 @@ namespace converter {
 
 template <>
 inline void convertSample(ColorRGB const& in, ColorHSV& out) {
-    auto& red = *in[RGB::red];
-    auto& green = *in[RGB::green];
-    auto& blue = *in[RGB::blue];
+    auto red = *in[RGB::red];
+    auto green = *in[RGB::green];
+    auto blue = *in[RGB::blue];
 
     auto& hue = *out[HSV::hue];
     auto& saturation = *out[HSV::saturation];

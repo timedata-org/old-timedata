@@ -26,6 +26,10 @@ using CColorListHSL = color::CColorHSL::List;
 using CColorListHSL255 = color::CColorHSL255::List;
 using CColorListHSL256 = color::CColorHSL256::List;
 
+using CColorListYIQ = color::CColorYIQ::List;
+using CColorListYIQ255 = color::CColorYIQ255::List;
+using CColorListYIQ256 = color::CColorYIQ256::List;
+
 template <typename ColorList>
 std::string toString(ColorList const& colors) {
     std::string result = "(";
