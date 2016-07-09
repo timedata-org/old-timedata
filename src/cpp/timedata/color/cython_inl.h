@@ -5,11 +5,11 @@
 #include <timedata/base/math.h>
 #include <timedata/base/rotate.h>
 #include <timedata/signal/sample.h>
-#include <timedata/color/rgb.h>
-#include <timedata/color/hsl.h>
-#include <timedata/color/hsv.h>
-#include <timedata/color/yiq.h>
-#include <timedata/color/yuv.h>
+#include <timedata/color/models/rgb.h>
+#include <timedata/color/models/hsl.h>
+#include <timedata/color/models/hsv.h>
+#include <timedata/color/models/yiq.h>
+#include <timedata/color/models/yuv.h>
 #include <timedata/color/names_inl.h>
 
 namespace timedata {

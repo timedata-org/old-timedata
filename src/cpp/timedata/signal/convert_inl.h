@@ -7,8 +7,8 @@
 #include <timedata/base/className.h>
 #include <timedata/base/deletable.h>
 #include <timedata/base/join.h>
-#include <timedata/color/rgb.h>
-#include <timedata/color/hsv.h>
+#include <timedata/color/models/rgb.h>
+#include <timedata/color/models/hsv.h>
 #include <timedata/signal/convert.h>
 
 namespace timedata {

@@ -1,6 +1,6 @@
 #pragma once
 
-#include <timedata/color/hsv.h>
+#include <timedata/color/models/hsv.h>
 #include <timedata/signal/convert.h>
 
 namespace timedata {
