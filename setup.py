@@ -54,19 +54,17 @@ def git_tags():
     return '%s+%s.%s' % (tags, branch, user)
 
 if IS_LINUX or IS_MAC:
-    OPTIMIZATION_FLAGS = ['-O3', '-DNDEBUG']
     COMPILE_ARGS = [
         '-std=c++11',
         '-ferror-limit=100',
         '-DCOMPILE_TIMESTAMP="%s"' % datetime.datetime.utcnow().isoformat(),
-        '-DOPTIMIZATION_FLAGS="%s"' % ' '.join(OPTIMIZATION_FLAGS),
         '-DGIT_TAGS="%s"' % git_tags(),
         '-Wall',
         '-Wextra',
         '-Wpedantic',
         '-Wno-unused-function',
         '-Wno-extended-offsetof',
-    ] + OPTIMIZATION_FLAGS
+    ]
     if IS_MAC:
         COMPILE_ARGS.extend(['-mmacosx-version-min=10.9',
                              '-Wno-tautological-constant-out-of-range-compare'])
@@ -123,7 +121,32 @@ class Generate(Command):
 class build_ext(_build_ext):
     # See https://groups.google.com/forum/#!topic/cython-users/IZMENRz6__s
 
+    BUILD_OPTIONS = dict(
+        o2=['-O2', '-DNDEBUG'],
+        o3=['-O3', '-DNDEBUG'],
+        debug=['-O0', '-DDEBUG'],
+        )
+    """See http://ithare.com/c-performance-common-wisdoms-and-common-wisdoms/
+       Other possibilities include:
+    -ffast-math
+    -flto
+    -fno-math-errno
+    -fomit-frame-pointer
+    -fprofile-generate
+    -ftree-vectorize
+    -funroll-loops"""
+
+    user_options2 = _build_ext.user_options + [
+        ['buildtype=', None, 'Select build type from o3 (default), o2, debug'],
+        ['compileropt=', None, 'Additional options to the compiler.'],
+        ]
+
+    def initialize_options2(self):
+        super().initialize_options()
+        self.buildtype_x = self.compileropt_x = None
+
     def finalize_options(self):
+        self.buildtype_x = self.compileropt_x = None
         try:
             import Cython.Build
         except:
@@ -131,12 +154,22 @@ class build_ext(_build_ext):
                   'http://docs.cython.org/src/quickstart/install.html')
             raise
         os.makedirs('build/genfiles/timedata', exist_ok=True)
+        compile_args = COMPILE_ARGS
+
+        if not IS_WINDOWS:
+            opt_flags = self.BUILD_OPTIONS[self.buildtype_x or 'o3']
+            if self.compileropt_x:
+                opt_flags += self.compileropt_x.split()
+            compile_args += opt_flags
+            compile_args.append(
+                '-DOPTIMIZATION_FLAGS="%s"' % ' '.join(sorted(opt_flags)))
+
         extension = setuptools.extension.Extension(
             name='timedata',
             sources=['timedata.pyx'],
             libraries=LIBRARIES,
             include_dirs=['src/cpp'],
-            extra_compile_args=COMPILE_ARGS,
+            extra_compile_args=compile_args,
             language='c++',
         )
 
