@@ -8,7 +8,6 @@ maintained....
 
 """
 import benchmark
-
 import timedata, timeit
 
 SIZE = 10240

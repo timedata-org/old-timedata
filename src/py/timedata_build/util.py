@@ -31,7 +31,7 @@ def write_if_different(fname, data):
         print(fname, 'unchanged')
 
 
-def read(lines, f):
+def read_template(lines, f):
     parts = []
     result = {}
     name = None
@@ -64,7 +64,7 @@ def substitute_templates(*names, **kwds):
     sub = substituter(**kwds)
 
     try:
-        parts = read(open(filename), filename)
+        parts = read_template(open(filename), filename)
         return [sub(parts.get(i)) for i in ('declare', 'define')]
 
     except Exception as e:

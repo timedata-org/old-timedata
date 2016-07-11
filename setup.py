@@ -3,12 +3,39 @@
 """This is the main builder and installer for the Templated Digital Signal
 Processing Python extension."""
 
-import datetime, glob, os, platform, shutil, subprocess, sys, unittest
+import sys
+sys.path.append('src/py')
+
+from timedata_build import flags, generate
+
+FLAGS = flags.extract_flags(
+    sys.argv,
+    buildtype='o3',
+    compileropt='',
+    tiny=False,
+    )
+
+BUILD_OPTIONS = dict(
+    o2=['-O2', '-DNDEBUG'],
+    o3=['-O3', '-DNDEBUG'],
+    debug=['-O0', '-DDEBUG'],
+    )
+
+"""See http://ithare.com/c-performance-common-wisdoms-and-common-wisdoms/
+Other possibilities include:
+    -ffast-math
+    -flto
+    -fno-math-errno
+    -fomit-frame-pointer
+    -fprofile-generate
+    -ftree-vectorize
+    -funroll-loops"""
+
+
+import datetime, glob, os, platform, shutil, subprocess, unittest
 import setuptools.extension
 from setuptools.command.build_ext import build_ext as _build_ext
 
-sys.path.append('src/py')
-from timedata_build import generate
 
 LEAST_PYTHON = 3, 4
 ACTUAL_PYTHON = sys.version_info[:2]
@@ -83,6 +110,8 @@ elif IS_WINDOWS:
 
 
 class Command(setuptools.Command):
+    user_options = []
+
     def initialize_options(self):
         pass
 
@@ -92,7 +121,6 @@ class Command(setuptools.Command):
 
 class Clean(Command):
     description = 'Complete clean command'
-    user_options = []
 
     def initialize_options(self):
         self.cwd = None
@@ -108,45 +136,16 @@ class Clean(Command):
 
 class Generate(Command):
     description = 'Make generated classes'
-    user_options = [['tiny=', None, 'Make a tiny build.']]
-
-    def initialize_options(self):
-        self.tiny = False
 
     def run(self):
-        print('Generate ' + ('tiny' if self.tiny else ''))
-        generate.generate(tiny=self.tiny)
+        print('Generate ' + ('tiny' if FLAGS.tiny else ''))
+        generate.generate(tiny=FLAGS.tiny)
 
 
 class build_ext(_build_ext):
     # See https://groups.google.com/forum/#!topic/cython-users/IZMENRz6__s
 
-    BUILD_OPTIONS = dict(
-        o2=['-O2', '-DNDEBUG'],
-        o3=['-O3', '-DNDEBUG'],
-        debug=['-O0', '-DDEBUG'],
-        )
-    """See http://ithare.com/c-performance-common-wisdoms-and-common-wisdoms/
-       Other possibilities include:
-    -ffast-math
-    -flto
-    -fno-math-errno
-    -fomit-frame-pointer
-    -fprofile-generate
-    -ftree-vectorize
-    -funroll-loops"""
-
-    user_options2 = _build_ext.user_options + [
-        ['buildtype=', None, 'Select build type from o3 (default), o2, debug'],
-        ['compileropt=', None, 'Additional options to the compiler.'],
-        ]
-
-    def initialize_options2(self):
-        super().initialize_options()
-        self.buildtype_x = self.compileropt_x = None
-
     def finalize_options(self):
-        self.buildtype_x = self.compileropt_x = None
         try:
             import Cython.Build
         except:
@@ -157,9 +156,9 @@ class build_ext(_build_ext):
         compile_args = COMPILE_ARGS
 
         if not IS_WINDOWS:
-            opt_flags = self.BUILD_OPTIONS[self.buildtype_x or 'o3']
-            if self.compileropt_x:
-                opt_flags += self.compileropt_x.split()
+            opt_flags = BUILD_OPTIONS[FLAGS.buildtype or 'o3']
+            if FLAGS.compileropt:
+                opt_flags += FLAGS.compileropt.split()
             compile_args += opt_flags
             compile_args.append(
                 '-DOPTIMIZATION_FLAGS="%s"' % ' '.join(sorted(opt_flags)))
