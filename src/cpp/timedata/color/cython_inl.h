@@ -8,6 +8,7 @@
 #include <timedata/color/models/rgb.h>
 #include <timedata/color/models/hsl.h>
 #include <timedata/color/models/hsv.h>
+#include <timedata/color/models/xyz.h>
 #include <timedata/color/models/yiq.h>
 #include <timedata/color/models/yuv.h>
 #include <timedata/color/names_inl.h>
@@ -18,6 +19,7 @@ namespace color {
 using CColorRGB = ColorRGB;
 using CColorHSV = ColorHSV;
 using CColorHSL = ColorHSL;
+using CColorXYZ = ColorXYZ;
 using CColorYIQ = ColorYIQ;
 using CColorYUV = ColorYUV;
 

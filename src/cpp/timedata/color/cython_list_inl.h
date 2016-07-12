@@ -17,6 +17,7 @@ namespace color_list {
 using CColorListRGB = color::CColorRGB::List;
 using CColorListHSV = color::CColorHSV::List;
 using CColorListHSL = color::CColorHSL::List;
+using CColorListXYZ = color::CColorXYZ::List;
 using CColorListYIQ = color::CColorYIQ::List;
 using CColorListYUV = color::CColorYUV::List;
 

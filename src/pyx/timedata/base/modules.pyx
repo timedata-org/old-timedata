@@ -25,6 +25,7 @@ def _make_module():
     color = dict(rgb=rgb, Color=ColorRGB, ColorList=ColorListRGB)
     add(color, 'hsl', 'HSL')
     add(color, 'hsv', 'HSV')
+    add(color, 'xyz', 'XYZ')
     add(color, 'yiq', 'YIQ')
     add(color, 'yuv', 'YUV')
 

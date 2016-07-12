@@ -4,8 +4,9 @@ from . util import substitute_context
 def read_classes(tiny=False):
     for model, prop in (
             ('RGB', ('red', 'green', 'blue')),
-            ('HSV', ('hue', 'saturation', 'value')),
             ('HSL', ('hue', 'saturation', 'lightness')),
+            ('HSV', ('hue', 'saturation', 'value')),
+            ('XYZ', ('x', 'y', 'z')),
             ('YIQ', ('luma', 'inphase', 'quadrature')),
             ('YUV', ('luma', 'uchrominance', 'vchrominance')),
             ):
