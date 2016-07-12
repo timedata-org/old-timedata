@@ -26,4 +26,14 @@ struct NormalSample {
 template <typename Sample>
 using NormalType = typename NormalSample<Sample>::normal_type;
 
+template <typename Matrix, typename SampleIn, typename SampleOut>
+void matrixMultiply(Matrix const& matrix, SampleIn const& in, SampleOut& out) {
+    for (size_t i = 0; i < out.size(); ++i) {
+        auto& o = out[i];
+        o = {};
+        for (size_t j = 0; j < in.size(); ++j)
+            o += ValueType<SampleOut>(matrix[i][j] * in[j]);
+    }
+}
+
 } // timedata

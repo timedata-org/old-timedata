@@ -17,22 +17,22 @@ namespace converter {
 
 template <>
 inline void convertSample(ColorRGB const& in, ColorYIQ& out) {
-    auto r = *in[RGB::red];
-    auto g = *in[RGB::green];
-    auto b = *in[RGB::blue];
-    out[YIQ::luma]       = 0.299f * r +  0.587f * g +  0.114f * b;
-    out[YIQ::inphase]    = 0.596f * r + -0.274f * g + -0.322f * b;
-    out[YIQ::quadrature] = 0.211f * r + -0.523f * g +  0.312f * g;
+    static const float matrix[3][3] = {
+        {0.299f,  0.587f,  0.114f},
+        {0.596f, -0.274f, -0.322f},
+        {0.211f, -0.523f,  0.312f}};
+
+    matrixMultiply(matrix, in, out);
 }
 
 template <>
 inline void convertSample(ColorYIQ const& in, ColorRGB& out) {
-    auto y = *in[YIQ::luma];
-    auto i = *in[YIQ::inphase];
-    auto q = *in[YIQ::quadrature];
-    out[RGB::red]   = y +  0.956f * i +  0.621f * q;
-    out[RGB::green] = y + -0.272f * i + -0.647f * q;
-    out[RGB::blue]  = y + -1.106f * i +  1.703f * q;
+    static const float matrix[3][3] = {
+        {1.0f,  0.956f,  0.621f},
+        {1.0f, -0.272f, -0.647f},
+        {1.0f, -1.106f,  1.703f}};
+
+    matrixMultiply(matrix, in, out);
 }
 
 } // converter

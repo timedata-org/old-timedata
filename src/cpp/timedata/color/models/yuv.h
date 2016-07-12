@@ -17,22 +17,22 @@ namespace converter {
 
 template <>
 inline void convertSample(ColorRGB const& in, ColorYUV& out) {
-    auto r = *in[RGB::red];
-    auto g = *in[RGB::green];
-    auto b = *in[RGB::blue];
-    out[YUV::luma]         =  0.299f   * r +  0.587f   * g +   0.114f   * b;
-    out[YUV::uchrominance] = -0.14713f * r + -0.28886f * g +   0.436f   * b;
-    out[YUV::vchrominance] =  0.615f   * r + -0.51499f * g +  -0.10001f * g;
+    static const float matrix[3][3] = {
+        {0.299f,    0.587f,    0.114f},
+        {0.14713f, -0.28886f,  0.436f},
+        {0.615f,   -0.51499f, -0.10001f}};
+
+    matrixMultiply(matrix, in, out);
 }
 
 template <>
 inline void convertSample(ColorYUV const& in, ColorRGB& out) {
-    auto y = *in[YUV::luma];
-    auto i = *in[YUV::uchrominance];
-    auto q = *in[YUV::vchrominance];
-    out[RGB::red]   = y +                  1.13983f * q;
-    out[RGB::green] = y + -0.39465f * i + -0.58060f * q;
-    out[RGB::blue]  = y +  2.03211f * i;
+    static const float matrix[3][3] = {
+        {1.0f,  0.0f,      1.13983f},
+        {1.0f, -0.39465f, -0.58060f},
+        {1.0f,  2.03211f,  0.0f}};
+
+    matrixMultiply(matrix, in, out);
 }
 
 } // converter
