@@ -37,17 +37,19 @@ def sorted_dict(**kwds):
 
 
 def write_result(name, filename_suffix, **kwds):
-    sub = ROOT.joinpath('results', name)
+    now = datetime.datetime.now()
+    date = now.strftime('%Y%m%d')
+    time = now.strftime('%H%M%S')
+    sub = ROOT.joinpath('results', name, date)
     try:
-        sub.mkdir()
+        sub.mkdir(parents=True)
     except FileExistsError:
         pass
-    timestamp = datetime.datetime.utcnow().strftime(TIMESTAMP_FORMAT)
-    filename = str(sub.joinpath(timestamp))
+    filename = str(sub.joinpath(time))
     if filename_suffix:
         filename += ('-' + filename_suffix)
 
-    d = sorted_dict(name=name, timestamp=timestamp, **kwds)
+    d = sorted_dict(name=name, timestamp=now.isoformat(), **kwds)
     with open(filename + FILE_SUFFIX, 'w') as fp:
         json.dump(d, fp, indent=4)
 
