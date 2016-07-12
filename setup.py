@@ -8,10 +8,16 @@ sys.path.append('src/py')
 
 from timedata_build import flags, generate
 
+OPTS = '-flto -fno-math-errno -fomit-frame-pointer -funroll-loops -ffast-math'
+
 FLAGS = flags.extract_flags(
     sys.argv,
+    benchmark='lists',
+    benchmark_size=10240,
+    benchmark_number=1000,
     buildtype='o3',
-    compileropt='',
+    compileropt=OPTS,
+    name='',
     tiny=False,
     )
 
@@ -29,7 +35,8 @@ Other possibilities include:
     -fomit-frame-pointer
     -fprofile-generate
     -ftree-vectorize
-    -funroll-loops"""
+    -funroll-loops
+"""
 
 
 import datetime, glob, os, platform, shutil, subprocess, unittest
@@ -142,6 +149,22 @@ class Generate(Command):
         generate.generate(tiny=FLAGS.tiny)
 
 
+class Benchmark(Command):
+    description = 'Run benchmark'
+
+    def run(self):
+        print('Benchmark')
+        from benchmark.benchmark import run_benchmarks
+        name = FLAGS.name
+        if not name:
+            parts = [FLAGS.buildtype]
+            for o in FLAGS.compileropt.split():
+                parts.append(o[2:])
+            name = '_'.join(parts)
+        run_benchmarks(FLAGS.benchmark.split(), '-'.join(parts),
+                       FLAGS.benchmark_size, FLAGS.benchmark_number)
+
+
 class build_ext(_build_ext):
     # See https://groups.google.com/forum/#!topic/cython-users/IZMENRz6__s
 
@@ -205,6 +228,7 @@ High-performance arithmetic for RGB color and for time data in general.""",
     download_url='https://github.com/rec/timedata/releases/tag/v0.8',
     cmdclass={
         'build_ext': build_ext,
+        'benchmark': Benchmark,
         'clean': Clean,
         'generate': Generate,
     },

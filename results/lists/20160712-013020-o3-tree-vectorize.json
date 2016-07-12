@@ -1,0 +1,25 @@
+{
+    "git_tags": "binary-release-2016-05-28-173-gfafc357+develop.rec",
+    "name": "lists",
+    "number": 1000,
+    "optimization_flags": "-DNDEBUG -O3 -ftree-vectorize",
+    "platform": {
+        "version": "10.9.5",
+        "system": "Darwin"
+    },
+    "results": {
+        "add_color": 0.024577048840001225,
+        "add_list": 0.037314854096621275,
+        "add_number": 0.021215700777247548,
+        "add_to_color": 0.030629059998318553,
+        "add_to_list": 0.03772706398740411,
+        "add_to_number": 0.02676420216448605,
+        "compare": 0.029623843962326646,
+        "invert": 0.0259614079259336,
+        "replace_all": 0.01398509880527854,
+        "rotate": 0.014367907075211406,
+        "rotate_to": 0.015744292875751853
+    },
+    "size": 10240,
+    "timestamp": "20160712-013020"
+}

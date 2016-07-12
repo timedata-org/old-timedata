@@ -1,5 +1,3 @@
-#!/usr/bin/env python3
-
 """
 Common functions for computing and reporting benchmarks.
 
@@ -14,7 +12,10 @@ What do we need to know when reporting a test?
          ...
 """
 
-import datetime, importlib, json, os, pathlib, platform, sys, time, timeit
+import collections, datetime, importlib, json, os, pathlib, platform, sys
+import time, timeit
+
+from . import lists
 
 # The format for timestamps and thus filenames.
 TIMESTAMP_FORMAT = '%Y%m%d-%H%M%S'
@@ -23,7 +24,7 @@ TIMESTAMP_FORMAT = '%Y%m%d-%H%M%S'
 FILE_SUFFIX = '.json'
 
 # The top level directory, which contains timedata.so.
-ROOT = pathlib.Path().resolve().parent.parent.parent
+ROOT = pathlib.Path().resolve()
 
 # ROOT must be in sys.path before importing timedata.
 sys.path.append(str(ROOT))
@@ -31,16 +32,24 @@ sys.path.append(str(ROOT))
 import timedata
 
 
-def write_result(name, **kwds):
+def sorted_dict(**kwds):
+    return collections.OrderedDict(sorted(kwds.items()))
+
+
+def write_result(name, filename_suffix, **kwds):
     sub = ROOT.joinpath('results', name)
     try:
         sub.mkdir()
     except FileExistsError:
         pass
     timestamp = datetime.datetime.utcnow().strftime(TIMESTAMP_FORMAT)
-    filename = str(sub.joinpath(timestamp + FILE_SUFFIX))
-    with open(filename, 'w') as fp:
-        json.dump(dict(kwds, name=name, timestamp=timestamp), fp, indent=4)
+    filename = str(sub.joinpath(timestamp))
+    if filename_suffix:
+        filename += ('-' + filename_suffix)
+
+    d = sorted_dict(name=name, timestamp=timestamp, **kwds)
+    with open(filename + FILE_SUFFIX, 'w') as fp:
+        json.dump(d, fp, indent=4)
 
 
 def version():
@@ -55,9 +64,8 @@ def version():
     return (platform.version(), '', '')
 
 
-def run_benchmarks(args):
+def run_benchmarks(args, filename_suffix, size, number):
     # Read and remove flags.
-    size, number = 10240, 200
     for arg in args:
         if arg.startswith('--'):
             name, value = arg.split('=', 1)
@@ -81,20 +89,16 @@ def run_benchmarks(args):
         )
 
     for name in args:
-        module = importlib.import_module(name, __name__)
+        try:
+            module = globals()[name]
+        except:
+            print(sys.path)
+            raise
         results = dict()
         for test, function in module.benchmarks():
             data = module.make_data(size)
             timer = timeit.Timer(lambda: function(*data))
             results[test] = timer.timeit(number=number)
 
-        write_result(name, results=results, **metadata)
-
-
-__all__ = ['lists']
-
-
-if __name__ == '__main__':
-    args = sys.argv[1:] or __all__[:]
-    print('Benchmarking', ' '.join(args))
-    run_benchmarks(args)
+        write_result(name, filename_suffix,
+                     results=sorted_dict(**results), **metadata)

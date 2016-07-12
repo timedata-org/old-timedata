@@ -1,0 +1,25 @@
+{
+    "git_tags": "binary-release-2016-05-28-173-gfafc357+develop.rec",
+    "name": "lists",
+    "number": 1000,
+    "optimization_flags": "-DNDEBUG -O3 -fomit-frame-pointer",
+    "platform": {
+        "version": "10.9.5",
+        "system": "Darwin"
+    },
+    "results": {
+        "add_color": 0.025412072893232107,
+        "add_list": 0.036720032105222344,
+        "add_number": 0.021100159967318177,
+        "add_to_color": 0.03172974707558751,
+        "add_to_list": 0.03939565783366561,
+        "add_to_number": 0.026008712127804756,
+        "compare": 0.03231074311770499,
+        "invert": 0.029593002051115036,
+        "replace_all": 0.016878806054592133,
+        "rotate": 0.015330137917771935,
+        "rotate_to": 0.017040468053892255
+    },
+    "size": 10240,
+    "timestamp": "20160712-012942"
+}

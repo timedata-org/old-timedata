@@ -1,0 +1,25 @@
+{
+    "git_tags": "binary-release-2016-05-28-173-gfafc357+develop.rec",
+    "name": "lists",
+    "number": 1000,
+    "optimization_flags": "-DNDEBUG -O3 -fprofile-generate",
+    "platform": {
+        "system": "Darwin",
+        "version": "10.9.5"
+    },
+    "results": {
+        "add_color": 0.025686878012493253,
+        "add_list": 0.03665925492532551,
+        "add_number": 0.021001219982281327,
+        "add_to_color": 0.030039445962756872,
+        "add_to_list": 0.03797105886042118,
+        "add_to_number": 0.02656342019326985,
+        "compare": 0.03329274198040366,
+        "invert": 0.02937258407473564,
+        "replace_all": 0.013866808032616973,
+        "rotate": 0.014058152912184596,
+        "rotate_to": 0.013684114906936884
+    },
+    "size": 10240,
+    "timestamp": "20160712-013001"
+}

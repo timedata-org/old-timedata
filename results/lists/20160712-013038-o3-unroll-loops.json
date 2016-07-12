@@ -1,0 +1,25 @@
+{
+    "git_tags": "binary-release-2016-05-28-173-gfafc357+develop.rec",
+    "name": "lists",
+    "number": 1000,
+    "optimization_flags": "-DNDEBUG -O3 -funroll-loops",
+    "platform": {
+        "system": "Darwin",
+        "version": "10.9.5"
+    },
+    "results": {
+        "add_color": 0.02502023195847869,
+        "add_list": 0.03948852093890309,
+        "add_number": 0.021350770024582744,
+        "add_to_color": 0.03100478509441018,
+        "add_to_list": 0.037255621049553156,
+        "add_to_number": 0.023394059855490923,
+        "compare": 0.030262555927038193,
+        "invert": 0.02543413802050054,
+        "replace_all": 0.016313229920342565,
+        "rotate": 0.015266516013070941,
+        "rotate_to": 0.013964246027171612
+    },
+    "size": 10240,
+    "timestamp": "20160712-013038"
+}

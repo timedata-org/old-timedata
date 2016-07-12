@@ -2,7 +2,6 @@
 
 import contextlib, csv, json, os, pathlib, stat, string, sys
 
-
 def substituter(**kwds):
     return lambda t: string.Template(t or '').substitute(**kwds)
 
