@@ -121,6 +121,10 @@ class TestColor(unittest.TestCase):
         self.assertEqual(Colors.red.distance2(Colors.green), 2)
         self.assertEqual(Colors.red.distance(Colors.black), 1)
 
+    def test_size(self):
+        import sys
+        self.assertEqual(sys.getsizeof(Colors.red), 12)
+
     def DONT_test_everything(self):
         # This test takes about five minutes to run when it's enabled.
         for i in range(256 * 256 * 256):

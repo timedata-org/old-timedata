@@ -40,6 +40,10 @@ struct Sample : SampleBase<Model, Range> {
         using ranged_type = typename Sample::value_type;
         using sample_type = Sample;
         using value_type = Sample;
+
+        size_t getSizeof() const {
+            return sizeof(List) + sizeof(Sample) * this->size();
+        }
     };
 
     // TODO: need to use std::initializer_list!
@@ -101,6 +105,8 @@ struct Sample : SampleBase<Model, Range> {
                 return d;
         return {};
     }
+
+    size_t getSizeof() const { return sizeof(Sample); }
 
     bool operator==(Sample const& s) const { return cmp(s) == 0; }
     bool operator!=(Sample const& s) const { return cmp(s) != 0; }

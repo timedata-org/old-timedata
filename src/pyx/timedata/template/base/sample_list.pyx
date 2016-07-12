@@ -11,6 +11,7 @@ cdef extern from "<$include_file>" namespace "$namespace":
          void fill(C$sampleclass)
          void push_back(C$sampleclass)
          void resize(size_t)
+         size_t getSizeof()
 
     C$classname sliceOut(C$classname&, int begin, int end, int step)
     C$sampleclass max_cpp(C$classname&)

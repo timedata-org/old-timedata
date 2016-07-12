@@ -29,3 +29,6 @@ cdef class $classname:
 
     def __str__($classname self):
         return toString(self.cdata).decode('ascii')
+
+    def __sizeof__($classname self):
+        return self.cdata.getSizeof()

@@ -279,3 +279,10 @@ class TestColorList(unittest.TestCase):
         cl = ColorList(((-0.2, -0.2, -0.4), (0.2, 0.2, 0.4)))
         self.assertEqual(str(cl),
                          '((-0.2, -0.2, -0.4), (0.2, 0.2, 0.4))')
+
+    def test_size(self):
+        import sys
+        cl = ColorList()
+        self.assertEqual(sys.getsizeof(cl.resize(0)), 24)
+        self.assertEqual(sys.getsizeof(cl.resize(1)), 36)
+        self.assertEqual(sys.getsizeof(cl.resize(2)), 48)

@@ -9,6 +9,7 @@ cdef extern from "<$include_file>" namespace "$namespace":
          C$classname($number_type, $number_type, $number_type)
          $number_type& operator[](size_t)
          void fill($number_type)
+         size_t getSizeof()
 
     bool compare(C$classname&, C$classname&, int richcmp)
     bool fromString(string&, C$classname&)
