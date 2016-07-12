@@ -19,6 +19,7 @@ FLAGS = flags.extract_flags(
     compileropt=OPTS,
     name='',
     tiny=False,
+    models=''
     )
 
 BUILD_OPTIONS = dict(
@@ -39,7 +40,7 @@ Other possibilities include:
 """
 
 
-import datetime, glob, os, platform, shutil, subprocess, unittest
+import datetime, glob, os, platform, re, shutil, subprocess, unittest
 import setuptools.extension
 from setuptools.command.build_ext import build_ext as _build_ext
 
@@ -143,10 +144,13 @@ class Clean(Command):
 
 class Generate(Command):
     description = 'Make generated classes'
+    split_flag = re.compile('[\W,]').split
 
     def run(self):
         print('Generate ' + ('tiny' if FLAGS.tiny else ''))
-        generate.generate(tiny=FLAGS.tiny)
+
+        models = FLAGS.models and re.split('[\W,]', FLAGS.models)
+        generate.generate(tiny=FLAGS.tiny, models=models)
 
 
 class Benchmark(Command):

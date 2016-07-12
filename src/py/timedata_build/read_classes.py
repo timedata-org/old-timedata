@@ -1,28 +1,37 @@
 from . class_descriptions import Color, ColorList
 from . util import substitute_context
 
-def read_classes(tiny=False):
-    for model, prop in (
-            ('RGB', ('red', 'green', 'blue')),
-            ('HSL', ('hue', 'saturation', 'lightness')),
-            ('HSV', ('hue', 'saturation', 'value')),
-            ('XYZ', ('x', 'y', 'z')),
-            ('YIQ', ('luma', 'inphase', 'quadrature')),
-            ('YUV', ('luma', 'uchrominance', 'vchrominance')),
-            ):
-        for name in '', '255', '256':
-            if name and (tiny or model != 'RGB'):
-                continue
-            if tiny and model not in ('RGB', 'HSV'):
-                continue
+MODELS = (
+    ('RGB', ('red', 'green', 'blue')),
+    ('HSL', ('hue', 'saturation', 'lightness')),
+    ('HSV', ('hue', 'saturation', 'value')),
+    ('XYZ', ('x', 'y', 'z')),
+    ('YIQ', ('luma', 'inphase', 'quadrature')),
+    ('YUV', ('luma', 'uchrominance', 'vchrominance')),
+    )
 
-            cname = 'Color' + model + name
-            lname = 'ColorList' + model + name
-            rng = float(name or '1')
+def read_classes(tiny=False, models=[]):
+    for model, prop in MODELS:
+        for range_name in '', '255', '256':
+            name = model + range_name
+
+            if models:
+                if name.lower() not in models:
+                    continue
+            elif tiny:
+                if range_name or (model not in ('RGB', 'HSV')):
+                    continue
+            else:
+                if range_name and model != 'RGB':
+                    continue
 
             def sub(cl, name, **kwds):
                 return substitute_context(
-                    cl.__dict__, name=name, properties=prop, **kwds)
+                    cl.__dict__, name=name, properties=prop,
+                    range=float(range_name or '1'), **kwds)
 
-            yield sub(Color, cname, range=rng)
-            yield sub(ColorList, lname, range=rng, sampleclass=cname)
+            cname = 'Color' + name
+            lname = 'ColorList' + name
+
+            yield sub(Color, cname)
+            yield sub(ColorList, lname, sampleclass=cname)
