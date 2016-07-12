@@ -16,4 +16,4 @@ locals().update(
      **_make_module())
 
 
-print(timestamp())
+print(startup_message())

@@ -13,6 +13,5 @@ def git_tags():
 def optimization_flags():
     return optimizationFlags().decode('ascii')
 
-def timestamp():
-    return 'timedata: compiled %s; tags %s; optimization %s' % (
-        compile_timestamp(), git_tags(), optimization_flags())
+def startup_message():
+    return 'timedata: compiled %s; tags %s' % (compile_timestamp(), git_tags())
