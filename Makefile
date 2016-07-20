@@ -22,7 +22,7 @@ SYMBOLS ?= -g
 #
 CODE_GENERATION = $(OPTIMIZE) $(SYMBOLS) -std=$(STDLIB) -pthread
 DEPENDENCIES = -MMD -MP -MF
-INCLUDES = -Isrc
+INCLUDES = -Isrc/cpp
 LIBRARIES = -lm -lstdc++
 WARNINGS = -Wall -Wextra -Wno-strict-aliasing -Wpedantic
 
@@ -69,7 +69,7 @@ pre-build:
 binaries: pre-build
 	@$(MAKE) --no-print-directory $(BINARIES)
 
-build/%: src/%.cpp
+build/%: src/cpp/%.cpp
 	$(CXX) -o $@ $< $(CXXFLAGS) build/.deps/$*.d
 
 clean:

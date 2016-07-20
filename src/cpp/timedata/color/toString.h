@@ -2,6 +2,8 @@
 
 #include <timedata/color/colorfulness.h>
 #include <timedata/color/names_table_inl.h>
+#include <timedata/color/models/rgb.h>
+#include <timedata/signal/convert_inl.h>
 
 namespace timedata {
 
