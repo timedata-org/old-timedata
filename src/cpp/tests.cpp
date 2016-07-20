@@ -3,6 +3,7 @@
 #define CATCH_CONFIG_MAIN
 
 #include <catch/catch.hpp>
+#include <timedata/base/gammaTable_test.cpp>
 #include <timedata/base/join_test.cpp>
 #include <timedata/base/math_test.cpp>
 #include <timedata/color/names_test.cpp>
