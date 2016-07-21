@@ -196,6 +196,7 @@ class build_ext(_build_ext):
             libraries=LIBRARIES,
             include_dirs=['src/cpp'],
             extra_compile_args=compile_args,
+            extra_link_args=opt_flags,
             language='c++',
         )
 

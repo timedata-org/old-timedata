@@ -55,7 +55,8 @@ NumberType<ColorList> compare(ColorList const& x, ColorList const& y) {
 }
 
 template <typename ColorList>
-NumberType<ColorList> compare(ValueType<ColorList> const& x, ColorList const& y) {
+NumberType<ColorList> compare(ValueType<ColorList> const& x,
+                              ColorList const& y) {
     for (size_t i = 0; i < y.size(); ++i) {
         for (size_t j = 0; j < y[i].size(); ++j) {
             if (auto d = x[j] - y[i][j])
@@ -259,7 +260,8 @@ void sort(ColorList const& i, ColorList& o, bool reversed) {
 }
 
 template <typename ColorList>
-void spreadAppend(ValueType<ColorList> const& end, size_t size, ColorList& out) {
+void spreadAppend(ValueType<ColorList> const& end, size_t size,
+                  ColorList& out) {
     return timedata::spreadAppendG(end, size, out);
 }
 
