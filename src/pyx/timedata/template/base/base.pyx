@@ -5,9 +5,6 @@
 import cython
 from numbers import Number
 
-cdef extern from "<$include_file>" namespace "$namespace":
-    string toString(C$classname&)
-
 ### define
 
 cdef class $classname:
@@ -31,4 +28,4 @@ cdef class $classname:
         return toString(self.cdata).decode('ascii')
 
     def __sizeof__($classname self):
-        return self.cdata.getSizeof()
+        return getSizeof(self.cdata)

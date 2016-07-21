@@ -23,6 +23,8 @@ struct Sample : SampleBase<Model, Range> {
     using value_type = ValueType<base_type>;
     using number_type = ValueType<value_type>;
 
+    using is_container = std::false_type;
+
     using FunctionPointer = number_type (*)(number_type);
 
     using base_type::base_type;
@@ -41,9 +43,7 @@ struct Sample : SampleBase<Model, Range> {
         using sample_type = Sample;
         using value_type = Sample;
 
-        size_t getSizeof() const {
-            return sizeof(List) + sizeof(Sample) * this->size();
-        }
+        using is_container = std::true_type;
     };
 
     // TODO: need to use std::initializer_list!
@@ -106,8 +106,6 @@ struct Sample : SampleBase<Model, Range> {
         return {};
     }
 
-    size_t getSizeof() const { return sizeof(Sample); }
-
     bool operator==(Sample const& s) const { return cmp(s) == 0; }
     bool operator!=(Sample const& s) const { return cmp(s) != 0; }
     bool operator<(Sample const& s) const { return cmp(s) < 0; }
@@ -119,5 +117,21 @@ struct Sample : SampleBase<Model, Range> {
 template <typename T> using NumberType = typename T::number_type;
 template <typename T> using RangedType = typename T::ranged_type;
 template <typename T> using SampleType = typename T::sample_type;
+
+
+template <typename T>
+size_t getSizeof(T const& t, std::true_type) {
+    return sizeof(t) + sizeof(t[0]) * t.size();
+}
+
+template <typename T>
+size_t getSizeof(T const& t, std::false_type) {
+    return sizeof(t);
+}
+
+template <typename Sample>
+size_t getSizeof(Sample const& sample) {
+    return getSizeof(sample, typename Sample::is_container());
+}
 
 }  // timedata

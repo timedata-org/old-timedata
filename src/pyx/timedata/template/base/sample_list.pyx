@@ -4,15 +4,9 @@
 ### declare
 
 cdef extern from "<$include_file>" namespace "$namespace":
-    cdef cppclass C$classname:
-         C$classname()
-         C$sampleclass& operator[](size_t)
-         size_t size()
-         void fill(C$sampleclass)
-         void push_back(C$sampleclass)
-         void resize(size_t)
-         size_t getSizeof()
+    ctypedef vector[C$sampleclass] C$classname
 
+    string toString(C$classname&)
     C$classname sliceOut(C$classname&, int begin, int end, int step)
     C$sampleclass max_cpp(C$classname&)
     C$sampleclass min_cpp(C$classname&)
