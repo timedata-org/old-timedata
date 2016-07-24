@@ -12,7 +12,6 @@ def make(header_file):
     header = read_header_file(os.path.join('src', 'cpp', header_file))
     classname = header.classname
     namespace = ':'.join(header.namespaces)
-    member_name = '_instance'
 
     enum_class, enum_pyx, enum_types = make_enums(
         header.enum_classes, header_file, namespace, header.classname)

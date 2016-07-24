@@ -7,7 +7,7 @@ from . import read_classes, write_classes, make_structs, util
 STRUCT_FILES = [
     'timedata/signal/combiner',
     'timedata/signal/fade',
-#    'timedata/signal/render3',
+    'timedata/signal/render3',
     'timedata/signal/stripe',
     ]
 

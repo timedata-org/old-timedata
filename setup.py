@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
-"""This is the main builder and installer for the Templated Digital Signal
-Processing Python extension."""
+"""This is the main builder and installer for the timedata DSP Python
+extension."""
 
 import sys
 sys.path.append('src/py')

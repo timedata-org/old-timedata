@@ -11,6 +11,9 @@ struct Render3 {
     Permutation permutation = Permutation::rgb;
     size_t offset = 0, size = 0;
 
+};
+
+#if 0
     float apply(float s) const {
         s = std::min(1.0f, std::max(0.0f, scale * s));
         if (gamma != 1.0f)
@@ -35,7 +38,6 @@ struct Render3 {
             result[i] = static_cast<Type>(apply(c[perm[i]]));
         return result;
     }
-};
 
 inline void renderColorVector(
     Render3 const& r3, ColorVector const& in, size_t pos, char* s) {
@@ -46,5 +48,7 @@ inline void renderColorVector(
     for (size_t i = 0; i < r3.size; ++i)
         out[i] = r3.apply<Color256>(in.at(i + pos));
 }
+
+#endif
 
 } // timedata

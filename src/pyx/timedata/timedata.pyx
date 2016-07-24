@@ -10,8 +10,8 @@ include "build/genfiles/timedata/genfiles.pyx"
 
 locals().update(
      Combiner=_Combiner,
-#     Fade=_FadeImpl,
-#     Render3=_Render3Impl,
+     Fade=_Fade,
+     Render3=_Render3,
      Stripe=_Stripe,
      **_make_module())
 
