@@ -7,7 +7,8 @@ namespace timedata {
 struct Render3 {
     enum class Permutation {rgb, rbg, grb, gbr, brg, bgr};
 
-    float min = 0.0f, max = 255.0f, scale = 1.0f, gamma = 1.0f;
+    uint8_t min = 0, max = 255;
+    float scale = 1.0f, gamma = 1.0f;
     Permutation permutation = Permutation::rgb;
     size_t offset = 0, size = 0;
 

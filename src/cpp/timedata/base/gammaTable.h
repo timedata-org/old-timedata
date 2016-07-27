@@ -16,15 +16,8 @@ uint8_t getGamma(GammaTable const&);
 ////////////////////////////////////////////////////////////////////////////////
 
 inline GammaTable makeGammaTable(float gamma, uint8_t begin, uint8_t end) {
-    GammaTable table;
-
-    float diff = 1.0f, prevG;
-    for (size_t i = 0; i <= 256; ++i) {
-        auto g = std::pow(float(i) / 256.0f, 1.0f / gamma);
-        if (i)
-            diff = std::min(diff, g - prevG);
-        prevG = g;
-    }
+    auto iGamma = 1.0f / gamma;
+    auto diff = 1.0f - std::pow(255.0f / 256.0f, iGamma);
 
     /* Pick a table size to guarantee that each integer gamma appears
        at least four times in the table, which intuitively guarantees "enough"
@@ -32,6 +25,7 @@ inline GammaTable makeGammaTable(float gamma, uint8_t begin, uint8_t end) {
     auto size = 4 * static_cast<size_t>(1.0f / diff);
     float width = 1.0f + (end - begin);
 
+    GammaTable table;
     table.reserve(size);
 
     for (size_t i = 0; i < size; ++i) {
