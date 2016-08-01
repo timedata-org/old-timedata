@@ -6,8 +6,8 @@ namespace timedata {
 
 using GammaTable = std::vector<uint8_t>;
 
-GammaTable makeGammaTable(float gamma, uint8_t begin = 0, uint8_t end = 255);
-uint8_t getGamma(GammaTable const&);
+GammaTable makeGammaTable(float gamma, uint8_t min = 0, uint8_t max = 255);
+uint8_t getGamma(GammaTable const&, float x);
 
 ////////////////////////////////////////////////////////////////////////////////
 //
@@ -15,7 +15,7 @@ uint8_t getGamma(GammaTable const&);
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-inline GammaTable makeGammaTable(float gamma, uint8_t begin, uint8_t end) {
+inline GammaTable makeGammaTable(float gamma, uint8_t min, uint8_t max) {
     auto iGamma = 1.0f / gamma;
     auto diff = 1.0f - std::pow(255.0f / 256.0f, iGamma);
 
@@ -23,15 +23,15 @@ inline GammaTable makeGammaTable(float gamma, uint8_t begin, uint8_t end) {
        at least four times in the table, which intuitively guarantees "enough"
        coverage (proof needed). */
     auto size = 4 * static_cast<size_t>(1.0f / diff);
-    float width = 1.0f + (end - begin);
+    float width = 1.0f + (max - min);
 
     GammaTable table;
     table.reserve(size);
 
     for (size_t i = 0; i < size; ++i) {
         auto ratio = std::pow(float(i) / float(size), gamma),
-             gRaw = begin + ratio * width,
-             g = std::min(float(end), gRaw);
+             gRaw = min + ratio * width,
+             g = std::min(float(max), gRaw);
         table.push_back(static_cast<uint8_t>(g));
     }
 

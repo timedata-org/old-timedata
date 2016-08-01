@@ -15,5 +15,6 @@ locals().update(
      Stripe=_Stripe,
      **_make_module())
 
+include "src/pyx/timedata/signal/renderer.pyx"
 
 print(startup_message())
