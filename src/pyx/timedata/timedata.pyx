@@ -17,4 +17,4 @@ locals().update(
 
 include "src/pyx/timedata/signal/renderer.pyx"
 
-print(startup_message())
+print_startup_message()
