@@ -6,11 +6,11 @@ extension."""
 import sys
 sys.path.append('src/py')
 
-from timedata_build import flags, generate
+from timedata_build import arguments, generate
 
 OPTS = '-flto -fno-math-errno -fomit-frame-pointer -funroll-loops -ffast-math'
 
-FLAGS = flags.extract_flags(
+FLAGS = arguments.extract_flags(
     sys.argv,
     benchmark='lists',
     benchmark_size=10240,
@@ -21,6 +21,14 @@ FLAGS = flags.extract_flags(
     tiny=False,
     models=''
     )
+
+sys.argv[1:] = arguments.insert_dependencies(
+    sys.argv[1:],
+    develop='generate',
+    test='develop',
+    )
+
+print('Building targets', *sys.argv[1:])
 
 BUILD_OPTIONS = dict(
     o2=['-O2', '-DNDEBUG'],
