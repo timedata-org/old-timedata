@@ -24,7 +24,9 @@ FLAGS = arguments.extract_flags(
 
 sys.argv[1:] = arguments.insert_dependencies(
     sys.argv[1:],
+
     develop='generate',
+    build_sphinx='develop',
     test='develop',
     )
 
@@ -221,6 +223,13 @@ class build_ext(_build_ext):
         self.distribution.ext_modules = module
         super(build_ext, self).finalize_options()
 
+COMMANDS = {
+    'benchmark': Benchmark,
+    'build_ext': build_ext,
+    'clean': Clean,
+    'generate': Generate,
+    }
+
 
 # http://stackoverflow.com/a/37033551/43839
 def test_suite():
@@ -239,10 +248,5 @@ High-performance arithmetic for RGB color and for time data in general.""",
     url='https://github.com/rec/timedata',
     test_suite='setup.test_suite',
     download_url='https://github.com/rec/timedata/releases/tag/v0.8',
-    cmdclass={
-        'build_ext': build_ext,
-        'benchmark': Benchmark,
-        'clean': Clean,
-        'generate': Generate,
-    },
+    cmdclass=COMMANDS,
 )
