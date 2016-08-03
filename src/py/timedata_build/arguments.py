@@ -1,25 +1,11 @@
-import sys
+import os, sys
 
 from . import util
 
 
-def extract_flags(args, **flags):
-    result = []
-    for arg in args:
-        for flag in flags:
-            if arg.startswith('--' + flag):
-                value = arg[len(flag) + 2:]
-                if not value:
-                    flags[flag] = True
-                elif value.startswith('='):
-                    flags[flag] = value[1:]
-                else:
-                    raise ValueError('Can\'t understand flag ' + arg)
-                break
-        else:
-            result.append(arg)
-    args[:] = result
-    return util.Context(**flags)
+def extract_env(**flags):
+    get = lambda k, v: os.environ.get(k.upper(), v)
+    return util.Context(**{k: get(k, v) for k, v in flags.items()})
 
 
 def insert_dependencies(args, **dependencies):

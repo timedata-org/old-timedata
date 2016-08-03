@@ -10,8 +10,7 @@ from timedata_build import arguments, generate
 
 OPTS = '-flto -fno-math-errno -fomit-frame-pointer -funroll-loops -ffast-math'
 
-FLAGS = arguments.extract_flags(
-    sys.argv,
+FLAGS = arguments.extract_env(
     benchmark='lists',
     benchmark_size=10240,
     benchmark_number=1000,
