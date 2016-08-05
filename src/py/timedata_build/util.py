@@ -25,9 +25,6 @@ def write_if_different(fname, data):
         make_writable(fname)
         open(fname, 'w').write(data)
         make_writable(fname, False)
-        print('Wrote changed file', fname)
-        open('/tmp/old.txt', 'w').write(old_data)
-        open('/tmp/new.txt', 'w').write(data)
     else:
         print(fname, 'unchanged')
 
