@@ -1,3 +1,5 @@
+TEMP_LOG = print
+
 include "src/pyx/timedata/base/stl.pyx"
 include "src/pyx/timedata/base/math.pyx"
 include "src/pyx/timedata/base/modules.pyx"
@@ -16,5 +18,7 @@ locals().update(
      **_make_module())
 
 include "src/pyx/timedata/signal/renderer.pyx"
+
+del TEMP_LOG
 
 print_startup_message()

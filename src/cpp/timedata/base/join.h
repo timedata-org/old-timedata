@@ -8,6 +8,8 @@ namespace timedata {
 template <typename ... Args>
 void log(Args&& ...);
 
+using TEMP_LOG = log;
+
 /** Join items into a string. */
 template <typename ... Args>
 std::string join(Args&& ...);
