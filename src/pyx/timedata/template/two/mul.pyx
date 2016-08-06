@@ -7,6 +7,7 @@
 
 ### define
     def __${name}__(object self, object other):
+        """$documentation that returns a new $classname."""
         # A little tricky because the $classname can appear on the left or the
         # right side of the argument.
         cdef size_t mult
@@ -21,5 +22,6 @@
         return cl
 
     def __i${name}__($classname self, size_t mult):
+        """$documentation that writes into self."""
         magic_$name(mult, self.cdata)
         return self

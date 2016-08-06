@@ -9,6 +9,7 @@ $enum_pyx
         clearStruct(self.cdata)
 
     def clear(self):
+        """Clear the $classname to its initial state."""
         clearStruct(self.cdata)
 
     def __str__(self):

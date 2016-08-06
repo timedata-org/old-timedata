@@ -3,6 +3,6 @@
 
 ### define
     cpdef $classname $name($classname self):
-        """Mutating version of __${name}__ that changes self."""
+        """$documentation."""
         math_$name(self.cdata)
         return self

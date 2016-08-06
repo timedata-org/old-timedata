@@ -9,6 +9,7 @@
 
 ### define
     def __${name}__(object a, object b, object mod):
+        """$documentation"""
         cdef $classname z, result = $classname()
 
         cdef $classname x = a if isinstance(a, $classname) else $classname(a)
