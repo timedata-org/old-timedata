@@ -30,15 +30,15 @@ substitutions = dict(substitutions,
                      class_documentation="""\
 A $name is an immutable RGB floating point color.
 
-     A $name looks very much like a Python tuple with $$size floating point
-     numbers, with the big exception that operators like + and * perform
-     arithmetic, not list-style operations.
+     A $name looks like a Python tuple with $$size floating point numbers, with
+     the big exception that operators like + and * perform arithmetic, not
+     list-style operations.
 
      The constructor for $name takes a triple of numbers but also strings
      representing human-readable color names like "red" and "green".
 
-     $name supports the operations +, -, *, /, %, pow, and ~ (which means
-     "take the complementary color").
+     $name supports the operations `+`, `-`, `\\*`, `/`, `%`, `pow`, and `~`
+     (which means "take the complementary color").
 
      ${name}s are very lightweight - about half the size of a corresponding
      Python tuple and more than twice as fast to create and copy.  ${name}s
