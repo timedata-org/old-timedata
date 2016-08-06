@@ -9,7 +9,7 @@ from .. import util
 
 def make(header_file):
     header_file += '.h'
-    header = read_header_file(os.path.join('src', 'cpp', header_file))
+    header = read_header_file('/'.join(['src', 'cpp', header_file]))
     classname = header.classname
     namespace = ':'.join(header.namespaces)
 
@@ -74,7 +74,7 @@ def make_structs(files):
     for f in files:
         data = make(f)
         base, fname = os.path.split(os.path.splitext(f)[0])
-        outfile = os.path.join('build', 'genfiles', f + '.pyx')
+        outfile = '/'.join(['build', 'genfiles', f + '.pyx'])
         results.append(outfile)
         util.write_if_different(outfile, data)
     return results
