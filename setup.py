@@ -158,6 +158,14 @@ class Clean(Command):
             shutil.rmtree(os.path.join(ROOT_DIR, d), ignore_errors=True)
 
 
+class TestCpp(Command):
+    description = 'Build and run C++ tests.  Might not work on windows.'
+
+    def run(self):
+        print(run('make'))
+        print(run('./build/tests'))
+
+
 class Generate(Command):
     description = 'Make generated classes'
     split_flag = re.compile('[\W,]').split
@@ -234,6 +242,7 @@ COMMANDS = {
     'build_ext': build_ext,
     'clean': Clean,
     'generate': Generate,
+    'test_cpp': TestCpp,
     }
 
 
