@@ -4,12 +4,7 @@ import os
 from . import read_classes, write_classes, make_structs, util
 
 
-STRUCT_FILES = [
-    'timedata/signal/combiner',
-    'timedata/signal/fade',
-    'timedata/signal/render3',
-    'timedata/signal/stripe',
-    ]
+STRUCT_FILES = ['timedata/signal/render3']
 
 
 def generate(tiny=False, models=''):

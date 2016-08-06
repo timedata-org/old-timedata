@@ -8,12 +8,23 @@ $enum_pyx
     def __cinit__(self):
         clearStruct(self.cdata)
 
+    def __str__(self):
+        return "($str_format)" % (
+            $variable_names)
+
     def clear(self):
         """Clear the $classname to its initial state."""
         clearStruct(self.cdata)
 
-    def __str__(self):
-        return "($str_format)" % (
-            $variable_names)
+    cpdef _$classname copy(self):
+        cdef _$classname other = _$classname()
+        other.cdata = self.cdata
+        return other
+
+    def __copy__(self):
+      return self.copy()
+
+    def __deepcopy__(self, memodict={}):
+        return self.copy()
 
 $property_list
