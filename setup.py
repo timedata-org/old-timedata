@@ -10,6 +10,13 @@ from timedata_build import arguments, generate
 
 OPTS = '-flto -fno-math-errno -fomit-frame-pointer -funroll-loops -ffast-math'
 
+"""Each of these "flags" corresponds to an environment variables looking like
+   TIMEDATA_$NAME where $NAME is the uppercase version of flag.
+
+   For example, to run generate with the "tiny" flag, enter:
+
+       TIMEDATA_TINY=true ./setup.py generate
+"""
 FLAGS = arguments.extract_env(
     benchmark='lists',
     benchmark_size=10240,
