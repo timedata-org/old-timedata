@@ -1,6 +1,7 @@
+#include <memory>
+
 #if !defined WINDOWS && __cplusplus < 201200
 
-#include <memory>
 #include <type_traits>
 #include <utility>
 
