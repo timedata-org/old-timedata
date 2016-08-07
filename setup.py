@@ -165,6 +165,7 @@ class PushSphinx(Command):
             os.chdir(src)
             print(run('git', 'add', '--all', ':/'))
             print(run('git', 'commit', '-m', TIME))
+            print(run('git', push))
         except:
             os.chdir(dot)
 
