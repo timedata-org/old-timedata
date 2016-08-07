@@ -178,6 +178,13 @@ class TestColorList(unittest.TestCase):
         self.assertEqual(cl.round(1),
                              ColorList(((0.2, 0.2, 0.4), (-0.2, -0.2, -0.4))))
 
+    def test_copy(self):
+        import copy
+        cl = ColorList(['red', 'green', 'blue'])
+        self.assertEqual(cl, cl.copy())
+        self.assertEqual(cl, copy.copy(cl))
+        self.assertEqual(cl, copy.deepcopy(cl))
+
     def test_distance(self):
         cl = ColorList()
         self.assertEqual(cl.distance(ColorList()), 0)

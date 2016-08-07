@@ -3,6 +3,7 @@
 
 ### define
     def __${name}__(object x, object y):
+        """$documentation"""
         cdef $classname result = $classname()
         cdef $classname a = <$classname> x if isinstance(x, $classname) else $classname(x)
         cdef $classname b = <$classname> y if isinstance(y, $classname) else $classname(y)

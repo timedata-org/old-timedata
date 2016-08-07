@@ -57,8 +57,7 @@ def read_template(lines, f):
 
 
 def substitute_templates(*names, **kwds):
-    filename = os.path.join('src', 'pyx', 'timedata', 'template',
-                            *names) + '.pyx'
+    filename = '/'.join(('src', 'pyx', 'timedata', 'template') + names) + '.pyx'
     sub = substituter(**kwds)
 
     try:

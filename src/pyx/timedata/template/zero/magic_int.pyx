@@ -6,4 +6,5 @@
 
 ### define
     def __${name}__($classname self):
+        """$documentation"""
         return magic_$name(self.cdata)

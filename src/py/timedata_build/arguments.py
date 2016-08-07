@@ -4,7 +4,7 @@ from . import util
 
 
 def extract_env(**flags):
-    get = lambda k, v: os.environ.get(k.upper(), v)
+    get = lambda k, v: os.environ.get('TIMEDATA_' + k.upper(), v)
     return util.Context(**{k: get(k, v) for k, v in flags.items()})
 
 

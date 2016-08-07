@@ -10,6 +10,13 @@ from timedata_build import arguments, generate
 
 OPTS = '-flto -fno-math-errno -fomit-frame-pointer -funroll-loops -ffast-math'
 
+"""Each of these "flags" corresponds to an environment variables looking like
+   TIMEDATA_$NAME where $NAME is the uppercase version of flag.
+
+   For example, to run generate with the "tiny" flag, enter:
+
+       TIMEDATA_TINY=true ./setup.py generate
+"""
 FLAGS = arguments.extract_env(
     benchmark='lists',
     benchmark_size=10240,
@@ -48,9 +55,9 @@ Other possibilities include:
     -funroll-loops
 """
 
-
-import datetime, glob, os, platform, re, shutil, subprocess, unittest
+import datetime, errno, glob, os, platform, re, shutil, subprocess, unittest
 import setuptools.extension
+from distutils.dir_util import copy_tree
 from setuptools.command.build_ext import build_ext as _build_ext
 
 
@@ -74,16 +81,11 @@ IS_DEBIAN = IS_LINUX and (platform.linux_distribution()[0] == 'debian')
 IS_WINDOWS = (platform.system() == 'Windows')
 
 LIBRARIES = [] if (IS_MAC or IS_LINUX or IS_WINDOWS) else ['m']
-
 ROOT_DIR = os.path.dirname(os.path.realpath(__file__))
 
 CLEAN_DIRS = ['build']
 
-
-def execute(command):
-    result = os.system(command)
-    if result:
-        raise Exception('%s\n failed with code %s' % (command, result))
+TIME = datetime.datetime.utcnow().isoformat()
 
 
 def run(*cmds):
@@ -101,7 +103,7 @@ if IS_LINUX or IS_MAC:
     COMPILE_ARGS = [
         '-std=c++11',
         '-ferror-limit=100',
-        '-DCOMPILE_TIMESTAMP="%s"' % datetime.datetime.utcnow().isoformat(),
+        '-DCOMPILE_TIMESTAMP="%s"' % TIME,
         '-DGIT_TAGS="%s"' % git_tags(),
         '-Wall',
         '-Wextra',
@@ -149,6 +151,30 @@ class Clean(Command):
         for d in CLEAN_DIRS:
             print('Deleting ./{}/'.format(d))
             shutil.rmtree(os.path.join(ROOT_DIR, d), ignore_errors=True)
+
+
+class PushSphinx(Command):
+    description = 'Push documentation to github.io'
+
+    def run(self):
+        dot = os.path.abspath('.')
+        src = os.path.abspath('build/html/')
+        target = os.path.abspath('../timedata-org.github.io/')
+        copy_tree(src, target)
+        try:
+            os.chdir(target)
+            print(run('git', 'add', '--all', '.'))
+            print(run('git', 'commit', '-am', TIME))
+            print(run('git', 'push'))
+        except:
+            os.chdir(dot)
+
+class TestCpp(Command):
+    description = 'Build and run C++ tests.  Might not work on windows.'
+
+    def run(self):
+        print(run('make'))
+        print(run('./build/tests'))
 
 
 class Generate(Command):
@@ -227,6 +253,8 @@ COMMANDS = {
     'build_ext': build_ext,
     'clean': Clean,
     'generate': Generate,
+    'push_sphinx': PushSphinx,
+    'test_cpp': TestCpp,
     }
 
 

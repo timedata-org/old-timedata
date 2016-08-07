@@ -1,3 +1,5 @@
+#if __cplusplus < 201200
+
 #include <memory>
 #include <type_traits>
 #include <utility>
@@ -32,3 +34,5 @@ namespace std {
         typename _Unique_if<T>::_Known_bound
         make_unique(Args&&...) = delete;
 }
+
+#endif

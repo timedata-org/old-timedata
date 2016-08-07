@@ -16,10 +16,16 @@ cdef class $classname:
     MODEL_NAME = '$model'
 
     cpdef $classname copy($classname self):
-        """Return a shallow copy of self."""
+        """Return a new copy of self."""
         cdef $classname s = $classname()
         s.cdata = self.cdata
         return s
+
+    def __copy__($classname self):
+      return self.copy()
+
+    def __deepcopy__($classname self, memodict={}):
+        return self.copy()
 
     def __repr__($classname self):
         return '$classname(%s)' % str(self)

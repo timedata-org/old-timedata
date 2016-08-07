@@ -110,6 +110,13 @@ class TestColor(unittest.TestCase):
         self.assertEqual(abs(-red), red)
         self.assertEqual(abs(-(red + gray + gray)), red + gray + gray)
 
+    def test_copy(self):
+        import copy
+        red = Color.by_name.red
+        self.assertEqual(red, red.copy())
+        self.assertEqual(red, copy.copy(red))
+        self.assertEqual(red, copy.deepcopy(red))
+
     def test_hex(self):
         for k, v in Colors.__dict__.items():
             if not (k.startswith('_') or k.startswith('grey') or

@@ -5,7 +5,7 @@
 
 ### define
     cpdef $classname $name($classname self, object c):
-        """ into colors from either a number or a ColorList."""
+        """$documentation into this $classname."""
         if isinstance(c, Number):
             math_$name(self.cdata, <$number_type> c, self.cdata)
         elif isinstance(c, $sampleclass):
@@ -15,7 +15,7 @@
         return self
 
     cpdef $classname ${name}_to($classname self, object c, $classname x):
-        """ into colors from either a number or a ColorList."""
+        """$documentation onto another $classname."""
         if isinstance(c, Number):
             math_$name(self.cdata, <$number_type> c, x.cdata)
         elif isinstance(c, $sampleclass):

@@ -10,7 +10,7 @@ slow in Python to get either very high frame rates, or complex patterns with
 more than a few components - particularly on small machines like the Raspberry
 Pi.
 
-Tradition color arithmetic is done in 8-bit integers, which provide inadequate
+Traditional color arithmetic is done in 8-bit integers, which provide inadequate
 resolution for smooth fades - particularly when everything is gamma corrected
 (exponentiated) at the very last step.
 
