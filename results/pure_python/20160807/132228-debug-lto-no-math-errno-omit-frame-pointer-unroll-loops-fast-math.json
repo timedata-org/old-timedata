@@ -1,0 +1,25 @@
+{
+    "git_tags": "5021a8c+develop.rec",
+    "name": "pure_python",
+    "number": 100,
+    "optimization_flags": "-DDEBUG -O0 -ffast-math -flto -fno-math-errno -fomit-frame-pointer -funroll-loops",
+    "platform": {
+        "version": "10.9.5",
+        "system": "Darwin"
+    },
+    "results": {
+        "add_color": 0.3912019017152488,
+        "add_list": 0.4284549090079963,
+        "add_number": 0.3288530558347702,
+        "add_to_color": 0.42442741664126515,
+        "add_to_list": 0.4387080832384527,
+        "add_to_number": 0.33410940133035183,
+        "compare": 0.12959110783413053,
+        "invert": 0.18540755473077297,
+        "replace_all": 0.004355092998594046,
+        "rotate": 0.0025630472227931023,
+        "rotate_to": 0.0034314850345253944
+    },
+    "size": 10240,
+    "timestamp": "2016-08-07T13:22:28.676465"
+}

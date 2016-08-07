@@ -1,0 +1,25 @@
+{
+    "git_tags": "5021a8c+develop.rec",
+    "name": "lists",
+    "number": 100,
+    "optimization_flags": "-DDEBUG -O0 -ffast-math -flto -fno-math-errno -fomit-frame-pointer -funroll-loops",
+    "platform": {
+        "version": "10.9.5",
+        "system": "Darwin"
+    },
+    "results": {
+        "add_color": 0.004262549336999655,
+        "add_list": 0.004307059105485678,
+        "add_number": 0.0040459660813212395,
+        "add_to_color": 0.004087622743099928,
+        "add_to_list": 0.0038660340942442417,
+        "add_to_number": 0.0040524788200855255,
+        "compare": 0.004742555785924196,
+        "invert": 0.006017335224896669,
+        "replace_all": 0.002613592892885208,
+        "rotate": 0.0013759410940110683,
+        "rotate_to": 0.0013765469193458557
+    },
+    "size": 10240,
+    "timestamp": "2016-08-07T13:22:25.989153"
+}

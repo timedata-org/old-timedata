@@ -1,7 +1,5 @@
 from timedata import Color, ColorList
 
-DEFAULT_SIZE = 10240
-
 BLACK = Color.by_name.black
 
 

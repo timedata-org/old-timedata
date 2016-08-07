@@ -18,9 +18,9 @@ OPTS = '-flto -fno-math-errno -fomit-frame-pointer -funroll-loops -ffast-math'
        TIMEDATA_TINY=true ./setup.py generate
 """
 FLAGS = arguments.extract_env(
-    benchmark='lists',
+    benchmarks='lists,pure_python',
     benchmark_size=10240,
-    benchmark_number=1000,
+    benchmark_number=100,
     buildtype='o3',
     compileropt=OPTS,
     name='',
@@ -70,7 +70,7 @@ assert ACTUAL_PYTHON >= LEAST_PYTHON, (
 
 # Uncomment this next line if you want Cython to output HTML showing how C++-ey
 # it can make your code.
-# Same as --annotate here: http://docs.cython.org/src/quickstart/cythonize.html
+# Same as --annotate here: http://goo.gl/1kNY1n
 #
 # import Cython.Compiler.Options
 # Cython.Compiler.Options.annotate = True
@@ -200,7 +200,7 @@ class Benchmark(Command):
             for o in FLAGS.compileropt.split():
                 parts.append(o[2:])
             name = '_'.join(parts)
-        run_benchmarks(FLAGS.benchmark.split(), '-'.join(parts),
+        run_benchmarks(FLAGS.benchmarks.split(','), '-'.join(parts),
                        FLAGS.benchmark_size, FLAGS.benchmark_number)
 
 

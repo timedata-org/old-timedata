@@ -15,7 +15,7 @@ What do we need to know when reporting a test?
 import collections, datetime, importlib, json, os, pathlib, platform, sys
 import time, timeit
 
-from . import lists
+from . benchmarks import lists, pure_python
 
 # The format for timestamps and thus filenames.
 TIMESTAMP_FORMAT = '%Y%m%d-%H%M%S'
