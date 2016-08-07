@@ -1,4 +1,4 @@
-#if __cplusplus < 201200
+#if !defined WINDOWS && __cplusplus < 201200
 
 #include <memory>
 #include <type_traits>
