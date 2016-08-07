@@ -97,6 +97,5 @@ def add_methods(old_methods=None, **new_methods):
         else:
             cat_dict = result.setdefault(signature, {})
             for category, methods in categories.items():
-                # print(signature, category, )
                 cat_dict[category] = cat_dict.get(category, ()) + tup(methods)
     return result
