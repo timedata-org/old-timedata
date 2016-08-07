@@ -23,8 +23,11 @@ def write_classes(config, *, output_file=None, **kwds):
     for method_type in 'zero', 'one', 'two', 'static':
         for tmpl, methods in sorted(config.get(method_type, {}).items()):
             for m in methods:
-                if not isinstance(m, dict):
+                if isinstance(m, str):
                     m = dict(name=m)
+                elif isinstance(m, (list, tuple)):
+                    name, documentation = m
+                    m = dict(name=name, documentation=documentation)
                 fmt(method_type, tmpl, **collections.ChainMap(m, kwds))
 
     while define and not define[-1].strip():

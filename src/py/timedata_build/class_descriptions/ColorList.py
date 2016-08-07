@@ -11,19 +11,48 @@ methods = add_methods(
     methods,
     base='sample_list',
     zero=dict(
-        simple_mutator=('clear', 'zero'),
-        mutator=('abs', 'floor', 'ceil', 'invert', 'neg', 'reverse', 'trunc'),
+        simple_mutator=(
+            'clear',
+            'zero'),
+        mutator=(
+            'abs',
+            'floor',
+            'ceil',
+            'invert',
+            'neg',
+            'reverse',
+            'trunc',
+            ),
         ),
 
     one=dict(
-        arithmetic=('add', 'div', 'mul', 'pow', 'sub', 'rdiv', 'rpow', 'rsub',
-                    'max_limit', 'min_limit'),
-        return_number=('distance', 'distance2'),
+        arithmetic=(
+            'add',
+            'div',
+            'mul',
+            'pow',
+            'sub',
+            'rdiv',
+            'rpow',
+            'rsub',
+            'max_limit',
+            'min_limit',
+            ),
+
+        return_number=(
+            'distance',
+            'distance2',
+            ),
         ),
 
     two=dict(
-        magic='add',
-        mul='mul',
+        magic=(
+            'add',
+            ),
+
+        mul=(
+            'mul',
+            ),
         ),
 )
 
