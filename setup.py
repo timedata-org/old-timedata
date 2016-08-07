@@ -163,8 +163,8 @@ class PushSphinx(Command):
         copy_tree(src, target)
         try:
             os.chdir(src)
-            print(run('git', 'add', '--all', ':/'))
-            print(run('git', 'commit', '-m', TIME))
+            print(run('git', 'add', '--all'))
+            print(run('git', 'commit', '-am', TIME))
             print(run('git', push))
         except:
             os.chdir(dot)
