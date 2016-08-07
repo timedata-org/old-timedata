@@ -217,6 +217,7 @@ class build_ext(_build_ext):
         os.makedirs('build/genfiles/timedata', exist_ok=True)
         compile_args = COMPILE_ARGS
 
+        opt_flags = None
         if not IS_WINDOWS:
             opt_flags = BUILD_OPTIONS[FLAGS.buildtype or 'o3']
             if FLAGS.compileropt:
