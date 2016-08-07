@@ -84,19 +84,18 @@ def substitute_context(context, **kwds):
     return Context(**context)
 
 
-def add_methods(x=None, **y):
-    """Merge two dictionaries down exactly two levels."""
+def add_methods(old_methods=None, **new_methods):
+    """Merge two class description dictionaries."""
     import copy
     def tup(v):
         return (v, ) if isinstance(v, str) else v
 
-    result = copy.deepcopy(x or {})
-    for k, v in y.items():
-        if k == 'base':
-            result[k] = result.get(k, ()) + tup(v)
+    result = copy.deepcopy(old_methods or {})
+    for signature, categories in new_methods.items():
+        if signature == 'base':
+            result[signature] = result.get(signature, ()) + tup(categories)
         else:
-            r_value = result.setdefault(k, {})
-            for k2, v2 in v.items():
-                v3 = r_value.get(k2, ())
-                r_value[k2] = v3  + tup(v2)
+            cat_dict = result.setdefault(signature, {})
+            for category, methods in categories.items():
+                cat_dict[category] = cat_dict.get(category, ()) + tup(methods)
     return result

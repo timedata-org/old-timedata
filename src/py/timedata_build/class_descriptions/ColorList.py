@@ -6,7 +6,6 @@ properties = ()
 namespace = 'timedata::color_list'
 value_type = 'float'
 size = 3
-documentation = 'FIXME'
 
 methods = add_methods(
     methods,
@@ -23,8 +22,8 @@ methods = add_methods(
         ),
 
     two=dict(
-        magic=('add',),
-        mul=('mul')
+        magic='add',
+        mul='mul',
         ),
 )
 

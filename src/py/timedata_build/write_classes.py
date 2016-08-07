@@ -6,6 +6,10 @@ def write_classes(config, *, output_file=None, **kwds):
     declare, define = [], []
 
     def fmt(*names, **kwds):
+        name = kwds.get('name')
+        docnames = names + (name, ) if name else names
+        default_documentation = '.'.join(docnames)
+        kwds['documentation'] = kwds.get('documentation', default_documentation)
         dc, df = util.substitute_templates(*names, **kwds)
         dc and declare.append(dc)
         df and define.append(df)
