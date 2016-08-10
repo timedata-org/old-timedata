@@ -6,5 +6,5 @@
 
 ### define
     def __${name}__($classname self):
-        """$documentation"""
+        """Python magic method __${name}__."""
         return magic_$name(self.cdata)

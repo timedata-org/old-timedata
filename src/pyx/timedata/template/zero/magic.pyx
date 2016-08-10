@@ -3,7 +3,7 @@
 
 ### define
     def  __${name}__($classname self):
-        """$documentation"""
+        """Python magic method __${name}__"""
         cdef $classname s = $classname()
         s.cdata = magic_$name(self.cdata)
         return s

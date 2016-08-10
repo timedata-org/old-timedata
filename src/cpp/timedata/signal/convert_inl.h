@@ -157,9 +157,9 @@ Converter const& getConverterByType();
 
 template <typename Sample>
 Converter makeConverterByType() {
-    auto name = className<Sample>();
-
     using Normal = NormalType<Sample>;
+
+    auto name = className<Sample>();
     auto isNormal = std::is_same<Normal, Sample>::value;
     auto normal = isNormal ? nullptr : &getConverterByType<Normal>();
 

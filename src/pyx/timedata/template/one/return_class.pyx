@@ -3,7 +3,10 @@
 
 ### define
     cpdef $name($classname self, object x):
-        """$documentation"""
+        """$documentation
+        Arguments:
+            x: a $classname or something that can be converted into one.
+        """
         cdef $classname s = x if isinstance(x, $classname) else $classname(x)
         cdef $classname result = $classname()
         result.cdata = $name(self.cdata, s.cdata)

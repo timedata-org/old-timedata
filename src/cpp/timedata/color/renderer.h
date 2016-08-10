@@ -15,7 +15,12 @@ class CRenderer {
 
     /** Render a CColorListRGB to a byte buffer.  The number of bytes pointed to
         by `out` must be at least 3 times the number of colors. */
-    void render(float level, CColorListRGB const& colors, char* out);
+    void render(float level, CColorListRGB const&, char* out);
+
+    /** Render a CColorListRGB to a byte buffer.  The number of bytes pointed to
+        by `out` must be at least 3 times the number of colors. */
+    template <typename Colors>
+    void renderGeneric(float level, Colors const&, size_t size, char* out);
 
   private:
     using Perm = std::array<uint8_t, 3>;
@@ -36,17 +41,23 @@ inline CRenderer::CRenderer(Render3 r)
           perm_(getPerm(r.permutation)) {
 }
 
-/** Render a CColorListRGB to a byte buffer.  The number of bytes pointed to
-    by `out` must be at least 3 times the number of colors. */
-inline void CRenderer::render(float level, CColorListRGB const& colors,
-                             char* out) {
-    for (size_t i = 0; i < colors.size(); ++i) {
-        for (size_t j = 0; j < colors[i].size(); ++j, ++out) {
-            auto component = level * colors[i][perm_[j]];
+template <typename Colors>
+void CRenderer::renderGeneric(
+        float level, Colors const& colors, size_t size, char* out) {
+    for (size_t i = 0; i < size; ++i) {
+        auto&& color = colors(i);
+        for (size_t j = 0; j < color.size(); ++j, ++out) {
+            auto component = level * color[perm_[j]];
             auto gamma = getGamma(gammaTable_, component);
             *out = static_cast<char>(gamma);
         }
     }
+}
+
+inline void CRenderer::render(
+        float level, CColorListRGB const& colors, char* out) {
+    auto getter = [&] (size_t i) { return colors[i]; };
+    return renderGeneric(level, getter, colors.size(), out);
 }
 
 inline CRenderer::Perm CRenderer::getPerm(Render3::Permutation perm) {

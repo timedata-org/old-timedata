@@ -14,6 +14,7 @@ methods = add_methods(
         simple_mutator=(
             'clear',
             'zero'),
+
         mutator=(
             'abs',
             'floor',
