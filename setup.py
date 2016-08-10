@@ -34,6 +34,8 @@ sys.argv[1:] = arguments.insert_dependencies(
     develop='generate',
     build_sphinx='develop',
     test='develop',
+    copy_sphinx='build_sphinx',
+    push_sphinx='copy_spinx',
     )
 
 print('Building targets', *sys.argv[1:])
@@ -153,16 +155,23 @@ class Clean(Command):
             shutil.rmtree(os.path.join(ROOT_DIR, d), ignore_errors=True)
 
 
+SPHINX_SOURCE = os.path.abspath('build/html/')
+DOCUMENTATION_REPO = os.path.abspath('../timedata-org.github.io/')
+
+class CopySphinx(Command):
+    description = 'Push documentation to github.io'
+
+    def run(self):
+        copy_tree(SPHINX_SOURCE, DOCUMENTATION_REPO)
+
+
 class PushSphinx(Command):
     description = 'Push documentation to github.io'
 
     def run(self):
         dot = os.path.abspath('.')
-        src = os.path.abspath('build/html/')
-        target = os.path.abspath('../timedata-org.github.io/')
-        copy_tree(src, target)
         try:
-            os.chdir(target)
+            os.chdir(DOCUMENTATION_REPO)
             print(run('git', 'add', '--all', '.'))
             print(run('git', 'commit', '-am', TIME))
             print(run('git', 'push'))
@@ -253,6 +262,7 @@ COMMANDS = {
     'benchmark': Benchmark,
     'build_ext': build_ext,
     'clean': Clean,
+    'copy_sphinx': CopySphinx,
     'generate': Generate,
     'push_sphinx': PushSphinx,
     'test_cpp': TestCpp,
