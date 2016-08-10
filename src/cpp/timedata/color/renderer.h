@@ -14,14 +14,9 @@ class CRenderer {
     CRenderer() = default;
     CRenderer& operator=(CRenderer const&) = default;
 
-    /** Render a CColorListRGB to a byte buffer.  The number of bytes pointed to
-        by `out` must be at least 3 times the number of colors. */
-    void render(float level, CColorListRGB const&, char* out);
-
-    /** Render a CColorListRGB to a byte buffer.  The number of bytes pointed to
-        by `out` must be at least 3 times the number of colors. */
-    template <typename Colors>
-    void renderGeneric(float level, Colors const&, char* out);
+    /** Render a generic RGBIndexer to a byte buffer.  The number of bytes
+        pointed to by `out` must be at least 3 times the number of colors. */
+    void render(float level, RGBIndexer const&, size_t size, char* out);
 
   private:
     using Perm = std::array<uint8_t, 3>;

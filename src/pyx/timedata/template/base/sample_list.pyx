@@ -134,6 +134,12 @@ cdef extern from "<$include_file>" namespace "$namespace":
             return id
         raise ValueError('Can\'t find sample %s' % sample)
 
+    cpdef Indexer indexer($classname self):
+        """Return an RGBIndexer in Python form."""
+        cpdef Indexer indexer = Indexer()
+        indexer.cdata = getIndexer(self.cdata)
+        return indexer
+
     cpdef $classname insert($classname self, int key,
                            $sampleclass sample):
         """Insert a sample before key."""

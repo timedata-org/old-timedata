@@ -15,22 +15,16 @@ inline CRenderer::CRenderer(Render3 r)
           perm_(getPerm(r.permutation)) {
 }
 
-template <typename Colors>
-void CRenderer::renderGeneric(
-        float level, Colors const& colors, char* out) {
-    for (size_t i = 0; i < colors.size(); ++i) {
-        auto color = colors[i];
+void CRenderer::render(
+        float level, RGBIndexer const& colors, size_t size, char* out) {
+    for (size_t i = 0; i < size; ++i) {
+        auto color = colors(i);
         for (size_t j = 0; j < color.size(); ++j, ++out) {
             auto component = level * color[perm_[j]];
             auto gamma = getGamma(gammaTable_, component);
             *out = static_cast<char>(gamma);
         }
     }
-}
-
-inline void CRenderer::render(
-        float level, CColorListRGB const& colors, char* out) {
-    return renderGeneric(level, RGBAdaptor<CColorListRGB>{colors}, out);
 }
 
 inline CRenderer::Perm CRenderer::getPerm(Render3::Permutation perm) {

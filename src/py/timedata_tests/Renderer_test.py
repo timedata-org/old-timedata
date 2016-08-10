@@ -36,3 +36,7 @@ class TestRenderer(unittest.TestCase):
         r = render(COLORS.copy().mul(0.9), gamma=2.5)
         self.assertEqual(r, [196, 0, 0, 0, 196, 0, 0, 0, 196])
         self.assertEqual(r, render(COLORS, gamma=2.5, level=0.9))
+
+    def test_render_convert(self):
+        colors = ColorListHSV(['red', 'green', 'blue'])
+        self.assertEqual(render(colors), [255, 0, 0, 0, 255, 0, 0, 0, 255])
