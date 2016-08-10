@@ -1,4 +1,4 @@
-cdef extern from "<timedata/color/renderer.h>" namespace "timedata::color_list":
+cdef extern from "<timedata/color/renderer_inl.h>" namespace "timedata::color_list":
     cdef cppclass CRenderer:
         CRenderer(Render3&)
         CRenderer()
