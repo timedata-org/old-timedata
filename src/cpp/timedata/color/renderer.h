@@ -2,6 +2,7 @@
 
 #include <timedata/base/gammaTable.h>
 #include <timedata/signal/render3.h>
+#include <timedata/signal/convert_inl.h>
 #include <timedata/color/cython_list_inl.h>
 
 namespace timedata {
@@ -20,7 +21,7 @@ class CRenderer {
     /** Render a CColorListRGB to a byte buffer.  The number of bytes pointed to
         by `out` must be at least 3 times the number of colors. */
     template <typename Colors>
-    void renderGeneric(float level, Colors const&, size_t size, char* out);
+    void renderGeneric(float level, Colors const&, char* out);
 
   private:
     using Perm = std::array<uint8_t, 3>;
@@ -43,9 +44,9 @@ inline CRenderer::CRenderer(Render3 r)
 
 template <typename Colors>
 void CRenderer::renderGeneric(
-        float level, Colors const& colors, size_t size, char* out) {
-    for (size_t i = 0; i < size; ++i) {
-        auto&& color = colors(i);
+        float level, Colors const& colors, char* out) {
+    for (size_t i = 0; i < colors.size(); ++i) {
+        auto color = colors[i];
         for (size_t j = 0; j < color.size(); ++j, ++out) {
             auto component = level * color[perm_[j]];
             auto gamma = getGamma(gammaTable_, component);
@@ -54,10 +55,22 @@ void CRenderer::renderGeneric(
     }
 }
 
+template <typename ColorList>
+struct RGBAdaptor {
+    ColorList const& list;
+
+    ColorRGB operator[](size_t i) const {
+        ColorRGB result;
+        converter::convertSample(list[i], result);
+        return result;
+    };
+
+    size_t size() const { return list.size(); }
+};
+
 inline void CRenderer::render(
         float level, CColorListRGB const& colors, char* out) {
-    auto getter = [&] (size_t i) { return colors[i]; };
-    return renderGeneric(level, getter, colors.size(), out);
+    return renderGeneric(level, RGBAdaptor<CColorListRGB>{colors}, out);
 }
 
 inline CRenderer::Perm CRenderer::getPerm(Render3::Permutation perm) {
