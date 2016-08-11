@@ -3,10 +3,14 @@
 """This is the main builder and installer for the timedata DSP Python
 extension."""
 
-import datetime, errno, glob, os, platform, re, shutil, sys, subprocess, unittest
+import configparser, datetime, errno, glob, os, platform
+import re, shutil, sys, subprocess, unittest
+
 from distutils.dir_util import copy_tree
 from setuptools.command.build_ext import build_ext
 import setuptools.extension
+
+
 
 sys.path.append('src/py')
 

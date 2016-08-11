@@ -1,5 +1,5 @@
 import collections
-from . import util
+from . import files, util
 
 
 def write_classes(config, *, output_file=None, **kwds):
@@ -34,5 +34,5 @@ def write_classes(config, *, output_file=None, **kwds):
         define.pop()
 
     data = ''.join(d for d in declare if d.strip()) + '\n' + '\n'.join(define)
-    util.write_if_different(output_file, data)
+    files.write_if_different(output_file, data)
     return output_file

@@ -4,7 +4,7 @@ import datetime, os, re, string, sys
 
 from . read_header_file import read_header_file
 from . make_enums import make_enums
-from .. import util
+from .. import files, util
 
 
 def make(header_file):
@@ -69,12 +69,12 @@ def make(header_file):
     return '\n'.join(mt) + '\n'
 
 
-def make_structs(files):
+def make_structs(filenames):
     results = []
-    for f in files:
+    for f in filenames:
         data = make(f)
         base, fname = os.path.split(os.path.splitext(f)[0])
         outfile = '/'.join(['build', 'genfiles', f + '.pyx'])
         results.append(outfile)
-        util.write_if_different(outfile, data)
+        files.write_if_different(outfile, data)
     return results
