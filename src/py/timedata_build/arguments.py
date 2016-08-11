@@ -1,11 +1,11 @@
 import os, sys
 
-from . import util
+from . context import Context
 
 
 def extract_env(**flags):
     get = lambda k, v: os.environ.get('TIMEDATA_' + k.upper(), v)
-    return util.Context(**{k: get(k, v) for k, v in flags.items()})
+    return Context(**{k: get(k, v) for k, v in flags.items()})
 
 
 def insert_dependencies(args, **dependencies):

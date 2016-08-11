@@ -1,8 +1,8 @@
-from timedata_build import util
+from timedata_build.context import Context
 import re
 
 def read_header_file(header_file):
-    context = util.Context(
+    context = Context(
         namespaces=[],
         structs=[],
         classname='',
@@ -23,7 +23,7 @@ def read_header_file(header_file):
             was_equal = p == '='
 
         assert typename and parts and variables
-        return util.Context(typename=typename, variables=variables)
+        return Context(typename=typename, variables=variables)
 
     def struct_is_finished(line):
         return ('{' in line or
@@ -42,7 +42,7 @@ def read_header_file(header_file):
             if line:
                  yield line
 
-    regex = util.Context(
+    regex = Context(
         namespace=re.compile(r'namespace (\w+)'),
         cstruct=re.compile(r'struct (\w+)'),
         enum_class=re.compile(r'enum class (\w+) \{([^}]+)}'),

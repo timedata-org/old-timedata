@@ -1,5 +1,6 @@
 from . class_descriptions import Color, ColorList
-from . import util, template
+from . import template
+from . context import Context
 
 
 MODELS = (
@@ -19,7 +20,7 @@ def read_classes(tiny=False, models=[]):
 
         for k, v in context.pop('substitutions', {}).items():
             context[k] = sub(v)
-        return util.Context(**context)
+        return Context(**context)
 
     for model, prop in MODELS:
         for range_name in '', '255', '256':
