@@ -1,5 +1,6 @@
 from . class_descriptions import Color, ColorList
-from . util import substitute_context
+from . import util, template
+
 
 MODELS = (
     ('RGB', ('red', 'green', 'blue')),
@@ -10,7 +11,16 @@ MODELS = (
     ('YUV', ('luma', 'uchrominance', 'vchrominance')),
     )
 
+
 def read_classes(tiny=False, models=[]):
+    def substitute_context(context, **kwds):
+        context = dict(context)
+        sub = template.substituter(**kwds)
+
+        for k, v in context.pop('substitutions', {}).items():
+            context[k] = sub(v)
+        return util.Context(**context)
+
     for model, prop in MODELS:
         for range_name in '', '255', '256':
             name = model + range_name

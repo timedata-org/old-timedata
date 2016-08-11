@@ -7,15 +7,6 @@ class Context(object):
             setattr(self, k, v)
 
 
-def substitute_context(context, **kwds):
-    context = dict(context)
-    sub = template.substituter(**kwds)
-
-    for k, v in context.pop('substitutions', {}).items():
-        context[k] = sub(v)
-    return Context(**context)
-
-
 def add_methods(old_methods=None, **new_methods):
     """Merge two class description dictionaries."""
     import copy
