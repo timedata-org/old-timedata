@@ -4,7 +4,7 @@ import datetime, os, re, string, sys
 
 from . read_header_file import read_header_file
 from . make_enums import make_enums
-from .. import files, util
+from .. import files, template
 
 
 def make(header_file):
@@ -40,7 +40,7 @@ def make(header_file):
     property_list = []
 
     def format(s, kwds):
-        x, y = util.substitute_templates('struct', s, **kwds)
+        x, y = template.substitute('struct', s, **kwds)
         return x + y
 
     for s in header.structs:

@@ -1,5 +1,5 @@
 import collections
-from . import files, util
+from . import files, template
 
 
 def write_classes(config, *, output_file=None, **kwds):
@@ -10,7 +10,7 @@ def write_classes(config, *, output_file=None, **kwds):
         docnames = names + (name, ) if name else names
         default_documentation = '.'.join(docnames)
         kwds['documentation'] = kwds.get('documentation', default_documentation)
-        dc, df = util.substitute_templates(*names, **kwds)
+        dc, df = template.substitute(*names, **kwds)
         dc and declare.append(dc)
         df and define.append(df)
 
