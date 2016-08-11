@@ -2,6 +2,8 @@ from .. context import CONFIG
 from .. arguments import FLAGS
 
 from setuptools import Command as _Command
+import datetime
+
 
 class Command(_Command):
     user_options = []
@@ -11,3 +13,6 @@ class Command(_Command):
 
     def finalize_options(self):
         pass
+
+
+TIME = datetime.datetime.utcnow().isoformat()
