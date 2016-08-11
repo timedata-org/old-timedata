@@ -1,7 +1,11 @@
 import string
 
+def substitute_one(t, **kwds):
+    return string.Template(t or '').substitute(**kwds)
+
+
 def substituter(**kwds):
-    return lambda t: string.Template(t or '').substitute(**kwds)
+    return lambda t: substitute_one(t, **kwds)
 
 
 def substitute(*names, **kwds):

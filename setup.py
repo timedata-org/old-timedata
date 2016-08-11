@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 
 """This is the main builder and installer for the timedata DSP Python
-extension."""
+extension.
+"""
 
 import configparser, datetime, errno, glob, os, platform
 import re, shutil, sys, subprocess, unittest
@@ -9,61 +10,24 @@ import re, shutil, sys, subprocess, unittest
 from distutils.dir_util import copy_tree
 from setuptools.command.build_ext import build_ext
 import setuptools.extension
-
-
+import Cython.Compiler.Options
 
 sys.path.append('src/py')
+from timedata_build import arguments, commands, context, execute, generate, template
 
-from timedata_build import arguments, generate
+CONFIG = context.CONFIG
 
-OPTS = '-flto -fno-math-errno -fomit-frame-pointer -funroll-loops -ffast-math'
-
-"""Each of these "flags" corresponds to an environment variables looking like
-   TIMEDATA_$NAME where $NAME is the uppercase version of flag.
+"""Each of these "flags" corresponds to an environment variable looking like
+   TIMEDATA_$NAME, where $NAME is the uppercase version of flag.
 
    For example, to run generate with the "tiny" flag, enter:
 
        TIMEDATA_TINY=true ./setup.py generate
 """
-FLAGS = arguments.extract_env(
-    benchmarks='lists,pure_python',
-    benchmark_size=10240,
-    benchmark_number=100,
-    buildtype='o3',
-    compileropt=OPTS,
-    name='',
-    tiny=False,
-    models=''
-    )
-
-sys.argv[1:] = arguments.insert_dependencies(
-    sys.argv[1:],
-
-    develop='generate',
-    build_sphinx='develop',
-    test='develop',
-    copy_sphinx='build_sphinx',
-    push_sphinx='copy_spinx',
-    )
+FLAGS = arguments.FLAGS
+sys.argv = arguments.insert_dependencies(sys.argv, **CONFIG.dependencies)
 
 print('Building targets', *sys.argv[1:])
-
-BUILD_OPTIONS = dict(
-    o2=['-O2', '-DNDEBUG'],
-    o3=['-O3', '-DNDEBUG'],
-    debug=['-O0', '-DDEBUG'],
-    )
-
-"""See http://ithare.com/c-performance-common-wisdoms-and-common-wisdoms/
-Other possibilities include:
-    -ffast-math
-    -flto
-    -fno-math-errno
-    -fomit-frame-pointer
-    -fprofile-generate
-    -ftree-vectorize
-    -funroll-loops
-"""
 
 LEAST_PYTHON = 3, 4
 ACTUAL_PYTHON = sys.version_info[:2]
@@ -72,91 +36,23 @@ assert ACTUAL_PYTHON >= LEAST_PYTHON, (
     'Must use at least Python %d.%d but have version %d.%d' %
     (LEAST_PYTHON[0], LEAST_PYTHON[1], ACTUAL_PYTHON[0], ACTUAL_PYTHON[1]))
 
-# Uncomment this next line if you want Cython to output HTML showing how C++-ey
-# it can make your code.
-# Same as --annotate here: http://goo.gl/1kNY1n
-#
-# import Cython.Compiler.Options
-# Cython.Compiler.Options.annotate = True
+IS_DEBIAN = platform.linux_distribution()[0] == 'debian'
+IS_WINDOWS = platform.system() == 'windows'
 
-IS_DARWIN = (platform.system() == 'Darwin')
-IS_LINUX = (platform.system() == 'Linux')
-IS_DEBIAN = IS_LINUX and (platform.linux_distribution()[0] == 'debian')
-IS_WINDOWS = (platform.system() == 'Windows')
-
-LIBRARIES = [] if (IS_DARWIN or IS_LINUX or IS_WINDOWS) else ['m']
-ROOT_DIR = os.path.dirname(os.path.realpath(__file__))
-
-CLEAN_DIRS = ['build']
-
+LIBRARIES = ['m'] if IS_DEBIAN else []
 TIME = datetime.datetime.utcnow().isoformat()
-SPHINX_SOURCE = os.path.abspath('build/html/')
-DOCUMENTATION_REPO = os.path.abspath('../timedata-org.github.io/')
 
-def run(*cmds):
-    return subprocess.check_output(cmds).strip().decode('ascii')
+# See: http://goo.gl/1kNY1n
+Cython.Compiler.Options.annotate = bool(CONFIG.flags['annotate'])
 
 
-def git_tags():
-    if IS_WINDOWS:
-        return 'windows'
-    tags = run('git', 'describe', '--tags', '--always')
-    branch = run('git', 'rev-parse', '--abbrev-ref', 'HEAD')
-    remote = run('git', 'config', 'remote.origin.url')
-    user = remote.split(':')[1].split('/')[0]
-    return '%s+%s.%s' % (tags, branch, user)
+def compiler_flags():
+    flags = CONFIG.compiler_flags[platform.system().lower()]
+    git_tags = execute.git_tags()
+    return template.substitute_one(flags, git_tags=git_tags, time=TIME).split()
 
 
-UNIX_COMPILE_ARGS = [
-    '-std=c++11',
-    '-ferror-limit=100',
-    '-DCOMPILE_TIMESTAMP="%s"' % TIME,
-    '-DGIT_TAGS="%s"' % git_tags(),
-    '-Wall',
-    '-Wextra',
-    '-Wpedantic',
-    '-Wno-unused-function',
-    '-Wno-extended-offsetof',
-    ]
-
-DARWIN_COMPILE_ARGS = [
-    '-mmacosx-version-min=10.9',
-    '-Wno-tautological-constant-out-of-range-compare',
-    ]
-
-WINDOWS_COMPILE_ARGS = [
-    '-DNDEBUG',
-    '-DWINDOWS',
-    '/Dand=&&',
-    '/Dnot=!',
-    '/Dnot_eq=!=',
-    '/Dor=||',
-    '/Duint=size_t',
-    # Disable warnings
-    '/wd4800',
-    ]
-
-if IS_LINUX:
-    COMPILE_ARGS = UNIX_COMPILE_ARGS
-
-elif IS_DARWIN:
-    COMPILE_ARGS = UNIX_COMPILE_ARGS + DARWIN_COMPILE_ARGS
-
-elif IS_WINDOWS:
-    COMPILE_ARGS = WINDOWS_COMPILE_ARGS
-
-
-class Command(setuptools.Command):
-    user_options = []
-
-    def initialize_options(self):
-        pass
-
-    def finalize_options(self):
-        pass
-
-
-class Benchmark(Command):
+class Benchmark(commands.Command):
     description = 'Run benchmark'
 
     def run(self):
@@ -183,11 +79,11 @@ class BuildExt(build_ext):
                   'http://docs.cython.org/src/quickstart/install.html')
             raise
         os.makedirs('build/genfiles/timedata', exist_ok=True)
-        compile_args = COMPILE_ARGS
+        compile_args = compiler_flags()
 
         opt_flags = None
         if not IS_WINDOWS:
-            opt_flags = BUILD_OPTIONS[FLAGS.buildtype or 'o3']
+            opt_flags = CONFIG.build_options[FLAGS.buildtype or 'o3'].split()
             if FLAGS.compileropt:
                 opt_flags += FLAGS.compileropt.split()
             compile_args += opt_flags
@@ -218,7 +114,7 @@ class BuildExt(build_ext):
         super().finalize_options()
 
 
-class Clean(Command):
+class Clean(commands.Command):
     description = 'Complete clean command'
 
     def initialize_options(self):
@@ -228,40 +124,35 @@ class Clean(Command):
         self.cwd = os.getcwd()
 
     def run(self):
-        for d in CLEAN_DIRS:
-            print('Deleting ./{}/'.format(d))
-            shutil.rmtree(os.path.join(ROOT_DIR, d), ignore_errors=True)
+        d = CONFIG.directories['build']
+        print('Deleting ./{}/'.format(d))
+        shutil.rmtree(os.path.abspath(d), ignore_errors=True)
 
 
-class CopySphinx(Command):
+class CopySphinx(commands.Command):
     description = 'Push documentation to github.io'
 
     def run(self):
-        copy_tree(SPHINX_SOURCE, DOCUMENTATION_REPO)
+        f = lambda s: os.path.abspath(CONFIG.directories[s])
+        copy_tree(f('sphinx'), f('documentation'))
 
 
-class PushSphinx(Command):
+class PushSphinx(commands.Command):
     description = 'Push documentation to github.io'
 
     def run(self):
-        dot = os.path.abspath('.')
-        try:
-            os.chdir(DOCUMENTATION_REPO)
-            print(run('git', 'add', '--all', '.'))
-            print(run('git', 'commit', '-am', TIME))
-            print(run('git', 'push'))
-        except:
-            os.chdir(dot)
+        execute.git_push(CONFIG.directories['documentation'], TIME)
 
-class TestCpp(Command):
+
+class TestCpp(commands.Command):
     description = 'Build and run C++ tests.  Might not work on windows.'
 
     def run(self):
-        print(run('make'))
-        print(run('./build/tests'))
+        print(execute.run('make'))
+        print(execute.run('./build/tests'))
 
 
-class Generate(Command):
+class Generate(commands.Command):
     description = 'Make generated classes'
     split_flag = re.compile('[\W,]').split
 
@@ -270,7 +161,6 @@ class Generate(Command):
 
         models = FLAGS.models and re.split('[\W,]', FLAGS.models)
         generate.generate(tiny=FLAGS.tiny, models=models)
-
 
 
 COMMANDS = {
@@ -289,17 +179,4 @@ def test_suite():
     return unittest.TestLoader().discover('src/py', pattern='*_test.py')
 
 
-setuptools.setup(
-    name='timedata',
-    packages=['src/py/timedata_tests'],
-    version='0.8',
-    keywords=['color', 'cython', 'dsp', 'C++'],
-    description="""\
-High-performance arithmetic for RGB color and for time data in general.""",
-    author='Tom Swirly',
-    author_email='tom@swirly.com',
-    url='https://github.com/rec/timedata',
-    test_suite='setup.test_suite',
-    download_url='https://github.com/rec/timedata/releases/tag/v0.8',
-    cmdclass=COMMANDS,
-)
+setuptools.setup(cmdclass=COMMANDS, **CONFIG.setuptools)

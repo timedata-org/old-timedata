@@ -1,6 +1,6 @@
 import os, sys
 
-from . context import Context
+from . context import CONFIG, Context
 
 
 def extract_env(**flags):
@@ -21,3 +21,6 @@ def insert_dependencies(args, **dependencies):
 
     add_all(*args)
     return result
+
+
+FLAGS = extract_env(**CONFIG.flags)
