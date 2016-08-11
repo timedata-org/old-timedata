@@ -3,7 +3,11 @@
 """This is the main builder and installer for the timedata DSP Python
 extension."""
 
-import sys
+import datetime, errno, glob, os, platform, re, shutil, sys, subprocess, unittest
+from distutils.dir_util import copy_tree
+from setuptools.command.build_ext import build_ext
+import setuptools.extension
+
 sys.path.append('src/py')
 
 from timedata_build import arguments, generate
@@ -57,12 +61,6 @@ Other possibilities include:
     -funroll-loops
 """
 
-import datetime, errno, glob, os, platform, re, shutil, subprocess, unittest
-import setuptools.extension
-from distutils.dir_util import copy_tree
-from setuptools.command.build_ext import build_ext as _build_ext
-
-
 LEAST_PYTHON = 3, 4
 ACTUAL_PYTHON = sys.version_info[:2]
 
@@ -77,57 +75,71 @@ assert ACTUAL_PYTHON >= LEAST_PYTHON, (
 # import Cython.Compiler.Options
 # Cython.Compiler.Options.annotate = True
 
-IS_MAC = (platform.system() == 'Darwin')
+IS_DARWIN = (platform.system() == 'Darwin')
 IS_LINUX = (platform.system() == 'Linux')
 IS_DEBIAN = IS_LINUX and (platform.linux_distribution()[0] == 'debian')
 IS_WINDOWS = (platform.system() == 'Windows')
 
-LIBRARIES = [] if (IS_MAC or IS_LINUX or IS_WINDOWS) else ['m']
+LIBRARIES = [] if (IS_DARWIN or IS_LINUX or IS_WINDOWS) else ['m']
 ROOT_DIR = os.path.dirname(os.path.realpath(__file__))
 
 CLEAN_DIRS = ['build']
 
 TIME = datetime.datetime.utcnow().isoformat()
-
+SPHINX_SOURCE = os.path.abspath('build/html/')
+DOCUMENTATION_REPO = os.path.abspath('../timedata-org.github.io/')
 
 def run(*cmds):
     return subprocess.check_output(cmds).strip().decode('ascii')
 
 
 def git_tags():
+    if IS_WINDOWS:
+        return 'windows'
     tags = run('git', 'describe', '--tags', '--always')
     branch = run('git', 'rev-parse', '--abbrev-ref', 'HEAD')
     remote = run('git', 'config', 'remote.origin.url')
     user = remote.split(':')[1].split('/')[0]
     return '%s+%s.%s' % (tags, branch, user)
 
-if IS_LINUX or IS_MAC:
-    COMPILE_ARGS = [
-        '-std=c++11',
-        '-ferror-limit=100',
-        '-DCOMPILE_TIMESTAMP="%s"' % TIME,
-        '-DGIT_TAGS="%s"' % git_tags(),
-        '-Wall',
-        '-Wextra',
-        '-Wpedantic',
-        '-Wno-unused-function',
-        '-Wno-extended-offsetof',
+
+UNIX_COMPILE_ARGS = [
+    '-std=c++11',
+    '-ferror-limit=100',
+    '-DCOMPILE_TIMESTAMP="%s"' % TIME,
+    '-DGIT_TAGS="%s"' % git_tags(),
+    '-Wall',
+    '-Wextra',
+    '-Wpedantic',
+    '-Wno-unused-function',
+    '-Wno-extended-offsetof',
     ]
-    if IS_MAC:
-        COMPILE_ARGS.extend(['-mmacosx-version-min=10.9',
-                             '-Wno-tautological-constant-out-of-range-compare'])
+
+DARWIN_COMPILE_ARGS = [
+    '-mmacosx-version-min=10.9',
+    '-Wno-tautological-constant-out-of-range-compare',
+    ]
+
+WINDOWS_COMPILE_ARGS = [
+    '-DNDEBUG',
+    '-DWINDOWS',
+    '/Dand=&&',
+    '/Dnot=!',
+    '/Dnot_eq=!=',
+    '/Dor=||',
+    '/Duint=size_t',
+    # Disable warnings
+    '/wd4800',
+    ]
+
+if IS_LINUX:
+    COMPILE_ARGS = UNIX_COMPILE_ARGS
+
+elif IS_DARWIN:
+    COMPILE_ARGS = UNIX_COMPILE_ARGS + DARWIN_COMPILE_ARGS
+
 elif IS_WINDOWS:
-    COMPILE_ARGS = [
-        '-DNDEBUG',
-        '-DWINDOWS',
-        '/Dand=&&',
-        '/Dnot=!',
-        '/Dnot_eq=!=',
-        '/Dor=||',
-        '/Duint=size_t',
-        # Disable warnings
-        '/wd4800'
-    ]
+    COMPILE_ARGS = WINDOWS_COMPILE_ARGS
 
 
 class Command(setuptools.Command):
@@ -138,63 +150,6 @@ class Command(setuptools.Command):
 
     def finalize_options(self):
         pass
-
-
-class Clean(Command):
-    description = 'Complete clean command'
-
-    def initialize_options(self):
-        self.cwd = None
-
-    def finalize_options(self):
-        self.cwd = os.getcwd()
-
-    def run(self):
-        for d in CLEAN_DIRS:
-            print('Deleting ./{}/'.format(d))
-            shutil.rmtree(os.path.join(ROOT_DIR, d), ignore_errors=True)
-
-
-SPHINX_SOURCE = os.path.abspath('build/html/')
-DOCUMENTATION_REPO = os.path.abspath('../timedata-org.github.io/')
-
-class CopySphinx(Command):
-    description = 'Push documentation to github.io'
-
-    def run(self):
-        copy_tree(SPHINX_SOURCE, DOCUMENTATION_REPO)
-
-
-class PushSphinx(Command):
-    description = 'Push documentation to github.io'
-
-    def run(self):
-        dot = os.path.abspath('.')
-        try:
-            os.chdir(DOCUMENTATION_REPO)
-            print(run('git', 'add', '--all', '.'))
-            print(run('git', 'commit', '-am', TIME))
-            print(run('git', 'push'))
-        except:
-            os.chdir(dot)
-
-class TestCpp(Command):
-    description = 'Build and run C++ tests.  Might not work on windows.'
-
-    def run(self):
-        print(run('make'))
-        print(run('./build/tests'))
-
-
-class Generate(Command):
-    description = 'Make generated classes'
-    split_flag = re.compile('[\W,]').split
-
-    def run(self):
-        print('Generate ' + ('tiny' if FLAGS.tiny else ''))
-
-        models = FLAGS.models and re.split('[\W,]', FLAGS.models)
-        generate.generate(tiny=FLAGS.tiny, models=models)
 
 
 class Benchmark(Command):
@@ -213,7 +168,7 @@ class Benchmark(Command):
                        FLAGS.benchmark_size, FLAGS.benchmark_number)
 
 
-class build_ext(_build_ext):
+class BuildExt(build_ext):
     # See https://groups.google.com/forum/#!topic/cython-users/IZMENRz6__s
 
     def finalize_options(self):
@@ -256,11 +211,67 @@ class build_ext(_build_ext):
             )
         )
         self.distribution.ext_modules = module
-        super(build_ext, self).finalize_options()
+        super().finalize_options()
+
+
+class Clean(Command):
+    description = 'Complete clean command'
+
+    def initialize_options(self):
+        self.cwd = None
+
+    def finalize_options(self):
+        self.cwd = os.getcwd()
+
+    def run(self):
+        for d in CLEAN_DIRS:
+            print('Deleting ./{}/'.format(d))
+            shutil.rmtree(os.path.join(ROOT_DIR, d), ignore_errors=True)
+
+
+class CopySphinx(Command):
+    description = 'Push documentation to github.io'
+
+    def run(self):
+        copy_tree(SPHINX_SOURCE, DOCUMENTATION_REPO)
+
+
+class PushSphinx(Command):
+    description = 'Push documentation to github.io'
+
+    def run(self):
+        dot = os.path.abspath('.')
+        try:
+            os.chdir(DOCUMENTATION_REPO)
+            print(run('git', 'add', '--all', '.'))
+            print(run('git', 'commit', '-am', TIME))
+            print(run('git', 'push'))
+        except:
+            os.chdir(dot)
+
+class TestCpp(Command):
+    description = 'Build and run C++ tests.  Might not work on windows.'
+
+    def run(self):
+        print(run('make'))
+        print(run('./build/tests'))
+
+
+class Generate(Command):
+    description = 'Make generated classes'
+    split_flag = re.compile('[\W,]').split
+
+    def run(self):
+        print('Generate ' + ('tiny' if FLAGS.tiny else ''))
+
+        models = FLAGS.models and re.split('[\W,]', FLAGS.models)
+        generate.generate(tiny=FLAGS.tiny, models=models)
+
+
 
 COMMANDS = {
     'benchmark': Benchmark,
-    'build_ext': build_ext,
+    'build_ext': BuildExt,
     'clean': Clean,
     'copy_sphinx': CopySphinx,
     'generate': Generate,
