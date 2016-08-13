@@ -86,14 +86,6 @@ struct Sample : SampleBase<Model, Range> {
         base_type::fill({});
     }
 
-    Sample scale() const {
-        return applyNew(*this, &timedata::scale<Range>);
-    }
-
-    Sample unscale() const {
-        return applyNew(*this, &timedata::unscale<Range>);
-    }
-
     static Sample infinity() {
         auto inf = value_type::infinity();
         return {inf, inf, inf};

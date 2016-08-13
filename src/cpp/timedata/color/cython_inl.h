@@ -198,7 +198,7 @@ void from_hex(uint32_t hex, Color& x) {
     x[0] = *c[0];
     x[1] = *c[1];
     x[2] = *c[2];
-    x = x.scale();
+    applyInto(x, &timedata::scale<ValueType<Color>>);
 }
 
 template <typename Color>
