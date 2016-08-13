@@ -161,16 +161,16 @@ inline bool isNearFraction(float decimal, unsigned int denominator) {
     return std::abs(std::round(numerator) - numerator) < 0.0001f;
 }
 
-inline bool cmpToRichcmp(float cmp, int richcmp) {
+inline bool cmpToRichcmp(float diff, int richcmp) {
     switch (richcmp) {
-        case 0: return cmp < 0;
-        case 1: return cmp <= 0;
-        case 2: return cmp == 0;
-        case 3: return cmp != 0;
-        case 4: return cmp > 0;
-        case 5: return cmp >= 0;
+        case 0: return diff < 0;
+        case 1: return diff <= 0;
+        case 2: return diff == 0;
+        case 3: return diff != 0;
+        case 4: return diff > 0;
+        case 5: return diff >= 0;
         default:
-            log("Bad richcmp", richcmp, cmp);
+            log("Bad richcmp", richcmp, diff);
             return false;
     }
 }

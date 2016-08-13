@@ -28,7 +28,7 @@ inline void convertSample(ColorRGB const& in, ColorHSV& out) {
 
     value = std::max({red, green, blue});
     if (not value) {
-        out.clear();
+        out = {};
         return;
     }
 

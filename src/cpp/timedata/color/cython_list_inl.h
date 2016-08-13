@@ -67,8 +67,8 @@ NumberType<ColorList> compare(ValueType<ColorList> const& x,
     return 0;
 }
 
-inline bool cmpToRichcmp(float cmp, int richcmp) {
-    return timedata::cmpToRichcmp(cmp, richcmp);
+inline bool cmpToRichcmp(float diff, int richcmp) {
+    return timedata::cmpToRichcmp(diff, richcmp);
 }
 
 template <typename ColorList>

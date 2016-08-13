@@ -7,35 +7,9 @@
 #include <timedata/base/className.h>
 #include <timedata/base/enum.h>
 #include <timedata/signal/ranged.h>
+#include <timedata/signal/sampleFunctions.h>
 
 namespace timedata {
-
-template <typename Sample, typename Function>
-Sample& applyInto(Sample& out, Function f) {
-    for (size_t i = 0; i < out.size(); ++i)
-        out[i] = f(out[i]);
-    return out;
-}
-
-template <typename Sample, typename Function>
-Sample& applyInto(Sample const& in, Sample& out, Function f) {
-    for (size_t i = 0; i < out.size(); ++i)
-        out[i] = f(out[i], in[i]);
-    return out;
-}
-
-template <typename Sample, typename Function>
-Sample applyNew(Sample const& in, Function f) {
-    Sample out;
-    for (size_t i = 0; i < out.size(); ++i)
-        out[i] = f(in[i]);
-    return out;
-}
-
-template <typename Sample>
-Sample applyNewFunction(Sample const& in, typename Sample::FunctionPointer f) {
-    return applyNew(in, f);
-}
 
 template <typename Model, typename Range>
 using SampleBase = std::array<Ranged<Range>, enumSize<Model>()>;
@@ -71,6 +45,12 @@ struct Sample : SampleBase<Model, Range> {
         using value_type = Sample;
 
         using is_container = std::true_type;
+
+        struct Index {
+            List& list;
+            size_t index;
+        };
+
     };
 
     // TODO: need to use std::initializer_list!
@@ -79,31 +59,15 @@ struct Sample : SampleBase<Model, Range> {
     }
 
     Sample() {
-        clear();
-    }
-
-    void clear() {
         base_type::fill({});
     }
 
-    static Sample infinity() {
-        auto inf = value_type::infinity();
-        return {inf, inf, inf};
-    }
-
     value_type const& operator[](Model m) const {
-        return base_type::at(static_cast<size_t>(m));
+        return base_type::operator[](static_cast<size_t>(m));
     }
 
     value_type& operator[](Model m) {
-        return base_type::at(static_cast<size_t>(m));
-    }
-
-    number_type cmp(Sample const& x) const {
-        for (size_t i = 0; i < SIZE; ++i)
-            if (auto d = (*this)[i] - x[i])
-                return d;
-        return {};
+        return base_type::operator[](static_cast<size_t>(m));
     }
 
     bool operator==(Sample const& s) const { return cmp(s) == 0; }
@@ -112,26 +76,26 @@ struct Sample : SampleBase<Model, Range> {
     bool operator<=(Sample const& s) const { return cmp(s) <= 0; }
     bool operator>(Sample const& s) const { return cmp(s) > 0; }
     bool operator>=(Sample const& s) const { return cmp(s) >= 0; }
+
+  private:
+    number_type cmp(Sample const& x) const {
+        return compareTo(*this, x);
+    }
 };
 
-template <typename T> using NumberType = typename T::number_type;
-template <typename T> using RangedType = typename T::ranged_type;
-template <typename T> using SampleType = typename T::sample_type;
-
-
-template <typename T>
-size_t getSizeof(T const& t, std::true_type) {
+template <typename Container>
+size_t getSizeof(Container const& t, std::true_type) {
     return sizeof(t) + sizeof(t[0]) * t.size();
 }
 
-template <typename T>
-size_t getSizeof(T const& t, std::false_type) {
+template <typename Sample>
+size_t getSizeof(Sample const& t, std::false_type) {
     return sizeof(t);
 }
 
-template <typename Sample>
-size_t getSizeof(Sample const& sample) {
-    return getSizeof(sample, typename Sample::is_container());
+template <typename Item>
+size_t getSizeof(Item const& x) {
+    return getSizeof(x, typename Item::is_container());
 }
 
 }  // timedata
