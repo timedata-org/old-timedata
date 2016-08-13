@@ -1,4 +1,4 @@
-import os
+import os, stat
 
 
 def make_writable(f, is_writable=True, report=False):
@@ -7,6 +7,7 @@ def make_writable(f, is_writable=True, report=False):
     except:
         if report:
             print('Failed to change writability for', f)
+            raise
 
 
 def write_if_different(fname, data):
