@@ -18,6 +18,13 @@ Sample& applyInto(Sample& out, Function f) {
 }
 
 template <typename Sample, typename Function>
+Sample& applyInto(Sample const& in, Sample& out, Function f) {
+    for (size_t i = 0; i < out.size(); ++i)
+        out[i] = f(out[i], in[i]);
+    return out;
+}
+
+template <typename Sample, typename Function>
 Sample applyNew(Sample const& in, Function f) {
     Sample out;
     for (size_t i = 0; i < out.size(); ++i)
@@ -25,11 +32,9 @@ Sample applyNew(Sample const& in, Function f) {
     return out;
 }
 
-template <typename Sample, typename Function>
-Sample& applyInto(Sample const& in, Sample& out, Function f) {
-    for (size_t i = 0; i < out.size(); ++i)
-        out[i] = f(out[i], in[i]);
-    return out;
+template <typename Sample>
+Sample applyNewFunction(Sample const& in, typename Sample::FunctionPointer f) {
+    return applyNew(in, f);
 }
 
 template <typename Model, typename Range>
@@ -79,10 +84,6 @@ struct Sample : SampleBase<Model, Range> {
 
     void clear() {
         base_type::fill({});
-    }
-
-    Sample forEachF(FunctionPointer fp) const {
-        return applyNew(*this, fp);
     }
 
     Sample scale() const {

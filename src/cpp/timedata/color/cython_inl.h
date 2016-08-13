@@ -38,17 +38,17 @@ bool fromString(std::string const& x, Color& c) {
 
 template <typename Color>
 Color magic_abs(Color const& x) {
-    return x.forEachF(std::abs);
+    return applyNewFunction(x, std::abs);
 }
 
 template <typename Color>
 Color magic_ceil(Color const& x) {
-    return x.forEachF(std::ceil);
+    return applyNewFunction(x, std::ceil);
 }
 
 template <typename Color>
 Color magic_floor(Color const& x) {
-    return x.forEachF(std::floor);
+    return applyNewFunction(x, std::floor);
 }
 
 template <typename Color>
@@ -65,12 +65,12 @@ Color magic_neg(Color const& x) {
 template <typename Color>
 Color magic_round(Color const& x) {
     // TODO: two argument version!
-    return x.forEachF(std::round);
+    return applyNewFunction(x, std::round);
 }
 
 template <typename Color>
 Color magic_trunc(Color const& x) {
-    return x.forEachF(std::trunc);
+    return applyNewFunction(x, std::trunc);
 }
 
 template <typename Color>
