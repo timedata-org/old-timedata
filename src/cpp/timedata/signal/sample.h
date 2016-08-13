@@ -10,6 +10,20 @@
 
 namespace timedata {
 
+template <typename Sample, typename Function>
+Sample& applyInto(Sample& out, Function f) {
+    for (size_t i = 0; i < out.size(); ++i)
+        out[i] = f(out[i]);
+    return out;
+}
+
+template <typename Sample, typename Function>
+Sample& applyInto(Sample const& in, Sample& out, Function f) {
+    for (size_t i = 0; i < out.size(); ++i)
+        out[i] = f(out[i], in[i]);
+    return out;
+}
+
 template <typename Model, typename Range>
 using SampleBase = std::array<Ranged<Range>, enumSize<Model>()>;
 
@@ -61,17 +75,12 @@ struct Sample : SampleBase<Model, Range> {
 
     template <typename Function>
     Sample& into(Function f) {
-        for (size_t i = 0; i < SIZE; ++i)
-            (*this)[i] = f((*this)[i]);
-        return (*this);
+        return applyInto(*this, f);
     }
 
     template <typename Function>
     Sample& into(Sample const& x, Function f) {
-        auto& th = *this;
-        for (size_t i = 0; i < SIZE; ++i)
-            (*this)[i] = f((*this)[i], x[i]);
-        return (*this);
+        return applyInto(x, *this, f);
     }
 
     Sample forEachF(FunctionPointer fp) const {

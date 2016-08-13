@@ -1,5 +1,4 @@
-from . class_descriptions import Color, ColorList
-from . import template
+from . import class_descriptions, template
 from . context import Context
 
 
@@ -40,11 +39,12 @@ def read_classes(tiny=False, models=[]):
                 cl.__dict__, name=name, properties=prop,
                 range=float(range_name or '1'), **kwds)
 
+
         cname = 'Color' + name
         lname = 'ColorList' + name
 
-        yield sub(Color, cname)
-        yield sub(ColorList, lname, sampleclass=cname)
+        yield sub(class_descriptions.Color, cname)
+        yield sub(class_descriptions.ColorList, lname, sampleclass=cname)
 
     for model, prop in MODELS:
         for range_name in '', '255', '256':

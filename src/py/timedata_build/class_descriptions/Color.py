@@ -26,7 +26,7 @@ methods = add_methods(
 
 substitutions = dict(substitutions,
                      class_documentation="""\
-A $name is an immutable RGB floating point color.
+A $name is an immutable floating point color.
 
      A $name looks like a Python tuple with $$size floating point numbers, with
      the big exception that operators like + and * perform arithmetic, not

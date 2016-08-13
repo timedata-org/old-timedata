@@ -58,7 +58,8 @@ Color magic_invert(Color const& x) {
 
 template <typename Color>
 Color magic_neg(Color const& x) {
-    return Color(x).into(std::negate<typename Color::value_type>());
+    Color result = x;
+    return applyInto(result, std::negate<typename Color::value_type>());
 }
 
 template <typename Color>
