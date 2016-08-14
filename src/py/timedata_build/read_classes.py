@@ -42,10 +42,9 @@ def read_classes(tiny=False, models=[]):
             return substitute_context(
                 cl, name=name, range=range_name, **kwds)
 
-        cname = 'Color' + name
-        lname = 'ColorList' + name
-        yield sub(dict(color_dict, properties=properties), cname)
-        yield sub(color_list_dict, lname, sampleclass=cname)
+        color_name = 'Color' + name
+        yield sub(dict(color_dict, properties=properties), color_name)
+        yield sub(color_list_dict, 'ColorList' + name, sampleclass=color_name)
 
     for model, prop in MODELS:
         for range_name in '', '255', '256':

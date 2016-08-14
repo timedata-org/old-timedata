@@ -38,7 +38,7 @@ cdef extern from "<$include_file>" namespace "$namespace":
           components.
 
         * Anything else throws an exception.
-"""
+        """
         cdef string model
         cdef uint64_t pointer
         while len(args) == 1:
@@ -90,7 +90,7 @@ cdef extern from "<$include_file>" namespace "$namespace":
         t = tuple(self[i] for i in range(*key.indices($size)))
 
         # Try to remain as $classname if possible.
-        return $classname(*t) if len(t) == $size else t
+        return self.__class__(*t) if len(t) == $size else t
 
     def __len__($classname self):
         return $size

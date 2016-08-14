@@ -8,7 +8,7 @@ size = 3
 
 methods = add_methods(
     methods,
-    base='sample_list',
+    base=('sample_list', 'copy'),
     zero=dict(
         simple_mutator=(
             'clear',
