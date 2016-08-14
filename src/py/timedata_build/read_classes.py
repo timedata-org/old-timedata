@@ -36,15 +36,14 @@ def read_classes(tiny=False, models=[]):
         else:
             if range_name and model != 'RGB':
                 return
-        range_name = range_name or '1'
-
-        def sub(cl, name, **kwds):
-            return substitute_context(
-                cl, name=name, range=range_name, **kwds)
-
         color_name = 'Color' + name
-        yield sub(dict(color_dict, properties=properties), color_name)
-        yield sub(color_list_dict, 'ColorList' + name, sampleclass=color_name)
+        kwds = dict(range=range_name or '1', sampleclass=color_name)
+
+        def sub(cl, name, **props):
+            return substitute_context(dict(cl, **props), name=name, **kwds)
+
+        yield sub(color_dict, color_name, properties=properties)
+        yield sub(color_list_dict, 'ColorList' + name)
 
     for model, prop in MODELS:
         for range_name in '', '255', '256':

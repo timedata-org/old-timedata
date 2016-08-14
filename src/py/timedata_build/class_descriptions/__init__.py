@@ -1,1 +1,1 @@
-from . import Color, ColorList
+from . import Color, ColorList, Mutable
