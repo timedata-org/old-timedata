@@ -22,5 +22,6 @@ def write_if_different(fname, data):
         make_writable(fname)
         open(fname, 'w').write(data)
         make_writable(fname, False)
+        print(fname, 'written.')
     else:
-        print(fname, 'unchanged')
+        print(fname, 'unchanged.')

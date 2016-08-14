@@ -2,7 +2,7 @@ def add_methods(old_methods=None, **new_methods):
     """Merge two class description dictionaries."""
     import copy
     def tup(v):
-        return (v, ) if isinstance(v, str) else v
+        return (v, ) if isinstance(v, str) else tuple(v)
 
     result = copy.deepcopy(old_methods or {})
     for signature, categories in new_methods.items():
