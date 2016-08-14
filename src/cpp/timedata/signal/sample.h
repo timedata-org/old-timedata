@@ -47,10 +47,24 @@ struct Sample : SampleBase<Model, Range> {
         using is_container = std::true_type;
 
         struct Index {
+            using model_type = Model;
+            using range_type = Range;
+            using sample_type = Sample;
+
+            using value_type = ValueType<base_type>;
+            using number_type = ValueType<value_type>;
+
+            using is_container = std::false_type;
+
             List& list;
             size_t index;
-        };
 
+            size_t size() const { return SIZE; }
+
+            value_type operator[](size_t i) const {
+                return index < list.size() ? list[index][i] : value_type{};
+            }
+        };
     };
 
     // TODO: need to use std::initializer_list!

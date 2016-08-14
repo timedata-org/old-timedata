@@ -37,39 +37,39 @@ bool fromString(std::string const& x, Color& c) {
 }
 
 template <typename Color>
-Color magic_abs(Color const& x) {
+SampleType<Color> magic_abs(Color const& x) {
     return applyNewFunction(x, std::abs);
 }
 
 template <typename Color>
-Color magic_ceil(Color const& x) {
+SampleType<Color> magic_ceil(Color const& x) {
     return applyNewFunction(x, std::ceil);
 }
 
 template <typename Color>
-Color magic_floor(Color const& x) {
+SampleType<Color> magic_floor(Color const& x) {
     return applyNewFunction(x, std::floor);
 }
 
 template <typename Color>
-Color magic_invert(Color const& x) {
+SampleType<Color> magic_invert(Color const& x) {
     return {x[0].invert(), x[1].invert(), x[2].invert()};
 }
 
 template <typename Color>
-Color magic_neg(Color const& x) {
+SampleType<Color> magic_neg(Color const& x) {
     Color result = x;
     return applyInto(result, std::negate<typename Color::value_type>());
 }
 
 template <typename Color>
-Color magic_round(Color const& x) {
+SampleType<Color> magic_round(Color const& x) {
     // TODO: two argument version!
     return applyNewFunction(x, std::round);
 }
 
 template <typename Color>
-Color magic_trunc(Color const& x) {
+SampleType<Color> magic_trunc(Color const& x) {
     return applyNewFunction(x, std::trunc);
 }
 
@@ -79,50 +79,50 @@ int magic_hash(Color const& x) {
 }
 
 template <typename Color>
-Color magic_add(Color const& x, Color const& y) {
+SampleType<Color> magic_add(Color const& x, Color const& y) {
     return {x[0] + y[0], x[1] + y[1], x[2] + y[2]};
 }
 
 template <typename Color>
-Color magic_truediv(Color const& x, Color const& y) {
+SampleType<Color> magic_truediv(Color const& x, Color const& y) {
     return {divPython(x[0], y[0]),
             divPython(x[1], y[1]),
             divPython(x[2], y[2])};
 }
 
 template <typename Color>
-Color magic_mod(Color const& x, Color const& y) {
+SampleType<Color> magic_mod(Color const& x, Color const& y) {
     return {modPython(x[0], y[0]),
             modPython(x[1], y[1]),
             modPython(x[2], y[2])};
 }
 
 template <typename Color>
-Color magic_mul(Color const& x, Color const& y) {
+SampleType<Color> magic_mul(Color const& x, Color const& y) {
     return {x[0] * y[0], x[1] * y[1], x[2] * y[2]};
 }
 
 template <typename Color>
-Color magic_sub(Color const& x, Color const& y) {
+SampleType<Color> magic_sub(Color const& x, Color const& y) {
     return {x[0] - y[0], x[1] - y[1], x[2] - y[2]};
 }
 
 template <typename Color>
-Color limit_min(Color const& x, Color const& y) {
+SampleType<Color> limit_min(Color const& x, Color const& y) {
     return {std::max(x[0], y[0]),
             std::max(x[1], y[1]),
             std::max(x[2], y[2])};
 }
 
 template <typename Color>
-Color limit_max(Color const& x, Color const& y) {
+SampleType<Color> limit_max(Color const& x, Color const& y) {
     return {std::min(x[0], y[0]),
             std::min(x[1], y[1]),
             std::min(x[2], y[2])};
 }
 
 template <typename Color>
-Color rotated(Color const& x, int pos) {
+SampleType<Color> rotated(Color const& x, int pos) {
     auto y = x;
     rotate(y, pos);
     return y;
@@ -144,14 +144,14 @@ float distance(Color const& x, Color const& y) {
 }
 
 template <typename Color>
-Color magic_pow(Color const& x, Color const& y) {
+SampleType<Color> magic_pow(Color const& x, Color const& y) {
     return {powPython(x[0], y[0]),
             powPython(x[1], y[1]),
             powPython(x[2], y[2])};
 }
 
 template <typename Color>
-Color magic_pow(Color const& x, Color const& y, Color const& z) {
+SampleType<Color> magic_pow(Color const& x, Color const& y, Color const& z) {
     return {modPython(powPython(x[0], y[0]), z[0]),
             modPython(powPython(x[1], y[1]), z[1]),
             modPython(powPython(x[2], y[2]), z[2])};
