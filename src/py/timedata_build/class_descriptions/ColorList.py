@@ -7,8 +7,7 @@ value_type = 'float'
 size = 3
 
 methods = add_methods(
-    methods,
-    base=('sample_list', 'copy'),
+    base=('base', 'sample_list', 'copy'),
     zero=dict(
         simple_mutator=(
             'clear',

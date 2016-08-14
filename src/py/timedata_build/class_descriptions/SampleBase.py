@@ -3,8 +3,7 @@ from . Base import *
 value_type = 'float'
 
 methods = add_methods(
-    methods,
-    base=['sample', 'copy'],
+    base=['base', 'sample', 'copy'],
     zero=dict(
         magic=('abs', 'ceil', 'floor', 'invert', 'neg', 'round', 'trunc',),
         magic_int=('hash',),

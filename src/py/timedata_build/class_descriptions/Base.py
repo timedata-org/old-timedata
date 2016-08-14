@@ -23,5 +23,3 @@ substitutions = dict(
     output_file='build/genfiles/timedata/color/$name.pyx',
     range='$range',
     )
-
-methods = add_methods({}, base='base')

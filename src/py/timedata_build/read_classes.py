@@ -14,6 +14,7 @@ MODELS = (
 
 def read_classes(tiny=False, models=[]):
     color_dict = class_descriptions.Color.__dict__
+    mutable_dict = class_descriptions.Mutable.__dict__
     color_list_dict = class_descriptions.ColorList.__dict__
 
     def substitute_context(context, **kwds):
@@ -37,12 +38,17 @@ def read_classes(tiny=False, models=[]):
             if range_name and model != 'RGB':
                 return
         color_name = 'Color' + name
-        kwds = dict(range=range_name or '1', sampleclass=color_name)
+        kwds = dict(
+            range=range_name or '1',
+            sampleclass=color_name)
 
         def sub(cl, name, **props):
             return substitute_context(dict(cl, **props), name=name, **kwds)
 
         yield sub(color_dict, color_name, properties=properties)
+        yield sub(mutable_dict, 'Mutable' + color_name,
+                  mutable_properties=properties,
+                  parentclass=color_name)
         yield sub(color_list_dict, 'ColorList' + name)
 
     for model, prop in MODELS:

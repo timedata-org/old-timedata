@@ -13,23 +13,27 @@ def _make_module():
     def add(d, key, name):
         c = globals().get('Color' + name)
         cl = globals().get('ColorList' + name)
-        if c and cl:
-            d[key] = dict(Color=c, ColorList=cl)
+        mut = globals().get('MutableColor' + name)
+        if c and cl and mut:
+            d[key] = dict(Color=c, ColorList=cl, MutableColor=mut)
 
-    rgb = dict(
-        normal=dict(Color=ColorRGB, ColorList=ColorListRGB),
-        Color=ColorRGB, ColorList=ColorListRGB)
+    normal = dict(
+        Color=ColorRGB,
+        MutableColor=MutableColorRGB,
+        ColorList=ColorListRGB,
+        )
+
+    rgb = dict(normal=normal, **normal)
     add(rgb, 'c255', 'RGB255')
     add(rgb, 'c256', 'RGB256')
 
-    color = dict(rgb=rgb, Color=ColorRGB, ColorList=ColorListRGB)
+    color = dict(rgb=rgb, **normal)
     add(color, 'hsl', 'HSL')
     add(color, 'hsv', 'HSV')
     add(color, 'xyz', 'XYZ')
     add(color, 'yiq', 'YIQ')
     add(color, 'yuv', 'YUV')
 
-    d = make('', 'timedata', Color=ColorRGB, ColorList=ColorListRGB,
-             color=color).__dict__
+    d = make('', 'timedata', color=color, **normal).__dict__
 
     return {k: v for (k, v) in d.items() if not k.startswith('_')}
