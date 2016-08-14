@@ -132,6 +132,11 @@ class TestColor(unittest.TestCase):
         import sys
         self.assertEqual(sys.getsizeof(Colors.red), 12)
 
+    def test_named_components(self):
+        self.assertEqual(Colors.red.red, 1)
+        self.assertEqual(Colors.red.green, 0)
+        self.assertEqual(Colors.red.blue, 0)
+
     def DONT_test_everything(self):
         # This test takes about five minutes to run when it's enabled.
         for i in range(256 * 256 * 256):
@@ -149,5 +154,9 @@ class TestColor(unittest.TestCase):
 class TestColorHSV(unittest.TestCase):
     def test_basics(self):
         for c in 'red', 'orange', 'yellow', 'green', 'black':
-            self.assertEqual(str(HSV(c)), c)
-            self.assertEqual(str(Color(HSV(c))), c)
+            self.assertEqual(str(ColorHSV(c)), c)
+            self.assertEqual(str(Color(ColorHSV(c))), c)
+        red = ColorHSV.by_name.red
+        self.assertEqual(red.hue, 0)
+        self.assertEqual(red.saturation, 1)
+        self.assertEqual(red.value, 1)

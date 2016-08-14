@@ -4,6 +4,7 @@ start = 0.0
 include_file = 'timedata/color/cython_inl.h'
 namespace = 'timedata::color'
 size = 3
+
 methods = add_methods(
     methods,
 
