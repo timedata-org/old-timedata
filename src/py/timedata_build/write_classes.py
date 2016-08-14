@@ -17,8 +17,9 @@ def write_classes(config, *, output_file=None, **kwds):
     for b in config['base']:
         fmt('base', b, **kwds)
 
-    for i, name in enumerate(kwds.get('properties', ())):
-        fmt('zero', 'property', name=name, index=i, **kwds)
+    for prop in 'properties', 'mutable_properties':
+        for i, name in enumerate(kwds.get(prop, ())):
+            fmt('zero', prop, name=name, index=i, **kwds)
 
     for method_type in 'zero', 'one', 'two', 'static':
         for tmpl, methods in sorted(config.get(method_type, {}).items()):

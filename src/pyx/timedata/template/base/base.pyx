@@ -24,7 +24,7 @@ cdef class $classname:
     def __copy__($classname self):
       return self.copy()
 
-    def __deepcopy__($classname self, memodict={}):
+    def __deepcopy__($classname self, memodict=None):
         return self.copy()
 
     def __repr__($classname self):

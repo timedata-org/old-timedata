@@ -2,7 +2,6 @@ from . Base import *
 
 start = 0
 include_file = 'timedata/color/cython_list_inl.h'
-properties = ()
 namespace = 'timedata::color_list'
 value_type = 'float'
 size = 3
