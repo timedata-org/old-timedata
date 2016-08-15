@@ -9,15 +9,9 @@ import Cython.Compiler.Options
 sys.path.append('src/py')
 from timedata_build import arguments, commands, context
 
-
-LEAST_PYTHON = 3, 4
-ACTUAL_PYTHON = sys.version_info[:2]
 CONFIG = context.CONFIG
 
-assert ACTUAL_PYTHON >= LEAST_PYTHON, (
-    'Must use at least Python %d.%d but have version %d.%d' %
-    (LEAST_PYTHON[0], LEAST_PYTHON[1], ACTUAL_PYTHON[0], ACTUAL_PYTHON[1]))
-
+arguments.check_python(CONFIG.flags['minimum_python_version'])
 
 """Each of these "flags" corresponds to an environment variable looking like
    TIMEDATA_$NAME, where $NAME is the uppercase version of flag.
