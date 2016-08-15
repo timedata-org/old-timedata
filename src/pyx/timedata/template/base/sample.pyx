@@ -3,6 +3,9 @@
 
 ### declare
 
+cdef class $classname
+cdef class $mutableclass($classname)
+
 cdef extern from "<$include_file>" namespace "$namespace":
     cdef cppclass C$classname:
          C$classname()

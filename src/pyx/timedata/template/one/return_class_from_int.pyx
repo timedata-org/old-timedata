@@ -4,6 +4,6 @@
 ### define
     cpdef $classname $name($classname self, int index):
         """$documentation"""
-        cdef $classname result = $classname()
+        cdef $classname result = $mutableclass()
         result.cdata = $name(self.cdata, index)
         return result

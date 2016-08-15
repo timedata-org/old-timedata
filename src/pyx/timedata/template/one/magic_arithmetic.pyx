@@ -7,6 +7,6 @@
         cdef $classname a = x if isinstance(x, $classname) else y.__class__(x)
         cdef $classname b = y if isinstance(y, $classname) else x.__class__(y)
 
-        result = a.__class__()
+        result = $mutableclass()
         (<$classname> result).cdata = magic_$name(a.cdata, b.cdata);
         return result

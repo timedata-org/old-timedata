@@ -8,6 +8,6 @@
             x: a $classname or something that can be converted into one.
         """
         cdef $classname s = x if isinstance(x, $classname) else $classname(x)
-        cdef $classname result = $classname()
+        cdef $mutableclass result = $mutableclass()
         result.cdata = $name(self.cdata, s.cdata)
         return result
