@@ -19,6 +19,13 @@ methods = add_methods(
              'Return a new $classname whose components are limited below by x'),
             ),
 
+        return_class_from_int=(
+            ('rotated',
+             'Return a new $classname with the components cyclically rotated '
+             'by `index` places.'),
+            ),
+        # no divmod!
+
         return_number=(
             ('distance',
              'Return the distance between this $classname and x.'),
@@ -26,13 +33,6 @@ methods = add_methods(
              """Return the square of the distance between this $classname and x.
             This is significantly faster than the distance method."""),
             ),
-
-        return_class_from_int=(
-            ('rotated',
-             'Return a new $classname with the components cyclically rotated '
-             'by `index` places.'),
-            ),
-        # no divmod!
 	),
 
     three=dict(

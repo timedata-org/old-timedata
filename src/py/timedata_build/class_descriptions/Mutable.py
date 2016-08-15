@@ -17,6 +17,16 @@ methods = add_methods(
 
     one=dict(
         magic_mutable=('add', 'truediv', 'mod', 'mul', 'sub', ),
+
+        mutator=(
+            ('limit_max', 'Limit components above by x'),
+            ('limit_min', 'Limit components below by x'),
+            ),
+
+        mutator_int=(
+            ('rotated', 'Cyclically rotate the components by n positions'),
+            ),
+        # no divmod!
         ),
     )
 
