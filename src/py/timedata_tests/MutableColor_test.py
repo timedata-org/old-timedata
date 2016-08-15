@@ -17,3 +17,13 @@ class TestMutable(unittest.TestCase):
         black *= 2
         black /= 2
         self.assertEqual(tuple(black), (1, 1, 1))
+
+    def test_list(self):
+        colors = ColorList(['red', 'green', 'blue'])
+
+        r = colors.get(0)
+        self.assertEqual(r, Color.by_name.red)
+
+        s = colors.get(1, r)
+        self.assertEqual(s, Color.by_name.green)
+        self.assertEqual(r, Color.by_name.green)
