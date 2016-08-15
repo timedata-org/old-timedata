@@ -8,7 +8,8 @@ class Generate(Command):
     split_flag = re.compile('[\W,]').split
 
     def run(self):
-        print('Generate ' + ('tiny' if FLAGS.tiny else ''))
+        tiny = FLAGS.tiny.lower() == 'true'
+        print('Generate ' + ('tiny' if tiny else ''))
 
         models = FLAGS.models and re.split('[\W,]', FLAGS.models)
-        generate.generate(tiny=FLAGS.tiny, models=models)
+        generate.generate(tiny=tiny, models=models)
