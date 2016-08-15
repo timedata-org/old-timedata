@@ -5,4 +5,5 @@ class PushDocumentation(Command):
     description = 'Push documentation to github.io'
 
     def run(self):
-        execute.git_push(CONFIG.directories['documentation'], TIME)
+        # TODO: dodgy, should probably delete.
+        execute.git_push(CONFIG.directories['documentation_repo'], TIME)
