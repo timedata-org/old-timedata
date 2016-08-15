@@ -14,9 +14,9 @@ methods = add_methods(
 
         return_class=(
             ('limit_max',
-             'Return a new $classname whose components are limited above by x'),
+             'Return a new $classname whose components are limited above by x.'),
             ('limit_min',
-             'Return a new $classname whose components are limited below by x'),
+             'Return a new $classname whose components are limited below by x.'),
             ),
 
         return_class_from_int=(
