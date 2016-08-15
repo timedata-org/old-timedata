@@ -1,13 +1,14 @@
 import os, stat
 
 
-def make_writable(f, is_writable=True, report=False):
-    try:
-        os.chmod(f, stat.S_IWRITE if is_writable else stat.S_IREAD)
-    except:
-        if report:
-            print('Failed to change writability for', f)
-            raise
+def make_writable(f, is_writable=True, report=True):
+    if os.path.isfile(f):
+        try:
+            os.chmod(f, stat.S_IWRITE if is_writable else stat.S_IREAD)
+        except:
+            if report:
+                print('Failed to change writability for', f)
+                raise
 
 
 def write_if_different(fname, data):

@@ -58,6 +58,7 @@ methods = add_methods(
 substitutions = dict(
     substitutions,
     sampleclass='$sampleclass',
+    mutableclass='$mutableclass',
     class_documentation = """\
 A list of RGB floating point Colors, with many mutating functions.
 

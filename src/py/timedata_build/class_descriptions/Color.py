@@ -7,7 +7,6 @@ size = 3
 
 methods = add_methods(
     methods,
-
     static=dict(
         from_cpp=(
             dict(name='from_hex',
@@ -25,8 +24,11 @@ methods = add_methods(
         ),
     )
 
-substitutions = dict(substitutions,
-                     class_documentation="""\
+substitutions = dict(
+    substitutions,
+    sampleclass='$sampleclass',
+    mutableclass='$mutableclass',
+    class_documentation="""\
 A $name is an immutable floating point color.
 
      A $name looks like a Python tuple with $$size floating point numbers, with

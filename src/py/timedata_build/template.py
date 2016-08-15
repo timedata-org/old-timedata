@@ -42,5 +42,5 @@ def substitute(*names, **kwds):
         parts = read(open(filename), filename)
         return [sub(parts.get(i)) for i in ('declare', 'define')]
 
-    except Exception as e:
-        raise e.__class__('in file %s' % filename)
+    except Exception:
+        raise LookupError('in file %s' % filename)
