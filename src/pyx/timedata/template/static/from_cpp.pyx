@@ -1,4 +1,7 @@
 ### declare
+cdef extern from "<timedata/color/cython_inl.h>" namespace "timedata::color":
+    cdef cppclass C$classname:
+        pass
     void $name($argument_type, C$classname&)
 
 ### define

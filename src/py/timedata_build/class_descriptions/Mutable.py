@@ -2,6 +2,15 @@ from . Base import *
 
 methods = add_methods(
     base='mutable',
+
+    static=dict(
+        from_cpp=(
+            dict(name='from_hex',
+                 argument_type='uint32_t',
+                 documentation='Create a $classname from a hex integer'),
+            ),
+        ),
+
     zero=dict(
         arithmetic=('abs', 'ceil', 'floor', 'invert', 'neg', 'round', 'trunc'),
         ),
