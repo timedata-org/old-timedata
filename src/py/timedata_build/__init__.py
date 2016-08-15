@@ -1,3 +1,3 @@
-from . arguments import check_python, FLAGS, insert_dependencies
+from . arguments import check_python, insert_dependencies
 from . commands import COMMANDS
-from . context import CONFIG
+from . context import CONFIG, FLAGS

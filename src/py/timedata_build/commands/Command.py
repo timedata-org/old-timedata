@@ -1,5 +1,4 @@
-from .. context import CONFIG
-from .. arguments import FLAGS
+from .. context import CONFIG, FLAGS
 
 from setuptools import Command as _Command
 import datetime

@@ -1,14 +1,5 @@
 import os, sys
 
-from . context import CONFIG, Context
-
-def extract_env(**flags):
-    get = lambda k, v: os.environ.get('TIMEDATA_' + k.upper(), v)
-    return Context(**{k: get(k, v) for k, v in flags.items()})
-
-
-FLAGS = extract_env(**CONFIG.flags)
-
 def insert_dependencies(args, **dependencies):
     result = []
     def add_all(*args):

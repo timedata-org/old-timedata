@@ -1,9 +1,13 @@
-import configparser, re
+import configparser, os, re
 
 class Context(object):
     def __init__(self, **kwds):
         for (k, v) in kwds.items():
             setattr(self, k, v)
+
+
+def public_dir(x):
+    return {k: v for (k, v) in x.__dict__.items() if not k.startswith('_')}
 
 
 def config(filename='setup.cfg', prefix='timedata_'):
@@ -25,4 +29,11 @@ def config(filename='setup.cfg', prefix='timedata_'):
 
     return Context(**result)
 
+
+def extract_env(**flags):
+    get = lambda k, v: os.environ.get('TIMEDATA_' + k.upper(), v)
+    return Context(**{k: get(k, v) for k, v in flags.items()})
+
+
 CONFIG = config()
+FLAGS = extract_env(**CONFIG.flags)
