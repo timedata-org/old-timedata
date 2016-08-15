@@ -30,10 +30,27 @@ def config(filename='setup.cfg', prefix='timedata_'):
     return Context(**result)
 
 
-def extract_env(**flags):
-    get = lambda k, v: os.environ.get('TIMEDATA_' + k.upper(), v)
-    return Context(**{k: get(k, v) for k, v in flags.items()})
+def read_flags_from_environ(**flags):
+    result = {}
+    for key, v in flags.items():
+        value = os.environ.get('TIMEDATA_' + key.upper(), v)
+        if value.lower() == 'true':
+            value = True
+        elif value.lower() == 'false':
+            value = False
+        result[key] = value
+    return Context(**result)
 
 
 CONFIG = config()
-FLAGS = extract_env(**CONFIG.flags)
+FLAGS = read_flags_from_environ(**CONFIG.flags)
+
+"""
+TODO: this comment need to be extracted into an external doc.
+Each of these "flags" corresponds to an environment variable looking like
+   TIMEDATA_$NAME, where $NAME is the uppercase version of flag.
+
+   For example, to run generate with the "tiny" flag, enter:
+
+       TIMEDATA_TINY=true ./setup.py generate
+"""

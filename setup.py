@@ -19,17 +19,7 @@ check_python(FLAGS.minimum_python_version)
 sys.argv = insert_dependencies(sys.argv, **CONFIG.dependencies)
 
 # See: http://goo.gl/1kNY1n
-Cython.Compiler.Options.annotate = FLAGS.annotate.lower() == 'true'
+Cython.Compiler.Options.annotate = FLAGS.annotate
 
 print('About to build targets', *sys.argv[1:])
 setuptools.setup(cmdclass=COMMANDS, **CONFIG.setuptools)
-
-"""
-TODO: this comment need to be extracted into an external doc.
-Each of these "flags" corresponds to an environment variable looking like
-   TIMEDATA_$NAME, where $NAME is the uppercase version of flag.
-
-   For example, to run generate with the "tiny" flag, enter:
-
-       TIMEDATA_TINY=true ./setup.py generate
-"""
