@@ -1,7 +1,7 @@
 from .. import execute
 from . Command import *
 
-class PushSphinx(Command):
+class PushDocumentation(Command):
     description = 'Push documentation to github.io'
 
     def run(self):

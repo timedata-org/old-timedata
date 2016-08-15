@@ -1,9 +1,9 @@
 from . Benchmark import Benchmark
 from . BuildExt import BuildExt
 from . Clean import Clean
-from . CopySphinx import CopySphinx
+from . CopyDocumentation import CopyDocumentation
 from . Generate import Generate
-from . PushSphinx import PushSphinx
+from . PushDocumentation import PushDocumentation
 from . TestCpp import TestCpp
 
 
@@ -11,8 +11,8 @@ COMMANDS = dict(
     benchmark=Benchmark,
     build_ext=BuildExt,
     clean=Clean,
-    copy_sphinx=CopySphinx,
+    copy_documentation=CopyDocumentation,
     generate=Generate,
-    push_sphinx=PushSphinx,
+    push_documentation=PushDocumentation,
     test_cpp=TestCpp,
     )

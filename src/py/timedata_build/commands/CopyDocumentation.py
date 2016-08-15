@@ -3,8 +3,8 @@ from distutils.dir_util import copy_tree
 from . Command import *
 
 
-class CopySphinx(Command):
-    description = 'Push documentation to github.io'
+class CopyDocumentation(Command):
+    description = 'Copy documentation to github.io repository'
 
     def run(self):
         f = lambda s: os.path.abspath(CONFIG.directories[s])
