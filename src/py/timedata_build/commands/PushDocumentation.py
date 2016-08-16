@@ -6,4 +6,4 @@ class PushDocumentation(Command):
 
     def run(self):
         # TODO: dodgy, should probably delete.
-        execute.git_push(CONFIG.directories['documentation_repo'], TIME)
+        execute.git_push(DIRS.documentation_repo, TIME)

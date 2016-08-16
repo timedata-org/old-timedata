@@ -12,6 +12,5 @@ class Clean(Command):
         self.cwd = os.getcwd()
 
     def run(self):
-        d = CONFIG.directories['build']
-        print('Deleting ./{}/'.format(d))
-        shutil.rmtree(os.path.abspath(d), ignore_errors=True)
+        print('Deleting ./{}/'.format(DIRS.build))
+        shutil.rmtree(DIRS.build, ignore_errors=True)

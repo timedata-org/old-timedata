@@ -43,6 +43,7 @@ def read_flags_from_environ(**flags):
 
 
 CONFIG = config()
+DIRS = Context(**{k: os.path.abspath(v) for k, v in CONFIG.directories.items()})
 FLAGS = read_flags_from_environ(**CONFIG.flags)
 
 """

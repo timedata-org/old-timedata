@@ -5,11 +5,6 @@ def copy_tree(f, g):
     return dir_util.copy_tree(os.path.abspath(f), os.path.abspath(g))
 
 
-def make_directories(*filenames):
-    for f in filenames:
-        os.makedirs(os.path.dirname(f), exist_ok=True)
-
-
 def make_writable(f, is_writable=True):
     if os.path.isfile(f):
         try:
@@ -26,7 +21,7 @@ def write_if_different(fname, data):
     except:
         old_data = None
     if old_data != data:
-        make_directories(fname)
+        os.makedirs(os.path.dirname(fname), exist_ok=True)
         make_writable(fname)
         open(fname, 'w').write(data)
         make_writable(fname, False)
