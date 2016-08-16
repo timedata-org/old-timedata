@@ -2,17 +2,10 @@
 
 High-performance color arithmetic for C++ and Python.
 
+---
 
-## Why? ##
-
-Controlling colored lights requires a great deal of arithmetic and this is too
-slow in Python to get either very high frame rates, or complex patterns with
-more than a few components - particularly on small machines like the Raspberry
-Pi.
-
-Traditional color arithmetic is done in 8-bit integers, which provide inadequate
-resolution for smooth fades - particularly when everything is gamma corrected
-(exponentiated) at the very last step.
+Most documents are now here:
+https://github.com/timedata-org/timedata/tree/master/doc
 
 ## What do you get? ##
 
