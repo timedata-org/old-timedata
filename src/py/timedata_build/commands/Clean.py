@@ -1,4 +1,4 @@
-import os, shutil
+import os, pathlib, shutil
 from . Command import *
 
 
@@ -14,3 +14,10 @@ class Clean(Command):
     def run(self):
         print('Deleting ./{}/'.format(DIRS.build))
         shutil.rmtree(DIRS.build, ignore_errors=True)
+
+        try:
+            os.remove('timedata.html')
+        except:
+            pass
+        for s in list(pathlib.Path('src').glob('**/*.html')):
+            os.remove(str(s))

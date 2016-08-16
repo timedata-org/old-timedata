@@ -1,10 +1,10 @@
-import os, platform
+import os, pathlib, platform, shutil
 import setuptools.extension
 from setuptools.command.build_ext import build_ext
 import Cython.Build
 
 from . Command import *
-from .. import execute, template
+from .. import execute, files, template
 
 
 class BuildExt(build_ext):
@@ -50,3 +50,24 @@ class BuildExt(build_ext):
         )
         self.distribution.ext_modules = module
         super().finalize_options()
+
+    def run(self):
+        super().run()
+        afile = files.clean_dir(DIRS.documentation, 'annotation')
+        try:
+            os.remove('timedata.html')
+        except:
+            pass
+        source_pyx = pathlib.Path('src').glob('**/*.html')
+        genfiles_pyx = pathlib.Path('build/genfiles').glob('**/*.html')
+        for s in list(source_pyx) + list(genfiles_pyx):
+            src = str(s)
+            parts = files.splitall(src)
+            while parts[0] != 'timedata':
+                parts.pop(0)
+            target = os.path.join(afile, *parts)
+            os.makedirs(os.path.dirname(target), exist_ok=True)
+            try:
+                shutil.move(src, target)
+            except:
+                pass

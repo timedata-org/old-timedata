@@ -4,6 +4,7 @@ dist/
 __pycache__
 
 timedata.cpp
+timedata.html
 src/**/*.html
 
 *.gen.pyx

@@ -1,4 +1,4 @@
-import os, stat
+import os, shutil, stat
 from distutils import dir_util
 
 def copy_tree(f, g):
@@ -11,6 +11,23 @@ def make_writable(f, is_writable=True):
             os.chmod(f, stat.S_IWRITE if is_writable else stat.S_IREAD)
         except:
             raise OSError('Failed to change writability for', f)
+
+
+def splitall(path):
+    result = []
+    last_path = '/'
+    while path and path != last_path:
+        last_path = path
+        path, part = os.path.split(path)
+        result.insert(0, part)
+    return result
+
+
+def clean_dir(*path):
+    dname = os.path.join(*path)
+    shutil.rmtree(dname, ignore_errors=True)
+    os.makedirs(dname)
+    return dname
 
 
 def write_if_different(fname, data):
