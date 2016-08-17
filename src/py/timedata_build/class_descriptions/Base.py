@@ -7,7 +7,7 @@ def add_methods(old_methods=None, **new_methods):
     result = copy.deepcopy(old_methods or {})
     for signature, categories in new_methods.items():
         if signature == 'base':
-            result[signature] = result.get(signature, ()) + tup(categories)
+            result['base'] = result.get('base', ()) + tup(categories)
         else:
             cat_dict = result.setdefault(signature, {})
             for category, methods in categories.items():
