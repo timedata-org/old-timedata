@@ -7,7 +7,8 @@ value_type = 'float'
 size = 3
 
 methods = add_methods(
-    base=('base', 'sample_list', 'copy'),
+    base=('base', 'list', 'copy'),
+
     zero=dict(
         simple_mutator=(
             'clear',
@@ -61,7 +62,9 @@ methods = add_methods(
 substitutions = dict(
     substitutions,
     sampleclass='$sampleclass',
+    itemclass='C$sampleclass',
     mutableclass='$mutableclass',
+    itemgetter='.cdata',
     class_documentation = """\
 A list of RGB floating point Colors, with many mutating functions.
 

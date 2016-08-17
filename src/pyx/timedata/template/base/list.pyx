@@ -4,28 +4,28 @@
 ### declare
 
 cdef extern from "<$include_file>" namespace "$namespace":
-    ctypedef vector[C$sampleclass] C$classname
+    ctypedef vector[$itemclass] C$classname
 
     string toString(C$classname&)
     C$classname sliceOut(C$classname&, int begin, int end, int step)
-    C$sampleclass max_cpp(C$classname&)
-    C$sampleclass min_cpp(C$classname&)
+    $itemclass max_cpp(C$classname&)
+    $itemclass min_cpp(C$classname&)
 
     bool cmpToRichcmp(float cmp, int richcmp)
     $number_type compare(C$classname&, C$classname&)
-    $number_type compare(C$sampleclass&, C$classname&)
+    $number_type compare($itemclass&, C$classname&)
     $number_type compare($number_type, C$classname&)
-    bool pop(C$classname&, int key, C$sampleclass&)
+    bool pop(C$classname&, int key, $itemclass&)
     bool resolvePythonIndex(int& index, size_t size)
     bool sliceInto(C$classname&, C$classname&, int begin, int end, int step)
 
-    int index(C$classname&, C$sampleclass&)
+    int index(C$classname&, $itemclass&)
 
-    size_t count(C$classname&, C$sampleclass&)
+    size_t count(C$classname&, $itemclass&)
 
     void erase(int key, C$classname&)
     void extend(C$classname&, C$classname&)
-    void insert(int key, C$sampleclass&, C$classname)
+    void insert(int key, $itemclass&, C$classname)
     void rotate(C$classname&, int pos)
     void rotate(C$classname&, C$classname&, int pos)
     void round_cpp(C$classname&, size_t digits)
@@ -33,7 +33,7 @@ cdef extern from "<$include_file>" namespace "$namespace":
     void sliceDelete(C$classname&, int begin, int end, int step)
     void sort(C$classname&)
     void sort(C$classname&, C$classname&, bool reverse)
-    void spreadAppend(C$sampleclass& end, size_t size, C$classname& out)
+    void spreadAppend($itemclass& end, size_t size, C$classname& out)
 
 ### define
     def __init__($classname self, items=None):
@@ -48,7 +48,7 @@ cdef extern from "<$include_file>" namespace "$namespace":
                 # A list of tuples, $classname or strings.
                 self.cdata.resize(len(items))
                 for i, item in enumerate(items):
-                    self.cdata[i] = $sampleclass(item).cdata
+                    self.cdata[i] = $sampleclass(item)$itemgetter
 
     def __setitem__($classname self, object key, object x):
         cdef size_t length, slice_length
@@ -64,7 +64,7 @@ cdef extern from "<$include_file>" namespace "$namespace":
         index = key
         if not resolvePythonIndex(index, self.cdata.size()):
             raise IndexError('$classname index out of range %s' % key)
-        self.cdata[index] = $sampleclass(x).cdata
+        self.cdata[index] = $sampleclass(x)$itemgetter
 
     def __getitem__($classname self, object key):
         cdef $sampleclass s
@@ -86,7 +86,7 @@ cdef extern from "<$include_file>" namespace "$namespace":
         cdef $mutableclass result = previous if previous else $mutableclass()
         if not resolvePythonIndex(key, self.cdata.size()):
             raise IndexError('$classname index out of range %s' % key)
-        result.cdata = self.cdata[key]
+        result$itemgetter = self.cdata[key]
         return result
 
     def __delitem__($classname self, object key):
@@ -114,7 +114,7 @@ cdef extern from "<$include_file>" namespace "$namespace":
         if isinstance(other, Number):
             c = compare((<$number_type> other), cl.cdata)
         elif isinstance(other, $sampleclass):
-            c = compare((<$sampleclass> other).cdata, cl.cdata)
+            c = compare((<$sampleclass> other)$itemgetter, cl.cdata)
         else:
             c = compare((<$classname> other).cdata, cl.cdata)
         return cmpToRichcmp(mult * c, rcmp)
@@ -126,17 +126,18 @@ cdef extern from "<$include_file>" namespace "$namespace":
 
     cpdef size_t count(self, $sampleclass sample):
         """Return the number of times a sample appears in this list."""
-        return count(self.cdata, sample.cdata)
+        return count(self.cdata, sample$itemgetter)
 
     cpdef $classname extend($classname self, object values):
         """Extend the samples from an iterator."""
-        extend($classname(values).cdata, self.cdata)
+        for v in values:
+            self.append(v)
         return self
 
     cpdef index($classname self, $sampleclass sample):
         """Returns an index to the first occurance of that Sample, or
            raises a ValueError if that Sample isn't there."""
-        cdef int id = index(self.cdata, sample.cdata)
+        cdef int id = index(self.cdata, sample$itemgetter)
         if id >= 0:
             return id
         raise ValueError('Can\'t find sample %s' % sample)
@@ -150,13 +151,13 @@ cdef extern from "<$include_file>" namespace "$namespace":
     cpdef $classname insert($classname self, int key,
                            $sampleclass sample):
         """Insert a sample before key."""
-        insert(key, sample.cdata, self.cdata)
+        insert(key, sample$itemgetter, self.cdata)
         return self
 
     cpdef $sampleclass pop($classname self, int key = -1):
         """Pop the sample at key."""
         cdef $sampleclass result = $sampleclass()
-        if pop(self.cdata, key, result.cdata):
+        if pop(self.cdata, key, result$itemgetter):
             return result
         raise IndexError('pop index out of range')
 
@@ -226,13 +227,13 @@ cdef extern from "<$include_file>" namespace "$namespace":
     cpdef $sampleclass max(self):
         """Return the maximum values of each component."""
         cdef $sampleclass result = $sampleclass()
-        result.cdata = max_cpp(self.cdata)
+        result$itemgetter = max_cpp(self.cdata)
         return result
 
     cpdef $sampleclass min(self):
-        """Return the minimum values of each component/"""
+        """Return the minimum values of each component."""
         cdef $sampleclass result = $sampleclass()
-        result.cdata = min_cpp(self.cdata)
+        result$itemgetter = min_cpp(self.cdata)
         return result
 
     @staticmethod
