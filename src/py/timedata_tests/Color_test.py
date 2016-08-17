@@ -30,28 +30,29 @@ class TestColor(unittest.TestCase):
     def test_mixed(self):
         antired = Color(-1, 0, 0)
         self.assertEqual(str(antired), 'red-++')
-        self.assertEqual(antired + Color('red'), Color('black'))
-        self.assertEqual(str(-Color('white')), 'white---')
+        self.assertEqual(antired.add(Color('red')), Color('black'))
+        self.assertEqual(antired.add('red'), Color('black'))
+        self.assertEqual(str(Color('white').neg()), 'white---')
 
     def test_arithmetic(self):
         black, red, green, blue, white, yellow, cyan, magenta = (
             Color(i) for i in ('black', 'red', 'green', 'blue', 'white',
                                'yellow', 'cyan', 'magenta'))
 
-        self.assertEqual(red + green + blue, white)
-        self.assertEqual(red + green, yellow)
-        self.assertEqual(green + blue, cyan)
-        self.assertEqual(red + blue, magenta)
+        self.assertEqual(red.add(green).add(blue), white)
+        self.assertEqual(red.add(green), yellow)
+        self.assertEqual(green.add(blue), cyan)
+        self.assertEqual(red.add(blue), magenta)
 
-        self.assertEqual(white - blue, yellow)
-        self.assertEqual(white - green, magenta)
-        self.assertEqual(white - red, cyan)
+        self.assertEqual(white.sub(blue), yellow)
+        self.assertEqual(white.sub(green), magenta)
+        self.assertEqual(white.sub(red), cyan)
 
-        self.assertEqual(~white, black)
-        self.assertEqual(~black, white)
+        self.assertEqual(white.invert(), black)
+        self.assertEqual(black.invert(), white)
 
-        self.assertEqual(white * red, red)
-        self.assertEqual(white * cyan, cyan)
+        self.assertEqual(white.mul(red), red)
+        self.assertEqual(white.mul(cyan), cyan)
 
     def test_methods(self):
         self.assertEqual(Color().START, 0)
@@ -59,8 +60,8 @@ class TestColor(unittest.TestCase):
 
     def test_rotated(self):
         self.assertEqual(Color('red').rotated(1), Color('blue'))
-        g1 = (Color('red') + Color('blue') * 0.5).rotated(-1)
-        g2 = Color('green') + Color('red') * 0.5
+        g1 = Color('red').add(Color('blue')).mul(0.5).rotated(-1)
+        g2 = Color('green').add(Color('red')).mul(0.5)
         # TODO:  but these should be *exactly equal!  Why do I need that?
         self.assertLessEqual(g1.distance(g2), 1.0E-6)
 
@@ -77,8 +78,12 @@ class TestColor(unittest.TestCase):
         black, red, green, blue, white, yellow, cyan, magenta = (
             Color(i) for i in ('black', 'red', 'green', 'blue', 'white',
                                'yellow', 'cyan', 'magenta'))
-        for x, y in ((red, green), (green, blue), (red + green, red + blue),
-                     (white, red), (white, green), (white, blue)):
+        for x, y in ((red, green),
+                     (green, blue),
+                     (red.add(green), red.add(blue)),
+                     (white, red),
+                     (white, green),
+                     (white, blue)):
             self.assertFalse(x == y)
             self.assertTrue(x != y)
             self.assertFalse(x <= y)
@@ -107,8 +112,9 @@ class TestColor(unittest.TestCase):
     def test_abs(self):
         red, green, gray = (
             Color('red'), Color('green'), Color('gray'))
-        self.assertEqual(abs(-red), red)
-        self.assertEqual(abs(-(red + gray + gray)), red + gray + gray)
+        self.assertEqual(red.neg().abs(), red)
+        self.assertEqual(red.add(gray).add(gray).neg().abs(),
+                         red.add(gray).add(gray))
 
     def test_copy(self):
         import copy

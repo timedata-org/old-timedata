@@ -15,7 +15,7 @@ class TestMutable(unittest.TestCase):
         black = MutableColor()
         black.add_into(1)
         black.mul_into(2)
-        black.truediv_into(2)
+        black.div_into(2)
         self.assertEqual(tuple(black), (1, 1, 1))
 
     def test_list(self):

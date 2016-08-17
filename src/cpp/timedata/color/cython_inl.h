@@ -94,7 +94,7 @@ SampleType<Color> magic_add(Color const& x, Color const& y) {
 }
 
 template <typename Color>
-SampleType<Color> magic_truediv(Color const& x, Color const& y) {
+SampleType<Color> magic_div(Color const& x, Color const& y) {
     return {divPython(x[0], y[0]),
             divPython(x[1], y[1]),
             divPython(x[2], y[2])};

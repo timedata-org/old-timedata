@@ -10,7 +10,7 @@ methods = add_methods(
         ),
 
     one=dict(
-        magic_arithmetic=('add', 'truediv', 'mod', 'mul', 'sub', ),
+        magic_arithmetic=('add', 'div', 'mod', 'mul', 'sub', ),
 
         return_class=(
             ('limit_max',

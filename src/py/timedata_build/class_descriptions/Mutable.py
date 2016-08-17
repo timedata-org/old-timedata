@@ -16,7 +16,7 @@ methods = add_methods(
         ),
 
     one=dict(
-        magic_mutable=('add', 'truediv', 'mod', 'mul', 'sub', ),
+        magic_mutable=('add', 'div', 'mod', 'mul', 'sub', ),
 
         mutator=(
             ('limit_max', 'Limit components above by x.'),

@@ -150,7 +150,7 @@ class TestColorList(unittest.TestCase):
 
     def test_div_pow(self):
         c = ColorList(('red', 'green', 'blue'))
-        c[1] = -c[1]
+        c[1] = c[1].neg()
         cl = c.copy().div(0)
         self.assertEqual(cl[0][0], float('inf'))
         self.assertFalse(cl[0][1] == cl[0][1])
@@ -168,10 +168,10 @@ class TestColorList(unittest.TestCase):
 
         c.min_limit(0.25).max_limit(0.75)
 
-        gray = Colors.white * 0.25
-        self.assertEqual(c, ColorList((gray + Colors.red / 2,
-                                       gray + Colors.green / 2,
-                                       gray + Colors.blue / 2)))
+        gray = Colors.white.mul(0.25)
+        self.assertEqual(c, ColorList((gray.add(Colors.red.div(2)),
+                                       gray.add(Colors.green.div(2)),
+                                       gray.add(Colors.blue.div(2)))))
 
     def test_round(self):
         cl = ColorList(((0.15, 0.24, 0.36), (-0.15, -0.24, -0.36)))
