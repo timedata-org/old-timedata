@@ -6,6 +6,10 @@
 ### define
     cpdef $classname $name($classname self, object c):
         """$documentation into this $classname."""
+        return self.${name}_into(c)
+
+    cpdef $classname ${name}_into($classname self, object c):
+        """$documentation into this $classname."""
         if isinstance(c, Number):
             math_$name(self.cdata, <$number_type> c, self.cdata)
         elif isinstance(c, $sampleclass):

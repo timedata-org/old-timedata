@@ -13,13 +13,16 @@ methods = add_methods(
             'clear',
             'zero'),
 
+        python_mutator=(
+            'reverse',
+            ),
+
         mutator=(
             'abs',
             'floor',
             'ceil',
             'invert',
             'neg',
-            'reverse',
             'trunc',
             ),
         ),
