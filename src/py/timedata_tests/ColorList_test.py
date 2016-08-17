@@ -56,8 +56,7 @@ class TestColorList(unittest.TestCase):
 
     def test_rotate(self):
         cl = ColorList(('red', 'green', 'blue'))
-        cl.rotate(1)
-        self.assertEqual(cl, ColorList(['green', 'blue', 'red']))
+        self.assertEqual(cl.rotate(1), ColorList(['green', 'blue', 'red']))
 
     def test_append(self):
         cl = ColorList()

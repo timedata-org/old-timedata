@@ -171,12 +171,18 @@ cdef extern from "<$include_file>" namespace "$namespace":
         return self
 
     cpdef $classname rotate(self, int pos):
+        """Return a new $classname with the samples rotated forward by `pos` positions."""
+        cdef $classname out = $classname()
+        rotate(self.cdata, out.cdata, pos)
+        return out
+
+    cpdef $classname rotate_into(self, int pos):
         """In-place rotation of the samples forward by `pos` positions."""
         rotate(self.cdata, pos)
         return self
 
     cpdef $classname rotate_to(self, int pos, $classname out):
-        """In-place rotation of the samples forward by `pos` positions."""
+        """Rotate the samples forward by `pos` positions to another $classname"""
         rotate(self.cdata, out.cdata, pos)
         return out
 
@@ -202,6 +208,12 @@ cdef extern from "<$include_file>" namespace "$namespace":
         return out
 
     cpdef $classname round($classname self, uint digits=0):
+        """Round each element in each sample to the nearest integer."""
+        cdef $classname out = $classname()
+        round_cpp(self.cdata, out.cdata, digits)
+        return out
+
+    cpdef $classname round_into($classname self, uint digits=0):
         """Round each element in each sample to the nearest integer."""
         round_cpp(self.cdata, digits)
         return self
