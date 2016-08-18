@@ -8,7 +8,6 @@ class TestRemap(unittest.TestCase):
     def check_identity(self, remap, *colors, result=None):
         cl = ColorList(colors)
         result = ColorList(cl if result is None else result)
-        print('!!!', cl, result)
 
         self.assertEqual(remap.map(cl[:]), result)
         self.assertEqual(cl[:].remap(remap), result)

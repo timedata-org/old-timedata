@@ -48,11 +48,11 @@ class TestColor(unittest.TestCase):
         self.assertEqual(white.sub(green), magenta)
         self.assertEqual(white.sub(red), cyan)
 
-        self.assertEqual(white.invert(), black)
-        self.assertEqual(black.invert(), white)
-
         self.assertEqual(white.mul(red), red)
         self.assertEqual(white.mul(cyan), cyan)
+
+        self.assertEqual(white.invert(), black)
+        self.assertEqual(black.invert(), white)
 
     def test_methods(self):
         self.assertEqual(Color().START, 0)

@@ -13,13 +13,13 @@ def _make_module():
     def add(d, key, name):
         c = globals().get('Color' + name)
         cl = globals().get('ColorList' + name)
-        mut = globals().get('MutableColor' + name)
-        if c and cl and mut:
-            d[key] = dict(Color=c, ColorList=cl, MutableColor=mut)
+        cnst = globals().get('ColorConst' + name)
+        if c and cl and cnst:
+            d[key] = dict(Color=c, ColorList=cl, ColorConst=cnst)
 
     normal = dict(
         Color=ColorRGB,
-        MutableColor=MutableColorRGB,
+        ColorConst=ColorConstRGB,
         ColorList=ColorListRGB,
         )
 

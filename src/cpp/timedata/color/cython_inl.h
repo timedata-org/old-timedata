@@ -26,15 +26,15 @@ using CColorYUV = ColorYUV;
 using CColorRGB256 = ColorRGB256;
 using CColorRGB255 = ColorRGB255;
 
-using CMutableColorRGB = ColorRGB;
-using CMutableColorHSV = ColorHSV;
-using CMutableColorHSL = ColorHSL;
-using CMutableColorXYZ = ColorXYZ;
-using CMutableColorYIQ = ColorYIQ;
-using CMutableColorYUV = ColorYUV;
+using CColorConstRGB = ColorRGB;
+using CColorConstHSV = ColorHSV;
+using CColorConstHSL = ColorHSL;
+using CColorConstXYZ = ColorXYZ;
+using CColorConstYIQ = ColorYIQ;
+using CColorConstYUV = ColorYUV;
 
-using CMutableColorRGB256 = ColorRGB256;
-using CMutableColorRGB255 = ColorRGB255;
+using CColorConstRGB256 = ColorRGB256;
+using CColorConstRGB255 = ColorRGB255;
 
 template <typename Color>
 std::string toString(Color const& x) {

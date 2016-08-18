@@ -4,7 +4,7 @@ from timedata import *
 
 class TestMutable(unittest.TestCase):
     def test_white(self):
-        white = MutableColor('white')
+        white = Color('white')
         self.assertEqual(tuple(white), (1, 1, 1))
 
         white.red = 0
@@ -12,7 +12,7 @@ class TestMutable(unittest.TestCase):
         self.assertEqual(white, Color.by_name.blue)
 
     def test_ops(self):
-        black = MutableColor()
+        black = Color()
         black.add_into(1)
         black.mul_into(2)
         black.div_into(2)

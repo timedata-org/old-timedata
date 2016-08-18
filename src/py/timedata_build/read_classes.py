@@ -20,8 +20,9 @@ def read_classes(tiny=False, models=[]):
 
     def read_class(model, properties, range_name):
         name = model + range_name
-        color_name = 'Color' + name
-        mutable_name = 'Mutable' + color_name
+        immutable_name = 'ColorConst' + name
+        mutable_name = 'Color' + name
+        list_name = 'ColorList' + name
 
         if models:
             if name.lower() not in models:
@@ -39,16 +40,16 @@ def read_classes(tiny=False, models=[]):
                 name=name,
                 range=range_name or '1',
                 mutableclass=mutable_name,
-                sampleclass=color_name)
+                sampleclass=immutable_name)
 
             for k, v in context.pop('substitutions', {}).items():
                 context[k] = sub(v)
             results.append(Context(**context))
 
-        sub(color_dict, color_name, properties=properties)
+        sub(color_dict, immutable_name, properties=properties)
         sub(mutable_dict, mutable_name, mutable_properties=properties,
-            parentclass=color_name)
-        sub(color_list_dict, 'ColorList' + name)
+            parentclass=immutable_name)
+        sub(color_list_dict, list_name)
 
     for model, prop in MODELS:
         for range_name in '', '255', '256':
