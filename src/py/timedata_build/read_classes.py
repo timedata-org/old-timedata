@@ -54,4 +54,5 @@ def read_classes(tiny=False, models=[]):
         for range_name in '', '255', '256':
             read_class(model, prop, range_name)
 
+    results.append(class_descriptions.Remap)
     return results

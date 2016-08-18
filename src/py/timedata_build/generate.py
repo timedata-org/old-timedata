@@ -9,7 +9,10 @@ STRUCT_FILES = ['timedata/signal/render3']
 
 def generate(tiny=False, models=''):
     filenames = list(make_structs.make_structs(STRUCT_FILES))
+
     for c in read_classes.read_classes(tiny=tiny, models=models):
+        if 'Remap' in c.output_file:
+            continue
         filenames.append(write_classes.write_classes(c.methods, **c.__dict__))
 
     data = ''.join('include "%s"\n' % f for f in sorted(filenames))

@@ -75,8 +75,8 @@ cdef extern from "<$include_file>" namespace "$namespace":
         k = key
         if not resolvePythonIndex(k, self.cdata.size()):
             raise IndexError('$classname index out of range %s' % key)
-        s = $sampleclass()
-        s.cdata = self.cdata[k]
+        s = $sampleclass()  # XXXXXXX
+        s$itemgetter = self.cdata[k]
         return s
 
     cpdef get($classname self, int key, $mutableclass previous=None):

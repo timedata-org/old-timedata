@@ -20,6 +20,7 @@ cdef extern from "<$include_file>" namespace "$namespace":
 
 ### define
     MODEL = loadConverter[C$classname]()
+    RANGE = $range
 
     names, by_name = _colors_by_name($classname)
 

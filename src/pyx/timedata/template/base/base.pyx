@@ -12,7 +12,6 @@ cdef class $classname:
     cdef C$classname cdata
 
     START = $start
-    RANGE = $range
     MODEL_NAME = '$model'
 
     def __repr__($classname self):

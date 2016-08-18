@@ -9,6 +9,8 @@ cdef extern from "<$include_file>" namespace "$namespace":
     void spreadAppend($itemclass& end, size_t size, C$classname& out)
 
 ### define
+    RANGE = $range
+
     cpdef Indexer indexer($classname self):
         """Return an RGBIndexer in Python form."""
         cpdef Indexer indexer = Indexer()
