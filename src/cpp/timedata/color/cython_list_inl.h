@@ -252,6 +252,20 @@ void insert(int key, ValueType<ColorList> const& color, ColorList& out) {
 }
 
 template <typename ColorList>
+void remap_to(CRemap const& remap, ColorList const& in, ColorList& out) {
+    if (out.size() < remap.size())
+        out.resize(remap.size());
+
+    for (size_t i = 0; i < remap.size(); ++i) {
+        auto index = remap[i];
+        if (index < in.size())
+            out[i] = in[index];
+        else
+            out[i] = {};
+    }
+}
+
+template <typename ColorList>
 void rotate(ColorList& out, int pos) {
     timedata::rotate(out, pos);
 }

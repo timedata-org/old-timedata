@@ -3,8 +3,11 @@
 
 ### declare
 
+cdef class Remap
+
 cdef extern from "<$include_file>" namespace "$namespace":
     ctypedef vector[$itemclass] C$classname
+    ctypedef vector[size_t] CRemap
 
     string toString(C$classname&)
     C$classname sliceOut(C$classname&, int begin, int end, int step)
@@ -26,9 +29,13 @@ cdef extern from "<$include_file>" namespace "$namespace":
     void erase(int key, C$classname&)
     void extend(C$classname&, C$classname&)
     void insert(int key, $itemclass&, C$classname)
+
+    void remap_to(CRemap& remap, C$classname&, C$classname&)
     void rotate(C$classname&, int pos)
     void rotate(C$classname&, C$classname&, int pos)
+
     void sliceDelete(C$classname&, int begin, int end, int step)
+
     void sort(C$classname&)
     void sort(C$classname&, C$classname&, bool reverse)
 
@@ -36,16 +43,19 @@ cdef extern from "<$include_file>" namespace "$namespace":
     def __init__($classname self, items=None):
         """Construct a $classname with an iterator of items, each of which looks
            like a $sampleclass."""
-        cdef $sampleclass s
-        cdef size_t i
-        if items is not None:
-            if isinstance(items, $classname):
-                self.cdata = (<$classname> items).cdata
-            else:
-                # A list of tuples, $classname or strings.
-                self.cdata.resize(len(items))
-                for i, item in enumerate(items):
-                    self.cdata[i] = $itemmaker(item)$itemgetter
+        if items is None:
+            return
+
+        if isinstance(items, $classname):
+            self.cdata = (<$classname> items).cdata
+            return
+
+        try:
+            self.cdata.reserve(len(items))
+        except:
+            pass  # Can't get the length, it's OK.
+        for i in items:
+            self.cdata.push_back($itemmaker(i)$itemgetter)
 
     def __setitem__($classname self, object key, object x):
         cdef size_t length, slice_length
@@ -135,6 +145,17 @@ cdef extern from "<$include_file>" namespace "$namespace":
         if pop(self.cdata, key, result$itemgetter):
             return result
         raise IndexError('pop index out of range')
+
+    cpdef $classname remap_to($classname self, Remap remap, $classname out):
+        remap_to(remap.cdata, self.cdata, out.cdata)
+        return out
+
+    cpdef $classname remap($classname self, Remap remap):
+        return self.remap_to(remap, $classname())
+
+    cpdef $classname remap_into($classname self, Remap remap):
+        self.cdata = self.remap(remap).cdata
+        return self
 
     cpdef $classname remove(self, $sampleclass sample):
         """Find and remove a specific sample."""
