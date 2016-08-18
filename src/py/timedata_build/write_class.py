@@ -2,7 +2,7 @@ import collections
 from . import files, template
 
 
-def write_classes(config, *, output_file=None, **kwds):
+def write_class(config, *, output_file=None, **kwds):
     declare, define = [], []
 
     def fmt(*names, **kwds):

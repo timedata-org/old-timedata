@@ -11,6 +11,13 @@ cdef extern from "<$include_file>" namespace "$namespace":
 ### define
     RANGE = $range
 
+    cpdef get($classname self, int key, $mutableclass previous=None):
+        cdef $mutableclass result = previous if previous else $mutableclass()
+        if not resolvePythonIndex(key, self.cdata.size()):
+            raise IndexError('$classname index out of range %s' % key)
+        result$itemgetter = self.cdata[key]
+        return result
+
     cpdef Indexer indexer($classname self):
         """Return an RGBIndexer in Python form."""
         cpdef Indexer indexer = Indexer()
