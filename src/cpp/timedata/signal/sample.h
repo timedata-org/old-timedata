@@ -97,6 +97,9 @@ struct Sample : SampleBase<Model, Range> {
     }
 };
 
+// TODO: need a better place for this.
+using CRemap = std::vector<size_t>;
+
 template <typename Container>
 size_t getSizeof(Container const& t, std::true_type) {
     return sizeof(t) + sizeof(t[0]) * t.size();
@@ -108,8 +111,16 @@ size_t getSizeof(Sample const& t, std::false_type) {
 }
 
 template <typename Item>
+size_t getSizeof(Item const& x);
+
+template <typename Item>
 size_t getSizeof(Item const& x) {
     return getSizeof(x, typename Item::is_container());
+}
+
+template <>
+inline size_t getSizeof(CRemap const& x) {
+    return getSizeof(x, std::true_type());
 }
 
 }  // timedata

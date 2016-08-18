@@ -45,7 +45,7 @@ cdef extern from "<$include_file>" namespace "$namespace":
                 # A list of tuples, $classname or strings.
                 self.cdata.resize(len(items))
                 for i, item in enumerate(items):
-                    self.cdata[i] = $sampleclass(item)$itemgetter
+                    self.cdata[i] = $itemmaker(item)$itemgetter
 
     def __setitem__($classname self, object key, object x):
         cdef size_t length, slice_length
@@ -61,7 +61,7 @@ cdef extern from "<$include_file>" namespace "$namespace":
         index = key
         if not resolvePythonIndex(index, self.cdata.size()):
             raise IndexError('$classname index out of range %s' % key)
-        self.cdata[index] = $sampleclass(x)$itemgetter
+        self.cdata[index] = $itemmaker(x)$itemgetter
 
     def __getitem__($classname self, object key):
         cdef $sampleclass s
@@ -75,7 +75,7 @@ cdef extern from "<$include_file>" namespace "$namespace":
         k = key
         if not resolvePythonIndex(k, self.cdata.size()):
             raise IndexError('$classname index out of range %s' % key)
-        s = $sampleclass()
+        s = $emptyitem
         s$itemgetter = self.cdata[k]
         return s
 
@@ -94,26 +94,13 @@ cdef extern from "<$include_file>" namespace "$namespace":
         return self.cdata.size()
 
     def __richcmp__(object self, object other, int rcmp):
-        cdef $classname cl
         cdef bool inv = not isinstance(self, $classname)
         cdef $number_type c, mult = 1
         if not inv:
             self, other = other, self
             mult = -1
-        cl = <$classname> self
-        if isinstance(other, Number):
-            c = compare((<$number_type> other), cl.cdata)
-        elif isinstance(other, $sampleclass):
-            c = compare((<$sampleclass> other)$itemgetter, cl.cdata)
-        else:
-            c = compare((<$classname> other).cdata, cl.cdata)
+        c = self._compare(other)
         return cmpToRichcmp(mult * c, rcmp)
-
-    cpdef $classname append($classname self, object c):
-        """Append to the list of samples."""
-        cdef $sampleclass x = c if isinstance(c, $sampleclass) else $sampleclass(c)
-        self.cdata.push_back(x$itemgetter)
-        return self
 
     cpdef size_t count(self, $sampleclass sample):
         """Return the number of times a sample appears in this list."""
@@ -144,7 +131,7 @@ cdef extern from "<$include_file>" namespace "$namespace":
 
     cpdef $sampleclass pop($classname self, int key = -1):
         """Pop the sample at key."""
-        cdef $sampleclass result = $sampleclass()
+        cdef $sampleclass result = $emptyitem
         if pop(self.cdata, key, result$itemgetter):
             return result
         raise IndexError('pop index out of range')
@@ -195,15 +182,3 @@ cdef extern from "<$include_file>" namespace "$namespace":
             # Use Python.
             out[:] = sorted(self, key=key, reverse=reverse)
         return out
-
-    cpdef $sampleclass max(self):
-        """Return the maximum values of each component."""
-        cdef $sampleclass result = $sampleclass()
-        result$itemgetter = max_cpp(self.cdata)
-        return result
-
-    cpdef $sampleclass min(self):
-        """Return the minimum values of each component."""
-        cdef $sampleclass result = $sampleclass()
-        result$itemgetter = min_cpp(self.cdata)
-        return result

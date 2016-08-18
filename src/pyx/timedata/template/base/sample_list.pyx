@@ -11,6 +11,20 @@ cdef extern from "<$include_file>" namespace "$namespace":
 ### define
     RANGE = $range
 
+    cpdef $classname append($classname self, object c):
+        """Append to the list of samples."""
+        cdef $sampleclass x = c if isinstance(c, $sampleclass) else $itemmaker(c)
+        self.cdata.push_back(x$itemgetter)
+        return self
+
+    cpdef _compare($classname self, object other):
+        if isinstance(other, Number):
+            return compare((<$number_type> other), self.cdata)
+        elif isinstance(other, $sampleclass):
+            return compare((<$sampleclass> other)$itemgetter, self.cdata)
+        else:
+            return compare((<$classname> other).cdata, self.cdata)
+
     cpdef get($classname self, int key, $mutableclass previous=None):
         cdef $mutableclass result = previous if previous else $mutableclass()
         if not resolvePythonIndex(key, self.cdata.size()):
@@ -39,6 +53,18 @@ cdef extern from "<$include_file>" namespace "$namespace":
         """Round each element in each sample to the nearest integer."""
         round_cpp(self.cdata, out.cdata, digits)
         return out
+
+    cpdef $sampleclass max(self):
+        """Return the maximum values of each component."""
+        cdef $sampleclass result = $emptyitem
+        result$itemgetter = max_cpp(self.cdata)
+        return result
+
+    cpdef $sampleclass min(self):
+        """Return the minimum values of each component."""
+        cdef $sampleclass result = $emptyitem
+        result$itemgetter = min_cpp(self.cdata)
+        return result
 
     @staticmethod
     def spread(*args):

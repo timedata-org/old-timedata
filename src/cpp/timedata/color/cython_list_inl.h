@@ -24,25 +24,37 @@ using CColorListYUV = color::CColorYUV::List;
 using CColorListRGB255 = color::CColorRGB255::List;
 using CColorListRGB256 = color::CColorRGB256::List;
 
+using CRemap = timedata::CRemap;
+
+template <typename Color>
+void toStringItem(Color c, std::string& result) {
+    auto s = color::toString(c);
+    auto isTriple = s.find(",") != std::string::npos;
+    auto digit = isTriple ? 1 : 0;
+    result += "'("[digit];
+    result += s;
+    result += "')"[digit];
+}
+
+template <>
+inline void toStringItem(size_t x, std::string& result) {
+    result += std::to_string(x);
+}
+
 template <typename ColorList>
 std::string toString(ColorList const& colors) {
     std::string result = "(";
     for (auto& c : colors) {
         if (result.size() > 1)
             result += ", ";
-        auto s = color::toString(c);
-        auto isTriple = s.find(",") != std::string::npos;
-        auto digit =  isTriple ? 1 : 0;
-        result += "'("[digit];
-        result += s;
-        result += "')"[digit];
+        toStringItem(c, result);
     }
     result += ")";
     return result;
 }
 
 template <typename ColorList>
-NumberType<ColorList> compare(ColorList const& x, ColorList const& y) {
+float compare(ColorList const& x, ColorList const& y) {
     auto size = std::min(x.size(), y.size());
     for (size_t i = 0; i < size; ++i) {
         for (size_t j = 0; j < y[i].size(); ++j) {
@@ -54,9 +66,19 @@ NumberType<ColorList> compare(ColorList const& x, ColorList const& y) {
     return static_cast<NumberType<ColorList>>(signum(x.size(), y.size()));
 }
 
+template <>
+float compare(CRemap const& x, CRemap const& y) {
+    auto size = std::min(x.size(), y.size());
+    for (size_t i = 0; i < size; ++i) {
+        if (auto d = x[i] - y[i])
+            return float(d);
+    }
+
+    return float(signum(x.size(), y.size()));
+}
+
 template <typename ColorList>
-NumberType<ColorList> compare(ValueType<ColorList> const& x,
-                              ColorList const& y) {
+float compare(ValueType<ColorList> const& x, ColorList const& y) {
     for (size_t i = 0; i < y.size(); ++i) {
         for (size_t j = 0; j < y[i].size(); ++j) {
             if (auto d = x[j] - y[i][j])
@@ -67,12 +89,22 @@ NumberType<ColorList> compare(ValueType<ColorList> const& x,
     return 0;
 }
 
+template <>
+float compare(size_t const& x, CRemap const& y) {
+    for (size_t i = 0; i < y.size(); ++i) {
+        if (auto d = x - y[i])
+            return float(d);
+    }
+
+    return 0.0f;
+}
+
 inline bool cmpToRichcmp(float diff, int richcmp) {
     return timedata::cmpToRichcmp(diff, richcmp);
 }
 
 template <typename ColorList>
-NumberType<ColorList> compare(NumberType<ColorList> x, ColorList const& y) {
+float compare(NumberType<ColorList> x, ColorList const& y) {
     for (size_t i = 0; i < y.size(); ++i) {
         for (size_t j = 0; j < y[i].size(); ++j) {
             if (auto d = x - y[i][j])
@@ -397,7 +429,7 @@ void math_max_limit(ColorList const& in, Input const& in2, ColorList& out) {
 }
 
 template <typename ColorList>
-NumberType<ColorList> distance2(ColorList const& x, ColorList const& y) {
+float distance2(ColorList const& x, ColorList const& y) {
     NumberType<ColorList> result = 0.0f;
     auto xShorter = x.size() < y.size();
     auto& shorter = xShorter ? x : y;
@@ -420,6 +452,25 @@ NumberType<ColorList> distance2(ColorList const& x, ColorList const& y) {
     return result;
 }
 
+template <>
+float distance2(CRemap const& x, CRemap const& y) {
+    float result = 0.0f;
+    auto xShorter = x.size() < y.size();
+    auto& shorter = xShorter ? x : y;
+    auto& longer = xShorter ? y : x;
+
+    size_t i = 0;
+    for (; i < shorter.size(); ++i) {
+        auto d = longer[i] - shorter[i];
+        result += d * d;
+    }
+
+    for (; i < longer.size(); ++i)
+        result += longer[i] * longer[i];
+
+    return result;
+}
+
 template <typename ColorList>
 NumberType<ColorList> distance2(
         ValueType<ColorList> const& x, ColorList const& y) {
@@ -430,6 +481,17 @@ NumberType<ColorList> distance2(
             result += d * d;
         }
     }
+    return result;
+}
+
+inline
+float distance2(float x, CRemap const& y) {
+    float result = 0.0f;
+    for (size_t i = 0; i < y.size(); ++i) {
+        auto d = x - y[i];
+        result += d * d;
+    }
+
     return result;
 }
 
@@ -446,7 +508,17 @@ NumberType<ColorList> distance2(NumberType<ColorList> x, ColorList const& y) {
 }
 
 template <typename Input, typename ColorList>
-NumberType<ColorList> distance(Input const& x, ColorList const& y) {
+NumberType<ColorList> distance(Input x, ColorList const& y) {
+    return std::sqrt(distance2(x, y));
+}
+
+inline
+float distance(CRemap const& x, CRemap const& y) {
+    return std::sqrt(distance2(x, y));
+}
+
+inline
+float distance(size_t x, CRemap const& y) {
     return std::sqrt(distance2(x, y));
 }
 

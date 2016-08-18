@@ -40,6 +40,8 @@ substitutions = dict(
     itemclass='C$sampleclass',
     mutableclass='$mutableclass',
     itemgetter='.cdata',
+    emptyitem='$sampleclass()',
+    itemmaker='$sampleclass',
     class_documentation = """\
 A list of RGB floating point Colors, with many mutating functions.
 

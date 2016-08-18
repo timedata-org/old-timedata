@@ -1,5 +1,10 @@
 from . List import *
 
+methods = add_methods(
+    methods,
+    base='remap',
+    )
+
 value_type = 'size_t'
 size = 1
 
@@ -10,3 +15,5 @@ itemgetter = ''
 classname = 'Remap'
 class_documentation = """Remap one list onto another.""",
 output_file = 'build/genfiles/timedata/signal/Remap.pyx'
+emptyitem='0'
+itemmaker=''
