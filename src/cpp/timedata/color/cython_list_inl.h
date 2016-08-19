@@ -24,7 +24,7 @@ using CColorListYUV = color::CColorYUV::List;
 using CColorListRGB255 = color::CColorRGB255::List;
 using CColorListRGB256 = color::CColorRGB256::List;
 
-using CRemap = timedata::CRemap;
+using CIndexList = timedata::CIndexList;
 
 template <typename Color>
 void toStringItem(Color c, std::string& result) {
@@ -67,7 +67,7 @@ float compare(ColorList const& x, ColorList const& y) {
 }
 
 template <>
-float compare(CRemap const& x, CRemap const& y) {
+float compare(CIndexList const& x, CIndexList const& y) {
     auto size = std::min(x.size(), y.size());
     for (size_t i = 0; i < size; ++i) {
         if (auto d = x[i] - y[i])
@@ -90,7 +90,7 @@ float compare(ValueType<ColorList> const& x, ColorList const& y) {
 }
 
 template <>
-float compare(size_t const& x, CRemap const& y) {
+float compare(size_t const& x, CIndexList const& y) {
     for (size_t i = 0; i < y.size(); ++i) {
         if (auto d = x - y[i])
             return float(d);
@@ -252,7 +252,7 @@ void insert(int key, ValueType<ColorList> const& color, ColorList& out) {
 }
 
 template <typename ColorList>
-void remap_to(CRemap const& remap, ColorList const& in, ColorList& out) {
+void remap_to(CIndexList const& remap, ColorList const& in, ColorList& out) {
     if (out.size() < remap.size())
         out.resize(remap.size());
 
@@ -467,7 +467,7 @@ float distance2(ColorList const& x, ColorList const& y) {
 }
 
 template <>
-float distance2(CRemap const& x, CRemap const& y) {
+float distance2(CIndexList const& x, CIndexList const& y) {
     float result = 0.0f;
     auto xShorter = x.size() < y.size();
     auto& shorter = xShorter ? x : y;
@@ -499,7 +499,7 @@ NumberType<ColorList> distance2(
 }
 
 inline
-float distance2(float x, CRemap const& y) {
+float distance2(float x, CIndexList const& y) {
     float result = 0.0f;
     for (size_t i = 0; i < y.size(); ++i) {
         auto d = x - y[i];
@@ -527,12 +527,12 @@ NumberType<ColorList> distance(Input x, ColorList const& y) {
 }
 
 inline
-float distance(CRemap const& x, CRemap const& y) {
+float distance(CIndexList const& x, CIndexList const& y) {
     return std::sqrt(distance2(x, y));
 }
 
 inline
-float distance(size_t x, CRemap const& y) {
+float distance(size_t x, CIndexList const& y) {
     return std::sqrt(distance2(x, y));
 }
 

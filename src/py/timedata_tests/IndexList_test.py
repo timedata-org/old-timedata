@@ -4,7 +4,7 @@ from timedata import *
 
 Colors = Color.by_name
 
-class TestRemap(unittest.TestCase):
+class TestIndexList(unittest.TestCase):
     def check_identity(self, remap, *colors, result=None):
         cl = ColorList(colors)
         result = ColorList(cl if result is None else result)
@@ -23,12 +23,12 @@ class TestRemap(unittest.TestCase):
         self.assertEqual(copy, result)
 
     def test_empty(self):
-        self.check_identity(Remap())
+        self.check_identity(IndexList())
 
     def test_trivial(self):
-        self.check_identity(Remap(range(3)), 'red', 'green', 'blue')
+        self.check_identity(IndexList(range(3)), 'red', 'green', 'blue')
 
     def test_reverse(self):
-        self.check_identity(Remap(list(reversed(range(3)))),
+        self.check_identity(IndexList(list(reversed(range(3)))),
                             'red', 'green', 'blue',
                             result=('blue', 'green', 'red'))

@@ -98,7 +98,7 @@ struct Sample : SampleBase<Model, Range> {
 };
 
 // TODO: need a better place for this.
-using CRemap = std::vector<size_t>;
+using CIndexList = std::vector<size_t>;
 
 template <typename Container>
 size_t getSizeof(Container const& t, std::true_type) {
@@ -119,7 +119,7 @@ size_t getSizeof(Item const& x) {
 }
 
 template <>
-inline size_t getSizeof(CRemap const& x) {
+inline size_t getSizeof(CIndexList const& x) {
     return getSizeof(x, std::true_type());
 }
 

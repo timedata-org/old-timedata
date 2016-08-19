@@ -3,11 +3,11 @@
 
 ### declare
 
-cdef class Remap
+cdef class IndexList
 
 cdef extern from "<$include_file>" namespace "$namespace":
     ctypedef vector[$itemclass] C$classname
-    ctypedef vector[size_t] CRemap
+    ctypedef vector[size_t] CIndexList
 
     string toString(C$classname&)
     C$classname sliceOut(C$classname&, int begin, int end, int step)
@@ -30,7 +30,7 @@ cdef extern from "<$include_file>" namespace "$namespace":
     void extend(C$classname&, C$classname&)
     void insert(int key, $itemclass&, C$classname)
 
-    void remap_to(CRemap& remap, C$classname&, C$classname&)
+    void remap_to(CIndexList& remap, C$classname&, C$classname&)
     void rotate(C$classname&, int pos)
     void rotate(C$classname&, C$classname&, int pos)
 
@@ -146,14 +146,14 @@ cdef extern from "<$include_file>" namespace "$namespace":
             return result
         raise IndexError('pop index out of range')
 
-    cpdef $classname remap_to($classname self, Remap remap, $classname out):
+    cpdef $classname remap_to($classname self, IndexList remap, $classname out):
         remap_to(remap.cdata, self.cdata, out.cdata)
         return out
 
-    cpdef $classname remap($classname self, Remap remap):
+    cpdef $classname remap($classname self, IndexList remap):
         return self.remap_to(remap, $classname())
 
-    cpdef $classname remap_into($classname self, Remap remap):
+    cpdef $classname remap_into($classname self, IndexList remap):
         self.cdata = self.remap(remap).cdata
         return self
 
