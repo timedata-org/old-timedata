@@ -37,7 +37,7 @@ void toStringItem(Color c, std::string& result) {
 }
 
 template <>
-inline void toStringItem(size_t x, std::string& result) {
+inline void toStringItem(int x, std::string& result) {
     result += std::to_string(x);
 }
 
@@ -90,7 +90,7 @@ float compare(ValueType<ColorList> const& x, ColorList const& y) {
 }
 
 template <>
-float compare(size_t const& x, CIndexList const& y) {
+float compare(int const& x, CIndexList const& y) {
     for (size_t i = 0; i < y.size(); ++i) {
         if (auto d = x - y[i])
             return float(d);
@@ -252,17 +252,16 @@ void insert(int key, ValueType<ColorList> const& color, ColorList& out) {
 }
 
 template <typename ColorList>
-void remap_to(CIndexList const& remap, ColorList const& in, ColorList& out) {
+bool remap_to(CIndexList const& remap, ColorList const& in, ColorList& out) {
     if (out.size() < remap.size())
         out.resize(remap.size());
-
     for (size_t i = 0; i < remap.size(); ++i) {
         auto index = remap[i];
-        if (index < in.size())
-            out[i] = in[index];
-        else
-            out[i] = {};
+        if (not resolvePythonIndex(index, in.size()))
+            return false;
+        out[i] = in[index];
     }
+    return true;
 }
 
 template <typename ColorList>

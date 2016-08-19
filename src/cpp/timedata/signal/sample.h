@@ -98,7 +98,7 @@ struct Sample : SampleBase<Model, Range> {
 };
 
 // TODO: need a better place for this.
-using CIndexList = std::vector<size_t>;
+using CIndexList = std::vector<int>;
 
 template <typename Container>
 size_t getSizeof(Container const& t, std::true_type) {

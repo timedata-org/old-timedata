@@ -7,7 +7,7 @@ cdef class IndexList
 
 cdef extern from "<$include_file>" namespace "$namespace":
     ctypedef vector[$itemclass] C$classname
-    ctypedef vector[size_t] CIndexList
+    ctypedef vector[int] CIndexList
 
     string toString(C$classname&)
     C$classname sliceOut(C$classname&, int begin, int end, int step)
@@ -30,7 +30,7 @@ cdef extern from "<$include_file>" namespace "$namespace":
     void extend(C$classname&, C$classname&)
     void insert(int key, $itemclass&, C$classname)
 
-    void remap_to(CIndexList& remap, C$classname&, C$classname&)
+    bool remap_to(CIndexList& remap, C$classname&, C$classname&)
     void rotate(C$classname&, int pos)
     void rotate(C$classname&, C$classname&, int pos)
 
@@ -147,7 +147,8 @@ cdef extern from "<$include_file>" namespace "$namespace":
         raise IndexError('pop index out of range')
 
     cpdef $classname remap_to($classname self, IndexList remap, $classname out):
-        remap_to(remap.cdata, self.cdata, out.cdata)
+        if not remap_to(remap.cdata, self.cdata, out.cdata):
+            raise IndexError('remap index out of range')
         return out
 
     cpdef $classname remap($classname self, IndexList remap):

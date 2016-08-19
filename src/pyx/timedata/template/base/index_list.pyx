@@ -10,14 +10,14 @@
         return self
 
     cpdef object map_to($classname self, object x, object result):
-        # TODO: having these different map/remap is sketchy.  Rethink!
+        cdef int index
         if len(result) < len(self):
             result.resize(len(self))
         for i in range(len(self)):
             index = self.cdata[i]
-            if index < <size_t> len(x):
-                result[i] = x[index]
-            # TODO: else what?
+            if not resolvePythonIndex(index, len(x)):
+                raise IndexError('Bad index %s' % index)
+            result[i] = x[index]
         return result
 
     cpdef object map($classname self, object x):

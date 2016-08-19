@@ -5,12 +5,12 @@ methods = add_methods(
     base='index_list',
     )
 
-value_type = 'size_t'
+value_type = 'int'
 size = 1
 
-sampleclass = 'size_t'
-itemclass = 'size_t'
-mutableclass='size_t'
+sampleclass = 'int'
+itemclass = 'int'
+mutableclass='int'
 itemgetter = ''
 classname = 'IndexList'
 class_documentation = """A list of array indices.""",

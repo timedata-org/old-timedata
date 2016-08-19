@@ -32,3 +32,14 @@ class TestIndexList(unittest.TestCase):
         self.check_identity(IndexList(list(reversed(range(3)))),
                             'red', 'green', 'blue',
                             result=('blue', 'green', 'red'))
+
+    def test_out_of_range(self):
+        with self.assertRaises(IndexError):
+            ColorList().remap(IndexList(range(1)))
+
+        with self.assertRaises(IndexError):
+            ColorList(['red']).remap(IndexList([1]))
+
+        ColorList(['red']).remap(IndexList([-1]))
+        with self.assertRaises(IndexError):
+            ColorList(['red']).remap(IndexList([-2]))
