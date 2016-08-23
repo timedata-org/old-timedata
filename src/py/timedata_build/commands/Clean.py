@@ -1,6 +1,7 @@
 import os, pathlib, shutil
 from . Command import *
 
+CLEAN_FILES = 'timedata.html', 'timedata.so'
 
 class Clean(Command):
     description = 'Complete clean command'
@@ -15,9 +16,10 @@ class Clean(Command):
         print('Deleting ./{}/'.format(DIRS.build))
         shutil.rmtree(DIRS.build, ignore_errors=True)
 
-        try:
-            os.remove('timedata.html')
-        except:
-            pass
+        for f in CLEAN_FILES:
+            try:
+                os.remove(f)
+            except:
+                pass
         for s in list(pathlib.Path('src').glob('**/*.html')):
             os.remove(str(s))
