@@ -1,5 +1,8 @@
 import configparser, os, re
 
+from . import git
+
+
 class Context(object):
     def __init__(self, *items, **kwds):
         def run(x):
@@ -14,7 +17,8 @@ def public_dir(x):
     return {k: v for (k, v) in x.__dict__.items() if not k.startswith('_')}
 
 
-def config(filename='setup.cfg', prefix='timedata_'):
+def config(filename='setup.cfg', prefix=None):
+    prefix = prefix or (git.project() + '_')
     parser = configparser.ConfigParser()
     parser.read_file(open(filename))
 
@@ -34,10 +38,11 @@ def config(filename='setup.cfg', prefix='timedata_'):
     return Context(**result)
 
 
-def read_flags_from_environ(**flags):
+def read_flags_from_environ(*, prefix=None, **flags):
+    prefix = prefix or (git.project().upper() + '_')
     result = {}
     for key, v in flags.items():
-        value = os.environ.get('TIMEDATA_' + key.upper(), v)
+        value = os.environ.get(prefix + key.upper(), v)
         if value.lower() == 'true':
             value = True
         elif value.lower() == 'false':
