@@ -18,5 +18,25 @@ RGBIndexer getIndexer(ColorList const& colors) {
     };
 }
 
+struct RGBIndexIterator {
+    RGBIndexer indexer;
+    size_t start;
+    size_t finish;
+
+    struct iterator {
+        RGBIndexIterator& parent;
+        size_t i;
+        /* TODO: lots more stuff here.
+        https://stackoverflow.com/questions/8054273
+
+        bool operator==(iterator x) { return i == x.i; }
+        bool operator!=(iterator x) { return i != x.i; }
+        void operator++( */
+    };
+
+    iterator begin() { return {*this, start}; }
+    iterator end() { return {*this, finish}; }
+};
+
 }  // timedata
 }  // color_list
