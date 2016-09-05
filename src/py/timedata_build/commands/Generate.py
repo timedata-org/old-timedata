@@ -14,7 +14,7 @@ class Generate(Command):
         models = FLAGS.models and re.split('[\W,]', FLAGS.models)
         generate.generate(
             models=models,
-            outfile=CONFIG.code_generation['output_pyx_file'],
+            outfile=CONFIG.code_generation['output_file'],
             structs=CONFIG.code_generation['struct_files'],
             template_directory=CONFIG.code_generation['template_directory'],
             tiny=FLAGS.tiny,

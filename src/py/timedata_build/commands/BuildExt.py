@@ -1,9 +1,9 @@
 import os, pathlib, platform, shutil
 import setuptools.extension
-from setuptools.command.build_ext import build_ext
 import Cython.Build
 
-from . Command import *
+from setuptools.command.build_ext import build_ext
+from . Command import CONFIG, DIRS, FLAGS, TIME
 from .. import execute, files, template
 
 
@@ -11,7 +11,7 @@ class BuildExt(build_ext):
     # See https://groups.google.com/forum/#!topic/cython-users/IZMENRz6__s
 
     def finalize_options(self):
-        os.makedirs('build/genfiles/timedata', exist_ok=True)
+        os.makedirs(DIRS.genfiles_timedata, exist_ok=True)
         flags = CONFIG.compiler_flags[platform.system().lower()]
         git_tags = execute.git_tags()
         compile_args = template.substitute_one(
@@ -29,10 +29,10 @@ class BuildExt(build_ext):
         libraries = ['m'] if is_debian else []
 
         extension = setuptools.extension.Extension(
-            name='timedata',
-            sources=['timedata.pyx'],
+            name=CONFIG.setuptools['name'],
+            sources=CONFIG.code_generation['sources'],
             libraries=libraries,
-            include_dirs=['src/cpp'],
+            include_dirs=CONFIG.code_generation['include_dirs'],
             extra_compile_args=compile_args,
             extra_link_args=opt_flags,
             language='c++',
@@ -54,16 +54,19 @@ class BuildExt(build_ext):
     def run(self):
         super().run()
         afile = files.clean_dir(DIRS.documentation, 'annotation')
-        try:
-            os.remove('timedata.html')
-        except:
-            pass
-        source_pyx = pathlib.Path('src').glob('**/*.html')
-        genfiles_pyx = pathlib.Path('build/genfiles').glob('**/*.html')
+        for f in CONFIG.code_generation['discarded_html']:
+            try:
+                os.remove(f)
+            except:
+                pass
+
+        html_path = CONFIG.code_generation['html_path']
+        source_pyx = pathlib.Path(html_path).glob('**/*.html')
+        genfiles_pyx = pathlib.Path(DIRS.genfiles).glob('**/*.html')
         for s in list(source_pyx) + list(genfiles_pyx):
             src = str(s)
             parts = files.splitall(src)
-            while parts[0] != 'timedata':
+            while parts[0] != CONFIG.setuptools['name']:
                 parts.pop(0)
             target = os.path.join(afile, *parts)
             os.makedirs(os.path.dirname(target), exist_ok=True)
