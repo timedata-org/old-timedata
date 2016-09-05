@@ -35,7 +35,7 @@ def substitute(*names, **kwds):
         new_section()
         return result
 
-    filename = '/'.join(('src', 'pyx', 'timedata', 'template') + names) + '.pyx'
+    filename = '/'.join(names) + '.pyx'
     sub = substituter(**kwds)
 
     try:

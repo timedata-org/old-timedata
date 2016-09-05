@@ -2,7 +2,7 @@ import collections
 from . import files, template
 
 
-def write_class(config, *, output_file=None, **kwds):
+def write_class(config, *, template_directory=None, output_file=None, **kwds):
     declare, define = [], []
 
     def fmt(*names, **kwds):
@@ -10,7 +10,7 @@ def write_class(config, *, output_file=None, **kwds):
         docnames = names + (name, ) if name else names
         default_documentation = '.'.join(docnames)
         kwds['documentation'] = kwds.get('documentation', default_documentation)
-        dc, df = template.substitute(*names, **kwds)
+        dc, df = template.substitute(template_directory, *names, **kwds)
         dc and declare.append(dc)
         df and define.append(df)
 

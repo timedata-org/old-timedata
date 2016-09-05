@@ -7,7 +7,7 @@ from . make_enums import make_enums
 from .. import files, template
 
 
-def make(header_file):
+def make(header_file, template_directory):
     header_file += '.h'
     header = read_header_file('/'.join(['src', 'cpp', header_file]))
     classname = header.classname
@@ -40,7 +40,7 @@ def make(header_file):
     property_list = []
 
     def format(s, kwds):
-        x, y = template.substitute('struct', s, **kwds)
+        x, y = template.substitute(template_directory, 'struct', s, **kwds)
         return x + y
 
     for s in header.structs:
@@ -69,10 +69,10 @@ def make(header_file):
     return '\n'.join(mt) + '\n'
 
 
-def make_structs(filenames):
+def make_structs(filenames, template_directory):
     results = []
     for f in filenames:
-        data = make(f)
+        data = make(f, template_directory)
         base, fname = os.path.split(os.path.splitext(f)[0])
         outfile = '/'.join(['build', 'genfiles', f + '.pyx'])
         results.append(outfile)
