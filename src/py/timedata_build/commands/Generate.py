@@ -1,6 +1,7 @@
 import re
 from . Command import *
 from timedata_build import generate
+from timedata_build.config import CONFIG, FLAGS
 
 
 class Generate(Command):
@@ -11,4 +12,9 @@ class Generate(Command):
         print('Generate ' + ('tiny' if FLAGS.tiny else ''))
 
         models = FLAGS.models and re.split('[\W,]', FLAGS.models)
-        generate.generate(tiny=FLAGS.tiny, models=models)
+        generate.generate(
+            models=models,
+            outfile=CONFIG.code_generation['output_pyx_file'],
+            structs=CONFIG.code_generation['struct_files'],
+            tiny=FLAGS.tiny,
+            )

@@ -1,4 +1,4 @@
-from .. context import CONFIG, DIRS, FLAGS
+from .. config import CONFIG, DIRS, FLAGS
 
 from setuptools import Command as _Command
 import datetime

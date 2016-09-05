@@ -9,7 +9,7 @@ sys.path.append(SOURCE_PATH)
 
 from timedata_build.arguments import check_python, insert_dependencies
 from timedata_build.commands import COMMANDS
-from timedata_build.context import CONFIG, FLAGS
+from timedata_build.config import CONFIG, FLAGS
 
 # http://stackoverflow.com/a/37033551/43839
 def test_suite():
