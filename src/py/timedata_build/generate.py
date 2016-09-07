@@ -1,5 +1,3 @@
-#!/usr/bin/env python3
-
 import os
 from . import read_classes, write_class, make_structs, files
 

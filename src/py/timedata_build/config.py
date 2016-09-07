@@ -6,7 +6,9 @@ from . context import Context
 
 def config(filename='setup.cfg', prefix=None):
     prefix = prefix or (git.project() + '_')
-    parser = configparser.ConfigParser()
+    parser = configparser.ConfigParser(
+        interpolation=configparser.ExtendedInterpolation()
+        )
     parser.read_file(open(filename))
 
     result = {}

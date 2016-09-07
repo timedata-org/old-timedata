@@ -10,8 +10,7 @@ from .. import execute, files, template
 class BuildExt(build_ext):
     # See https://groups.google.com/forum/#!topic/cython-users/IZMENRz6__s
 
-    def finalize_options(self):
-        os.makedirs(DIRS.genfiles_timedata, exist_ok=True)
+    def _extension_dict(self):
         flags = CONFIG.compiler_flags[platform.system().lower()]
         git_tags = execute.git_tags()
         compile_args = template.substitute_one(
@@ -27,17 +26,18 @@ class BuildExt(build_ext):
                 '-DOPTIMIZATION_FLAGS="%s"' % ' '.join(sorted(opt_flags)))
         is_debian = platform.linux_distribution()[0] == 'debian'
         libraries = ['m'] if is_debian else []
+        libraries += CONFIG.linker['libraries']
 
-        extension = setuptools.extension.Extension(
-            name=CONFIG.setuptools['name'],
-            sources=CONFIG.code_generation['sources'],
+        return dict(
             libraries=libraries,
-            include_dirs=CONFIG.code_generation['include_dirs'],
             extra_compile_args=compile_args,
             extra_link_args=opt_flags,
             language='c++',
-        )
+            **CONFIG.extension_arguments)
 
+    def finalize_options(self):
+        os.makedirs(DIRS.genfiles_project, exist_ok=True)
+        extension = setuptools.extension.Extension(**self._extension_dict())
         module = Cython.Build.cythonize(
             [extension],
             language='c++',

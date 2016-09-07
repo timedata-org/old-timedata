@@ -1,5 +1,3 @@
-#!/usr/bin/env python3
-
 import datetime, os, re, string, sys
 
 from . read_header_file import read_header_file
