@@ -11,8 +11,10 @@ class Clean(Command):
         self.cwd = os.getcwd()
 
     def run(self):
-        print('Deleting ./{}/'.format(DIRS.build))
-        shutil.rmtree(DIRS.build, ignore_errors=True)
+        dirs = CONFIG.code_generation['clean_directories']
+        for d in dirs:
+            print('Deleting ./{}/'.format(d))
+            shutil.rmtree(os.path.abspath(d), ignore_errors=True)
 
         for f in CONFIG.code_generation['clean_files']:
             try:
