@@ -7,6 +7,9 @@ High-performance color arithmetic for C++ and Python.
 Most documents are now here:
 https://github.com/timedata-org/timedata/tree/master/doc
 
+and as of mid-September the below is mostly accurate but rather incomplete.  In
+particular, we now have a very large number of color ranges and models...
+
 ## What do you get? ##
 
 _timedata_ provides two main Python classes: `Color` and `ColorList`. (It also
