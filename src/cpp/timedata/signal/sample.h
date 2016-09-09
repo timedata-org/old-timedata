@@ -13,6 +13,54 @@ namespace timedata {
 template <typename Model, typename Range>
 using SampleBase = std::array<Ranged<Range>, enumSize<Model>()>;
 
+/** A Sample represents a single point of time data of fixed length.  For
+    example, it might be a single color pixel - or a single stereo or
+    multi-channel sample - or a single DMX command.
+
+    A Sample is generic on two types: the `Model`, and the `Range`.
+
+    For those who aren't so well-versed in C++, "generic" means that Sample
+    isn't a single class, but something like "a recipe for writing classes" -
+    that you select one class for `Model`, one class for `Range` and then you
+    get a new sample class named `Sample<Model, Range>`.
+
+    The great advantage of generic programming is that the compiler knows a lot
+    of things at compilation time instead of at runtime - for example, how many
+    components are in a sample.  That means that a Sample has literally zero
+    overhead - there is no cost at all to using a `Sample<RGB>` over using three
+    variables named `r`, `g`, and `b`.  And this means we can create long lists
+    of Samples and never create any new objects at all - making them extremely
+    fast, but also cache coherent (TODO: better word for "laid out linearly in
+    memory")
+
+    The Model must be a C++11 enum type.  A typical Model is `RGB`.
+
+        enum class RGB {red, green, blue};
+
+    which corresponds to a `Sample` with three components named `red`, `green`
+    and `blue`.
+
+    One of the key properties of time data is that the numbers have "in band"
+    ranges that you're expecting to see - for example, DMX values are in the
+    range 0 through 255, normalized colors might be in the region 0.0 through
+    1.0, and of course audio samples come in a great variety of ranges depending
+    on hardware and software needs.
+
+    But lugging around this range information for each component in each
+    `Sample` would be very expensive - so we again use generic code.
+
+    Each component of a `Sample` is a generic number called a `Ranged<Range>`.
+    This contains information about the in-band, preferred range of numbers at
+    compile time.
+
+
+    NB: MIDI doesn't quite fit into the "sample" paradigm, because a MIDI
+    message is variable length - but in practice we'd just pick a Sample size
+    that's big enough for the longest non-sysex message and deal with the waste,
+    which is quite acceptable since MIDI is an 7-bit control format which is
+    tiny by today's standards.
+
+ */
 template <typename Model, typename Range = Normal<float>>
 struct Sample : SampleBase<Model, Range> {
     using base_type = SampleBase<Model, Range>;

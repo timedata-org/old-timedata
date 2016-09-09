@@ -44,24 +44,24 @@ else:
                 c256.Color(i) for i in ('black', 'red', 'green', 'blue', 'white',
                                       'yellow', 'cyan', 'magenta'))
 
-            self.assertEqual(red + green + blue, white)
-            self.assertEqual(red + green, yellow)
-            self.assertEqual(green + blue, cyan)
-            self.assertEqual(red + blue, magenta)
+            self.assertEqual(red.add(green).add(blue), white)
+            self.assertEqual(red.add(green), yellow)
+            self.assertEqual(green.add(blue), cyan)
+            self.assertEqual(red.add(blue), magenta)
 
-            self.assertEqual(white - blue, yellow)
-            self.assertEqual(white - green, magenta)
-            self.assertEqual(white - red, cyan)
+            self.assertEqual(white.sub(blue), yellow)
+            self.assertEqual(white.sub(green), magenta)
+            self.assertEqual(white.sub(red), cyan)
 
-            self.assertEqual(~white, black)
-            self.assertEqual(~black, white)
+            self.assertEqual(white.invert(), black)
+            self.assertEqual(black.invert(), white)
 
-            self.assertEqual(white * red / 256, red)
-            self.assertEqual(white * cyan / 256, cyan)
+            self.assertEqual(white.mul(red).div(256), red)
+            self.assertEqual(white.mul(cyan).div(256), cyan)
 
         def test_methods(self):
-            a = (c256.Color('red') + c256.Color('blue') * 0.5).rotated(-1)
-            b = c256.Color('green') + c256.Color('red') * 0.5
+            a = c256.Color('red').add(c256.Color('blue')).mul(0.5).rotated(-1)
+            b = c256.Color('green').add(c256.Color('red')).mul(0.5)
             self.assertTrue(a.distance(b) < 0.0001)
             self.assertEqual(c256.Color('red').rotated(1), c256.Color('blue'))
             self.assertEqual(c256.Color().RANGE, 256.0)
