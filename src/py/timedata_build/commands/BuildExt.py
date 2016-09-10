@@ -27,11 +27,18 @@ class BuildExt(build_ext):
         is_debian = platform.linux_distribution()[0] == 'debian'
         libraries = ['m'] if is_debian else []
         libraries += CONFIG.linker['libraries']
+        link_args = CONFIG.linker['extra_args'] + opt_flags
 
+        False and print('!!!!!!!!!!!!\n', dict(
+            libraries=libraries,
+            extra_compile_args=compile_args,
+            extra_link_args=link_args,
+            language='c++',
+            **CONFIG.extension_arguments))
         return dict(
             libraries=libraries,
             extra_compile_args=compile_args,
-            extra_link_args=opt_flags,
+            extra_link_args=link_args,
             language='c++',
             **CONFIG.extension_arguments)
 

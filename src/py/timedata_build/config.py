@@ -4,6 +4,25 @@ from . import git
 from . context import Context
 
 
+def clean_entry(s):
+    s = s.replace('\n', ' ').strip()
+    if not s.startswith('['):
+        return s
+
+    result, remains = [], s
+    while remains.startswith('['):
+        try:
+            index = remains.index(']')
+        except ValueError:
+            raise ValueError('Missing ] in "%s"' % s)
+        result.extend(remains[1:index].split())
+        remains = remains[index + 1:].strip()
+    if remains:
+        raise ValueError('Extra characters "%s" at end of string "%s"' %
+                         (remains, s))
+    return result
+
+
 def config(filename='setup.cfg', prefix=None):
     prefix = prefix or (git.project() + '_')
     parser = configparser.ConfigParser(
@@ -14,13 +33,7 @@ def config(filename='setup.cfg', prefix=None):
     result = {}
     for section_name, section in parser.items():
         if section_name.startswith(prefix):
-            def fix(x):
-                x = x.replace('\n', ' ').strip()
-                if x and x.startswith('[') and x.endswith(']'):
-                    return x[1:-1].split()
-                return x
-
-            section_dict = {k: fix(v) for k, v in section.items()}
+            section_dict = {k: clean_entry(v) for k, v in section.items()}
             section_name = section_name[len(prefix):]
             result[section_name] = section_dict
 
