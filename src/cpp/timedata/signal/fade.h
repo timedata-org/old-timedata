@@ -1,5 +1,6 @@
 #pragma once
 
+#include <cstddef>
 #include <timedata/color/models/rgb.h>
 #include <timedata/base/math.h>
 

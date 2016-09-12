@@ -2,6 +2,7 @@
 
 #include <ctype.h>
 #include <cmath>
+#include <cstddef>
 #include <iomanip>
 #include <sstream>
 #include <type_traits>
@@ -69,7 +70,7 @@ inline uint64_t fromHex(char const* s) {
     return decimalValue;
 }
 
-inline bool fromHexWithPrefix(char const* s, uint& result) {
+inline bool fromHexWithPrefix(char const* s, unsigned& result) {
     if (s[0] == '#')
         s++;
     else if (not (strncmp("0x", s, 2) and strncmp("0X", s, 2)))
@@ -122,14 +123,14 @@ PowArray const& powArray() {
     return array;
 }
 
-inline uint64_t pow10(uint log) {
+inline uint64_t pow10(unsigned log) {
     return powArray()[log];
 }
 
-inline uint log10(uint64_t exp) {
+inline unsigned log10(uint64_t exp) {
     auto& pa = powArray();
-    uint b = std::upper_bound(pa.begin(), pa.end(), exp) - pa.begin();
-    return std::max(b, uint(1)) - 1;
+    unsigned b = std::upper_bound(pa.begin(), pa.end(), exp) - pa.begin();
+    return std::max(b, unsigned(1)) - 1;
 }
 
 inline void removeTrailing(std::string& s, char ch) {
@@ -245,7 +246,7 @@ typename Collection::value_type hashPython(Collection const& c) {
 }
 
 template <typename Number>
-Number roundPython(Number x, uint digits) {
+Number roundPython(Number x, unsigned digits) {
     auto r = static_cast<Number>(pow10(digits));
     return std::round(x * r) / r;
 }

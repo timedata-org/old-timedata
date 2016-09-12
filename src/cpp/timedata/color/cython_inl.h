@@ -1,5 +1,6 @@
 #pragma once
 
+#include <cstddef>
 #include <functional>
 #include <timedata/base/enum.h>
 #include <timedata/base/math.h>
@@ -196,7 +197,7 @@ bool compare(Color const& x, Color const& y, int richCmp) {
     return cmpToRichcmp(compare(x, y), richCmp);
 }
 
-inline ColorRGB colorFromHex(uint hex) {
+inline ColorRGB colorFromHex(unsigned hex) {
     ColorRGB c;
     detail::hexToColor(hex, c);
     return c;

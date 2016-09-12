@@ -1,5 +1,6 @@
 #pragma once
 
+#include <cstddef>
 #include <timedata/base/className.h>
 #include <timedata/signal/sample.h>
 

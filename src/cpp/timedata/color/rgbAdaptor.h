@@ -1,5 +1,6 @@
 #pragma once
 
+#include <cstddef>
 #include <functional>
 
 #include <timedata/signal/convert_inl.h>

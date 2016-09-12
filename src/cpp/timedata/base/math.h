@@ -42,8 +42,8 @@ using PowArray = std::array<uint64_t, UNSIGNED_DIGITS>;
 
 PowArray const& powArray();
 
-uint64_t pow10(uint);
-uint log10(uint64_t);
+uint64_t pow10(unsigned);
+unsigned log10(uint64_t);
 uint64_t fromHex(char const*);
 bool isHex(char const*);
 
@@ -107,6 +107,6 @@ template <typename Collection>
 typename Collection::value_type hashPython(Collection const&);
 
 template <typename Number>
-Number roundPython(Number, uint digits);
+Number roundPython(Number, unsigned digits);
 
 }  // namespace timedata

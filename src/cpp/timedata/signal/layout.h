@@ -5,6 +5,7 @@
 
 #pragma once
 
+#include <cstddef>
 #include <timedata/signal/strip.h>
 
 namespace timedata {

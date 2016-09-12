@@ -1,5 +1,6 @@
 #pragma once
 
+#include <cstddef>
 #include <timedata/base/string.h>
 
 namespace timedata {

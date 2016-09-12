@@ -1,5 +1,6 @@
 #pragma once
 
+#include <cstddef>
 #include <timedata/signal/fade.h>
 
 namespace timedata {

@@ -1,5 +1,6 @@
 #pragma once
 
+#include <cstddef>
 #include <timedata/base/enum.h>
 #include <timedata/color/models/rgb.h>
 

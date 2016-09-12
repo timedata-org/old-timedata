@@ -1,7 +1,8 @@
 #pragma once
 
+#include <stdint.h>
 #include <type_traits>
-#include <timedata/base/base.h>
+#include <vector>
 
 namespace timedata {
 

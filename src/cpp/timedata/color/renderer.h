@@ -1,5 +1,6 @@
 #pragma once
 
+#include <cstddef>
 #include <timedata/base/gammaTable.h>
 #include <timedata/signal/render3.h>
 #include <timedata/signal/convert_inl.h>

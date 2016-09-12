@@ -1,5 +1,7 @@
 #pragma once
 
+#include <cstddef>
+
 namespace timedata {
 
 template <typename T> using NumberType = typename T::number_type;

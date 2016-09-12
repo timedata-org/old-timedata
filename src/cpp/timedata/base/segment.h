@@ -1,6 +1,6 @@
 #pragma once
 
-#include <timedata/base/base.h>
+#include <cstddef>
 
 namespace timedata {
 

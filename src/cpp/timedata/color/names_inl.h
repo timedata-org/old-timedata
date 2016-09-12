@@ -16,7 +16,7 @@ namespace timedata {
 namespace detail {
 
 template <typename Color>
-void hexToColor(uint hex, Color& out) {
+void hexToColor(unsigned hex, Color& out) {
     static const auto BYTE = 256;
 
     auto b = hex % BYTE;
@@ -37,7 +37,7 @@ inline float strtof(const char *nptr, char const **endptr) {
     return r;
 }
 
-inline bool getHexFromName(char const* name, uint& hex) {
+inline bool getHexFromName(char const* name, unsigned& hex) {
     auto i = colorMap().find(name);
     if (i != colorMap().end())
         hex = i->second;
@@ -68,7 +68,7 @@ bool colorFromCommaSeparated(char const* p, Color& color) {
 
 template <typename Color>
 bool colorFromHex(char const* name, Color& color) {
-    uint hex;
+    unsigned hex;
     if (not getHexFromName(name, hex))
         return false;
 
