@@ -29,12 +29,6 @@ class BuildExt(build_ext):
         libraries += CONFIG.linker['libraries']
         link_args = CONFIG.linker['extra_args'] + opt_flags
 
-        False and print('!!!!!!!!!!!!\n', dict(
-            libraries=libraries,
-            extra_compile_args=compile_args,
-            extra_link_args=link_args,
-            language='c++',
-            **CONFIG.extension_arguments))
         return dict(
             libraries=libraries,
             extra_compile_args=compile_args,
@@ -67,6 +61,7 @@ class BuildExt(build_ext):
             except:
                 pass
 
+    def _move_html(self):
         html_path = CONFIG.code_generation['html_path']
         source_pyx = pathlib.Path(html_path).glob('**/*.html')
         genfiles_pyx = pathlib.Path(DIRS.genfiles).glob('**/*.html')
