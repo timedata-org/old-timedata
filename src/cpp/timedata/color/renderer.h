@@ -2,9 +2,9 @@
 
 #include <cstddef>
 #include <timedata/base/gammaTable.h>
-#include <timedata/signal/render3.h>
-#include <timedata/signal/convert_inl.h>
 #include <timedata/color/cython_list_inl.h>
+#include <timedata/color/render3.h>
+#include <timedata/signal/convert_inl.h>
 
 namespace timedata {
 namespace color_list {
