@@ -5,13 +5,13 @@ from timedata import Render3
 class TestGenerated(unittest.TestCase):
     def test_render3(self):
         r = Render3()
-        s = "(gamma=1.0, min=0, max=255, permutation='rgb')"
+        s = "(gamma=1.0, min=0, max=255, offset=0.0, permutation='rgb')"
         self.assertEqual(str(r), s)
         self.assertEqual(repr(r), 'timedata.Render3' + s)
 
         r.gamma = 2.5
         r.permutation = 'grb'
-        s = "(gamma=2.5, min=0, max=255, permutation='grb')"
+        s = "(gamma=2.5, min=0, max=255, offset=0.0, permutation='grb')"
         self.assertEqual(str(r), s)
         self.assertEqual(repr(r), 'timedata.Render3' + s)
 

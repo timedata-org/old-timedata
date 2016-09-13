@@ -7,7 +7,9 @@ namespace timedata {
 
 using GammaTable = std::vector<uint8_t>;
 
-GammaTable makeGammaTable(float gamma, uint8_t min = 0, uint8_t max = 255);
+GammaTable makeGammaTable(
+        float gamma, float offset = 0.0, uint8_t min = 0, uint8_t max = 255);
+
 uint8_t getGamma(GammaTable const&, float x);
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -16,7 +18,8 @@ uint8_t getGamma(GammaTable const&, float x);
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-inline GammaTable makeGammaTable(float gamma, uint8_t min, uint8_t max) {
+inline GammaTable makeGammaTable(
+        float gamma, float offset, uint8_t min, uint8_t max) {
     auto iGamma = 1.0f / gamma;
     auto diff = 1.0f - std::pow(255.0f / 256.0f, iGamma);
 
@@ -31,7 +34,7 @@ inline GammaTable makeGammaTable(float gamma, uint8_t min, uint8_t max) {
 
     for (size_t i = 0; i < size; ++i) {
         auto ratio = std::pow(float(i) / float(size), gamma),
-             gRaw = min + ratio * width,
+             gRaw = min + ratio * width + offset,
              g = std::min(float(max), gRaw);
         table.push_back(static_cast<uint8_t>(g));
     }

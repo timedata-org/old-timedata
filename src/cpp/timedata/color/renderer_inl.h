@@ -11,15 +11,15 @@ namespace timedata {
 namespace color_list {
 
 inline CRenderer::CRenderer(Render3 r)
-        : gammaTable_(makeGammaTable(r.gamma, r.min, r.max)),
+        : gammaTable_(makeGammaTable(r.gamma, r.offset, r.min, r.max)),
           perm_(getPerm(r.permutation)) {
 }
 
 inline void CRenderer::render(
         float level, RGBIndexer const& colors,
-        size_t offset, size_t size, char* out) {
+        size_t position, size_t size, char* out) {
     for (size_t i = 0; i < size; ++i) {
-        auto color = colors(i + offset);
+        auto color = colors(i + position);
         for (size_t j = 0; j < color.size(); ++j, ++out) {
             auto component = level * color[perm_[j]];
             auto gamma = getGamma(gammaTable_, component);
