@@ -28,7 +28,7 @@ def read_classes(tiny=False, models=[]):
             if name.lower() not in models:
                 return
         elif tiny:
-            if range_name or (model not in ('RGB', 'HSV')):
+            if not (model == 'RGB' or (model == 'HSV' and not range_name)):
                 return
         else:
             if range_name and model != 'RGB':
