@@ -69,12 +69,13 @@ cdef extern from "<$include_file>" namespace "$namespace":
             try:
                 args = tuple(a)
             except:
-                raise ValueError("Can't understand sample tuple %s" % args)
+                raise ValueError('Can\'t understand sample tuple %s' % args)
 
         if not args:
             self.cdata.fill(0)
         elif len(args) != $size:
-            raise ValueError("Wrong args length %s, should be $size" % args)
+            raise ValueError('Wrong args length %s, should be $size' %
+                             len(args))
         else:
             for i, a in enumerate(args):
                 self.cdata[i] = a
