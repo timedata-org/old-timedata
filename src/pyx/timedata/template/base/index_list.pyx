@@ -22,3 +22,11 @@
 
     cpdef object map($classname self, object x):
         return self.map_to(x, x.__class__())
+
+    def __getstate__(self):
+        return tuple(i for i in self.cdata)
+
+    def __setstate__(self, state):
+        self.cdata.resize(len(state))
+        for i, s in enumerate(state):
+            self.cdata[i] = state[i]

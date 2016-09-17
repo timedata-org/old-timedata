@@ -89,3 +89,17 @@ cdef extern from "<$include_file>" namespace "$namespace":
 
         spread_append(None)
         return cl
+
+    def __getstate__(self):
+        result = []
+        for i in self.cdata:
+            for j in range($size):
+                result.append(i[j])
+        return result
+
+    def __setstate__(self, state):
+        cdef size_t length = <size_t> (len(state) / $size)
+        self.cdata.resize(length)
+        for i in range(length):
+            for j in range($size):
+                self.cdata[i][j] = state[$size * i + j]

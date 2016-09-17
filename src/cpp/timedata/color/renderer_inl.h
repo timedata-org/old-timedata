@@ -12,18 +12,22 @@ namespace color_list {
 
 inline CRenderer::CRenderer(Render3 r)
         : gammaTable_(makeGammaTable(r.gamma, r.offset, r.min, r.max)),
-          perm_(getPerm(r.permutation)) {
+          perm_(getPerm(r.permutation)),
+          prefix_(r.prefix) {
 }
 
 inline void CRenderer::render(
         float level, RGBIndexer const& colors,
         size_t position, size_t size, char* out) {
-    for (size_t i = 0; i < size; ++i) {
+    for (size_t i = 0, o = 0; i < size; ++i) {
         auto color = colors(i + position);
-        for (size_t j = 0; j < color.size(); ++j, ++out) {
+        for (size_t p = 0; p < prefix_; ++p)
+            out[o++] = '\xff';
+
+        for (size_t j = 0; j < color.size(); ++j) {
             auto component = level * color[perm_[j]];
             auto gamma = getGamma(gammaTable_, component);
-            *out = static_cast<char>(gamma);
+            out[o++] = static_cast<char>(gamma);
         }
     }
 }

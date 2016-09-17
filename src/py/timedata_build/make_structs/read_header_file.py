@@ -11,7 +11,7 @@ def read_header_file(header_file):
         declarations=[],
         )
 
-    def clean_struct(s):
+    def member_declaration(s):
         typename, *parts = s.split()
 
         was_equal = False
@@ -23,6 +23,8 @@ def read_header_file(header_file):
             was_equal = p == '='
 
         assert typename and parts and variables
+        if typename == 'std::string':
+            typename = 'string'
         return Context(typename=typename, variables=variables)
 
     def struct_is_finished(line):
@@ -57,7 +59,7 @@ def read_header_file(header_file):
             elif struct_is_finished(line):
                 break
             else:
-                context.structs.append(clean_struct(line))
+                context.structs.append(member_declaration(line))
         else:
             m = regex.namespace.match(line)
             if m:

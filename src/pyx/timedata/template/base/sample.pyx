@@ -102,3 +102,10 @@ cdef extern from "<$include_file>" namespace "$namespace":
 
     def __richcmp__($classname self, $classname other, int rcmp):
         return compare(self.cdata, other.cdata, rcmp)
+
+    def __getstate__(self):
+        return tuple(self)
+
+    def __setstate__(self, state):
+        for i in range($size):
+            self.cdata[i] = state[i]

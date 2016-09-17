@@ -27,6 +27,7 @@ class CRenderer {
 
     GammaTable gammaTable_;
     Perm perm_;
+    size_t prefix_;
 };
 
 }  // color_list

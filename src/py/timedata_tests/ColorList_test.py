@@ -1,4 +1,4 @@
-import unittest
+import pickle, unittest
 
 from timedata import *
 
@@ -292,3 +292,8 @@ class TestColorList(unittest.TestCase):
         self.assertEqual(sys.getsizeof(cl.resize(0)), 24)
         self.assertEqual(sys.getsizeof(cl.resize(1)), 36)
         self.assertEqual(sys.getsizeof(cl.resize(2)), 48)
+
+    def test_pickle(self):
+        for i in [], ['red'], ['red', 'green', 'blue', 'cyan']:
+            c = ColorList(i)
+            self.assertEqual(pickle.loads(pickle.dumps(c)), c)

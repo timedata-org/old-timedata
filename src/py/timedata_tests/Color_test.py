@@ -1,4 +1,4 @@
-import unittest
+import pickle, unittest
 
 from timedata import *
 
@@ -142,6 +142,10 @@ class TestColor(unittest.TestCase):
         self.assertEqual(Colors.red.red, 1)
         self.assertEqual(Colors.red.green, 0)
         self.assertEqual(Colors.red.blue, 0)
+
+    def test_pickle(self):
+        for c in Colors.red, Colors.black, Colors.white.mul(2):
+            self.assertEqual(pickle.loads(pickle.dumps(c)), c)
 
     def DONT_test_everything(self):
         # This test takes about five minutes to run when it's enabled.

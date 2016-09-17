@@ -1,4 +1,4 @@
-import unittest
+import pickle, unittest
 
 from timedata import *
 
@@ -43,3 +43,8 @@ class TestIndexList(unittest.TestCase):
         ColorList(['red']).remap(IndexList([-1]))
         with self.assertRaises(IndexError):
             ColorList(['red']).remap(IndexList([-2]))
+
+    def test_pickle(self):
+        for i in range(0), range(1), range(11):
+            c = IndexList(i)
+            self.assertEqual(pickle.loads(pickle.dumps(c)), c)
