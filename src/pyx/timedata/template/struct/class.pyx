@@ -27,4 +27,10 @@ $enum_pyx
     def __deepcopy__(self, memodict={}):
         return self.copy()
 
+    def __getstate__(self):
+        return $variable_names
+
+    def __setstate__(self, state):
+        $variable_names = state
+
 $property_list

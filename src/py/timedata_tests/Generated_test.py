@@ -1,4 +1,4 @@
-import copy, unittest
+import copy, pickle, unittest
 
 from timedata import Render3
 
@@ -50,3 +50,9 @@ class TestGenerated(unittest.TestCase):
 
         shallow.gamma = 1.5
         self.assertNotEqual(shallow.gamma, deep.gamma)
+
+    def test_pickle(self):
+        r = Render3(gamma=2.5, permutation='rbg')
+        self.assertEqual(str(r), str(r))
+        self.assertNotEqual(str(r), str(Render3()))
+        self.assertEqual(str(r), str(pickle.loads(pickle.dumps(r))))
