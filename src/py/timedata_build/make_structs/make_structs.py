@@ -5,9 +5,8 @@ from . make_enums import make_enums
 from .. import files, template
 
 
-def make(header_file, template_directory):
-    header_file += '.h'
-    header = read_header_file('/'.join(['src', 'cpp', header_file]))
+def make(prefix, header_file, template_directory):
+    header = read_header_file(os.path.join(prefix, header_file))
     classname = header.classname
     namespace = ':'.join(header.namespaces)
 
@@ -67,12 +66,12 @@ def make(header_file, template_directory):
     return '\n'.join(mt) + '\n'
 
 
-def make_structs(filenames, template_directory):
+def make_structs(prefix, filenames, template_directory):
     results = []
     for f in filenames:
-        data = make(f, template_directory)
+        data = make(prefix, f, template_directory)
         base, fname = os.path.split(os.path.splitext(f)[0])
-        outfile = '/'.join(['build', 'genfiles', f + '.pyx'])
+        outfile = '/'.join(['build', 'genfiles', base, fname + '.pyx'])
         results.append(outfile)
         files.write_if_different(outfile, data)
     return results

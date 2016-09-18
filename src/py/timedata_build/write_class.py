@@ -2,7 +2,8 @@ import collections
 from . import files, template
 
 
-def write_class(config, *, template_directory=None, output_file=None, **kwds):
+def write_class(*, methods, template_directory, output_file, **kwds):
+    config = methods  # TODO: fix this.  Note methods is reused below.
     declare, define = [], []
 
     def fmt(*names, **kwds):

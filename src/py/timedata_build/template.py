@@ -1,4 +1,4 @@
-import string
+import os, string
 
 def substitute_one(t, **kwds):
     return string.Template(t or '').substitute(**kwds)
@@ -39,7 +39,7 @@ def substitute(*names, **kwds):
     sub = substituter(**kwds)
 
     try:
-        parts = read(open(filename), filename)
+        parts = read(open(os.path.abspath(filename)), filename)
         return [sub(parts.get(i)) for i in ('declare', 'define')]
 
     except Exception:

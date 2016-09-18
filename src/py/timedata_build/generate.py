@@ -1,9 +1,8 @@
 import os
-from . import read_classes, write_class, make_structs, files
 
 
 def generate(structs, tiny, models, outfile, template_directory):
-    filenames = list(make_structs.make_structs(structs, template_directory))
+    filenames = list()
 
     for c in read_classes.read_classes(tiny=tiny, models=models):
         filenames.append(write_class.write_class(

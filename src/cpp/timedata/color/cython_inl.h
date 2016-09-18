@@ -17,6 +17,8 @@
 namespace timedata {
 namespace color {
 
+// TODO: either do these properly in the Cython, or fill in all of them here.
+
 using CColorRGB = ColorRGB;
 using CColorHSV = ColorHSV;
 using CColorHSL = ColorHSL;
