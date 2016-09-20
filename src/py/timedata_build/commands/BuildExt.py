@@ -18,7 +18,7 @@ class BuildExt(build_ext):
 
         opt_flags = None
         if not platform.system() == 'Windows':
-            opt_flags = CONFIG.build_options[FLAGS.buildtype or 'o3'].split()
+            opt_flags = CONFIG.build_type[FLAGS.build_type or 'o3'].split()
             if FLAGS.compileropt:
                 opt_flags += FLAGS.compileropt.split()
             compile_args += opt_flags

@@ -23,8 +23,8 @@ MODEL_SETTINGS = dict(
     tiny=['RGB', 'RGB255', 'RGB256', 'HSV'],
     )
 
-def get_models(models='all'):
-    models = MODEL_SETTINGS.get(models, models)
+def get_models(models=None):
+    models = MODEL_SETTINGS.get(models or 'tiny', models)
     return [MATCH(m).groups() for m in sorted(models)]
 
 def read_class(model, range_name):

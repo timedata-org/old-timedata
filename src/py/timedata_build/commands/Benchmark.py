@@ -8,7 +8,7 @@ class Benchmark(Command):
         print('Benchmark')
         name = FLAGS.name
         if not name:
-            parts = [FLAGS.buildtype]
+            parts = [FLAGS.build_type]
             for o in FLAGS.compileropt.split():
                 parts.append(o[2:])
             name = '_'.join(parts)
