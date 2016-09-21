@@ -34,3 +34,5 @@ $enum_pyx
         $variable_names = state
 
 $property_list
+
+locals()['$classname'] = _$classname
