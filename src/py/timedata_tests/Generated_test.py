@@ -30,7 +30,7 @@ class TestGenerated(unittest.TestCase):
         with self.assertRaises(ValueError):
             r.permutation = 'rrr'
 
-        with self.assertRaises(OverflowError):
+        with self.assertRaises(ValueError):
             r.permutation = -1
 
         with self.assertRaises(ValueError):

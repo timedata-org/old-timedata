@@ -34,6 +34,8 @@ cdef extern from "<$include_file>" namespace "$namespace":
     void rotate(C$classname&, int pos)
     void rotate(C$classname&, C$classname&, int pos)
 
+    void shuffle(C$classname&)
+
     void sliceDelete(C$classname&, int begin, int end, int step)
 
     void sort(C$classname&)
@@ -183,6 +185,18 @@ cdef extern from "<$include_file>" namespace "$namespace":
         """Rotate the samples forward by `pos` positions to another $classname"""
         rotate(self.cdata, out.cdata, pos)
         return out
+
+    cpdef $classname shuffle(self):
+        return self.copy().shuffle_into()
+
+    cpdef $classname shuffle_to(self, $classname out):
+        out.cdata = self.cdata
+        shuffle(out.cdata)
+        return self
+
+    cpdef $classname shuffle_into(self):
+        shuffle(self.cdata)
+        return self
 
     def sort($classname self, object key=None, bool reverse=False):
         """Sort."""

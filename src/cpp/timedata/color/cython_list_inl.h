@@ -550,5 +550,10 @@ void magic_mul(size_t count, ColorVector& colors) {
         std::copy(i, i + size, i + size);
 }
 
+template <typename ColorVector>
+void shuffle(ColorVector& colors) {
+    std::random_shuffle(colors.begin(), colors.end());
+}
+
 } // color_list
 } // timedata

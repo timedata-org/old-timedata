@@ -48,3 +48,10 @@ class TestIndexList(unittest.TestCase):
         for i in range(0), range(1), range(11):
             c = IndexList(i)
             self.assertEqual(pickle.loads(pickle.dumps(c)), c)
+
+    def test_shuffle(self):
+        c = list(IndexList(range(1000)).shuffle())
+
+        # One chance in about 10**5912 that this will fail.  :-D
+        self.assertNotEqual(c, list(range(1000)))
+        self.assertEqual(list(sorted(c)), list(range(1000)))
