@@ -1,4 +1,6 @@
 ### define
+from numbers import Number
+
 cdef extern from "<$header_file>" namespace "$namespace":
 $struct_definition
 
