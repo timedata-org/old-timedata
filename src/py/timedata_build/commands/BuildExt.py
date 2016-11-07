@@ -16,7 +16,7 @@ class BuildExt(build_ext):
         compile_args = template.substitute_one(
             flags, git_tags=git_tags, time=TIME).split()
 
-        opt_flags = None
+        opt_flags = []
         if not platform.system() == 'Windows':
             opt_flags = CONFIG.build_type[FLAGS.build_type or 'o3'].split()
             if FLAGS.compileropt:
